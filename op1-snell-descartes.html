@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Réflexion et réfraction : une expérience interactive autonome pour le cours de MPSI.">
+<title>Snell-Descartes · OP1 · MPSI</title>
+<style>
+:root{color-scheme:light;--paper:#f4f6f4;--surface:#fff;--ink:#142522;--secondary:#4c625d;--line:#cbd9d4;--accent:#3e8b89;--accent-ink:#2b6160;--soft:#e9f2ef;--incident:#b5353a;--reflected:#1f7552;--transmitted:#1e50be;--shadow:0 6px 26px #173c3610}
+:root[data-theme=dark]{color-scheme:dark;--paper:#111b1e;--surface:#182629;--ink:#eef6f3;--secondary:#bed0ca;--line:#3a5152;--accent:#86c7bf;--accent-ink:#96d6ce;--soft:#263e40;--incident:#ff969b;--reflected:#93d9a7;--transmitted:#8fbdff;--shadow:0 6px 26px #0003}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;color:var(--ink);background:var(--surface)}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button[aria-pressed=true],.primary{background:#2b6160;border-color:#2b6160;color:#fff}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] .primary{background:#96d6ce;border-color:#96d6ce;color:#112e2a}button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.topline{height:5px;background:var(--accent)}
+.shell{max-width:1920px;margin:auto;height:calc(100dvh - 5px);padding:16px 22px 10px;display:flex;flex-direction:column;gap:12px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:18px;flex:none}.eyebrow{font-size:14px;letter-spacing:.09em;font-weight:bold;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}.heading{display:flex;align-items:center;gap:12px}.chapter{font-size:18px;border:1px solid var(--accent);color:var(--accent-ink);padding:6px 9px;border-radius:4px}h1{font-size:30px;line-height:1.1;letter-spacing:-.025em;margin:0;font-weight:500}.subtitle{display:none}.header-actions{display:flex;gap:7px}.header-actions button{font-size:16px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;flex:1;min-height:0}.scene-wrap{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}.scene-card{position:relative;flex:1;min-height:260px;border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}.scene-top{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:2;pointer-events:none}.scene-top>*{pointer-events:auto}.view-tabs{display:flex;gap:4px;background:var(--surface);border-radius:6px}.view-tabs button{font-size:17px;min-height:40px}.scene-kicker{display:none}.view-tools{display:flex;gap:4px}.view-tools button{font-size:17px;min-height:40px}.view-tools .zoom-step{font-size:25px;width:40px;padding:0}.view-tools button[disabled]{opacity:.4}#scene{width:100%;height:100%;display:block;touch-action:none;user-select:none;background:var(--surface)}#scene text{font-family:Arial,Helvetica,sans-serif}#scene .label{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}.scene-bottom{position:absolute;bottom:10px;left:14px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:none}.scene-bottom>*{pointer-events:auto}.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:17px;color:var(--ink);background:var(--surface);padding:5px 7px;border-radius:4px}.legend span{display:inline-flex;gap:7px;align-items:center}.legend i{display:inline-block;width:22px;height:3px;background:var(--c)}.transport{display:flex;gap:6px;align-items:center}.transport button{font-size:16px;min-height:38px;padding:6px 10px}.readout{display:grid;grid-template-columns:repeat(3,1fr);flex:none}.readout>div{padding-left:20px;border-left:1px solid var(--line)}.readout>div:first-child{padding-left:0;border:0}.metric-label{font-size:18px;color:var(--secondary);display:flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;background:var(--c)}.metric-value{font-size:36px;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.2}.regime{display:flex;gap:10px;align-items:flex-start;font-size:18px;flex:none;min-height:52px}.regime-indicator{background:var(--accent);width:8px;height:8px;flex:none;border-radius:50%;margin-top:8px}.regime strong{font-weight:500;color:var(--accent-ink)}.regime p{margin:2px 0 0;color:var(--secondary);font-size:16px}.controls{background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:18px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{font-size:15px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-ink);margin:0 0 13px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0 4px;font-size:18px}.field-head:first-of-type{margin-top:0}input[type=number]{width:80px;border:1px solid var(--line);background:var(--paper);color:var(--ink);text-align:right;border-radius:4px;padding:7px 5px;font-size:18px;font-variant-numeric:tabular-nums}input[type=range]{width:100%;margin:12px 0 3px;accent-color:var(--accent-ink);height:22px;cursor:pointer}select{color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:8px;font-size:17px;max-width:100%;width:100%}.material-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin-bottom:12px}.medium-label{font-size:17px;margin-bottom:6px}.swap{width:100%;font-size:16px;margin-top:3px;min-height:38px}.tint-note{font-size:15px;color:var(--secondary);margin:10px 0 0}.range-ends{display:flex;justify-content:space-between;color:var(--secondary);font-size:15px}.angle-tools{display:flex;gap:6px;margin-top:12px}.angle-tools button{flex:1;font-size:16px;padding:7px}.checks{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}.checks label{display:flex;align-items:center;gap:9px;font-size:18px;cursor:pointer;color:var(--ink)}input[type=checkbox]{accent-color:var(--accent-ink);width:19px;height:19px;margin:0}.formula{font-family:Georgia,'Times New Roman',serif;font-size:26px;color:var(--ink);margin:10px 0}.formula-live,.formula-note{font-size:17px;color:var(--secondary);margin-top:9px;font-variant-numeric:tabular-nums}.presets{display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex:none}.presets>span{font-size:16px;color:var(--secondary);margin-right:4px}.presets button{font-size:16px;min-height:34px;padding:5px 9px;background:transparent}.footer{display:flex;justify-content:space-between;gap:15px;font-size:14px;color:var(--secondary);flex:none}.footer span:last-child{display:none}
+.projection .controls,.projection .footer,.projection .presets,.projection .eyebrow,.projection .chapter{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:10px}.projection h1{font-size:28px}.projection .readout .metric-label{font-size:21px}.projection .metric-value{font-size:42px}.projection .regime{font-size:21px;min-height:30px}.projection .regime p{display:none}.projection .legend,.projection .view-tabs button,.projection .transport button{font-size:20px}.projection .scene-card{min-height:260px}
+dialog{width:min(780px,calc(100% - 32px));max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:var(--surface);padding:28px}dialog::backdrop{background:#071c2299}dialog h2{font-size:28px;font-weight:500;margin:0 0 18px}dialog p,dialog li{font-size:18px;line-height:1.6;color:var(--secondary)}dialog a{color:var(--accent-ink)}dialog .close-row{display:flex;justify-content:flex-end;margin-top:20px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent-ink);color:var(--surface);padding:12px 20px;border-radius:6px;z-index:5;font-size:18px}.toast:empty{display:none}[hidden]{display:none!important}
+@media(max-width:1100px){.header-actions .button-text{display:none}.workspace{grid-template-columns:minmax(0,1fr) 300px;gap:12px}.shell{padding:12px;gap:10px}.header-actions button{padding:8px}.view-tabs button,.view-tools button{font-size:16px}.legend{font-size:16px;gap:10px}.presets>span{display:none}h1{font-size:27px}.footer{display:none}}
+@media(max-width:780px){.shell{height:auto;min-height:100dvh;padding:12px;gap:12px}.masthead{align-items:flex-start;flex-wrap:wrap;gap:12px}.header-actions{margin-left:auto}.workspace{grid-template-columns:1fr;flex:none}.scene-card{height:520px;flex:none}.controls{max-height:none;overflow:visible;display:grid;grid-template-columns:1fr 1fr}.control-section:nth-child(odd){border-right:1px solid var(--line)}.metric-label{font-size:16px}.metric-value{font-size:32px}.regime{font-size:17px}.regime p{font-size:16px}.projection .shell{height:100dvh;min-height:640px}.projection .workspace{flex:1}.projection .scene-card{height:auto;flex:1}.projection .readout .metric-label{font-size:17px}.projection .metric-value{font-size:36px}.projection .regime{font-size:18px}.projection .legend{font-size:17px}}
+@media(max-width:520px){h1{font-size:25px}.eyebrow{font-size:12px}.header-actions{margin-left:0}.controls{grid-template-columns:1fr}.control-section:nth-child(odd){border-right:0}.scene-card{height:460px}.scene-top{flex-wrap:wrap;top:8px;left:8px;right:8px}.view-tools{margin-left:auto}.scene-bottom{left:8px;right:8px;flex-wrap:wrap}.legend{font-size:15px}.transport{margin-left:auto}.metric-label{font-size:14px;gap:4px}.readout>div{padding-left:10px}.metric-value{font-size:29px}.projection .view-tabs button,.projection .transport button{font-size:16px}.projection .metric-value{font-size:31px}}
+@media print{.controls,.header-actions,.transport,.presets,.footer{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:600px;box-shadow:none}.scene-top{display:none}}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<main class="shell">
+ <header class="masthead">
+  <div><div class="eyebrow">Optique · Expériences interactives</div><div class="heading"><span class="chapter">OP1</span><h1>Lois de Snell-Descartes</h1></div><p class="subtitle">Réflexion, réfraction et réflexion totale</p></div>
+  <div class="header-actions">
+   <button id="theme" aria-pressed="false" title="Passer au mode sombre"><span id="theme-label">Sombre</span></button>
+   <button id="help" title="Modèle physique et aide" aria-label="Modèle physique et aide"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></svg></button>
+   <button id="export" aria-label="Enregistrer une image" title="Enregistrer le schéma en SVG"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg><span class="button-text">Image</span></button>
+   <button id="projection" aria-label="Mode projection" aria-pressed="false" title="Agrandir la scène et masquer les réglages"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="1"/><path d="m8 22 4-5 4 5M12 17v5"/></svg><span class="button-text">Projection</span></button>
+   <button id="fullscreen" title="Plein écran" aria-label="Plein écran"><svg class="icon" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+  </div>
+ </header>
+ <div class="workspace">
+  <section class="scene-wrap" aria-label="Expérience de réflexion et réfraction">
+   <div class="scene-card">
+    <div class="scene-top"><div class="view-tabs" role="group" aria-label="Point de vue"><button id="view2d" aria-pressed="true">Vue de face</button><button id="view3d" aria-pressed="false">Perspective 3D</button></div><span class="scene-kicker" id="view-caption">Dans le plan d’incidence</span><div class="view-tools"><button id="zoom-out" class="zoom-step" aria-label="Réduire le dessin" title="Réduire le dessin">−</button><button id="recenter" title="Recentrer et ajuster la scène">Cadrer</button><button id="zoom-in" class="zoom-step" aria-label="Agrandir le dessin" title="Agrandir le dessin">+</button></div></div>
+    <svg id="scene" viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg" role="group" aria-labelledby="scene-title scene-desc">
+     <title id="scene-title">Réflexion et réfraction sur un dioptre plan</title><desc id="scene-desc">Un rayon incident rencontre la séparation entre deux milieux transparents.</desc>
+     <defs>
+      <linearGradient id="medium-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf3f5"/><stop offset="1" stop-color="#f4f8f8"/></linearGradient>
+      <filter id="ray-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+      <marker id="angle-arrow" viewBox="0 0 8 8" refX="5" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 7 4 0 8Z" fill="context-stroke"/></marker>
+     </defs>
+     <g id="surfaces"></g><g id="grid"></g><g id="protractor-layer"></g><g id="normal-layer"></g><g id="fronts-layer"></g><g id="rays-layer"></g><g id="angles-layer"></g><g id="lambda-layer"></g><g id="labels-layer"></g><g id="laser-layer"></g>
+    </svg>
+    <div class="scene-bottom"><div class="legend"><span><i style="--c:var(--incident)"></i>Incident</span><span><i style="--c:var(--reflected)"></i>Réfléchi</span><span><i style="--c:var(--transmitted)"></i>Réfracté</span></div><div class="transport"><button id="laser-toggle" aria-pressed="true" title="Allumer ou éteindre le laser">Laser allumé</button><button id="play" title="Mettre les fronts d’onde en pause" aria-label="Mettre les fronts d’onde en pause">❚❚</button></div></div>
+   </div>
+   <div class="readout" aria-label="Angles algébriques"><div><div class="metric-label"><span class="dot" style="--c:var(--incident)"></span>Incidence <i>i₁</i></div><div class="metric-value" id="value-i1"></div></div><div><div class="metric-label"><span class="dot" style="--c:var(--reflected)"></span>Réflexion <i>r</i></div><div class="metric-value" id="value-r"></div></div><div><div class="metric-label"><span class="dot" style="--c:var(--transmitted)"></span>Réfraction <i>i₂</i></div><div class="metric-value" id="value-i2"></div></div></div>
+   <div class="regime" role="status" aria-live="polite"><span class="regime-indicator"></span><div><strong id="regime-title"></strong><p id="regime-detail"></p></div></div>
+   <div class="presets" role="group" aria-label="Situations à explorer"><span>Explorer</span><button data-preset="air-glass">Air → verre</button><button data-preset="glass-air">Verre → air</button><button data-preset="tir">Réflexion totale</button><button data-preset="equal">Même indice</button><button id="reset" title="Rétablir tous les réglages">Réinitialiser</button></div>
+  </section>
+  <aside class="controls" aria-label="Réglages de l’expérience">
+   <section class="control-section"><h2 class="section-label">01 / Les milieux</h2>
+    <div class="medium-label">Milieu incident · <i>n₁</i></div><div class="material-row"><select id="material1" aria-label="Nature du milieu incident"><option value="1">Air · 1,00</option><option value="1.33">Eau · 1,33</option><option value="1.5">Verre · 1,50</option><option value="2.42">Diamant · 2,42</option><option value="custom">Personnalisé</option></select><input type="number" id="n1" aria-label="Indice n1" min="1" max="2.5" step="0.01" value="1"></div><input id="n1-range" type="range" aria-label="Faire varier l’indice n1" min="1" max="2.5" step="0.01" value="1">
+    <div class="medium-label">Milieu transmis · <i>n₂</i></div><div class="material-row"><select id="material2" aria-label="Nature du milieu transmis"><option value="1">Air · 1,00</option><option value="1.33">Eau · 1,33</option><option value="1.5" selected>Verre · 1,50</option><option value="2.42">Diamant · 2,42</option><option value="custom">Personnalisé</option></select><input type="number" id="n2" aria-label="Indice n2" min="1" max="2.5" step="0.01" value="1.5"></div><input id="n2-range" type="range" aria-label="Faire varier l’indice n2" min="1" max="2.5" step="0.01" value="1.5">
+    <button class="swap" id="swap">⇅ &nbsp; Intervertir les milieux</button><p class="tint-note">Teinte plus marquée = indice plus élevé.</p>
+   </section>
+   <section class="control-section"><h2 class="section-label">02 / L’incidence</h2><div class="field-head"><label for="angle">Angle <i>i₁</i></label><div><input type="number" id="angle-number" aria-label="Angle d’incidence en degrés" min="-85" max="85" step="0.01" value="40"> °</div></div><input id="angle" aria-label="Angle d’incidence" type="range" min="-85" max="85" step="0.1" value="40"><div class="range-ends"><span>−85°</span><span>0°</span><span>+85°</span></div><div class="angle-tools"><button id="critical" title="Placer exactement le rayon à l’angle limite" disabled>Angle limite</button><button id="sweep" aria-pressed="false">Balayer</button></div></section>
+   <section class="control-section"><h2 class="section-label">03 / La représentation</h2><select id="representation" aria-label="Représentation de la lumière"><option value="rays">Rayons lumineux</option><option value="both">Rayons et fronts d’onde</option><option value="fronts">Fronts d’onde</option></select><div class="checks"><label><input id="normal" type="checkbox" checked>Normale</label><label><input id="angles" type="checkbox" checked>Angles</label><label><input id="protractor" type="checkbox">Rapporteur</label><label><input id="plane" type="checkbox" checked>Plan d’incidence</label><label><input id="wavelengths" type="checkbox">Longueurs d’onde</label></div></section>
+   <section class="control-section"><h2 class="section-label">Les lois</h2><div class="formula"><i>r</i> = −<i>i</i>₁</div><div class="formula"><i>n</i>₁ sin <i>i</i>₁ = <i>n</i>₂ sin <i>i</i>₂</div><div class="formula-live" id="snell-check"></div><div class="formula-note" id="critical-note"></div></section>
+  </aside>
+ </div>
+ <footer class="footer"><span>E. Guillaume · MPSI · OP1 — Propagation de la lumière</span><span id="interaction-hint">Déplacer le laser pour modifier l’incidence · Espace : pause</span><span>Modèle : milieux transparents, homogènes et isotropes</span></footer>
+</main>
+<dialog id="about"><h2>Une expérience pour le cours</h2><p><strong>Manipuler.</strong> Déplacer le laser en vue de face, ou régler l’angle au curseur. En perspective, faire glisser la scène pour tourner autour du dioptre. Les indices restent modifiables entre 1 et 2,5.</p><p><strong>Lire les angles.</strong> Ils sont comptés depuis la normale, positivement dans le sens trigonométrique vu de face. Le rayon incident est repéré vers sa source ; le rayon réfléchi vers sa sortie. On retrouve ainsi la convention du cours : <i>r = −i₁</i>. Les arcs portent une flèche indiquant le sens de mesure. À incidence nulle, les arcs se réduisent à zéro.</p><p><strong>Fronts d’onde.</strong> En régime monochromatique établi, les traits représentent des surfaces d’égale phase, perpendiculaires aux directions de propagation. La fréquence est commune aux trois ondes ; la célérité et la longueur d’onde sont divisées par l’indice : <i>v = c/n</i>, <i>λ = λ₀/n</i>, avec ici <i>λ₀ = 600 nm</i>. L’échelle spatiale est agrandie et le temps très fortement ralenti. Les fronts sont tronqués pour la lisibilité.</p><p><strong>Affichage.</strong> Les boutons + et − agrandissent ou réduisent le dessin ; Cadrer restaure une vue entière. En 3D, la rotation est limitée pour garder les deux milieux lisibles. Le bouton Clair/Sombre adapte toute la scène. Les deux milieux utilisent la même échelle de teinte : plus elle est marquée, plus l’indice est élevé. Cette teinte est un repère graphique, sans lien avec l’absorption ou la couleur réelle du matériau.</p><p><strong>Limites du modèle.</strong> Interface plane entre diélectriques transparents, homogènes, isotropes, non magnétiques et sans absorption. Les indices proposés sont des valeurs pédagogiques arrondies, sans loi de dispersion. Les couleurs et épaisseurs distinguent les rayons : elles ne représentent ni leur couleur réelle ni leur puissance. Les coefficients et déphasages de Fresnel, la polarisation et l’onde évanescente en réflexion totale ne sont pas représentés. Au seuil, le rayon rasant indique la direction limite du rayon réfracté. Pour deux indices égaux, aucun rayon réfléchi n’est tracé.</p><ul><li>Vue de face : lecture précise dans le plan d’incidence.</li><li>Perspective : le plan d’incidence est perpendiculaire au dioptre et contient les trois rayons.</li><li>Projection : agrandir la scène en masquant les réglages.</li><li>Image : enregistrer le schéma vectoriel avec les paramètres et les angles.</li><li>Raccourcis : Espace pour la pause, F pour le plein écran, R pour réinitialiser.</li></ul><p>Réalisation originale pour OP1 ; inspiration fonctionnelle : <a href="https://phyzik.store/" target="_blank" rel="noopener noreferrer">PhyzikStore, T. Roy</a>. Aucune ressource distante n’est nécessaire au fonctionnement.</p><div class="close-row"><button id="close-about" class="primary">Revenir à l’expérience</button></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script id="physics">
+'use strict';
+// Les angles sont en degrés, algébriques, conformément au cours OP1.
+window.SnellModel = Object.freeze({
+ solve(n1,n2,incidence){
+  if(!Number.isFinite(n1)||!Number.isFinite(n2)||n1<1||n2<1||n1>2.5||n2>2.5||!Number.isFinite(incidence)||Math.abs(incidence)>85+1e-10) throw new RangeError('Paramètres hors domaine');
+  const rad=Math.PI/180, q=n1/n2*Math.sin(incidence*rad), tir=Math.abs(q)>1+1e-12;
+  const i2=tir?null:Math.asin(Math.max(-1,Math.min(1,q)))/rad;
+  return {n1,n2,i1:incidence,r:-incidence,i2,tir,q,critical:n1>n2?Math.asin(n2/n1)/rad:null,limiting:n1>n2&&Math.abs(Math.abs(q)-1)<1e-12,matched:Math.abs(n1-n2)<1e-12,lambda1:600/n1,lambda2:600/n2};
+ }
+});
+</script>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg', rad=Math.PI/180;
+const COLORS={};
+let dark=false,zoom=1,sceneW=1000,sceneH=650,cameraScale=1,cameraCenter=[0,0];
+function applyPalette(){const css=getComputedStyle(document.documentElement);for(const k of ['incident','reflected','transmitted','ink','secondary'])COLORS[k]=css.getPropertyValue('--'+k).trim();COLORS.accent=css.getPropertyValue('--accent-ink').trim();COLORS.line=dark?'#779995':'#6e928b';COLORS.surface=css.getPropertyValue('--surface').trim();COLORS.structure=dark?'#9db7b2':'#708e87';}
+function mediumTint(n){const t=(n-1)/1.5;return dark?`hsl(180, ${22+22*t}%, ${11+23*t}%)`:`hsl(176, ${25+16*t}%, ${99-29*t}%)`;}
+function rawP(x,y,z=0){if(state.view==='2d')return [x,-y];const X=Math.cos(yaw)*x+Math.sin(yaw)*z,Z=-Math.sin(yaw)*x+Math.cos(yaw)*z,Y=Math.cos(pitch)*y-Math.sin(pitch)*Z,depth=Math.sin(pitch)*y+Math.cos(pitch)*Z,s=1000/(1000-depth*.20);return [X*s,-Y*s];}
+function fitCamera(){const box=$('scene').getBoundingClientRect();sceneW=Math.max(320,box.width);sceneH=Math.max(240,box.height);$('scene').setAttribute('viewBox',`0 0 ${sceneW} ${sceneH}`);let pts=[];if(state.view==='2d')pts=[[-450,-285],[450,285]];else{for(const x of [-400,400])for(const y of [-210,210])for(const z of [-155,155])pts.push(rawP(x,y,z));for(const x of [-435,435])for(const y of [-280,280])pts.push(rawP(x,y,0));}const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),loX=Math.min(...xs),hiX=Math.max(...xs),loY=Math.min(...ys),hiY=Math.max(...ys);cameraCenter=[(loX+hiX)/2,(loY+hiY)/2];const top=$('scene').parentElement.querySelector('.scene-top').offsetHeight+24,bottom=$('scene').parentElement.querySelector('.scene-bottom').offsetHeight+22;cameraScale=Math.min((sceneW-50)/(hiX-loX),Math.max(100,sceneH-top-bottom)/(hiY-loY))*zoom;cameraCenter[1]-=(top-bottom)/(2*cameraScale);}
+
+const defaults={n1:1,n2:1.5,i:40,view:'2d',mode:'rays',normal:true,angles:true,protractor:false,plane:true,wavelengths:false,laser:true};
+let state={...defaults}, model, yaw=-.48,pitch=.38,phase=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,sweeping=false,sweepDirection=1,lastTime=0,lastAnnouncement='',drag=null,toastTimer;
+const groups={};['surfaces','grid','protractor-layer','normal-layer','fronts-layer','rays-layer','angles-layer','lambda-layer','labels-layer','laser-layer'].forEach(k=>groups[k]=$(k));
+const fmt=(n,d=1)=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(n)<1e-10?0:n);
+const signed=n=>(n>1e-9?'+':'')+fmt(n)+'°';
+function node(tag,attrs={},parent){const el=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);if(parent)parent.append(el);return el;}
+function textAt(parent,p,content,color=COLORS.secondary,size=16,anchor='start',extra={}){const factor=document.body.classList.contains('projection')?1.2:1;const el=node('text',{x:p[0],y:p[1],fill:color,'font-size':Math.max(19,size)*factor,'text-anchor':anchor,...extra},parent);el.textContent=content;return el;}
+function P(x,y,z=0){const p=rawP(x,y,z);return [sceneW/2+(p[0]-cameraCenter[0])*cameraScale,sceneH/2+(p[1]-cameraCenter[1])*cameraScale];}
+const pathPoints=pts=>pts.map((p,i)=>(i?'L':'M')+p.map(v=>v.toFixed(2)).join(',')).join(' ');
+function line(parent,a,b,color,width=1,extra={}){return node('path',{d:pathPoints([a,b]),stroke:color,'stroke-width':width,fill:'none',...extra},parent);}
+function poly(parent,pts,fill,extra={}){return node('path',{d:pathPoints(pts)+'Z',fill,...extra},parent);}
+function worldLine(parent,a,b,color,width=1,extra={}){return line(parent,P(...a),P(...b),color,width,extra);}
+function arc(parent,from,to,radius,color,label){if(Math.abs(to-from)<.005)return;const points=[];for(let j=0;j<=32;j++){const a=from+(to-from)*j/32;points.push(P(Math.cos(a)*radius,Math.sin(a)*radius));}node('path',{d:pathPoints(points),stroke:color,'stroke-width':1.6,fill:'none','marker-end':'url(#angle-arrow)'},parent);const a=(from+to)/2;const p=P(Math.cos(a)*(radius+32),Math.sin(a)*(radius+32));const center=P(0,0),side=Math.cos(a)>=0?1:-1;if(Math.abs(p[0]-center[0])<25)p[0]=center[0]+side*25;textAt(parent,p,label,color,25,'middle',{'class':'label'});}
+function arrow(parent,a,b,color,width=2){line(parent,a,b,color,width,{'stroke-linecap':'round'});const t=Math.atan2(b[1]-a[1],b[0]-a[0]),len=10,w=4;poly(parent,[b,[b[0]-len*Math.cos(t)+w*Math.sin(t),b[1]-len*Math.sin(t)-w*Math.cos(t)],[b[0]-len*Math.cos(t)-w*Math.sin(t),b[1]-len*Math.sin(t)+w*Math.cos(t)]],color);}
+function ray(parent,start,end,color){worldLine(parent,start,end,color,12,{opacity:.065,'stroke-linecap':'round'});worldLine(parent,start,end,color,3.5,{'stroke-linecap':'round'});const a=start.map((v,j)=>v+(end[j]-v)*.58),b=start.map((v,j)=>v+(end[j]-v)*.66);arrow(parent,P(...a),P(...b),color,3.5);}
+function lengthFor(s,c){return Math.min(435/Math.max(Math.abs(s),.0001),265/Math.max(Math.abs(c),.0001));}
+function materialName(n){return ({'1':'Air','1.33':'Eau','1.5':'Verre','2.42':'Diamant'})[String(n)]||'Milieu personnalisé';}
+function drawSurfaces(){
+ const g=groups.surfaces;g.replaceChildren();groups.grid.replaceChildren();
+ const c1=mediumTint(state.n1),c2=mediumTint(state.n2),origin=P(0,0);
+ if(state.view==='2d'){
+  node('rect',{x:0,y:0,width:sceneW,height:origin[1],fill:c1},g);
+  node('rect',{x:0,y:origin[1],width:sceneW,height:sceneH-origin[1],fill:c2},g);
+  line(g,[0,origin[1]],[sceneW,origin[1]],COLORS.line,1.7);
+  textAt(g,[sceneW-22,origin[1]-12],'dioptre',COLORS.secondary,19,'end',{'class':'label'});
+ }else{
+  // Deux volumes transparents : leur teinte dépend du même indice qu'en vue de face.
+  for(const [sign,tint] of [[1,c1],[-1,c2]]){
+   const y=sign*210;
+   poly(g,[P(-400,0,-155),P(-400,y,-155),P(400,y,-155),P(400,0,-155)],tint,{'fill-opacity':'.8'});
+   poly(g,[P(-400,0,-155),P(-400,y,-155),P(-400,y,155),P(-400,0,155)],tint,{'fill-opacity':'.7'});
+   poly(g,[P(-400,0,155),P(-400,y,155),P(400,y,155),P(400,0,155)],tint,{'fill-opacity':'.65'});
+  }
+  poly(g,[P(-400,0,-155),P(400,0,-155),P(400,0,155),P(-400,0,155)],COLORS.accent,{'fill-opacity':'.12',stroke:COLORS.line,'stroke-width':1.5});
+  if(state.plane){
+   poly(g,[P(-350,275,0),P(350,275,0),P(350,-275,0),P(-350,-275,0)],COLORS.accent,{'fill-opacity':'.035'});
+   for(let x=-350;x<=350;x+=50)worldLine(groups.grid,[x,-275,0],[x,275,0],COLORS.structure,.8,{opacity:.35});
+   for(let y=-250;y<=250;y+=50)worldLine(groups.grid,[-350,y,0],[350,y,0],COLORS.structure,.8,{opacity:.35});
+   textAt(g,[sceneW-22,sceneH-77],'Plan d’incidence',COLORS.accent,20,'end',{'class':'label'});
+  }
+  const dp=P(350,0,155);textAt(g,[Math.min(sceneW-25,dp[0]),dp[1]+25],'Dioptre',COLORS.secondary,20,'end',{'class':'label'});
+ }
+ placeMediumLabel(g,1);placeMediumLabel(g,2);
+}
+function placeMediumLabel(g,n){
+ const center=P(0,0),top=$('scene').parentElement.querySelector('.scene-top').offsetHeight+24,bottom=$('scene').parentElement.querySelector('.scene-bottom').offsetHeight+22;
+ const name=materialName(state['n'+n]);const label=textAt(g,[22,0],(name==='Milieu personnalisé'?'':name+' · ')+'n'+(n===1?'₁':'₂')+' = '+fmt(state['n'+n],2),COLORS.accent,22,'start',{'class':'label'}),box=label.getBBox(),w=box.width,h=box.height;
+ const i=state.i*rad,t=(model.i2||0)*rad,si=Math.sin(i),ci=Math.cos(i),st=Math.sin(t),ct=Math.cos(t),Lr=lengthFor(si,ci),Lt=lengthFor(st,ct);
+ const segments=[[P(-si*247,ci*247),center],[P(0,-280),P(0,280)]];
+ if(!model.matched)segments.push([center,P(si*Lr,ci*Lr)]);
+ if(!model.tir)segments.push([center,P(st*Lt,-ct*Lt)]);
+ const ys=n===1?[top+h+5,center[1]-24,center[1]-85]:[center[1]+h+24,sceneH-bottom-12,center[1]+100];
+ let best=null;
+ for(const y of ys)for(const side of ['start','end']){
+  if(y-h<top||y>sceneH-bottom||(n===1?y>center[1]-12:y-h<center[1]+12))continue;
+  const x=side==='start'?22:sceneW-22,left=side==='start'?x:x-w,right=left+w,upper=y-h,lower=y+4;
+  let score=Infinity;
+  for(const [a,b] of segments)for(let k=0;k<=48;k++){const px=a[0]+(b[0]-a[0])*k/48,py=a[1]+(b[1]-a[1])*k/48,dx=Math.max(left-px,0,px-right),dy=Math.max(upper-py,0,py-lower);score=Math.min(score,Math.hypot(dx,dy));}
+  if(!best||score>best.score)best={x,y,side,score};
+ }
+ if(best){label.setAttribute('x',best.x);label.setAttribute('y',best.y);label.setAttribute('text-anchor',best.side);}else label.setAttribute('y',n===1?top+h+5:sceneH-bottom-12);
+}
+
+function drawProtractor(){const g=groups['protractor-layer'];g.replaceChildren();if(!state.protractor)return;for(let half=0;half<2;half++){
+ const pts=[];for(let d=0;d<=180;d+=2){let a=(d+half*180)*rad;pts.push(P(Math.cos(a)*180,Math.sin(a)*180));}node('path',{d:pathPoints(pts),fill:'none',stroke:COLORS.structure,'stroke-width':.8},g);
+ for(let d=-90;d<=90;d+=5){let a=(90+d+half*180)*rad,r=d%10?175:169;worldLine(g,[Math.cos(a)*r,Math.sin(a)*r,0],[Math.cos(a)*180,Math.sin(a)*180,0],COLORS.structure,1);if(d%30===0&&Math.abs(d)!==90)textAt(g,P(Math.cos(a)*195,Math.sin(a)*195),Math.abs(d)+'°',COLORS.secondary,16,'middle');}
+}}
+function drawNormal(){const g=groups['normal-layer'];g.replaceChildren();if(!state.normal)return;worldLine(g,[0,-280,0],[0,280,0],COLORS.structure,1.6,{'stroke-dasharray':'6 7'});const p=P(0,240,0);textAt(g,[p[0]+14,p[1]],'normale',COLORS.secondary,20,'start',{'class':'label'});}
+function drawStatic(){
+ fitCamera();
+ model=window.SnellModel.solve(state.n1,state.n2,state.i);
+ drawSurfaces();drawProtractor();drawNormal();
+ for(const name of ['rays-layer','angles-layer','labels-layer','laser-layer','lambda-layer'])groups[name].replaceChildren();
+ const inc=state.i*rad,si=Math.sin(inc),ci=Math.cos(inc),tr=model.i2===null?0:model.i2*rad,st=Math.sin(tr),ct=Math.cos(tr);
+ if(state.laser){
+  if(state.mode!=='fronts'){
+   ray(groups['rays-layer'],[-si*224,ci*224,0],[0,0,0],COLORS.incident);
+   if(!model.matched){let L=lengthFor(si,ci);ray(groups['rays-layer'],[0,0,0],[si*L,ci*L,0],COLORS.reflected);}
+   if(!model.tir){let L=lengthFor(st,ct);ray(groups['rays-layer'],[0,0,0],[st*L,-ct*L,0],COLORS.transmitted);}
+  }
+  if(state.angles){arc(groups['angles-layer'],Math.PI/2,Math.PI/2+inc,83,COLORS.incident,'i₁');if(!model.matched)arc(groups['angles-layer'],Math.PI/2,Math.PI/2-inc,104,COLORS.reflected,'r');if(!model.tir)arc(groups['angles-layer'],-Math.PI/2,-Math.PI/2+tr,91,COLORS.transmitted,'i₂');}
+  node('circle',{cx:P(0,0)[0],cy:P(0,0)[1],r:3.7,fill:COLORS.ink},groups['labels-layer']);textAt(groups['labels-layer'],P(-17,-20),'I',COLORS.ink,16,'end',{'class':'label'});
+  if(state.mode!=='rays'&&state.wavelengths)drawWavelengths(si,ci,st,ct);
+ }
+ drawLaser(si,ci);drawFronts();updateReadout();
+ $('scene-desc').textContent=state.laser?`Incidence ${fmt(state.i)} degrés. ${model.tir?'Réflexion totale.':`Réfraction ${fmt(model.i2)} degrés.`} Indices ${fmt(state.n1,2)} et ${fmt(state.n2,2)}.`:'Laser éteint.';
+}
+function drawLaser(si,ci){const g=groups['laser-layer'],x=-si*247,y=ci*247,k=[si,-ci],perp=[ci,si];const point=(u,v)=>P(x+u*k[0]+v*perp[0],y+u*k[1]+v*perp[1]);const handle=node('g',{'data-laser':'true',role:'slider',tabindex:'0','aria-label':'Orientation du laser','aria-valuemin':'-85','aria-valuemax':'85','aria-valuenow':state.i,'aria-valuetext':fmt(state.i)+' degrés',style:'cursor:'+(state.view==='2d'?'grab':'default')},g);
+ const center=P(x,y);node('circle',{cx:center[0],cy:center[1],r:33,fill:'transparent',stroke:COLORS.accent,'stroke-opacity':'.2','stroke-dasharray':'3 5'},handle);
+ poly(handle,[point(-26,-12),point(20,-12),point(25,-8),point(25,8),point(20,12),point(-26,12)],COLORS.surface,{stroke:COLORS.line,'stroke-width':1.1});
+ poly(handle,[point(12,-11),point(21,-11),point(21,11),point(12,11)],state.laser?COLORS.incident:COLORS.structure);worldLine(handle,[x-10*k[0],y-10*k[1],0],[x+5*k[0],y+5*k[1],0],COLORS.structure,4);
+
+}
+function clipFront(a,b,upper){const inside=p=>upper?p[1]>=0:p[1]<=0;if(!inside(a)&&!inside(b))return null;if(inside(a)&&inside(b))return [a,b];const t=-a[1]/(b[1]-a[1]),p=[a[0]+(b[0]-a[0])*t,0,0];return inside(a)?[a,p]:[p,b];}
+function drawFronts(){const g=groups['fronts-layer'];g.replaceChildren();if(state.mode==='rays'||!state.laser)return;const i=state.i*rad,t=(model.i2||0)*rad;const branches=[{k:[Math.sin(i),-Math.cos(i)],n:state.n1,color:COLORS.incident,upper:true,incident:true,max:220}];
+ if(!model.matched)branches.push({k:[Math.sin(i),Math.cos(i)],n:state.n1,color:COLORS.reflected,upper:true,max:330});
+ if(!model.tir&&!model.limiting)branches.push({k:[Math.sin(t),-Math.cos(t)],n:state.n2,color:COLORS.transmitted,upper:false,max:330});
+ for(const b of branches){const lambda=62/b.n;for(let j=-14;j<=14;j++){const s=(j+phase%1)*lambda;if(b.incident?(s>0||s< -b.max):(s<0||s>b.max))continue;const center=[s*b.k[0],s*b.k[1]],perp=[-b.k[1],b.k[0]],halfwidth=65;let a=[center[0]-perp[0]*halfwidth,center[1]-perp[1]*halfwidth,0],c=[center[0]+perp[0]*halfwidth,center[1]+perp[1]*halfwidth,0];const clipped=clipFront(a,c,b.upper);if(clipped)worldLine(g,clipped[0],clipped[1],b.color,1.5,{opacity:state.mode==='both'?.47:.8});}}
+}
+function drawWavelengths(si,ci,st,ct){const g=groups['lambda-layer'];const mark=(x,y,k,n,color,label)=>{const L=62/n,perp=[-k[1],k[0]],a=[x,y,0],b=[x+k[0]*L,y+k[1]*L,0];worldLine(g,a,b,color,1.1);for(const p of [a,b])worldLine(g,[p[0]-perp[0]*6,p[1]-perp[1]*6,0],[p[0]+perp[0]*6,p[1]+perp[1]*6,0],color,1.1);const p=P(x+k[0]*L/2+perp[0]*16,y+k[1]*L/2+perp[1]*16);textAt(g,p,label,color,20,'middle',{'class':'label'});};
+ // Repères fixes : leur longueur est l'écart entre deux fronts successifs.
+ mark(-si*156-ci*100,ci*156-si*100,[si,-ci],state.n1,COLORS.incident,'λ₁ = '+fmt(model.lambda1,0)+' nm');
+ if(!model.tir&&!model.limiting)mark(st*150+ct*100,-ct*150+st*100,[st,-ct],state.n2,COLORS.transmitted,'λ₂ = '+fmt(model.lambda2,0)+' nm');
+}
+function updateReadout(){
+ $('value-i1').textContent=signed(state.i);$('value-r').textContent=model.matched?'—':signed(model.r);$('value-i2').textContent=model.tir?'—':signed(model.i2);
+ $('critical').disabled=model.critical===null||model.critical>85;
+ $('critical-note').textContent=model.critical===null?'Pas de réflexion totale pour n₁ ≤ n₂.':'Angle limite |i₁,lim| = '+fmt(model.critical,2)+'°';
+ const left=state.n1*Math.sin(state.i*rad);$('snell-check').textContent=model.tir?'|n₁ sin i₁ / n₂| = '+fmt(Math.abs(model.q),3)+' > 1':fmt(left,3)+' = '+fmt(state.n2*Math.sin(model.i2*rad),3);
+ let title,detail;
+ if(!state.laser){title='Laser éteint';detail='Allumer le laser pour observer les rayons et les fronts d’onde.';}
+ else if(model.matched){title='Même indice : propagation sans déviation';detail='i₂ = i₁. Aucun rayon réfléchi à cette interface idéale.';}
+ else if(model.tir){title='Réflexion totale';detail='|i₁| > '+fmt(model.critical,2)+'° : aucun rayon réfracté propagatif.';}
+ else if(model.limiting){title='Réfraction rasante — cas limite';detail='|i₁| = '+fmt(model.critical,2)+'° et |i₂| = 90°. Le rayon réfracté rase le dioptre.';}
+ else if(Math.abs(state.i)<1e-9){title='Incidence normale';detail='Le rayon transmis poursuit sa direction. Le rayon réfléchi revient vers la source.';}
+ else if(state.n2>state.n1){title='Le rayon réfracté se rapproche de la normale';detail='n₂ > n₁ : le milieu transmis est plus réfringent, donc |i₂| < |i₁|.';}
+ else{title='Le rayon réfracté s’écarte de la normale';detail='n₂ < n₁ : le milieu transmis est moins réfringent, donc |i₂| > |i₁|.';}
+ if(title!==lastAnnouncement){$('regime-title').textContent=title;lastAnnouncement=title;}$('regime-detail').textContent=detail;
+}
+function sync(){
+ for(const n of [1,2]){const v=state['n'+n];$('n'+n).value=v;$('n'+n+'-range').value=v;const s=$('material'+n);s.value=[1,1.33,1.5,2.42].includes(v)?String(v):'custom';}
+ $('angle').value=state.i;$('angle-number').value=Number(state.i.toFixed(2));
+ for(const k of ['normal','angles','protractor','plane','wavelengths'])$(k).checked=state[k];
+ $('representation').value=state.mode;$('wavelengths').disabled=state.mode==='rays';$('plane').disabled=state.view==='2d';
+ $('view2d').setAttribute('aria-pressed',state.view==='2d');$('view3d').setAttribute('aria-pressed',state.view==='3d');
+ $('view-caption').hidden=state.view==='3d';
+ $('laser-toggle').textContent=state.laser?'Laser allumé':'Laser éteint';$('laser-toggle').setAttribute('aria-pressed',state.laser);
+ $('interaction-hint').textContent=state.view==='2d'?'Déplacer le laser pour modifier l’incidence · Espace : pause':'Glisser sur la scène pour tourner le point de vue · Espace : pause';
+ updatePlay();drawStatic();
+}
+function updatePlay(){$('play').textContent=playing?'❚❚':'▶';$('play').title=playing?'Mettre les fronts d’onde en pause':'Animer les fronts d’onde';$('play').setAttribute('aria-label',$('play').title);$('play').disabled=state.mode==='rays'&&!sweeping;$('sweep').setAttribute('aria-pressed',sweeping);}
+function stopSweep(){sweeping=false;updatePlay();}
+function setAngle(v,stop=true,writeInput=true){if(!Number.isFinite(v))return;if(stop)stopSweep();state.i=Math.max(-85,Math.min(85,v));$('angle').value=state.i;if(writeInput)$('angle-number').value=Number(state.i.toFixed(2));drawStatic();}
+function toast(message){$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3500);}
+function reset(){state={...defaults};yaw=-.48;pitch=.38;zoom=1;phase=0;stopSweep();playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;sync();}
+for(const n of [1,2]){
+ $('n'+n+'-range').addEventListener('input',e=>{stopSweep();state['n'+n]=e.target.valueAsNumber;sync();});
+ $('n'+n).addEventListener('input',e=>{const v=e.target.valueAsNumber;if(!Number.isFinite(v)||v<1||v>2.5)return;stopSweep();state['n'+n]=v;$('n'+n+'-range').value=v;$('material'+n).value=[1,1.33,1.5,2.42].includes(v)?String(v):'custom';drawStatic();});
+ $('material'+n).addEventListener('change',e=>{if(e.target.value==='custom'){$('n'+n).focus();return;}stopSweep();state['n'+n]=Number(e.target.value);sync();});
+ $('n'+n).addEventListener('change',e=>{const v=e.target.valueAsNumber;if(!Number.isFinite(v)){sync();return;}state['n'+n]=Math.max(1,Math.min(2.5,v));stopSweep();sync();});
+}
+$('swap').addEventListener('click',()=>{[state.n1,state.n2]=[state.n2,state.n1];stopSweep();sync();});
+$('angle').addEventListener('input',e=>setAngle(e.target.valueAsNumber));$('angle-number').addEventListener('input',e=>{const v=e.target.valueAsNumber;if(Number.isFinite(v)&&Math.abs(v)<=85)setAngle(v,true,false);});$('angle-number').addEventListener('change',e=>{setAngle(e.target.valueAsNumber);sync();});
+for(const k of ['normal','angles','protractor','plane','wavelengths'])$(k).addEventListener('change',e=>{state[k]=e.target.checked;drawStatic();});
+$('representation').addEventListener('change',e=>{state.mode=e.target.value;sync();});
+for(const view of ['2d','3d'])$('view'+view).addEventListener('click',()=>{state.view=view;sync();});
+$('recenter').addEventListener('click',()=>{yaw=-.48;pitch=.38;zoom=1;drawStatic();});
+function changeZoom(f){zoom=Math.max(.65,Math.min(1.8,zoom*f));drawStatic();}
+$('zoom-in').addEventListener('click',()=>changeZoom(1.15));$('zoom-out').addEventListener('click',()=>changeZoom(1/1.15));
+function setTheme(value){dark=value;document.documentElement.dataset.theme=dark?'dark':'light';$('theme').setAttribute('aria-pressed',dark);$('theme-label').textContent=dark?'Clair':'Sombre';$('theme').title=dark?'Passer au mode clair':'Passer au mode sombre';applyPalette();drawStatic();try{localStorage.setItem('op1-snell-theme',dark?'dark':'light');}catch{}}
+$('theme').addEventListener('click',()=>setTheme(!dark));
+
+$('critical').addEventListener('click',()=>{if(model.critical!==null)setAngle((state.i<0?-1:1)*model.critical);});
+$('sweep').addEventListener('click',()=>{sweeping=!sweeping;if(sweeping){playing=true;sweepDirection=state.i>0?1:-1;if(state.i===0)sweepDirection=1;}updatePlay();});
+$('laser-toggle').addEventListener('click',()=>{state.laser=!state.laser;sync();});
+$('play').addEventListener('click',()=>{playing=!playing;updatePlay();});
+$('reset').addEventListener('click',reset);
+document.querySelectorAll('[data-preset]').forEach(el=>el.addEventListener('click',()=>{stopSweep();state.laser=true;state.i=40;switch(el.dataset.preset){case'air-glass':state.n1=1;state.n2=1.5;break;case'glass-air':state.n1=1.5;state.n2=1;state.i=35;break;case'tir':state.n1=1.5;state.n2=1;state.i=55;break;case'equal':state.n1=1.5;state.n2=1.5;break;}sync();}));
+$('help').addEventListener('click',()=>$('about').showModal());$('close-about').addEventListener('click',()=>$('about').close());
+$('projection').addEventListener('click',()=>{const on=document.body.classList.toggle('projection');$('projection').setAttribute('aria-pressed',on);$('projection').title=on?'Afficher les réglages':'Agrandir la scène et masquer les réglages';$('projection').querySelector('.button-text').textContent=on?'Réglages':'Projection';requestAnimationFrame(drawStatic);});
+async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else toast('Utiliser le mode plein écran du navigateur.');}catch{toast('Utiliser le mode plein écran du navigateur.');}}
+$('fullscreen').addEventListener('click',fullscreen);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea,button,[role=slider]')||$('about').open)return;if(e.code==='Space'){e.preventDefault();if(state.mode!=='rays'||sweeping){playing=!playing;updatePlay();}}else if(e.key.toLowerCase()==='f')fullscreen();else if(e.key.toLowerCase()==='r')reset();});
+const scene=$('scene');
+scene.addEventListener('pointerdown',e=>{if(e.button!==0)return;const laser=e.target.closest('[data-laser]');if(state.view==='3d'){drag={type:'camera',x:e.clientX,y:e.clientY,yaw,pitch};}else if(laser){stopSweep();drag={type:'laser'};}else return;scene.setPointerCapture(e.pointerId);e.preventDefault();});
+scene.addEventListener('pointermove',e=>{if(!drag)return;if(drag.type==='camera'){yaw=Math.max(-1.05,Math.min(1.05,drag.yaw+(e.clientX-drag.x)*.005));pitch=Math.max(.15,Math.min(.65,drag.pitch+(e.clientY-drag.y)*.004));drawStatic();}else{const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(scene.getScreenCTM().inverse()),x=(p.x-sceneW/2)/cameraScale+cameraCenter[0],y=Math.max(.1,-((p.y-sceneH/2)/cameraScale+cameraCenter[1]));setAngle(Math.atan2(-x,y)/rad);}});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])scene.addEventListener(event,()=>{drag=null;});
+scene.addEventListener('keydown',e=>{if(!e.target.closest('[data-laser]'))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();const next=state.i+(e.key==='ArrowLeft'?1:-1)*(e.shiftKey?5:1);setAngle(next);groups['laser-layer'].querySelector('[data-laser]').focus();}else if(e.key==='Home'){e.preventDefault();setAngle(0);groups['laser-layer'].querySelector('[data-laser]').focus();}});
+$('export').addEventListener('click',()=>{
+ const copy=scene.cloneNode(true);copy.setAttribute('width',Math.round(sceneW*1.5));copy.setAttribute('height',Math.round((sceneH+90)*1.5));copy.setAttribute('viewBox',`0 -45 ${sceneW} ${sceneH+90}`);copy.querySelectorAll('[tabindex]').forEach(el=>{el.removeAttribute('tabindex');el.removeAttribute('role');});
+ const bg=node('rect',{x:0,y:-45,width:sceneW,height:sceneH+90,fill:COLORS.surface});copy.insertBefore(bg,copy.firstChild);
+ const style=node('style',{},copy);style.textContent=`text{font-family:Arial,Helvetica,sans-serif}.label{paint-order:stroke;stroke:${COLORS.surface};stroke-width:5px;stroke-linejoin:round}`;
+ textAt(copy,[20,-17],'OP1 · Snell-Descartes · E. Guillaume',COLORS.accent,19);
+ textAt(copy,[20,sceneH+31],'i₁ = '+signed(model.i1)+' ; r = '+(model.matched?'—':signed(model.r))+' ; i₂ = '+(model.tir?'absent':signed(model.i2))+' | n₁ = '+fmt(state.n1,2)+' ; n₂ = '+fmt(state.n2,2),COLORS.secondary,19);
+ const blob=new Blob([new XMLSerializer().serializeToString(copy)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='OP1_Snell_Descartes.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Schéma enregistré au format SVG.');
+});
+function animate(now){const dt=lastTime?Math.min((now-lastTime)/1000,.06):0;lastTime=now;if(playing&&!document.hidden){phase+=dt*.6;if(sweeping){let next=state.i+sweepDirection*dt*10;if(next>80){next=80;sweepDirection=-1;}else if(next< -80){next=-80;sweepDirection=1;}setAngle(next,false);}else if(state.mode!=='rays')drawFronts();}requestAnimationFrame(animate);}
+try{dark=localStorage.getItem('op1-snell-theme')==='dark';}catch{}
+setTheme(dark);sync();let resizeQueued=false;new ResizeObserver(()=>{if(resizeQueued)return;resizeQueued=true;requestAnimationFrame(()=>{resizeQueued=false;drawStatic();});}).observe(scene);requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>
