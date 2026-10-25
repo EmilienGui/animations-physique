@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Coordonnées, bases locales, déplacements, surfaces et volumes élémentaires. Animation autonome du chapitre MC1 de MPSI.">
+<title>Coordonnées et éléments géométriques · MC1 · MPSI</title>
+<style>
+:root{color-scheme:light;--paper:#f5f2ef;--surface:#fffdfa;--ink:#202326;--muted:#646365;--line:#ded8d3;--accent:#8b2432;--soft:#f4e6e7;--c0:#a62d3b;--c1:#1769a0;--c2:#357943;--ghost:#777279;--shadow:0 5px 24px #49232b08}
+:root[data-theme=dark]{color-scheme:dark;--paper:#17191d;--surface:#202329;--ink:#f4f0eb;--muted:#c2bbc0;--line:#454047;--accent:#f19ba7;--soft:#3c2932;--c0:#ff9a9f;--c1:#85c7ff;--c2:#9bd8a3;--ghost:#b8b2bd;--shadow:none}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.4 Arial,Helvetica,sans-serif;border-top:5px solid var(--accent)}button,input,select{font:inherit}button,select{cursor:pointer}button{border:1px solid var(--line);color:var(--ink);background:var(--surface);padding:8px 12px;border-radius:6px;min-height:40px}button:hover{border-color:var(--accent);background:var(--soft)}button[aria-pressed=true],button.active{background:var(--accent);border-color:var(--accent);color:var(--surface)}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] button.active{color:#21151b}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input,select{color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px}select{max-width:100%;width:100%;padding:8px}input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 10px;cursor:pointer}input[type=number]{width:88px;padding:6px;text-align:right;font-variant-numeric:tabular-nums}input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}[hidden]{display:none!important}
+.shell{height:calc(100dvh - 5px);max-width:2000px;margin:auto;padding:14px 20px 10px;display:flex;flex-direction:column;gap:10px}.mast{display:flex;justify-content:space-between;gap:16px;align-items:center;flex:none}.eyebrow{font-size:12px;letter-spacing:.13em;color:var(--accent);font-weight:bold;text-transform:uppercase;margin-bottom:3px}h1{margin:0;font-size:29px;line-height:1.2;font-weight:500;letter-spacing:-.025em}.actions{display:flex;gap:6px}.actions button{font-size:15px}.navigation{display:flex;gap:16px;justify-content:space-between;align-items:center;flex:none}.tabs{display:flex;gap:5px;flex-wrap:wrap}.tabs button{font-size:17px;padding:8px 17px}.chapter-tag{font-size:13px;letter-spacing:.1em;color:var(--muted);white-space:nowrap}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;flex:1;min-height:0}.main-scene{display:flex;flex-direction:column;gap:9px;min-height:0;min-width:0}.stages{display:flex;gap:5px;flex-wrap:wrap}.stages button{font-size:15px;padding:6px 12px;min-height:36px}.scene-card{border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);display:flex;flex-direction:column;flex:1;min-height:250px;overflow:hidden}.toolbar{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;gap:8px;flex:none;border-bottom:1px solid var(--line)}.toolbar>div{display:flex;gap:4px}.toolbar button{font-size:14px;min-height:34px;padding:5px 9px}.toolbar .zoom{font-size:22px;width:34px;padding:0}.drawing{position:relative;flex:1;min-height:170px}.drawing svg{display:block;width:100%;height:100%;position:absolute;inset:0;touch-action:none;user-select:none}.drawing text{font-family:Arial,Helvetica,sans-serif;paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round;pointer-events:none}.scene-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding:7px 12px;font-size:14px;color:var(--muted);min-height:38px}.legend{display:flex;gap:14px;flex-wrap:wrap}.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{height:3px;width:17px;background:var(--col)}.formula-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:10px 15px;flex:none;min-height:99px}.formula-title{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:3px}.formula{font:26px/1.6 Georgia,'Times New Roman',serif;overflow-wrap:anywhere}.formula .c0{color:var(--c0)}.formula .c1{color:var(--c1)}.formula .c2{color:var(--c2)}.vec{display:inline-block;position:relative;padding-top:.15em;line-height:1.15}.vec:before{content:'→';position:absolute;font-size:.82em;left:0;right:0;top:-.38em;text-align:center}.formula-note{font-size:15px;color:var(--muted);margin-top:3px}.status{font-size:15px;color:var(--muted);min-height:22px;padding:0 2px}.controls{border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.section{padding:16px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h2{font-size:12px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 13px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:7px;margin:6px 0}.field-head label{font-size:17px}.field-head small{color:var(--muted);font-size:14px}.convention{font-size:14px;color:var(--muted);margin:9px 0 0;line-height:1.5}.checks{display:grid;gap:8px}.checks label{display:flex;align-items:center;gap:8px}.inline-buttons{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}.inline-buttons button{font-size:14px;min-height:34px;padding:5px 8px}.wide{width:100%;margin-top:8px}.measure{font-variant-numeric:tabular-nums;font-size:22px;color:var(--ink);margin:9px 0 0}.measure small{font-size:14px;color:var(--muted)}.subtle{font-size:13px;color:var(--muted);margin:7px 0}.face-options{display:grid;gap:6px;margin-top:9px}.face-options button{text-align:left;font-size:15px}.presets{display:flex;gap:5px;flex-wrap:wrap;flex:none}.presets button{font-size:13px;min-height:30px;padding:4px 8px;background:transparent}.footer{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex:none}.transport{display:flex;gap:6px}.transport button{min-width:75px}.progress{display:flex;gap:6px;align-items:center}.progress input{margin:0}.projection .controls,.projection .footer,.projection .eyebrow,.projection .chapter-tag,.projection .presets{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 14px}.projection h1{font-size:26px}.projection .formula{font-size:31px}.projection .formula-note,.projection .status{font-size:19px}.projection .formula-title{font-size:14px}.projection .scene-caption{font-size:18px}.projection .toolbar button,.projection .stages button{font-size:18px}.projection .tabs button{font-size:20px}.projection .formula-card{min-height:105px}
+dialog{width:min(800px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:26px}dialog::backdrop{background:#111a}dialog h2{font-size:27px;font-weight:500;margin-top:0}dialog p,dialog li{line-height:1.6;color:var(--muted)}dialog a{color:var(--accent)}.dialog-end{text-align:right}.toast{position:fixed;z-index:4;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--surface);padding:12px 20px;border-radius:6px;max-width:90vw}.toast:empty{display:none}
+@media(min-width:1600px){.shell{padding:18px 28px 12px;gap:14px}.workspace{grid-template-columns:minmax(0,1fr) 350px;gap:18px}h1{font-size:34px}.formula{font-size:30px}.formula-card{padding:14px 18px}.section{padding:20px}.formula-note,.status{font-size:17px}.toolbar button{font-size:16px}.scene-caption{font-size:16px}}
+@media(max-width:1100px){.shell{padding:10px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 280px;gap:10px}.actions .word{display:none}h1{font-size:25px}.tabs button{padding:7px 12px}.chapter-tag{display:none}.toolbar{flex-wrap:wrap}.toolbar>div:last-child{margin-left:auto}.formula{font-size:24px}.scene-caption{font-size:13px}}
+@media(max-width:760px){.shell{height:auto;min-height:100dvh}.mast{flex-wrap:wrap;gap:10px}.actions{margin-left:auto}.workspace{grid-template-columns:1fr}.main-scene{min-height:660px}.scene-card{height:450px;flex:none}.controls{overflow:visible;display:grid;grid-template-columns:1fr 1fr}.section{border-right:1px solid var(--line)}.tabs button{font-size:16px;padding:7px 10px}.navigation{display:block}.footer{display:none}.formula{font-size:24px}.projection .shell{height:100dvh;min-height:720px}.projection .main-scene{min-height:0}.projection .scene-card{height:auto;flex:1}.projection .formula{font-size:25px}.projection .tabs button{font-size:16px}.projection .formula-note,.projection .status{font-size:16px}.projection .toolbar button,.projection .stages button{font-size:15px}.projection .scene-caption{font-size:14px}}
+@media(max-width:480px){h1{font-size:23px}.controls{grid-template-columns:1fr}.scene-card{height:430px}.toolbar>div{flex-wrap:wrap}.toolbar button{font-size:13px}.stages button{font-size:13px;padding:6px 9px}.legend{gap:9px}.scene-caption{align-items:flex-start;flex-direction:column;gap:4px}.formula{font-size:22px}.formula-note{font-size:14px}.projection .formula{font-size:22px}.projection .tabs{gap:3px}.projection .tabs button{font-size:14px}}
+@media print{.controls,.actions,.presets,.footer,.toolbar,.stages{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:600px}}
+</style>
+</head>
+<body>
+<main class="shell">
+ <header class="mast"><div><div class="eyebrow">MPSI · MC1 · Cinématique du point matériel</div><h1>Coordonnées & éléments géométriques</h1></div><div class="actions"><button id="theme" aria-pressed="false">Sombre</button><button id="help" aria-label="Aide et conventions">?</button><button id="export">↓ <span class="word">Image</span></button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran">⛶</button></div></header>
+ <nav class="navigation" aria-label="Système de coordonnées"><div class="tabs" id="systems"><button data-system="cart" aria-pressed="true">Cartésien</button><button data-system="cyl" aria-pressed="false">Cylindrique</button><button data-system="polar" aria-pressed="false">Polaire</button><button data-system="sph" aria-pressed="false">Sphérique</button><button data-system="frenet" aria-pressed="false">Frenet</button></div><span class="chapter-tag">REPÉRER → CONSTRUIRE → COMPRENDRE</span></nav>
+ <div class="workspace">
+  <section class="main-scene" aria-label="Exploration géométrique">
+   <div class="stages" id="stages"><button data-stage="point" aria-pressed="true">1 · Repérer M</button><button data-stage="move" aria-pressed="false">2 · Déplacement</button><button data-stage="cell" aria-pressed="false">3 · Surfaces & volume</button></div>
+   <div class="scene-card"><div class="toolbar"><div id="views"><button data-view="3d" aria-pressed="true">3D</button><button data-view="top" aria-pressed="false">Dessus · xy</button><button data-view="meridian" aria-pressed="false">Méridien</button></div><div><button id="local" aria-pressed="false">Vue locale</button><button id="zoom-out" class="zoom" aria-label="Réduire">−</button><button id="fit">Cadrer</button><button id="zoom-in" class="zoom" aria-label="Agrandir">+</button></div></div>
+    <div class="drawing"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Schéma interactif du système de coordonnées"><title id="scene-title">Point et base locale</title><desc id="scene-desc">Déplacer M à la souris ; tourner la vue 3D en glissant sur le fond.</desc><g id="geometry"></g><g id="labels"></g></svg></div>
+    <div class="scene-caption"><div class="legend" id="legend"></div><span id="gesture">Glisser M · Glisser le fond pour tourner</span><div class="transport" id="scene-transport" hidden><button id="scene-play">Animer</button><button id="scene-restart">Début</button></div></div>
+   </div>
+   <div class="formula-card"><div class="formula-title" id="formula-title">Vecteur position</div><div class="formula" id="formula"></div><div class="formula-note" id="formula-note"></div></div>
+   <div class="status" id="status" role="status" aria-live="polite"></div>
+   <div class="presets" id="presets"></div>
+  </section>
+  <aside class="controls" aria-label="Réglages">
+   <section class="section" id="position-section"><h2>01 / Position de M</h2><div id="coordinate-fields"></div><p class="convention" id="convention"></p></section>
+   <section class="section" id="increment-section" hidden><h2>02 / Petits accroissements</h2><div id="increment-fields"></div><div class="field-head"><label for="epsilon">Taille commune</label><output id="epsilon-value"></output></div><input id="epsilon" type="range" min="0.02" max="1" step="0.01" value="1" aria-label="Réduire les accroissements"><p class="subtle">À gauche : approche de la limite différentielle.</p><div id="move-controls"><label for="component">Faire varier</label><select id="component"><option value="all">Toutes les coordonnées</option></select><div class="transport inline-buttons"><button id="play">Animer</button><button id="restart">Recommencer</button></div><div class="progress"><label for="progress">λ</label><input id="progress" aria-label="Progression du déplacement" type="range" min="0" max="1" step="0.01" value="1"></div></div></section>
+   <section class="section" id="face-section" hidden><h2>03 / Construire une face</h2><div class="face-options" id="faces"></div><div class="checks" style="margin-top:12px"><label><input id="normal" type="checkbox">Normale orientée +</label></div><div class="measure" id="finite-value"></div><p class="subtle" id="finite-error"></p><p class="convention">Cliquer aussi sur une face colorée du schéma. La normale choisie suit la coordonnée croissante.</p></section>
+   <section class="section" id="frenet-section" hidden><h2>01 / Une trajectoire plane</h2><label for="curve">Trajectoire</label><select id="curve"><option value="circle">Cercle</option><option value="ellipse">Ellipse</option><option value="parabola">Parabole</option><option value="line">Droite · limite rectiligne</option></select><div class="field-head"><label for="u">Position sur la courbe</label></div><input id="u" type="range" min="0" max="1" step="0.001" value="0.12"><label for="speed-mode">Loi de vitesse</label><select id="speed-mode"><option value="uniform">Vitesse constante</option><option value="variable">Vitesse variable</option></select><div class="field-head"><label for="speed">Vitesse de référence</label><output id="speed-value">1,0 cm/s</output></div><input id="speed" type="range" min="0.2" max="2" step="0.1" value="1"><div class="field-head"><label for="slow">Temps de lecture</label></div><select id="slow"><option value="1">Temps réel</option><option value="0.35">Ralenti × 0,35</option></select><div class="transport inline-buttons"><button id="frenet-play">Animer</button><button id="frenet-reset">Début</button></div><div class="checks" style="margin-top:12px"><label><input id="osculating" type="checkbox" checked>Cercle osculateur</label><label><input id="kinematics" type="checkbox" checked>Vitesse et accélération</label><label><input id="compare" type="checkbox">Comparer à la base polaire</label></div><div class="measure" id="frenet-values"></div><p class="convention">s est orientée dans le sens du mouvement. Frenet décrit une courbe ; il ne définit pas ici de volume élémentaire.</p></section>
+   <section class="section"><h2 id="display-title">Affichage</h2><div class="checks"><label><input id="basis" type="checkbox" checked>Base locale</label><label><input id="position" type="checkbox" checked>Vecteur position</label><label id="guides-label"><input id="guides" type="checkbox" checked>Lignes de coordonnées</label></div><button id="reset" class="wide">Réinitialiser ce volet</button></section>
+  </aside>
+ </div>
+ <footer class="footer"><span>E. Guillaume · MPSI · MC1</span><span>Hors connexion · Longueurs en cm · Angles réglés en degrés, calculés en radians</span></footer>
+</main>
+<dialog id="help-dialog"><h2>Du repérage aux éléments géométriques</h2><p>Choisir un système, puis une étape. Déplacer M directement ou utiliser les champs et curseurs. En 3D, glisser sur le fond pour tourner ; glisser M le déplace horizontalement à altitude constante. La vue de dessus permet ce même déplacement sans perspective. En vue méridienne, M se déplace dans le plan vertical qui passe par M et Oz. La molette règle le zoom ; <b>Cadrer</b> rétablit la vue de référence.</p><p><b>Notations du cours MC1.</b> En cylindriques et polaires, r est la distance à l’axe et θ l’azimut. En sphériques, r = OM, θ est la colatitude depuis +Oz et φ l’azimut. Le passage aux polaires projette M sur z = 0 ; les autres changements de coordonnées conservent M.</p><p><b>Petits éléments.</b> Les Δ indiquent des accroissements finis, les d des expressions différentielles. Les arêtes courbes sont réellement courbes. Le parallélépipède tangent est une approximation locale, tracée en pointillés. Les formules différentielles utilisent les facteurs géométriques au point M. La taille commune réduit les accroissements ; elle ne grossit pas artificiellement l’élément.</p><p>Dans « Déplacement », λ règle la fraction des accroissements ; la somme tangentielle est comparée au déplacement fini exact. Les incréments peuvent être signés. Dans « Surfaces & volume », ils sont positifs ; Δθ est limité pour rester entre les pôles. Un secteur qui franchit l’origine est également limité au domaine admissible. Les aires affichées sont positives. La normale optionnelle est celle de la coordonnée croissante, sans prétendre être la normale sortante des deux faces opposées d’un volume.</p><p><b>Singularités.</b> Sur l’axe cylindrique, l’azimut et les vecteurs radiaux ne sont pas uniques ; à l’origine sphérique, la base entière ne l’est pas. Aux pôles, le méridien de référence fixe une base conventionnelle. Ces choix sont signalés dans le schéma. Les éléments dégénérés ne définissent pas une base géométrique unique.</p><p><b>Frenet.</b> Trajectoires planes régulières, mouvement dans un seul sens, vitesse strictement positive. eₜ est tangent dans le sens du mouvement, eₙ pointe vers le centre de courbure. La loi variable est v(s) = v₀[1 + 0,3 sin(2πs/L)] et aₜ = v dv/ds ; L est la longueur de la trajectoire affichée. Les vecteurs vitesse et accélération ont des échelles distinctes, indiquées. Pour la droite, la normale de Frenet n’est pas définie et aₙ = 0. Un cercle osculateur trop grand est tronqué par le cadre, sans modifier son rayon.</p><p><b>Affichage.</b> La projection 3D est orthographique et conserve la lecture d’une base directe : e_x × e_y = e_z. Dans la vue initiale, x se projette vers le bas à gauche, y vers le bas à droite et z vers le haut. Les couleurs identifient les directions locales ; les flèches de base ont la même longueur dans l’espace et non nécessairement à l’écran. La vue locale centre et agrandit l’élément. Les légendes gardent leur taille quand on zoome. Les symboles ⊙ et ⊗ signalent respectivement une direction vers l’observateur et vers l’arrière lorsque sa projection se réduit à un point. Les coordonnées du point et les calculs ne sont pas modifiés par la caméra.</p><p>Animation indépendante, inspirée par la manipulation des coordonnées de <a href="https://phyzik.store/animations/coordonnees.html" target="_blank" rel="noopener">PhyzikStore · T. Roy</a>. Aucun accès réseau n’est nécessaire. Référence scientifique : cours MC1 d’E. Guillaume.</p><div class="dialog-end"><button id="close-help">Fermer</button></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script id="model">
+/* Modèle autonome : coordonnées en cm et radians. Testable sans navigateur. */
+const MC1Model=(()=>{
+ const TAU=2*Math.PI,EPS=1e-9;
+ const add=(a,b)=>a.map((x,i)=>x+b[i]),sub=(a,b)=>a.map((x,i)=>x-b[i]),mul=(a,k)=>a.map(x=>x*k),dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0),norm=a=>Math.hypot(...a),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],unit=a=>mul(a,1/norm(a)),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ function from(s,q){let [a,b,c=0]=q;if(s==='cart')return [a,b,c];if(s==='sph')return [a*Math.sin(b)*Math.cos(c),a*Math.sin(b)*Math.sin(c),a*Math.cos(b)];return [a*Math.cos(b),a*Math.sin(b),s==='polar'?0:c];}
+ function to(s,p,az=0){const [x,y,z]=p,rho=Math.hypot(x,y),r=norm(p),a=rho>EPS?(Math.atan2(y,x)+TAU)%TAU:az;if(s==='cart')return [...p];if(s==='sph')return [r,r>EPS?Math.acos(clamp(z/r,-1,1)):Math.PI/3,a];return [rho,a,...(s==='polar'?[]:[z])];}
+ function basis(s,q){if(s==='cart')return [[1,0,0],[0,1,0],[0,0,1]];if(s==='sph'){let [,t,p]=q;return [[Math.sin(t)*Math.cos(p),Math.sin(t)*Math.sin(p),Math.cos(t)],[Math.cos(t)*Math.cos(p),Math.cos(t)*Math.sin(p),-Math.sin(t)],[-Math.sin(p),Math.cos(p),0]];}const a=q[1];return [[Math.cos(a),Math.sin(a),0],[-Math.sin(a),Math.cos(a),0],...(s==='polar'?[]:[[0,0,1]])];}
+ function factors(s,q){if(s==='cart')return [1,1,1];if(s==='sph')return [1,q[0],q[0]*Math.sin(q[1])];return s==='polar'?[1,q[0]]:[1,q[0],1];}
+ function differential(s,q,d){return basis(s,q).reduce((v,e,i)=>add(v,mul(e,factors(s,q)[i]*d[i])),[0,0,0]);}
+ function measure(s,q,d,face=-1){const h=factors(s,q),ls=d.map((v,i)=>v*h[i]);if(s==='polar')return ls[0]*ls[1];return ls.reduce((v,x,i)=>i===face?v:v*x,1);}
+ function finite(s,q,d,face=-1){const [r,t,p=0]=q,[dr,dt,dp=0]=d;if(s==='cart')return measure(s,q,d,face);if(s==='polar')return (r*dr+dr*dr/2)*dt;if(s==='cyl'){if(face===0)return r*dt*dp;if(face===1)return dr*dp;if(face===2)return (r*dr+dr*dr/2)*dt;return (r*dr+dr*dr/2)*dt*dp;}if(face===0)return r*r*(Math.cos(t)-Math.cos(t+dt))*dp;if(face===1)return (r*dr+dr*dr/2)*Math.sin(t)*dp;if(face===2)return (r*dr+dr*dr/2)*dt;return ((r+dr)**3-r**3)/3*(Math.cos(t)-Math.cos(t+dt))*dp;}
+ function curve(type,u){const t=TAU*u;if(type==='circle')return {p:[2.2*Math.cos(t),2.2*Math.sin(t),0],d:[-2.2*TAU*Math.sin(t),2.2*TAU*Math.cos(t),0],dd:[-2.2*TAU*TAU*Math.cos(t),-2.2*TAU*TAU*Math.sin(t),0]};if(type==='ellipse')return {p:[3*Math.cos(t),1.6*Math.sin(t),0],d:[-3*TAU*Math.sin(t),1.6*TAU*Math.cos(t),0],dd:[-3*TAU*TAU*Math.cos(t),-1.6*TAU*TAU*Math.sin(t),0]};if(type==='parabola'){const x=6*u-3;return {p:[x,.32*x*x-1.4,0],d:[6,3.84*x,0],dd:[0,23.04,0]};}return {p:[6*u-3,0,0],d:[6,0,0],dd:[0,0,0]};}
+ function frenet(type,u){const c=curve(type,u),g=norm(c.d),t=mul(c.d,1/g),nd=sub(c.dd,mul(t,dot(c.dd,t))),k=norm(cross(c.d,c.dd))/g**3,n=norm(nd)>EPS?unit(nd):null,rho=k>EPS?1/k:Infinity;return {...c,g,t,n,k,rho,center:n?add(c.p,mul(n,rho)):null};}
+ function arcTable(type,N=1200){const values=[0];let prev=curve(type,0).p;for(let i=1;i<=N;i++){const p=curve(type,i/N).p;values.push(values[i-1]+norm(sub(p,prev)));prev=p;}return {values,N,L:values[N]};}
+ function arcAt(table,u){let x=clamp(u,0,1)*table.N,i=Math.min(table.N-1,Math.floor(x));return table.values[i]+(table.values[i+1]-table.values[i])*(x-i);}
+ function uAt(table,s){s=clamp(s,0,table.L);let lo=0,hi=table.N;while(hi-lo>1){const m=(lo+hi)>>1;if(table.values[m]<s)lo=m;else hi=m;}return (lo+(s-table.values[lo])/(table.values[hi]-table.values[lo]))/table.N;}
+ function speed(table,u,v0,variable){const s=arcAt(table,u),a=TAU*s/table.L,v=v0*(variable?1+.3*Math.sin(a):1),dvds=variable?v0*.3*TAU/table.L*Math.cos(a):0;return {s,v,at:v*dvds};}
+ /* Écran : horizontal vers la droite, vertical vers le bas, profondeur vers l'observateur.
+    Les vecteurs droite × haut donnent toujours la direction vers l'observateur. */
+ function project(p,view='3d',yaw=-.65,pitch=.55,meridian=0){if(view==='top')return [p[0],-p[1],p[2]];const a=view==='meridian'?meridian:yaw,X=Math.cos(a)*p[0]+Math.sin(a)*p[1],Y=-Math.sin(a)*p[0]+Math.cos(a)*p[1];if(view==='meridian')return [X,-p[2],-Y];return [-X,Math.sin(pitch)*Y-Math.cos(pitch)*p[2],Math.cos(pitch)*Y+Math.sin(pitch)*p[2]];}
+ return {TAU,EPS,add,sub,mul,dot,norm,cross,unit,clamp,from,to,basis,factors,differential,measure,finite,curve,frenet,arcTable,arcAt,uAt,speed,project};
+})();
+if(typeof window!=='undefined')window.MC1Model=MC1Model;
+</script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),M=MC1Model,NS='http://www.w3.org/2000/svg',rad=Math.PI/180;
+const specs={cart:{names:['x','y','z'],bases:['eₓ','eᵧ','e_z'],label:'Cartésien',note:'Base fixe · x, y, z sont des coordonnées algébriques.'},cyl:{names:['r','θ','z'],bases:['eᵣ','eθ','e_z'],label:'Cylindrique',note:'r : distance à Oz · θ : azimut autour de Oz · z : altitude algébrique.'},polar:{names:['r','θ'],bases:['eᵣ','eθ'],label:'Polaire',note:'Dans le plan z = 0 · r = OM · θ : azimut depuis +Ox.'},sph:{names:['r','θ','φ'],bases:['eᵣ','eθ','eφ'],label:'Sphérique',note:'r = OM · θ : colatitude depuis +Oz · φ : azimut depuis +Ox.'}};
+const state={system:'cart',stage:'point',p:[2.2,1.3,1.5],az:.53,view:'3d',local:false,face:-1,epsilon:1,deltas:[.8,.8,.8],component:'all',progress:1,basis:true,position:true,guides:true,normal:false,curve:'circle',u:.12,v0:1,variable:false,osculating:true,kinematics:true,compare:false,slow:1};
+let dark=false,yaw=-.65,pitch=.55,zoom=1,playing=false,phase=0,lastTime=0,drag=null,toastTimer,arcTable=M.arcTable('circle'),W=900,H=450,plotW=900,scale=70,center=[0,0],primitives=[],texts=[],fitPoints=[],palette={},q=[...state.p],effectiveD=[],actualD=[],geometryModel=null,lastStatus='';
+try{dark=localStorage.getItem('MC1-coordinates-theme')==='dark';}catch{}
+function fmt(v,n=2){return Number.isFinite(v)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:n,minimumFractionDigits:0}).format(Math.abs(v)<1e-10?0:v):'∞';}
+const vhtml=s=>'<span class="vec">'+s+'</span>',ehtml=s=>vhtml('e')+'<sub>'+s+'</sub>';
+const colors=()=>{let c=getComputedStyle(document.documentElement);for(let k of ['ink','muted','line','accent','surface','ghost','c0','c1','c2'])palette[k]=c.getPropertyValue('--'+k).trim();};
+function toast(s){$('toast').textContent=s;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',4300);}
+function angular(i){return state.system==='sph'?i>0:(state.system==='cyl'||state.system==='polar')&&i===1;}
+function getQ(){return M.to(state.system,state.p,state.az);}
+function limits(i){if(angular(i))return [0,state.system==='sph'&&i===1?180:360,.5];const signed=state.system==='cart'||i===2;return [signed?Math.min(-6,Math.floor(q[i])):0,Math.max(signed?6:8,Math.ceil(q[i])),.05];}
+function baseD(){return specs[state.system].names.map((_,i)=>state.deltas[i]*state.epsilon);}
+function constrainD(d){let a=[...d];if(state.system!=='cart'){a[0]=Math.max(-q[0],a[0]);if(state.system==='sph')a[1]=M.clamp(a[1],-q[1],Math.PI-q[1]);}return a;}
+function setQ(next){if(state.system!=='cart'){next[0]=Math.max(0,next[0]);if(state.system==='sph')next[1]=M.clamp(next[1],0,Math.PI);state.az=next[state.system==='sph'?2:1];}state.p=M.from(state.system,next);}
+function stop(){playing=false;$('play').textContent='Animer';$('frenet-play').textContent='Animer';$('scene-play').textContent='Animer';}
+function setSystem(s){stop();const previous=state.system;state.system=s;state.stage='point';state.face=-1;state.local=false;zoom=1;yaw=-.65;pitch=.55;if(s==='frenet'){state.view='top';}else{if(s==='polar'){if(Math.abs(state.p[2])>1e-8)toast('Mode polaire : M est projeté dans le plan z = 0.');state.p[2]=0;state.view='top';}else if(previous==='polar'||previous==='frenet')state.view='3d';q=getQ();state.deltas=specs[s].names.map((_,i)=>angular(i)?.4:.8);}buildControls();render();}
+function setStage(s){stop();state.stage=s;state.face=-1;state.progress=1;state.component='all';state.local=s!=='point';zoom=1;if(s==='cell')state.deltas=state.deltas.map(Math.abs);buildControls();render();}
+function buildControls(){
+ const f=state.system==='frenet';$('position-section').hidden=f;$('increment-section').hidden=f||state.stage==='point';$('face-section').hidden=f||state.stage!=='cell';$('frenet-section').hidden=!f;$('stages').hidden=f;$('position').parentElement.hidden=f;$('guides-label').hidden=f;$('local').hidden=!f&&state.stage==='point';
+ document.querySelectorAll('[data-system]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.system===state.system));document.querySelectorAll('[data-stage]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.stage===state.stage));
+ if(!f){q=getQ();$('convention').textContent=specs[state.system].note;const fields=$('coordinate-fields');fields.replaceChildren();const inc=$('increment-fields');inc.replaceChildren();
+ specs[state.system].names.forEach((name,i)=>{let [min,max,step]=limits(i),unit=angular(i)?'°':'cm',value=angular(i)?q[i]/rad:q[i];const wrap=document.createElement('div');wrap.innerHTML=`<div class="field-head"><label for="q${i}">${name} <small>(${unit})</small></label><input id="q${i}" type="number" min="${min}" max="${max}" step="${step}" value="${value.toFixed(2)}" aria-label="Coordonnée ${name}"></div><input id="qr${i}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="Faire varier ${name}">`;fields.append(wrap);for(const id of ['q'+i,'qr'+i])$(id).addEventListener('input',ev=>{let n=Number(ev.target.value);if(!Number.isFinite(n)||ev.target.value==='')return;stop();let a=getQ();a[i]=M.clamp(n,min,max)*(angular(i)?rad:1);setQ(a);syncCoordinates(ev.target);render();});
+ for(const id of ['q'+i,'qr'+i])$(id).addEventListener('change',()=>syncCoordinates());
+ const di=document.createElement('div');di.innerHTML=`<div class="field-head"><label for="dq${i}">Δ${name} <small>(${unit})</small></label><input id="dq${i}" aria-label="Accroissement ${name}" type="number" min="${state.stage==='cell'?0:-1*(angular(i)?90:2)}" max="${angular(i)?90:2}" step="${angular(i)?1:.05}" value="${(state.deltas[i]/(angular(i)?rad:1)).toFixed(2)}"></div>`;inc.append(di);$('dq'+i).addEventListener('input',ev=>{if(ev.target.value===''||!Number.isFinite(+ev.target.value))return;stop();let v=M.clamp(+ev.target.value,state.stage==='cell'?0:angular(i)?-90:-2,angular(i)?90:2);state.deltas[i]=v*(angular(i)?rad:1);render();});
+ });
+ $('component').innerHTML='<option value="all">Toutes les coordonnées</option>'+specs[state.system].names.map((n,i)=>`<option value="${i}">${n} seulement</option>`).join('');$('component').value=state.component;
+ $('move-controls').hidden=state.stage!=='move';const faces=$('faces');faces.replaceChildren();const faceNames=state.system==='polar'?['Aire du secteur']:['Volume',...specs[state.system].names.map(n=>'Face '+n+' = constante')];faceNames.forEach((n,k)=>{let b=document.createElement('button');b.textContent=n;b.dataset.face=state.system==='polar'?-1:k-1;b.addEventListener('click',()=>{state.face=+b.dataset.face;render();});faces.append(b);});
+ }else{$('curve').value=state.curve;$('speed-mode').value=state.variable?'variable':'uniform';$('u').value=state.u;}
+ makePresets();syncToggles();
+}
+function syncCoordinates(exclude){if(state.system==='frenet')return;q=getQ();specs[state.system].names.forEach((_,i)=>{const n=q[i]/(angular(i)?rad:1);if($('q'+i)!==exclude)$('q'+i).value=n.toFixed(2);$('qr'+i).value=n;});}
+function syncToggles(){for(let id of ['basis','position','guides','normal','osculating','kinematics','compare'])$(id).checked=state[id];$('epsilon').value=state.epsilon;$('progress').value=state.progress;$('local').setAttribute('aria-pressed',state.local);document.querySelectorAll('[data-view]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.view===state.view);b.disabled=(state.system==='polar'||state.system==='frenet')&&b.dataset.view!=='top';});}
+function makePresets(){const box=$('presets');box.replaceChildren();const arr=state.system==='frenet'?[['Cercle uniforme',()=>{state.curve='circle';state.variable=false;state.u=.12;}],['Virage variable',()=>{state.curve='ellipse';state.variable=true;state.u=.1;}],['Limite rectiligne',()=>{state.curve='line';state.variable=false;state.u=.4;}]]:state.system==='sph'?[['Équateur',()=>setQ([3,Math.PI/2,.65])],['Près du pôle',()=>setQ([3,.12,.65])],['Au pôle',()=>setQ([3,0,.65])],['Doubler r',()=>{let a=getQ();a[0]=Math.min(7,a[0]*2);setQ(a);}]]:state.system==='cyl'||state.system==='polar'?[['Même angle, rayon × 2',()=>{let a=getQ();a[0]=Math.min(7,a[0]*2);setQ(a);}],['Sur l’axe',()=>{let a=getQ();a[0]=0;setQ(a);}],['Quart de tour',()=>{let a=getQ();a[1]=(a[1]+Math.PI/2)%M.TAU;setQ(a);}]]:[['Coordonnées négatives',()=>{state.p=[-2,1.5,-1];}],['Dans le plan xy',()=>{state.p=[2,1.5,0];}],['À l’origine',()=>{state.p=[0,0,0];}]];
+ for(const [label,fn] of arr){let b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{stop();fn();if(state.system==='frenet'){arcTable=M.arcTable(state.curve);$('curve').value=state.curve;$('speed-mode').value=state.variable?'variable':'uniform';$('u').value=state.u;}syncCoordinates();render();});box.append(b);}
+}
+function raw(p){const a=state.system==='sph'?q[2]:state.system==='cart'||state.system==='frenet'?0:q[1];return M.project(p,state.view,yaw,pitch,a);}
+function P(p){const a=raw(p);return [plotW/2+(a[0]-center[0])*scale,H/2+(a[1]-center[1])*scale];}
+function addLine(points,color='muted',width=1.4,dash='',opacity=1){primitives.push({kind:'line',points,color,width,dash,opacity});}
+function addPoly(points,color='accent',opacity=.15,face=null){primitives.push({kind:'poly',points,color,opacity,face});}
+function addArrow(a,b,color='ink',width=2.5){primitives.push({kind:'arrow',points:[a,b],color,width});}
+function addDot(p,label='',color='ink',r=5,draggable=false){primitives.push({kind:'dot',points:[p],color,r,draggable});if(label)addText(p,label,color,13,-14,22);}
+function addText(p,label,color='ink',dx=0,dy=0,size=20){texts.push({p,label,color,dx,dy,size});}
+function sampled(fn,n=64){return Array.from({length:n+1},(_,j)=>fn(j/n));}
+function basisAt(p,system=state.system,a=q){if(!state.basis)return;const bs=M.basis(system,a),names=specs[system].bases;for(let i=0;i<bs.length;i++){let end=M.add(p,M.mul(bs[i],.92));const origin=P(p),tip=P(end);let dx=tip[0]-origin[0],dy=tip[1]-origin[1],len=Math.hypot(dx,dy);if(len<4){const toward=raw(end)[2]-raw(p)[2]>0;addText(p,names[i]+(toward?' ⊙':' ⊗'),'c'+i,16,-24,22);}else{addArrow(p,end,'c'+i,3);addText(end,names[i],'c'+i,dx/len*15,dy/len*15,22);}}}
+function axes(){const e=state.system==='frenet'?3.6:Math.max(3.4,...state.p.map(Math.abs))+.4;const max=Math.min(8.5,e);for(let i=0;i<(state.system==='polar'||state.system==='frenet'?2:3);i++){let a=[0,0,0],b=[0,0,0];a[i]=-.5;b[i]=max;addArrow(a,b,'ghost',1.3);addText(b,['x','y','z'][i],'muted',8,-8,20);}addText([0,0,0],'O','muted',-18,20,18);}
+function angleArc(fn,label,color){const pts=sampled(fn,30);addLine(pts,color,2);addText(fn(.55),label,color,10,-10,21);}
+function coordinateGuides(){
+ if(!state.guides)return;const p=state.p,[x,y,z]=p,s=state.system;
+ if(s==='cart'){const a=[x,0,0],b=[x,y,0];addLine([[0,0,0],a],'c0',1.8,'5 5');addLine([a,b],'c1',1.8,'5 5');addLine([b,p],'c2',1.8,'5 5');if(state.stage==='point'){addText([x/2,0,0],'x','c0',0,20);addText([x,y/2,0],'y','c1',15,0);addText([x,y,z/2],'z','c2',15,0);}return;}
+ const a=s==='sph'?q[2]:q[1],r=s==='sph'?q[0]*Math.sin(q[1]):q[0],R=q[0];
+ addLine([[0,0,0],[x,y,0],p],'ghost',1.4,'5 5');addLine([[0,0,z],p],'c0',1.5,'5 5');
+ if(s==='sph'){
+  addLine(sampled(t=>M.from('sph',[R,t*Math.PI,a])),'ghost',1.2,'3 5',.8);
+  addLine(sampled(t=>[r*Math.cos(t*M.TAU),r*Math.sin(t*M.TAU),z]),'c2',1.2,'3 5',.8);
+  if(state.stage==='point'){
+   angleArc(t=>M.from('sph',[.85,t*q[1],a]),'θ','c1');angleArc(t=>[.65*Math.cos(t*a),.65*Math.sin(t*a),0],'φ','c2');
+   addLine([[0,0,z],[x,y,z]],'c2',1.4);addText([x/2,y/2,z],'r sin θ','c2',8,-12,20);addText(M.mul(p,.55),'r = OM','c0',-20,-12,20);
+  }
+ }else{
+  addLine(sampled(t=>[r*Math.cos(t*M.TAU),r*Math.sin(t*M.TAU),s==='polar'?0:z]),'ghost',1.3,'3 5',.8);
+  if(s==='cyl'&&r>1e-8){addLine(sampled(t=>[r*Math.cos(t*M.TAU),r*Math.sin(t*M.TAU),0]),'ghost',1,'3 5',.5);addLine([[x,y,0],p],'c2',1.8,'5 5');}
+  if(state.stage==='point'){angleArc(t=>[.8*Math.cos(t*a),.8*Math.sin(t*a),0],'θ','c1');addText([x/2,y/2,z],'r','c0',0,-14,22);if(s==='cyl')addText([x,y,z/2],'z','c2',16,0,21);}
+ }
+}
+function drawPoint(){if(state.position&&!state.local)addArrow([0,0,0],state.p,'ink',2.2);basisAt(state.p);addDot(state.p,'M','accent',7,true);}
+function drawMove(){
+ const names=specs[state.system].names,basis=M.basis(state.system,q),h=M.factors(state.system,q);let result=[0,0,0];
+ actualD=effectiveD.map(v=>v*state.progress);
+ for(let i=0;i<names.length;i++){if(Math.abs(actualD[i])<1e-9)continue;let curve=sampled(t=>{let a=[...q];a[i]+=actualD[i]*t;return M.from(state.system,a);},35);addLine(curve,'c'+i,3);addArrow(curve[32],curve[35],'c'+i,2.8);let delta=M.mul(basis[i],h[i]*actualD[i]);result=M.add(result,delta);addLine([state.p,M.add(state.p,delta)],'c'+i,1.6,'4 4');let label=(angular(i)?(state.system==='sph'&&i===2?'r sin θ Δφ':'r Δ'+names[i]):'Δ'+names[i]);addText(curve[18],label,'c'+i,i===0?4:14,i===0?-15:20,21);}
+ const end=M.from(state.system,q.map((v,i)=>v+actualD[i])),linear=M.add(state.p,result);
+ if(M.norm(result)>1e-8){addArrow(state.p,end,'accent',3);addArrow(state.p,linear,'ghost',2);addLine([end,linear],'ghost',1.5,'4 5');addDot(end,'M′','accent',5);addDot(linear,'T','ghost',4);}
+ geometryModel={end,linear,result};drawPoint();
+ fitPoints.push(end,linear);
+}
+function facePoint(i,v,u,w,d){const a=[...q];a[i]+=d[i]*v;const other=a.map((_,j)=>j).filter(j=>j!==i);a[other[0]]+=d[other[0]]*u;a[other[1]]+=d[other[1]]*w;return M.from(state.system,a);}
+function normalArrow(e,label,color){const end=M.add(state.p,e),a=raw(state.p),b=raw(end);if(Math.hypot(b[0]-a[0],b[1]-a[1])<.01)addText(state.p,label+(b[2]>a[2]?' ⊙':' ⊗'),color,16,-30,22);else{addArrow(state.p,end,color,3);addText(end,label,color,12,-12,22);}}
+function cellGeometry(){
+ const d=effectiveD,n=q.length;actualD=d;
+ if(n===2){const grid=12;for(let j=0;j<grid;j++)for(let k=0;k<grid;k++){let pt=(u,v)=>M.from(state.system,[q[0]+d[0]*u,q[1]+d[1]*v]);addPoly([pt(j/grid,k/grid),pt((j+1)/grid,k/grid),pt((j+1)/grid,(k+1)/grid),pt(j/grid,(k+1)/grid)],'accent',.22,-1);}for(let i=0;i<2;i++)for(let v=0;v<=1;v++){addLine(sampled(t=>M.from(state.system,[q[0]+d[0]*(i===0?v:t),q[1]+d[1]*(i===1?v:t)])),'c'+(1-i),2.2);}if(state.normal)normalArrow([0,0,.8],'n = e_z','accent');}
+ else{
+  for(let i=0;i<3;i++)for(let v=0;v<=1;v++){
+   if(state.face>=0&&(state.face!==i||v!==0))continue;
+   const count=state.system==='cart'?1:9;
+   for(let j=0;j<count;j++)for(let k=0;k<count;k++){let f=(u,w)=>facePoint(i,v,u,w,d);addPoly([f(j/count,k/count),f((j+1)/count,k/count),f((j+1)/count,(k+1)/count),f(j/count,(k+1)/count)],'c'+i,state.face===i?.28:.11,i);}
+   for(let side=0;side<2;side++)for(let edge=0;edge<=1;edge++)addLine(sampled(t=>facePoint(i,v,side===0?t:edge,side===0?edge:t,d),35),'c'+i,state.face===i?2.6:1.2,'',.8);
+  }
+  if(state.face>=0&&state.normal){let i=state.face;normalArrow(M.basis(state.system,q)[i],'n = '+specs[state.system].bases[i],'c'+i);}
+ }
+ // Parallélépipède tangent : ses arêtes représentent h_i(M) Δq_i, au premier ordre.
+ const basis=M.basis(state.system,q),h=M.factors(state.system,q),vecs=d.map((v,i)=>M.mul(basis[i],h[i]*v)),local=bits=>vecs.reduce((p,v,i)=>M.add(p,M.mul(v,bits[i])),state.p);
+ for(let i=0;i<n;i++){for(let mask=0;mask<(1<<n);mask++){if(mask&(1<<i))continue;const a=Array.from({length:n},(_,j)=>(mask>>j)&1),b=[...a];b[i]=1;addLine([local(a),local(b)],'ghost',1.5,'5 5',.8);}}
+ for(let i=0;i<n;i++){let a=[...q];a[i]+=d[i];let label=angular(i)?(state.system==='sph'&&i===2?'r sin θ Δφ':'r Δ'+specs[state.system].names[i]):'Δ'+specs[state.system].names[i];const mid=M.from(state.system,q.map((v,j)=>v+(j===i?d[i]*.6:0)));if(Math.abs(h[i]*d[i])>1e-8)addText(mid,label,'c'+i,i===0?-10:13,i===0?-18:24,21);fitPoints.push(M.from(state.system,a));}
+ fitPoints.push(local(Array(n).fill(1)));drawPoint();
+}
+function drawFrenet(){
+ const f=M.frenet(state.curve,state.u),sp=M.speed(arcTable,state.u,state.v0,state.variable),p=f.p;
+ geometryModel={...f,...sp};addLine(sampled(t=>M.curve(state.curve,t).p,180),'ghost',2);
+ addLine(sampled(t=>M.curve(state.curve,t*state.u).p,Math.max(2,Math.floor(150*state.u))),'accent',4);
+ const start=M.curve(state.curve,0).p;addDot(start,'Ω','ghost',4);addDot(p,'M','accent',7,true);
+ if(state.osculating&&f.center){addLine(sampled(t=>M.add(f.center,[f.rho*Math.cos(t*M.TAU),f.rho*Math.sin(t*M.TAU),0]),150),'c1',1.7,'6 6');addLine([p,f.center],'c1',1.2,'4 5');addDot(f.center,'C','c1',4);addText(M.add(p,M.mul(f.n,Math.min(f.rho/2,1.6))),'ρ','c1',10,-10,23);}
+ if(state.basis){addArrow(p,M.add(p,M.mul(f.t,.9)),'c0',3);addText(M.add(p,M.mul(f.t,.98)),'eₜ','c0',10,-10,23);if(f.n){addArrow(p,M.add(p,M.mul(f.n,.9)),'c1',3);addText(M.add(p,M.mul(f.n,.98)),'eₙ','c1',10,-10,23);}}
+ if(state.kinematics){const vel=M.mul(f.t,sp.v),acc=M.add(M.mul(f.t,sp.at),f.n?M.mul(f.n,sp.v*sp.v*f.k):[0,0,0]);const offset=[0,0,0];addArrow(M.add(p,offset),M.add(p,M.mul(vel,.65)),'c2',4);addText(M.add(p,M.mul(vel,.65)),'v','c2',-10,26,23);addArrow(p,M.add(p,M.mul(acc,1.3)),'accent',3.5);addText(M.add(p,M.mul(acc,1.3)),'a','accent',14,23,23);fitPoints.push(M.add(p,M.mul(vel,.65)),M.add(p,M.mul(acc,1.3)));}
+ if(state.compare&&state.curve==='circle'){const a=M.to('polar',p);for(let i=0;i<2;i++){let e=M.basis('polar',a)[i];addArrow(p,M.add(p,M.mul(e,1.3)),'ghost',1.7);addText(M.add(p,M.mul(e,1.35)),['eᵣ','eθ'][i],'ghost',i?10:-15,-12,21);}}
+ fitPoints.push(...sampled(t=>M.curve(state.curve,t).p,40));if(f.center&&f.rho<5)fitPoints.push(f.center);
+}
+function frame(){
+ const rect=$('scene').getBoundingClientRect();W=Math.max(280,rect.width);H=Math.max(160,rect.height);plotW=W-(document.body.classList.contains('projection')&&W>=1000?300:0);$('scene').setAttribute('viewBox',`0 0 ${W} ${H}`);
+ let pts;
+ if(state.local){if(state.system==='frenet'){const p=geometryModel.p;pts=[...sampled(t=>M.add(p,[2*Math.cos(t*M.TAU),2*Math.sin(t*M.TAU),0]),20)];}else{pts=primitives.flatMap(p=>p.points);const bs=M.basis(state.system,q);pts.push(...bs.flatMap(b=>[M.add(state.p,M.mul(b,1.2)),M.add(state.p,M.mul(b,-.25))]));}}
+ else if(state.system==='frenet'){pts=[...fitPoints,[-3.6,-2,0],[3.9,3.4,0]];}
+ else{pts=primitives.flatMap(a=>a.points);}
+ if(drag?.kind==='point'){center=[...drag.center];scale=drag.scale;return;}
+ const rp=pts.map(raw),xs=rp.map(p=>p[0]),ys=rp.map(p=>p[1]);let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);center=[(x0+x1)/2,(y0+y1)/2];scale=Math.min(Math.max(80,plotW-110)/Math.max(1.5,x1-x0),Math.max(65,H-64)/Math.max(1.5,y1-y0))*zoom;
+}
+function node(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.append(e);return e;}
+function path(pts,close=false){return pts.map((p,i)=>(i?'L':'M')+P(p).map(v=>v.toFixed(2)).join(',')).join(' ')+(close?'Z':'');}
+function paint(){
+ const g=$('geometry'),labels=$('labels');g.replaceChildren();labels.replaceChildren();
+ // Tri du fond vers l'avant pour les faces transparentes ; contours et vecteurs au-dessus.
+ const polys=primitives.filter(p=>p.kind==='poly').sort((a,b)=>a.points.reduce((s,p)=>s+raw(p)[2],0)/a.points.length-b.points.reduce((s,p)=>s+raw(p)[2],0)/b.points.length);
+ const rest=primitives.filter(p=>p.kind!=='poly');
+ for(const p of [...polys,...rest]){const col=palette[p.color]||p.color;
+  if(p.kind==='poly'){const e=node('path',{d:path(p.points,true),fill:col,'fill-opacity':p.opacity,stroke:col,'stroke-opacity':p.opacity,'stroke-width':.3},g);if(p.face!==null){e.dataset.face=p.face;e.style.cursor='pointer';}continue;}
+  if(p.kind==='dot'){const pt=P(p.points[0]);const group=node('g',p.draggable?{'data-drag':'point',role:'button',tabindex:0,'aria-label':state.system==='frenet'?'Point M sur la trajectoire':'Point M : utiliser les flèches pour le déplacer',style:'cursor:grab'}:{},g);if(p.draggable)node('circle',{cx:pt[0],cy:pt[1],r:21,fill:'transparent',stroke:palette.accent,'stroke-opacity':.2,'stroke-dasharray':'2 5'},group);node('circle',{cx:pt[0],cy:pt[1],r:p.r,fill:col,stroke:palette.surface,'stroke-width':2},group);continue;}
+  node('path',{d:path(p.points),fill:'none',stroke:col,'stroke-width':p.width,'stroke-dasharray':p.dash||'','stroke-opacity':p.opacity??1,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+  if(p.kind==='arrow'){const a=P(p.points[0]),b=P(p.points[1]),len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(len<3)continue;const t=Math.atan2(b[1]-a[1],b[0]-a[0]),l=Math.min(10,len*.45),w=l*.43;node('path',{d:`M ${b} L ${b[0]-l*Math.cos(t)+w*Math.sin(t)},${b[1]-l*Math.sin(t)-w*Math.cos(t)} L ${b[0]-l*Math.cos(t)-w*Math.sin(t)},${b[1]-l*Math.sin(t)+w*Math.cos(t)} Z`,fill:col},g);}
+ }
+ const placed=[],projection=document.body.classList.contains('projection');
+ for(const t of texts){const p=P(t.p);if(p[0]<-30||p[0]>W+30||p[1]<-30||p[1]>H+30)continue;const size=t.size*(projection?1.15:1),e=node('text',{'font-size':size,fill:palette[t.color],x:p[0]+t.dx,y:p[1]+t.dy,'dominant-baseline':'middle'},labels);e.textContent=t.label;const sub={eₓ:'x',eᵧ:'y',e_z:'z',eᵣ:'r',eθ:'θ',eφ:'φ',eₜ:'t',eₙ:'n'}[t.label];if(sub){e.textContent='e';node('tspan',{'baseline-shift':'sub','font-size':size*.7},e).textContent=sub;}let b=e.getBBox(),x=M.clamp(p[0]+t.dx,8,W-b.width-8),y=M.clamp(p[1]+t.dy,size/2+5,H-size/2-5);let best={x,y,score:Infinity};
+  const offsets=[[0,0],[0,23],[0,-23],[24,0],[-b.width-20,0],[14,40],[-b.width-15,-30],[0,60]];
+  for(const [dx,dy] of offsets){let xx=M.clamp(x+dx,8,W-b.width-8),yy=M.clamp(y+dy,size/2+5,H-size/2-5),box={x:xx,y:yy-size/2,w:b.width,h:size};let overlaps=placed.reduce((n,a)=>n+(box.x<a.x+a.w+5&&box.x+box.w+5>a.x&&box.y<a.y+a.h+3&&box.y+box.h+3>a.y?1:0),0),score=overlaps*1000+Math.abs(dx)+Math.abs(dy);if(score<best.score)best={x:xx,y:yy,score};}
+  e.setAttribute('x',best.x);e.setAttribute('y',best.y);placed.push({x:best.x,y:best.y-size/2,w:b.width,h:size});
+ }
+ if(plotW<W)paintReadout(labels);
+}
+function paintReadout(parent){
+ const x=plotW+23,top=Math.max(28,(H-250)/2);let title,items;
+ if(state.system==='frenet'){const f=geometryModel;title='À cet instant';items=[['v',f.v,'cm/s','c2'],['ρ',f.rho,'cm','c1'],['aₙ',f.v*f.v*f.k,'cm/s²','accent']];}
+ else if(state.stage==='point'){title='Coordonnées de M';items=q.map((v,i)=>[specs[state.system].names[i],v/(angular(i)?rad:1),angular(i)?'°':'cm']);}
+ else{title=state.stage==='cell'?'Arêtes issues de M':'Composantes tangentielles';const s=state.system,ds=actualD,h=M.factors(s,q);items=ds.map((v,i)=>[(angular(i)?s==='sph'&&i===2?'r sin θ Δφ':'r Δ'+specs[s].names[i]:'Δ'+specs[s].names[i]),h[i]*v,'cm']);}
+ const heading=node('text',{x,y:top,fill:palette.muted,'font-size':18},parent);heading.textContent=title;
+ items.forEach(([name,value,unit,color],i)=>{let y=top+37+i*74;const label=node('text',{x,y,fill:palette[color||'c'+i],'font-size':21},parent);label.textContent=name;const val=node('text',{x:x+115,y:y+7,fill:palette.ink,'font-size':35},parent);val.textContent=fmt(value,2);const u=node('tspan',{'font-size':17,dx:7,fill:palette.muted},val);u.textContent=unit;});
+}
+function singular(){if(state.system==='cart'||state.system==='frenet')return '';if(q[0]<1e-8)return state.system==='sph'?'Origine : orientation de la base conventionnelle ; base sphérique non unique.':'Sur l’axe : azimut conventionnel ; eᵣ et eθ ne sont pas uniques.';if(state.system==='sph'&&Math.abs(Math.sin(q[1]))<1e-8)return 'Au pôle : φ et la base tangentielle dépendent du méridien choisi.';return '';}
+function differentialFormula(){if(state.system==='cart')return `<span class="c0">dx ${ehtml('x')}</span> + <span class="c1">dy ${ehtml('y')}</span> + <span class="c2">dz ${ehtml('z')}</span>`;if(state.system==='sph')return `<span class="c0">dr ${ehtml('r')}</span> + <span class="c1">r dθ ${ehtml('θ')}</span> + <span class="c2">r sin θ dφ ${ehtml('φ')}</span>`;return `<span class="c0">dr ${ehtml('r')}</span> + <span class="c1">r dθ ${ehtml('θ')}</span>`+(state.system==='cyl'?` + <span class="c2">dz ${ehtml('z')}</span>`:'');}
+function cellFormula(){let f=state.face,s=state.system;if(s==='polar')return 'dS = r dr dθ';if(s==='cart')return f<0?'dV = dx dy dz':['dSₓ = dy dz','dSᵧ = dx dz','dS_z = dx dy'][f];if(s==='cyl')return f<0?'dV = r dr dθ dz':['dSᵣ = r dθ dz','dSθ = dr dz','dS_z = r dr dθ'][f];return f<0?'dV = r² sin θ dr dθ dφ':['dSᵣ = r² sin θ dθ dφ','dSθ = r sin θ dr dφ','dSφ = r dr dθ'][f];}
+function updateInfo(){
+ let title,formula,note,status;
+ if(state.system==='frenet'){
+  const f=geometryModel,an=f.v*f.v*f.k;$('frenet-values').innerHTML=`v = ${fmt(f.v)} <small>cm/s</small><br>ρ = ${fmt(f.rho)} <small>cm</small><br>s = ${fmt(f.s)} <small>cm</small><br>aₜ = ${fmt(f.at)} ; aₙ = ${fmt(an)} <small>cm/s²</small>`;
+  title='Frenet · Tangente, normale et courbure';formula=`${vhtml('v')} = v ${ehtml('t')} &emsp; ${vhtml('a')} = v̇ ${ehtml('t')}`+(f.n?` + (v²/ρ) ${ehtml('n')}`:'');
+  note='s orientée dans le sens du mouvement · '+(state.kinematics?'Flèches : 1 cm/s ↔ 0,65 cm ; 1 cm/s² ↔ 1,30 cm.':'d'+vhtml('OM')+' = '+ehtml('t')+' ds.');
+  status=f.n?'La normale pointe vers C ; une vitesse constante peut s’accompagner d’une accélération.':'Courbure nulle : ρ → ∞ ; normale de Frenet non définie ; aₙ = 0.';
+  if(state.compare)status=state.curve==='circle'?'Cercle parcouru dans le sens positif : eₙ = −eᵣ et eₜ = eθ.':'La comparaison à la base polaire est proposée sur le cercle centré en O.';
+  $('u').value=state.u;$('speed-value').textContent=fmt(state.v0,1)+' cm/s';$('scene-title').textContent='Repère de Frenet · '+({circle:'cercle',ellipse:'ellipse',parabola:'parabole',line:'droite'})[state.curve];
+ }else{
+  const s=state.system;title=state.stage==='point'?'Vecteur position':state.stage==='move'?'Déplacement élémentaire · au point M':state.face<0?(s==='polar'?'Aire élémentaire':'Volume élémentaire'):'Surface élémentaire · '+specs[s].names[state.face]+' constante';
+  if(state.stage==='point'){
+   formula=vhtml('OM')+' = '+(s==='cart'?`<span class="c0">x ${ehtml('x')}</span> + <span class="c1">y ${ehtml('y')}</span> + <span class="c2">z ${ehtml('z')}</span>`:s==='sph'||s==='polar'?`r ${ehtml('r')}`:`r ${ehtml('r')} + z ${ehtml('z')}`);
+   note='M : '+specs[s].names.map((n,i)=>n+' = '+fmt(q[i]/(angular(i)?rad:1))+(angular(i)?'°':' cm')).join(' · ');
+   status=s==='sph'?'Le parallèle de M a pour rayon r sin θ.':s==='cyl'?'r mesure la distance à l’axe Oz ; OM = √(r² + z²).':s==='polar'?'Une variation angulaire Δθ parcourt un arc de longueur r |Δθ|.':'Base orthonormée directe : eₓ × eᵧ = e_z. Les vecteurs de base restent fixes.';
+  }else if(state.stage==='move'){
+   formula='d'+vhtml('OM')+' = '+differentialFormula();
+   const exact=M.norm(M.sub(geometryModel.end,state.p)),err=M.norm(M.sub(geometryModel.end,geometryModel.linear));note=`ΔOM exact : ${fmt(exact,3)} cm · Écart avec la somme tangentielle MT : ${fmt(err,4)} cm · λ = ${fmt(state.progress)}.`;
+   status='M′ : extrémité du déplacement fini · T : approximation tangentielle · Réduire les accroissements rapproche M′ de T.';
+  }else{
+   formula=cellFormula();if(state.normal&&(s==='polar'||state.face>=0))formula+=' &emsp; d'+vhtml('S')+' = '+ehtml(s==='polar'?'z':specs[s].names[state.face])+' dS';
+   let exact=M.finite(s,q,effectiveD,state.face),approx=M.measure(s,q,effectiveD,state.face),unit=s==='polar'||state.face>=0?'cm²':'cm³';
+   $('finite-value').innerHTML=`${s==='polar'||state.face>=0?'Aire finie':'Volume fini'} : ${fmt(exact,5)} <small>${unit}</small>`;
+   $('finite-error').textContent=`Approximation locale : ${fmt(approx,5)} ${unit}. `+(Math.abs(exact)>1e-12?'Écart relatif : '+fmt(Math.abs(exact-approx)/Math.abs(exact)*100,2)+' %.':'Élément dégénéré.');
+   note='Δ : cellule finie colorée · d : limite différentielle · Pointillés : cellule tangentielle au premier ordre.';
+   status='Deux longueurs locales construisent une aire ; trois construisent un volume.';
+   if(s==='sph')status='À r et Δφ fixés, la longueur azimutale r sin θ Δφ diminue près des pôles.';
+   if(s==='cyl'||s==='polar')status='À Δθ fixé, la longueur de l’arc augmente proportionnellement à r.';
+   document.querySelectorAll('[data-face]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',+b.dataset.face===state.face);});
+  }
+  let singularity=singular();if(singularity)status=singularity;
+  if(state.stage!=='point'){const original=baseD().map((v,i)=>state.stage==='move'&&state.component!=='all'&&+state.component!==i?0:v);if(effectiveD.some((v,i)=>Math.abs(v-original[i])>1e-8))status+=' Accroissement limité au domaine des coordonnées.';}
+  $('epsilon-value').textContent='× '+fmt(state.epsilon);$('scene-title').textContent=specs[s].label+' : '+title;
+ }
+ $('formula-title').textContent=title;$('formula').innerHTML=formula;$('formula-note').innerHTML=note;
+ if(status!==lastStatus){$('status').textContent=status;lastStatus=status;}
+ const labels=state.system==='frenet'?['Tangente','Normale','Vitesse']:specs[state.system].bases;
+ $('legend').innerHTML=labels.map((n,i)=>`<span><i style="--col:var(--c${i})"></i>${n.replace('e_z','e<sub>z</sub>').replace('eθ','e<sub>θ</sub>').replace('eφ','e<sub>φ</sub>')}</span>`).join('');
+ $('scene-transport').hidden=state.system!=='frenet'&&state.stage!=='move';$('scene-play').textContent=playing?'Pause':'Animer';$('gesture').hidden=!$('scene-transport').hidden;
+ $('gesture').textContent=state.system==='frenet'?'Glisser M le long de la trajectoire':state.view==='3d'?'Glisser M : altitude fixe · Fond : rotation':state.view==='top'?'Glisser M dans le plan xy':'Glisser M dans le plan méridien';
+ $('scene-desc').textContent=$('scene-title').textContent+'. '+status;
+}
+function render(){
+ colors();primitives=[];texts=[];fitPoints=[];geometryModel=null;
+ if(state.system!=='frenet'){
+  q=getQ();effectiveD=constrainD(baseD().map((v,i)=>state.stage==='move'&&state.component!=='all'&&+state.component!==i?0:v));
+  if(!state.local){axes();coordinateGuides();}if(state.stage==='point')drawPoint();else if(state.stage==='move')drawMove();else cellGeometry();
+ }else{axes();drawFrenet();}
+ frame();paint();syncToggles();updateInfo();
+}
+function reset(){stop();zoom=1;yaw=-.65;pitch=.55;state.local=state.stage!=='point';state.epsilon=1;state.progress=1;state.component='all';state.face=-1;state.basis=true;state.position=true;state.guides=true;state.normal=false;if(state.system==='frenet'){state.curve='circle';state.u=.12;state.variable=false;state.v0=1;state.osculating=true;state.kinematics=true;state.compare=false;arcTable=M.arcTable('circle');$('speed').value=1;state.slow=1;$('slow').value=1;}else{state.p=state.system==='polar'?[2.2,1.3,0]:[2.2,1.3,1.5];state.az=.53;state.deltas=specs[state.system].names.map((_,i)=>angular(i)?.4:.8);}state.view=state.system==='polar'||state.system==='frenet'?'top':'3d';buildControls();render();}
+function applyTheme(){document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',dark);}
+document.querySelectorAll('[data-system]').forEach(b=>b.addEventListener('click',()=>setSystem(b.dataset.system)));
+document.querySelectorAll('[data-stage]').forEach(b=>b.addEventListener('click',()=>setStage(b.dataset.stage)));
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;zoom=1;render();}));
+$('local').onclick=()=>{state.local=!state.local;zoom=1;render();};$('fit').onclick=()=>{yaw=-.65;pitch=.55;zoom=1;render();};
+$('zoom-in').onclick=()=>{zoom=M.clamp(zoom*1.2,.4,6);render();};$('zoom-out').onclick=()=>{zoom=M.clamp(zoom/1.2,.4,6);render();};
+$('theme').onclick=()=>{dark=!dark;try{localStorage.setItem('MC1-coordinates-theme',dark?'dark':'light');}catch{}applyTheme();render();};
+$('projection').onclick=()=>{const on=document.body.classList.toggle('projection');$('projection').setAttribute('aria-pressed',on);$('projection').textContent=on?'Réglages':'Projection';requestAnimationFrame(render);};
+$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Plein écran indisponible : utiliser le mode Projection.');}};
+$('help').onclick=()=>{stop();$('help-dialog').showModal();};$('close-help').onclick=()=>$('help-dialog').close();
+$('reset').onclick=reset;
+for(const id of ['basis','position','guides','normal','osculating','kinematics','compare'])$(id).onchange=()=>{state[id]=$(id).checked;render();};
+$('epsilon').oninput=()=>{state.epsilon=+$('epsilon').value;render();};$('progress').oninput=()=>{stop();state.progress=+$('progress').value;render();};
+$('component').onchange=()=>{stop();state.component=$('component').value;state.progress=1;render();};
+$('play').onclick=()=>{if(playing){stop();return;}playing=true;phase=0;state.progress=0;$('play').textContent='Pause';};$('restart').onclick=()=>{stop();state.progress=0;render();};
+$('curve').onchange=()=>{stop();state.curve=$('curve').value;state.u=.12;arcTable=M.arcTable(state.curve);zoom=1;render();};
+$('u').oninput=()=>{stop();state.u=+$('u').value;render();};$('speed-mode').onchange=()=>{state.variable=$('speed-mode').value==='variable';render();};$('speed').oninput=()=>{state.v0=+$('speed').value;render();};$('slow').onchange=()=>{state.slow=+$('slow').value;};
+$('frenet-play').onclick=()=>{if(playing){stop();return;}if(state.u>=1)state.u=0;playing=true;$('frenet-play').textContent='Pause';};$('frenet-reset').onclick=()=>{stop();state.u=0;render();};
+$('scene-play').onclick=()=>{(state.system==='frenet'?$('frenet-play'):$('play')).click();$('scene-play').textContent=playing?'Pause':'Animer';};$('scene-restart').onclick=()=>{(state.system==='frenet'?$('frenet-reset'):$('restart')).click();};
+function pointerXY(ev){const r=$('scene').getBoundingClientRect();return [ev.clientX-r.left,ev.clientY-r.top];}
+$('scene').addEventListener('pointerdown',ev=>{
+ if(ev.button!==0)return;const target=ev.target.closest('[data-drag]'),face=ev.target.closest('[data-face]');
+ if(!target&&face&&state.stage==='cell'){state.face=+face.dataset.face;render();return;}
+ const pos=pointerXY(ev);drag={kind:target?'point':'camera',start:pos,yaw,pitch,p:[...state.p],q:state.system==='frenet'?[]:getQ(),center:[...center],scale};if(target)stop();$('scene').setPointerCapture(ev.pointerId);
+});
+$('scene').addEventListener('pointermove',ev=>{
+ if(!drag)return;const pos=pointerXY(ev),dx=pos[0]-drag.start[0],dy=pos[1]-drag.start[1];
+ if(drag.kind==='camera'){if(state.view!=='3d')return;yaw=drag.yaw-dx*.008;pitch=M.clamp(drag.pitch-dy*.006,.22,1.18);render();return;}
+ if(state.system==='frenet'){let best={d:Infinity,u:state.u};for(let i=0;i<=700;i++){const u=i/700,p=P(M.curve(state.curve,u).p),dist=Math.hypot(p[0]-pos[0],p[1]-pos[1]);if(dist<best.d)best={d:dist,u};}state.u=best.u;render();return;}
+ let next=[...drag.p],X=dx/drag.scale,Y=dy/drag.scale;
+ if(state.view==='top'){next[0]+=X;next[1]-=Y;}
+ else if(state.view==='3d'){const cy=Math.cos(yaw),sy=Math.sin(yaw),V=Y/Math.sin(pitch);next[0]+=-cy*X-sy*V;next[1]+=-sy*X+cy*V;}
+ else{const a=state.system==='sph'?drag.q[2]:state.system==='cart'?0:drag.q[1];next[0]+=X*Math.cos(a);next[1]+=X*Math.sin(a);next[2]-=Y;}
+ state.p=next.map(v=>M.clamp(v,-6,6));if(state.system==='polar')state.p[2]=0;syncCoordinates();render();
+});
+for(const type of ['pointerup','pointercancel','lostpointercapture'])$('scene').addEventListener(type,()=>drag=null);
+$('scene').addEventListener('wheel',ev=>{ev.preventDefault();zoom=M.clamp(zoom*Math.exp(-ev.deltaY*.001),.4,6);render();},{passive:false});
+$('scene').addEventListener('keydown',ev=>{if(!ev.target.closest('[data-drag]'))return;if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(ev.key))return;ev.preventDefault();stop();if(state.system==='frenet'){state.u=M.clamp(state.u+(ev.key==='ArrowRight'||ev.key==='ArrowUp'?.01:-.01),0,1);}else{let p=[...state.p];if(ev.key==='ArrowLeft')p[0]-=.1;if(ev.key==='ArrowRight')p[0]+=.1;if(ev.key==='ArrowDown')p[1]-=.1;if(ev.key==='ArrowUp')p[1]+=.1;state.p=p;syncCoordinates();}render();$('scene').querySelector('[data-drag]')?.focus();});
+$('export').onclick=()=>{
+ const source=$('scene'),clone=source.cloneNode(true);clone.setAttribute('width',W);clone.setAttribute('height',H+125);clone.setAttribute('viewBox',`0 0 ${W} ${H+125}`);const bg=node('rect',{width:W,height:H+125,fill:palette.surface});clone.insertBefore(bg,clone.firstChild);
+ clone.querySelectorAll('text').forEach(e=>{e.setAttribute('font-family','Arial,Helvetica,sans-serif');e.setAttribute('paint-order','stroke');e.setAttribute('stroke',palette.surface);e.setAttribute('stroke-width','5');});
+ clone.querySelectorAll('[tabindex]').forEach(e=>e.removeAttribute('tabindex'));
+ const title=node('text',{x:18,y:H+29,fill:palette.accent,'font-family':'Arial','font-size':19},clone);title.textContent='MC1 · '+(state.system==='frenet'?'Frenet':specs[state.system].label)+' · '+$('formula-title').textContent;
+ const form=node('text',{x:18,y:H+64,fill:palette.ink,'font-family':'Georgia','font-size':23},clone);form.textContent=$('formula').textContent;
+ const note=node('text',{x:18,y:H+99,fill:palette.muted,'font-family':'Arial','font-size':14},clone);note.textContent=$('formula-note').textContent;
+ // Adapter les longues lignes au cadre dans l’export uniquement.
+ for(const e of [title,form,note]){const estimate=e.textContent.length*(+e.getAttribute('font-size'))*.56;if(estimate>W-36){e.setAttribute('textLength',W-36);e.setAttribute('lengthAdjust','spacingAndGlyphs');}}
+ const blob=new Blob([new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='MC1_'+state.system+'_'+state.stage+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Schéma et formule exportés en SVG.');
+};
+let resizePending=false;new ResizeObserver(()=>{if(!resizePending){resizePending=true;requestAnimationFrame(()=>{resizePending=false;render();});}}).observe($('scene'));
+function tick(time){const dt=Math.min(.05,(time-lastTime)/1000||0);lastTime=time;if(playing&&!document.hidden){if(state.system==='frenet'){const s=M.arcAt(arcTable,state.u),sp=M.speed(arcTable,state.u,state.v0,state.variable),halfU=M.uAt(arcTable,Math.min(arcTable.L,s+sp.v*dt*state.slow/2)),vMid=M.speed(arcTable,halfU,state.v0,state.variable).v;let next=s+vMid*dt*state.slow;if(next>=arcTable.L){next=arcTable.L;stop();}state.u=M.uAt(arcTable,next);}else{phase+=dt*.23;state.progress=(1-Math.cos(Math.min(1,phase)*Math.PI))/2;if(phase>=1)stop();}render();}requestAnimationFrame(tick);}
+document.addEventListener('visibilitychange',()=>{lastTime=performance.now();});applyTheme();buildControls();render();requestAnimationFrame(tick);
+</script>
+</body>
+</html>

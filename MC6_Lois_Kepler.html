@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Les trois lois de Kepler : ellipse, aires et périodes. Animation MPSI autonome hors connexion.">
+<title>Kepler · MC6 · MPSI</title>
+<style>
+:root{color-scheme:light;--paper:#f6f3f1;--surface:#fffefa;--ink:#181c23;--secondary:#53595e;--line:#ded7d3;--accent:#8b2432;--accent-ink:#771f2b;--soft:#f5e9e8;--orbit:#8b2432;--orbit2:#2563a7;--gold:#ad7419;--teal:#237a70;--violet:#7753ab;--star:#be861f;--shadow:0 8px 28px #4d222008}
+:root[data-theme=dark]{color-scheme:dark;--paper:#14181f;--surface:#1c222b;--ink:#f3f2ee;--secondary:#bbc3cd;--line:#3c424e;--accent:#ee93a0;--accent-ink:#ffadba;--soft:#35272f;--orbit:#ff9ba9;--orbit2:#8cbeff;--gold:#f0c169;--teal:#83d3c0;--violet:#c8aff7;--star:#ffd17b;--shadow:0 8px 28px #0002}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:40px;padding:7px 12px;border:1px solid var(--line);border-radius:7px;color:var(--ink);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;gap:7px}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.4;cursor:default}button[aria-pressed=true],button[aria-selected=true],.primary{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--surface)}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] button[aria-selected=true],:root[data-theme=dark] .primary{color:#22191e}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.topline{height:5px;background:#8b2432}.shell{max-width:2000px;margin:auto;padding:14px 20px 10px;height:calc(100dvh - 5px);display:flex;flex-direction:column;gap:12px}.masthead,.heading,.header-actions,.tabs,.view-tools,.transport{display:flex;align-items:center;gap:8px}.masthead{justify-content:space-between;gap:18px;flex:none}.eyebrow{font-size:13px;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.1em;font-weight:bold;margin-bottom:3px}.heading{gap:12px}.chapter{border:1px solid var(--accent);padding:4px 8px;border-radius:5px;font-size:17px;color:var(--accent-ink)}h1{font-size:32px;font-weight:500;letter-spacing:-.035em;line-height:1.1;margin:0}.subtitle{font-size:16px;color:var(--secondary);margin-left:8px}.header-actions button{font-size:16px}.icon-button{width:40px;padding:6px;font-size:23px}.tab-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:none}.tabs{gap:5px}.tabs button{font-size:20px;padding:8px 17px}.tab-note{font-size:16px;color:var(--secondary);text-align:right}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;flex:1;min-height:0}.experiment{display:flex;flex-direction:column;gap:11px;min-width:0;min-height:0}.scene-card{display:flex;flex-direction:column;flex:1;min-height:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}.scene-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px 0;flex:none}.scene-heading{font-size:17px;font-weight:normal;color:var(--secondary);margin:0}.view-tools{gap:4px}.view-tools button{min-height:34px;font-size:16px;padding:4px 9px}.view-tools .zoom{font-size:24px;width:34px;padding:0}.stage{flex:1;position:relative;min-height:180px}#scene{display:block;width:100%;height:100%;position:absolute;inset:0;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}#scene .label{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}#scene [data-mobile]{cursor:grab}.scene-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px 7px;flex:none;color:var(--secondary);font-size:14px}.legend{display:flex;gap:14px;flex-wrap:wrap}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{display:inline-block;width:22px;height:3px;background:var(--c)}.legend i.dashed{background:repeating-linear-gradient(90deg,var(--c) 0 5px,transparent 5px 8px)}.transport{padding:9px 13px;border-top:1px solid var(--line);flex:none;gap:9px}.transport button{min-width:42px}.transport #play{min-width:110px}.timeline{display:flex;align-items:center;gap:10px;flex:1;min-width:30px}.clock{font-variant-numeric:tabular-nums;font-size:18px;white-space:nowrap;min-width:128px;text-align:right}.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));flex:none}.metric{padding:0 15px;border-left:1px solid var(--line);min-width:0}.metric:first-child{border:0;padding-left:0}.metric-label{font-size:17px;color:var(--secondary)}.metric-value{font-size:36px;line-height:1.18;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}.unit{font-size:17px;letter-spacing:0;color:var(--secondary);margin-left:5px}.law{display:flex;align-items:flex-start;gap:12px;flex:none;min-height:62px}.law-index{font-family:Georgia,serif;color:var(--accent-ink);font-size:32px;line-height:1.1;width:28px;flex:none}.law-formula{font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2}.law-detail{font-size:17px;color:var(--secondary);margin-top:4px}.presets{display:flex;flex-wrap:wrap;gap:6px;flex:none}.presets button{font-size:16px;min-height:33px;padding:5px 10px;background:transparent}.controls{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:16px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 12px}.field-head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:17px;margin:12px 0 0}.field-head:first-of-type{margin-top:0}.value-field{display:flex;align-items:center;gap:6px;color:var(--secondary);font-size:14px}input[type=number]{width:78px;text-align:right;padding:5px;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--paper);font-size:18px;font-variant-numeric:tabular-nums}input[type=range]{accent-color:var(--accent-ink);width:100%;height:24px;margin:8px 0 0;cursor:pointer;min-width:0}input[type=checkbox]{accent-color:var(--accent-ink);width:19px;height:19px;margin:0;flex:none}select{padding:7px 8px;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--paper);width:100%;font-size:17px}.checks{display:grid;gap:11px}.checks label{display:flex;align-items:center;gap:9px;font-size:17px;cursor:pointer}.note{font-size:14px;color:var(--secondary);margin:9px 0 0}.formula{font-family:Georgia,serif;font-size:23px;margin:9px 0}.small-stats{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:16px;font-variant-numeric:tabular-nums}.small-stats dt{color:var(--secondary)}.small-stats dd{margin:0;text-align:right}.body-key{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orbit);margin-right:7px}.body-key.second{background:var(--orbit2)}.footer{display:flex;justify-content:space-between;color:var(--secondary);font-size:12px;flex:none}.projection .controls,.projection .footer,.projection .presets,.projection .eyebrow,.projection .chapter,.projection .subtitle,.projection .tab-note,.projection .drag-hint{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:10px}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:21px}.projection .unit{font-size:21px}.projection .law-formula{font-size:28px}.projection .law-detail{font-size:20px}.projection .scene-heading{font-size:20px}.projection .legend{font-size:18px}.projection .transport button{font-size:20px}.projection .clock{font-size:21px}.projection h1{font-size:30px}dialog{max-height:86dvh;width:min(780px,calc(100% - 30px));overflow:auto;padding:26px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:var(--surface)}dialog::backdrop{background:#080d18a0}dialog h2{font-size:27px;font-weight:500;margin:0 0 15px}dialog p,dialog li{font-size:18px;line-height:1.55;color:var(--secondary)}dialog strong{color:var(--ink)}.close-row{text-align:right}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent-ink);color:var(--surface);border-radius:6px;padding:12px 20px;z-index:10}.toast:empty{display:none}[hidden]{display:none!important}
+@media(min-width:1600px){.shell{padding:18px 28px 12px;gap:15px}.workspace{grid-template-columns:minmax(0,1fr) 350px;gap:22px}.control-section{padding:20px}.section-label{font-size:15px}.field-head,.checks label{font-size:19px}.note{font-size:16px}.scene-heading{font-size:20px}.scene-meta{font-size:17px}.metric-label{font-size:20px}.metric-value{font-size:40px}.law-detail{font-size:20px}.law-formula{font-size:28px}.subtitle{font-size:19px}.header-actions button{font-size:18px}.controls .small-stats{font-size:18px}.presets button{font-size:18px}}
+@media(max-width:1100px){.subtitle,.tab-note{display:none}.shell{padding:12px;gap:10px}.workspace{grid-template-columns:minmax(0,1fr) 290px;gap:12px}.header-actions button{font-size:15px;padding:7px 9px}.metric-value{font-size:31px}.unit{font-size:15px}.metric-label{font-size:16px}.scene-meta{font-size:13px}.drag-hint{display:none}}
+@media(max-width:780px){.shell{height:auto;min-height:100dvh}.masthead{flex-wrap:wrap;gap:12px}.header-actions{margin-left:auto}.workspace{grid-template-columns:1fr;flex:none}.scene-card{height:490px;flex:none}.controls{overflow:visible;display:grid;grid-template-columns:1fr 1fr}.control-section{border-bottom:1px solid var(--line)}.control-section:nth-child(odd){border-right:1px solid var(--line)}.footer{display:none}.law-detail{font-size:16px}.tabs button{font-size:18px;padding:7px 13px}.projection .shell{height:100dvh;min-height:680px}.projection .workspace{flex:1}.projection .scene-card{height:auto;flex:1}.projection .metric-value{font-size:34px}.projection .metric-label{font-size:17px}.projection .unit{font-size:17px}.projection .law-detail{font-size:17px}.projection .law-formula{font-size:23px}}
+@media(max-width:520px){.header-actions{margin-left:0;flex-wrap:wrap}.header-actions button{font-size:14px}.eyebrow{font-size:12px}.scene-card{height:440px}.scene-heading{font-size:14px}.scene-toolbar{padding:8px 8px 0;gap:5px}.view-tools button{font-size:14px}.tabs{width:100%;gap:4px}.tabs button{flex:1;padding:7px 9px;font-size:17px}.tab-row{display:block}.controls{grid-template-columns:1fr}.control-section:nth-child(odd){border-right:0}.transport{flex-wrap:wrap;padding:8px;gap:7px}.transport #play{min-width:96px}.timeline{order:4;flex-basis:100%}.clock{margin-left:auto;font-size:16px}.scene-meta{padding:0 10px 7px}.metric{padding:0 8px}.metric-label{font-size:13px}.metric-value{font-size:27px}.unit{font-size:13px;margin-left:3px}.law-formula{font-size:22px}.law-index{font-size:28px;width:20px}.law{gap:8px;min-height:70px}.law-detail{font-size:15px}.presets button{font-size:14px}.projection .metric-value{font-size:28px}.projection .metric-label{font-size:14px}.projection .unit{font-size:14px}.projection .law-detail{font-size:16px}.projection .scene-heading{font-size:15px}.projection .legend{font-size:15px}.projection .transport button{font-size:17px}}
+@media print{.controls,.header-actions,.presets,.footer,.transport{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:600px}.scene-toolbar{display:none}}
+
+/* Les valeurs occupent la place libre à côté de l’orbite, pour préserver sa hauteur. */
+.scene-content{display:grid;grid-template-columns:minmax(0,1fr) 195px;flex:1;min-height:0}.scene-content .readout{display:flex;flex-direction:column;justify-content:center;gap:25px;padding:20px 14px 20px 0}.scene-content .metric{border:0;padding:0}.scene-content .metric-value{white-space:normal}.scene-content .unit{white-space:nowrap}.scene-content .metric-label{margin-bottom:4px}.primary:hover{background:var(--accent-ink);color:var(--surface);filter:brightness(1.1)}:root[data-theme=dark] .primary:hover{color:#22191e}.scene-content .stage{min-height:180px}.projection .scene-content{grid-template-columns:minmax(0,1fr) 255px}.projection .scene-content .readout{gap:35px;padding-right:24px}.projection .law{min-height:62px}
+@media(min-width:1600px){.scene-content{grid-template-columns:minmax(0,1fr) 245px}.scene-content .readout{gap:35px;padding-right:25px}}
+@media(max-width:1100px){.scene-content{grid-template-columns:minmax(0,1fr) 170px}.scene-content .readout{gap:22px;padding-right:10px}}
+@media(max-width:780px){.scene-content{grid-template-columns:minmax(0,1fr) 160px}.scene-content .metric-value{font-size:30px}.scene-content .unit{font-size:15px}.scene-card{height:540px}.projection .scene-content{grid-template-columns:minmax(0,1fr) 190px}.projection .scene-content .readout{padding-right:12px}}
+@media(max-width:520px){.scene-content,.projection .scene-content{display:flex;flex-direction:column}.scene-content .readout,.projection .scene-content .readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:5px 10px 12px}.scene-content .stage{flex:1;min-height:200px}.scene-content .metric-value,.projection .scene-content .metric-value{font-size:25px}.scene-content .metric-label{font-size:13px}.scene-content .unit{font-size:13px}.scene-card{height:570px}.scene-meta{font-size:13px}.scene-toolbar{flex-wrap:wrap}.scene-toolbar .view-tools{margin-left:auto}.projection .scene-content .stage{min-height:180px}}
+#scene:focus-visible{outline:2px dashed var(--accent);outline-offset:-4px}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<main class="shell">
+ <header class="masthead">
+  <div><div class="eyebrow">Mécanique · Expériences interactives</div><div class="heading"><span class="chapter">MC6</span><h1>Kepler</h1><span class="subtitle">Les trois lois, un même mouvement</span></div></div>
+  <div class="header-actions">
+   <button id="theme" aria-pressed="false" title="Changer de thème">Sombre</button>
+   <button id="help" class="icon-button" title="Modèle et utilisation" aria-label="Modèle et utilisation">ⓘ</button>
+   <button id="export" title="Enregistrer le schéma en SVG">Image ↓</button>
+   <button id="projection" aria-pressed="false" title="Agrandir la scène et masquer les réglages">Projection</button>
+   <button id="fullscreen" class="icon-button" aria-label="Plein écran" title="Plein écran">⛶</button>
+  </div>
+ </header>
+ <div class="tab-row"><nav class="tabs" aria-label="Lois de Kepler"><button data-view="orbit" aria-pressed="true">1 · Orbite</button><button data-view="areas" aria-pressed="false">2 · Aires</button><button data-view="periods" aria-pressed="false">3 · Périodes</button></nav><span class="tab-note">Un astre central fixe · un mouvement plan</span></div>
+ <div class="workspace">
+  <section class="experiment" aria-label="Animation de Kepler">
+   <div class="scene-card">
+    <div class="scene-toolbar"><h2 id="scene-heading" class="scene-heading">L’astre attracteur occupe un foyer</h2><div class="view-tools"><button id="zoom-out" class="zoom" aria-label="Réduire le dessin">−</button><button id="fit" title="Rétablir la vue entière">Cadrer</button><button id="zoom-in" class="zoom" aria-label="Agrandir le dessin">+</button></div></div>
+    <div class="scene-content"><div class="stage"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="group" tabindex="0" aria-labelledby="scene-title scene-desc"><title id="scene-title">Une orbite elliptique autour d’un foyer</title><desc id="scene-desc">Déplacer le mobile avec la souris ou les flèches du clavier.</desc><g id="drawing"></g></svg></div><div class="readout" aria-label="Grandeurs calculées"><div class="metric"><div class="metric-label" id="label-1"></div><div class="metric-value" id="metric-1"></div></div><div class="metric"><div class="metric-label" id="label-2"></div><div class="metric-value" id="metric-2"></div></div><div class="metric"><div class="metric-label" id="label-3"></div><div class="metric-value" id="metric-3"></div></div></div></div>
+    <div class="scene-meta"><div id="legend" class="legend"></div><span class="drag-hint">Glisser le mobile · glisser le fond pour déplacer la vue</span></div>
+    <div class="transport"><button id="play" class="primary" aria-label="Mettre en pause">❚❚ Pause</button><button id="restart" title="Revenir au périastre à t = 0" aria-label="Revenir à t égal zéro">↺</button><button id="step" title="Avancer d’un intervalle Δt" hidden>+ Δt</button><label class="timeline"><span class="sr-only" hidden>Position dans le tour du mobile 1</span><input type="range" id="phase" min="0" max="1000" step="1" value="0" aria-label="Position dans le tour du mobile 1"></label><output id="clock" class="clock">t = 0,00 an</output></div>
+   </div>
+   <div class="law"><span id="law-index" class="law-index">I</span><div><div id="law-formula" class="law-formula"></div><div id="law-detail" class="law-detail"></div></div></div>
+  </section>
+  <aside class="controls" aria-label="Réglages de l’animation">
+   <section class="control-section"><h2 class="section-label">Explorer</h2><div class="presets" id="presets" aria-label="Situations caractéristiques"></div></section>
+   <section class="control-section"><h2 class="section-label" id="orbit-label">01 / L’orbite</h2>
+    <label class="field-head" for="a1"><span>Demi-grand axe <i>a₁</i></span><span class="value-field"><input id="a1" type="number" min="0.3" max="5" step="0.05" value="1" aria-label="Demi-grand axe du mobile 1 en UA"> UA</span></label><input id="a1-range" type="range" min="0.3" max="5" step="0.05" value="1" aria-label="Régler le demi-grand axe du mobile 1">
+    <label class="field-head" for="e1"><span>Excentricité <i>e₁</i></span><span class="value-field"><input id="e1" type="number" min="0" max="0.95" step="0.01" value="0.55" aria-label="Excentricité du mobile 1"></span></label><input id="e1-range" type="range" min="0" max="0.95" step="0.01" value="0.55" aria-label="Régler l’excentricité du mobile 1">
+    <dl class="small-stats"><dt>Périastre <i>rₚ</i></dt><dd id="rp"></dd><dt>Apoastre <i>rₐ</i></dt><dd id="ra"></dd></dl>
+   </section>
+   <section id="second-controls" class="control-section" hidden><h2 class="section-label"><span class="body-key second"></span>02 / Le mobile 2</h2>
+    <label class="field-head" for="a2"><span>Demi-grand axe <i>a₂</i></span><span class="value-field"><input id="a2" type="number" min="0.3" max="5" step="0.05" value="1" aria-label="Demi-grand axe du mobile 2 en UA"> UA</span></label><input id="a2-range" type="range" min="0.3" max="5" step="0.05" value="1" aria-label="Régler le demi-grand axe du mobile 2">
+    <label class="field-head" for="e2"><span>Excentricité <i>e₂</i></span><span class="value-field"><input id="e2" type="number" min="0" max="0.95" step="0.01" value="0.15" aria-label="Excentricité du mobile 2"></span></label><input id="e2-range" type="range" min="0" max="0.95" step="0.01" value="0.15" aria-label="Régler l’excentricité du mobile 2">
+    <dl class="small-stats"><dt>Tours du mobile 1</dt><dd id="turns1">0</dd><dt>Tours du mobile 2</dt><dd id="turns2">0</dd><dt>T₁² / a₁³</dt><dd id="ratio1"></dd><dt>T₂² / a₂³</dt><dd id="ratio2"></dd></dl><p class="note">Les deux rapports sont exprimés en an²/UA³.</p>
+    <p class="note">Même astre attracteur, même horloge. Les mobiles partent ensemble de leur périastre à t = 0.</p>
+   </section>
+   <section id="areas-controls" class="control-section" hidden><h2 class="section-label">02 / Des durées égales</h2>
+    <label class="field-head" for="dt"><span>Intervalle Δt</span><span class="value-field"><input id="dt" type="number" min="2" max="12" step="1" value="6" aria-label="Durée des secteurs en pourcentage de la période"> % T₁</span></label><input id="dt-range" type="range" min="2" max="12" step="1" value="6" aria-label="Régler l’intervalle des secteurs">
+    <p class="note">Trois secteurs de référence, autour du périastre, de l’apoastre et entre les deux. Leurs angles et leurs formes diffèrent ; leurs aires sont égales.</p>
+    <div class="formula">d𝒜 / dt = 𝒞 / 2</div><p class="note">𝒞 = r² θ̇ : constante des aires. Les marques sur l’orbite sont espacées du même Δt.</p>
+   </section>
+   <section class="control-section"><h2 class="section-label">L’astre attracteur</h2>
+    <label class="field-head" for="mass"><span>Masse <i>mₒ</i></span><span class="value-field"><input id="mass" type="number" min="0.25" max="4" step="0.05" value="1" aria-label="Masse de l’astre en masses solaires"> M☉</span></label><input id="mass-range" type="range" min="0.25" max="4" step="0.05" value="1" aria-label="Régler la masse de l’astre attracteur">
+    <p class="note">À géométrie fixée, une masse centrale plus grande donne un mouvement plus rapide.</p>
+   </section>
+   <section class="control-section"><h2 class="section-label">Affichages</h2><div class="checks">
+    <label><input id="velocity" type="checkbox" checked>Vecteur vitesse</label>
+    <label><input id="radius" type="checkbox" checked>Rayon-vecteur OM</label>
+    <label><input id="geometry" type="checkbox" checked>Foyers, centre et grand axe</label>
+    <label><input id="marks" type="checkbox">Positions à temps égaux</label>
+   </div><p class="note">Les vecteurs vitesse partagent une échelle commune, ajustée au cadrage. Les astres sont agrandis pour être visibles.</p></section>
+   <section class="control-section"><h2 class="section-label">Lecture</h2><label for="rate" class="note">Temps simulé par seconde réelle</label><select id="rate"><option value="0.01">0,01 an / s · très lent</option><option value="0.03">0,03 an / s · lent</option><option value="0.06" selected>0,06 an / s</option><option value="0.12">0,12 an / s</option><option value="0.25">0,25 an / s</option><option value="0.5">0,50 an / s · rapide</option></select><p class="note">Espace : pause · R : t = 0 · C : cadrer · F : plein écran. Sur le dessin, ← et → déplacent le mobile.</p><button id="reset" style="width:100%;margin-top:12px">Tout réinitialiser</button></section>
+  </aside>
+ </div>
+ <footer class="footer"><span>E. Guillaume · MPSI · MC6</span><span>Modèle képlérien · fichier autonome hors connexion · longueurs en UA</span></footer>
+</main>
+<dialog id="info"><h2>Kepler · modèle et utilisation</h2>
+ <p><strong>Manipuler.</strong> Choisir une loi, régler a et e, puis lancer ou interrompre le mouvement. Glisser un mobile pour le positionner sur son orbite : la même horloge déplace les deux mobiles dans la vue Périodes. Glisser le fond pour déplacer la vue ; utiliser +, − ou Cadrer. Les flèches du clavier sur le dessin déplacent le mobile 1 (Maj : pas plus grand).</p>
+ <p><strong>Orbite.</strong> O est le foyer occupé par l’astre attracteur, F′ le second foyer, C le centre de l’ellipse. P et A désignent le périastre et l’apoastre. Lorsque e = 0, les deux foyers et le centre se confondent. Le mouvement s’effectue dans le sens trigonométrique.</p>
+ <p><strong>Aires.</strong> Les trois secteurs sont des intervalles de référence fixes, tous de durée Δt. Les positions ponctuelles correspondent aussi à des intervalles Δt ; le dernier intervalle avant le retour à t = 0 peut être incomplet. « + Δt » met en pause et avance d’un intervalle. La loi des aires vaut pour toute force centrale ; les trajectoires affichées ici sont képlériennes.</p>
+ <p><strong>Périodes.</strong> Les deux mobiles sont indépendants et interagissent uniquement avec le même astre central. t = 0 correspond au périastre pour chacun. Changer a ou la masse centrale remet les horloges à zéro ; modifier e conserve t et T. La barre de temps permet de choisir t entre 0 et T₁. Le bouton ↺ remet les deux mobiles à t = 0.</p>
+ <p><strong>Hypothèses.</strong> Gravitation newtonienne d’un astre ponctuel fixe, masses des mobiles négligeables devant sa masse, absence de perturbations et de frottements. L’équation de Kepler E − e sin E = nt est résolue numériquement ; le mouvement n’est pas uniforme en angle polaire. Cette animation traite les états liés, 0 ≤ e ≤ 0,95. Elle ne modélise pas les collisions avec la surface d’un astre.</p>
+ <p><strong>Unités et dessin.</strong> 1 UA = 149 597 870 700 m ; 1 an = 365,25 jours ; GM☉ = 1,32712440018 × 10²⁰ m³·s⁻². T est calculée à partir de ces constantes. La masse réglée est un multiple de la masse solaire, via GM. Le temps est accéléré ; tailles des corps, couleurs et épaisseurs sont conventionnelles. Les distances orbitales ont la même échelle dans les deux directions. Les vitesses sont affichées en km/s ; 𝒞 en UA²/an ; les aires en UA².</p>
+ <p><strong>Projection et export.</strong> Projection masque les réglages et agrandit les légendes ; Réglages les réaffiche. Image prépare un aperçu ; Enregistrer le SVG télécharge le dessin avec ses paramètres, le temps, les valeurs et la loi courante. Les thèmes clair et sombre s’appliquent aussi à l’export. Aucune ressource extérieure n’est nécessaire.</p>
+ <div class="close-row"><button id="close-info">Fermer</button></div>
+</dialog>
+<dialog id="export-info"><h2>Enregistrer le schéma</h2><p>Le SVG conserve les tracés, les paramètres et les valeurs de cet instant.</p><div id="export-preview" style="border:1px solid var(--line);border-radius:6px;overflow:auto;max-height:48vh"></div><div style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:18px"><a id="download-svg" style="color:var(--accent-ink);font-size:19px" download>Enregistrer le SVG</a><button id="close-export">Fermer</button></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script id="kepler-model">
+/* Modèle indépendant du dessin : UA, année julienne et multiple de GM solaire. */
+window.KeplerModel=(()=>{
+ 'use strict';
+ const TAU=2*Math.PI,AU=149597870700,YEAR=365.25*86400,GM=1.32712440018e20,MU=GM*YEAR*YEAR/(AU*AU*AU);
+ const mod=(x,m=TAU)=>((x%m)+m)%m;
+ function eccentric(mean,e){
+  if(!(e>=0&&e<1)||!Number.isFinite(mean))throw Error('Paramètres képlériens invalides');
+  const m=mod(mean+Math.PI)-Math.PI,turns=mean-m;
+  let lo=-Math.PI,hi=Math.PI,E=e<.8?m:(m<0?-Math.PI:Math.PI);
+  for(let i=0;i<70;i++){
+   const f=E-e*Math.sin(E)-m;if(Math.abs(f)<2e-14)return E+turns;
+   if(f>0)hi=E;else lo=E;
+   const next=E-f/(1-e*Math.cos(E));E=next>lo&&next<hi?next:(lo+hi)/2;
+  }
+  return E+turns;
+ }
+ function orbit(a,e,mass=1){
+  if(!(a>0&&mass>0&&e>=0&&e<1))throw Error('Orbite invalide');
+  const mu=MU*mass,n=Math.sqrt(mu/a**3),b=a*Math.sqrt(1-e*e),C=Math.sqrt(mu*a*(1-e*e));
+  return {a,e,mass,mu,n,b,C,T:TAU/n,area:Math.PI*a*b,rp:a*(1-e),ra:a*(1+e)};
+ }
+ function atMean(o,mean){
+  const E=eccentric(mean,o.e),c=Math.cos(E),s=Math.sin(E),d=1-o.e*c;
+  const x=o.a*(c-o.e),y=o.b*s,vx=-o.a*o.n*s/d,vy=o.b*o.n*c/d,r=o.a*d;
+  return {E,x,y,r,vx,vy,v:Math.hypot(vx,vy),theta:Math.atan2(y,x),thetaDot:o.C/(r*r)};
+ }
+ const atTime=(o,t)=>atMean(o,o.n*t);
+ function swept(o,m0,m1){const e0=eccentric(m0,o.e),e1=eccentric(m1,o.e);return .5*o.a*o.b*(e1-e0-o.e*(Math.sin(e1)-Math.sin(e0)));}
+ return Object.freeze({TAU,AU,YEAR,GM,MU,mod,eccentric,orbit,atMean,atTime,swept});
+})();
+</script>
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id),K=window.KeplerModel,NS='http://www.w3.org/2000/svg';
+ const defaults={a1:1,e1:.55,a2:1,e2:.15,mass:1,dt:6,velocity:true,radius:true,geometry:true,marks:false,rate:.06};
+ let state={...defaults},view='orbit',t=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,dark=false,zoom=1,pan=[0,0],W=900,H=400,scale=1,center=[0,0],last=0,drag=null,wasPlaying=false,toastTimer,resizeFrame,exportUrl=null;
+ let o1,o2,p1,p2,labels=[],obstacles=[],C={},vectorScale=1;
+ const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(x)<1e-10?0:x);
+ const el=(tag,attrs={},parent=$('drawing'))=>{const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));parent.append(n);return n;};
+ const path=points=>points.map((p,i)=>(i?'L':'M')+p.map(v=>v.toFixed(3)).join(',')).join(' ');
+ const P=(x,y)=>[W/2+(x-center[0])*scale+pan[0],H/2-(y-center[1])*scale+pan[1]];
+ const world=(x,y)=>[(x-W/2-pan[0])/scale+center[0],-(y-H/2-pan[1])/scale+center[1]];
+ const line=(a,b,color,width=1,extra={},parent)=>el('path',{d:path([a,b]),fill:'none',stroke:color,'stroke-width':width,...extra},parent);
+ function text(p,s,color=C.ink,size=22,anchor='start',extra={},parent){const n=el('text',{x:p[0],y:p[1],fill:color,'font-size':size,'text-anchor':anchor,...extra},parent);n.textContent=s;return n;}
+ const proj=()=>document.body.classList.contains('projection');
+ function palette(){const css=getComputedStyle(document.documentElement);for(const k of ['ink','secondary','line','accent','accent-ink','surface','orbit','orbit2','gold','teal','violet','star'])C[k]=css.getPropertyValue('--'+k).trim();}
+ function orbitModels(){o1=K.orbit(state.a1,state.e1,state.mass);o2=K.orbit(state.a2,state.e2,state.mass);p1=K.atTime(o1,t);p2=K.atTime(o2,t);}
+ function camera(){
+  const box=$('scene').getBoundingClientRect();W=Math.max(260,box.width);H=Math.max(170,box.height);$('scene').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const os=view==='periods'?[o1,o2]:[o1],left=Math.min(...os.map(o=>-o.ra)),right=Math.max(...os.map(o=>o.rp)),b=Math.max(...os.map(o=>o.b));
+  center=[(left+right)/2,0];const marginX=W<500?48:65,marginY=proj()?55:45;
+  scale=Math.min(Math.max(100,W-2*marginX)/(right-left),Math.max(75,H-2*marginY)/(2*b))*zoom;
+  const vmax=Math.max(...os.map(o=>Math.sqrt(o.mu*(1+o.e)/(o.a*(1-o.e)))));
+  vectorScale=.15*(right-left)/vmax;
+ }
+ function arrow(a,b,color,width=2.5){line(a,b,color,width);const angle=Math.atan2(b[1]-a[1],b[0]-a[0]),L=11;el('path',{d:path([b,[b[0]-L*Math.cos(angle-.4),b[1]-L*Math.sin(angle-.4)],[b[0]-L*Math.cos(angle+.4),b[1]-L*Math.sin(angle+.4)]])+'Z',fill:color});}
+ function collision(a,b,pad=7){return a.x<b.x+b.w+pad&&a.x+a.w+pad>b.x&&a.y<b.y+b.h+pad&&a.y+a.h+pad>b.y;}
+ function label(p,s,color=C.ink,preferred=[14,-18],size=proj()?27:22){
+  if(p[0]<-80||p[0]>W+80||p[1]<-80||p[1]>H+80)return;
+  const w=s.length*size*.57,h=size*1.2,choices=[preferred,[16,32],[-w-16,-18],[-w-16,32],[14,-48],[-w-14,-48],[18,60],[-w-18,60]];
+  let best=null;
+  for(const [dx,dy] of choices){const x=Math.max(8,Math.min(W-w-8,p[0]+dx)),y=Math.max(h+5,Math.min(H-15,p[1]+dy)),box={x,y:y-h*.85,w,h};let cost=Math.hypot(x-p[0],y-p[1])*.03;for(const b of labels)if(collision(box,b))cost+=100;for(const b of obstacles)if(collision(box,b,2))cost+=30;if(!best||cost<best.cost)best={x,y,box,cost};}
+  labels.push(best.box);if(Math.hypot(best.x-p[0],best.y-p[1])>60)line(p,[best.x+Math.min(12,w/2),best.y-h*.4],color,1,{opacity:.45});
+  text([best.x,best.y],s,color,size,'start',{'class':'label'});
+ }
+ function drawOrbit(o,color,second=false){const p=P(-o.a*o.e,0);el('ellipse',{cx:p[0],cy:p[1],rx:o.a*scale,ry:o.b*scale,fill:color,'fill-opacity':second?.015:.025,stroke:color,'stroke-width':second?2.5:3,'stroke-dasharray':second?'9 7':'none'});}
+ function geometry(){
+  if(!state.geometry)return;
+  const a=P(-o1.ra,0),b=P(o1.rp,0),c=P(-o1.a*o1.e,0),f=P(-2*o1.a*o1.e,0);
+  line(a,b,C.secondary,1,{'stroke-dasharray':'5 7',opacity:.6});
+  for(const p of [a,b])el('circle',{cx:p[0],cy:p[1],r:4,fill:C.orbit});
+  label(a,'A',C.orbit,[-30,-18]);label(b,'P',C.orbit,[13,-18]);
+  if(o1.e<1e-9)label(P(0,0),'O = C = F′',C.secondary,[18,35]);
+  else{
+   line([c[0]-5,c[1]],[c[0]+5,c[1]],C.secondary,1.5);line([c[0],c[1]-5],[c[0],c[1]+5],C.secondary,1.5);
+   el('circle',{cx:f[0],cy:f[1],r:3.5,fill:C.secondary});label(c,'C',C.secondary,[-8,33]);label(f,'F′',C.secondary,[-9,-19]);
+  }
+  // Cotation du grand axe à distance fixe sous l’ellipse : les lettres ne changent pas d’échelle.
+  const yy=P(0,-o1.b)[1]+27;
+  if(yy<H-10&&b[0]-a[0]>110){line([a[0],yy],[b[0],yy],C.secondary,1);for(const x of [a[0],b[0]])line([x,yy-5],[x,yy+5],C.secondary,1);label([(a[0]+b[0])/2,yy],'2a₁',C.secondary,[-17,23],proj()?25:21);}
+ }
+ function sector(o,m0,dm,color,index){
+  const pts=[P(0,0)],n=180,E0=K.eccentric(m0,o.e),E1=K.eccentric(m0+dm,o.e);for(let j=0;j<=n;j++){const E=E0+(E1-E0)*j/n;pts.push(P(o.a*(Math.cos(E)-o.e),o.b*Math.sin(E)));}
+  el('path',{d:path(pts)+'Z',fill:color,'fill-opacity':dark?.23:.19,stroke:color,'stroke-width':1.3});
+  const q=K.atMean(o,m0+dm/2),anchor=P(q.x*.65,q.y*.65);return {anchor,s:'𝒜'+['₁','₂','₃'][index],color};
+ }
+ function drawMarks(o,color){
+  const dm=K.TAU*state.dt/100;for(let k=0;k*dm<K.TAU-1e-9;k++){const q=K.atMean(o,k*dm),p=P(q.x,q.y);el('circle',{cx:p[0],cy:p[1],r:3.3,fill:C.surface,stroke:color,'stroke-width':1.5});}
+ }
+ function drawBody(o,p,color,index){
+  const pt=P(p.x,p.y),O=P(0,0);if(state.radius)line(O,pt,color,1.5,{'stroke-dasharray':'5 5',opacity:.7});
+  if(state.velocity){const tip=P(p.x+p.vx*vectorScale,p.y+p.vy*vectorScale);arrow(pt,tip,color);if(Math.hypot(tip[0]-pt[0],tip[1]-pt[1])>17)label(tip,view==='periods'?'v'+['₁','₂'][index-1]:'v',color,[10,-12],proj()?26:22);}
+  const g=el('g',{'data-mobile':index,'aria-label':`Mobile ${index}, à déplacer sur son orbite`});
+  el('circle',{cx:pt[0],cy:pt[1],r:21,fill:color,'fill-opacity':.06,stroke:color,'stroke-opacity':.25,'stroke-dasharray':'3 5'},g);
+  el('circle',{cx:pt[0],cy:pt[1],r:8,fill:color,stroke:C.surface,'stroke-width':2},g);
+  label(pt,view==='periods'?'M'+['₁','₂'][index-1]:'M',color,[15,-19],proj()?29:24);
+ }
+ function draw(){
+  orbitModels();camera();labels=[];obstacles=[];$('drawing').replaceChildren();
+  for(const p of view==='periods'?[p1,p2]:[p1]){const q=P(p.x,p.y);obstacles.push({x:q[0]-12,y:q[1]-12,w:24,h:24});}
+  const O=P(0,0);obstacles.push({x:O[0]-14,y:O[1]-14,w:28,h:28});
+  let sectorLabels=[];
+  if(view==='areas'){const dm=K.TAU*state.dt/100;sectorLabels=[sector(o1,-dm/2,dm,C.gold,0),sector(o1,Math.PI-dm/2,dm,C.teal,1),sector(o1,1.5*Math.PI-dm/2,dm,C.violet,2)];}
+  drawOrbit(o1,C.orbit);if(view==='periods')drawOrbit(o2,C.orbit2,true);
+  if(state.marks||view==='areas'){drawMarks(o1,C.orbit);if(view==='periods')drawMarks(o2,C.orbit2);}
+  if(view!=='periods')geometry();
+  el('circle',{cx:O[0],cy:O[1],r:15,fill:C.star,'fill-opacity':.12});el('circle',{cx:O[0],cy:O[1],r:8,fill:C.star});
+  if(!(state.geometry&&view!=='periods'&&o1.e<1e-9))label(O,'O',C.ink,[15,32],proj()?28:24);
+  for(const s of sectorLabels)label(s.anchor,s.s,s.color,[8,-8],proj()?28:24);
+  drawBody(o1,p1,C.orbit,1);if(view==='periods')drawBody(o2,p2,C.orbit2,2);
+  const scaleAU=niceScale(100/scale),bar=scaleAU*scale;
+  if(W>370&&H>200){line([18,H-15],[18+bar,H-15],C.secondary,2);for(const x of [18,18+bar])line([x,H-20],[x,H-10],C.secondary,1.5);text([18,H-29],fmt(scaleAU,scaleAU<1?2:1)+' UA',C.secondary,proj()?22:17);}
+  updateValues();
+ }
+ function niceScale(x){const n=10**Math.floor(Math.log10(x)),q=x/n;return (q>=5?5:q>=2?2:1)*n;}
+ const metric=(i,label,value,unit)=>{$('label-'+i).textContent=label;$('metric-'+i).replaceChildren(document.createTextNode(value));if(unit){const u=document.createElement('span');u.className='unit';u.textContent=unit;$('metric-'+i).append(u);}};
+ function updateValues(){
+  $('rp').textContent=fmt(o1.rp)+' UA';$('ra').textContent=fmt(o1.ra)+' UA';$('clock').textContent='t = '+fmt(t)+' an'+(t>=2?'s':'');
+  if(document.activeElement!==$('phase'))$('phase').value=K.mod(t,o1.T)/o1.T*1000;
+  $('phase').setAttribute('aria-valuetext',fmt(K.mod(t,o1.T)/o1.T*100,1)+' % du tour');
+  if(view==='orbit'){
+   metric(1,'Distance OM',fmt(p1.r),'UA');metric(2,'Vitesse v',fmt(p1.v*K.AU/K.YEAR/1000,1),'km/s');metric(3,'Période T₁',fmt(o1.T),'an');
+   $('law-formula').textContent='L’astre attracteur est au foyer O de l’ellipse.';
+   $('law-detail').textContent=state.e1===0?'e₁ = 0 : le cercle est une ellipse dont les foyers sont confondus.':'rₚ = a₁(1 − e₁) ; rₐ = a₁(1 + e₁). La vitesse est maximale au périastre.';
+  }else if(view==='areas'){
+   metric(1,'Durée commune Δt',fmt(o1.T*state.dt/100,3),'an');metric(2,'Aire de chaque secteur',fmt(o1.area*state.dt/100,3),'UA²');metric(3,'Constante des aires 𝒞',fmt(o1.C),'UA²/an');
+   $('law-formula').textContent='𝒜₁ = 𝒜₂ = 𝒜₃ = 𝒞 Δt / 2';
+   $('law-detail').textContent='Des durées égales donnent des aires égales, avec des angles et des distances parcourues différents.';
+  }else{
+   metric(1,'Période T₁ · mobile 1',fmt(o1.T),'an');metric(2,'Période T₂ · mobile 2',fmt(o2.T),'an');metric(3,'Rapport T₂ / T₁',fmt(o2.T/o1.T,3),'');
+   $('law-formula').textContent='T₁² / a₁³ = T₂² / a₂³ = 4π² / (Gmₒ)';
+   $('law-detail').textContent=Math.abs(o1.a-o2.a)<1e-9?'Même demi-grand axe : même période, quelles que soient les excentricités.':'T₂ / T₁ = (a₂ / a₁)³ᐟ². Le demi-grand axe fixe la période ; l’excentricité ne la change pas.';
+   $('turns1').textContent=Math.floor((t+1e-10)/o1.T);$('turns2').textContent=Math.floor((t+1e-10)/o2.T);$('ratio1').textContent=fmt(o1.T**2/o1.a**3,4);$('ratio2').textContent=fmt(o2.T**2/o2.a**3,4);
+  }
+ }
+ function sync(skip=null){for(const key of ['a1','e1','a2','e2','mass','dt']){if(key!==skip)$(key).value=state[key];$(key+'-range').value=state[key];}for(const key of ['velocity','radius','geometry','marks'])$(key).checked=state[key];$('rate').value=state.rate;}
+ function transport(){ $('play').textContent=playing?'❚❚ Pause':'▶ Lire';$('play').setAttribute('aria-label',playing?'Mettre en pause':'Lancer le mouvement');last=0;}
+ function resetTime(){t=0;draw();}
+ function setView(next){
+  view=next;zoom=1;pan=[0,0];for(const n of document.querySelectorAll('[data-view]'))n.setAttribute('aria-pressed',n.dataset.view===view);
+  $('second-controls').hidden=view!=='periods';$('areas-controls').hidden=view!=='areas';$('step').hidden=view!=='areas';$('geometry').disabled=view==='periods';
+  $('orbit-label').textContent=view==='periods'?'01 / Le mobile 1':'01 / L’orbite';
+  $('scene-heading').textContent=({orbit:'L’astre attracteur occupe un foyer',areas:'Trois secteurs · une même durée Δt',periods:'Deux orbites · une même horloge'})[view];
+  $('scene-title').textContent=({orbit:'Une ellipse autour d’un foyer',areas:'Trois secteurs d’aires égales',periods:'Comparaison de deux mouvements képlériens'})[view];
+  $('law-index').textContent=({orbit:'I',areas:'II',periods:'III'})[view];
+  $('legend').innerHTML=view==='areas'?'<span><i style="--c:var(--gold)"></i>𝒜₁</span><span><i style="--c:var(--teal)"></i>𝒜₂</span><span><i style="--c:var(--violet)"></i>𝒜₃</span>':view==='periods'?'<span><i style="--c:var(--orbit)"></i>Mobile 1</span><span><i class="dashed" style="--c:var(--orbit2)"></i>Mobile 2</span>':'<span><i style="--c:var(--orbit)"></i>Orbite</span><span><i style="--c:var(--star)"></i>Astre attracteur</span>';
+  const ps=view==='periods'?[['equal','Même a, e différents'],['double','a₂ = 2 a₁'],['both-circles','Deux cercles']]:[['circle','Cercle'],['ellipse','Ellipse'],['comet','Très excentrique']];
+  $('presets').replaceChildren();for(const [key,s] of ps){const b=document.createElement('button');b.textContent=s;b.dataset.preset=key;$('presets').append(b);}
+  draw();
+ }
+ function preset(key){
+  if(key==='circle')state.e1=0;if(key==='ellipse')Object.assign(state,{a1:1,e1:.55});if(key==='comet')Object.assign(state,{a1:1,e1:.9});
+  if(key==='equal')Object.assign(state,{a1:1,a2:1,e1:.7,e2:.1});if(key==='double')Object.assign(state,{a1:1,a2:2,e1:.15,e2:.15});if(key==='both-circles')Object.assign(state,{a1:1,a2:1.6,e1:0,e2:0});
+  t=0;zoom=1;pan=[0,0];sync();draw();
+ }
+ for(const key of ['a1','e1','a2','e2','mass','dt']){
+  const accept=(e,preserve=false)=>{let value=Number(e.target.value);if(e.target.value.trim()===''||!Number.isFinite(value))return;const n=$(key),lo=Number(n.min),hi=Number(n.max);value=Math.max(lo,Math.min(hi,value));state[key]=value;if(['a1','a2','mass'].includes(key))t=0;zoom=1;pan=[0,0];sync(preserve?key:null);draw();};
+  $(key+'-range').addEventListener('input',e=>accept(e));
+  $(key).addEventListener('input',e=>{const v=Number(e.target.value);if(e.target.value!==''&&Number.isFinite(v)&&v>=Number(e.target.min)&&v<=Number(e.target.max))accept(e,true);});
+  $(key).addEventListener('change',e=>{if(e.target.value.trim()===''||!Number.isFinite(Number(e.target.value))){sync();return;}accept(e);});
+ }
+ for(const key of ['velocity','radius','geometry','marks'])$(key).addEventListener('change',e=>{state[key]=e.target.checked;draw();});
+ $('rate').addEventListener('change',e=>state.rate=Number(e.target.value));
+ document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',()=>setView(n.dataset.view)));
+ $('presets').addEventListener('click',e=>{const n=e.target.closest('[data-preset]');if(n)preset(n.dataset.preset);});
+ $('play').addEventListener('click',()=>{playing=!playing;transport();});$('restart').addEventListener('click',resetTime);
+ $('step').addEventListener('click',()=>{playing=false;transport();t+=o1.T*state.dt/100;draw();});
+ $('phase').addEventListener('input',e=>{playing=false;transport();t=Number(e.target.value)/1000*o1.T;draw();});
+ $('reset').addEventListener('click',()=>{state={...defaults};t=0;zoom=1;pan=[0,0];playing=false;transport();sync();setView('orbit');});
+ const fit=()=>{zoom=1;pan=[0,0];draw();};$('fit').addEventListener('click',fit);
+ const changeZoom=f=>{zoom=Math.max(.5,Math.min(3,zoom*f));draw();};$('zoom-in').addEventListener('click',()=>changeZoom(1.2));$('zoom-out').addEventListener('click',()=>changeZoom(1/1.2));
+ $('projection').addEventListener('click',()=>{const on=document.body.classList.toggle('projection');$('projection').textContent=on?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',on);zoom=1;pan=[0,0];requestAnimationFrame(draw);});
+ function setTheme(on){dark=on;document.documentElement.dataset.theme=on?'dark':'light';$('theme').textContent=on?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',on);palette();try{localStorage.setItem('mc6-kepler-theme',on?'dark':'light');}catch{}draw();}
+ $('theme').addEventListener('click',()=>setTheme(!dark));
+ function toast(s){$('toast').textContent=s;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3000);}
+ async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran ici.');}}
+ $('fullscreen').addEventListener('click',fullscreen);
+ $('help').addEventListener('click',()=>{wasPlaying=playing;playing=false;transport();$('info').showModal();});$('close-info').addEventListener('click',()=>$('info').close());$('info').addEventListener('close',()=>{playing=wasPlaying;transport();});
+ document.addEventListener('visibilitychange',()=>{last=0;});
+ document.addEventListener('keydown',e=>{
+  if($('info').open||$('export-info').open||/INPUT|SELECT|BUTTON|TEXTAREA/.test(e.target.tagName))return;
+  if(e.code==='Space'){e.preventDefault();playing=!playing;transport();}
+  if(e.key.toLowerCase()==='r')resetTime();if(e.key.toLowerCase()==='c')fit();if(e.key.toLowerCase()==='f')fullscreen();
+  if(e.target===$('scene')&&['ArrowLeft','ArrowRight','Home'].includes(e.key)){e.preventDefault();playing=false;transport();t=e.key==='Home'?0:Math.max(0,t+(e.key==='ArrowRight'?1:-1)*o1.T*(e.shiftKey?.05:1/120));draw();}
+ });
+ function pointerPoint(e){const r=$('scene').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+ $('scene').addEventListener('pointerdown',e=>{if(e.button!==0)return;const target=e.target.closest('[data-mobile]'),p=pointerPoint(e);drag={index:target?Number(target.dataset.mobile):0,start:p,pan:[...pan]};if(target){playing=false;transport();}e.preventDefault();$('scene').focus({preventScroll:true});$('scene').setPointerCapture(e.pointerId);});
+ $('scene').addEventListener('pointermove',e=>{
+  if(!drag)return;const p=pointerPoint(e);if(!drag.index){pan=[drag.pan[0]+p[0]-drag.start[0],drag.pan[1]+p[1]-drag.start[1]];}else{
+   const o=drag.index===1?o1:o2,q=world(...p),E=Math.atan2(q[1]/o.b,q[0]/o.a+o.e);t=K.mod(E-o.e*Math.sin(E))/o.n;
+  }draw();
+ });
+ const endDrag=()=>{drag=null;};$('scene').addEventListener('pointerup',endDrag);$('scene').addEventListener('pointercancel',endDrag);$('scene').addEventListener('lostpointercapture',endDrag);
+ $('scene').addEventListener('wheel',e=>{e.preventDefault();changeZoom(e.deltaY<0?1.08:1/1.08);},{passive:false});
+ $('export').addEventListener('click',()=>{
+  wasPlaying=playing;playing=false;transport();draw();const clone=$('scene').cloneNode(true),extra=view==='periods'?`, a₂ = ${fmt(state.a2)} UA, e₂ = ${fmt(state.e2)}`:'';
+  const EW=Math.max(900,W);clone.setAttribute('width',EW);clone.setAttribute('height',H+250);clone.setAttribute('viewBox',`0 -90 ${EW} ${H+250}`);clone.removeAttribute('style');clone.removeAttribute('tabindex');clone.querySelector('#drawing').setAttribute('transform',`translate(${(EW-W)/2} 0)`);
+  const bg=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:0,y:-90,width:EW,height:H+250,fill:C.surface}))bg.setAttribute(k,v);clone.insertBefore(bg,clone.firstChild);
+  for(const n of clone.querySelectorAll('.label')){n.setAttribute('stroke',C.surface);n.setAttribute('stroke-width','5');n.setAttribute('paint-order','stroke');n.removeAttribute('class');}
+  for(const n of clone.querySelectorAll('[data-mobile]'))n.removeAttribute('data-mobile');
+  const add=(y,s,size=17)=>{let row='',yy=y;const max=(EW-36)/(size*.57);for(const word of s.split(' ')){if((row+' '+word).length>max&&row){const n=text([18,yy],row,C.ink,size,'start',{},clone);n.setAttribute('font-family','Arial, Helvetica, sans-serif');yy+=size*1.3;row='';}row+=(row?' ':'')+word;}const n=text([18,yy],row,C.ink,size,'start',{},clone);n.setAttribute('font-family','Arial, Helvetica, sans-serif');};
+  add(-57,'MC6 · Kepler · '+({orbit:'Orbite',areas:'Loi des aires',periods:'Loi des périodes'})[view],25);
+  add(-30,`a₁ = ${fmt(state.a1)} UA, e₁ = ${fmt(state.e1)}${extra} · mₒ = ${fmt(state.mass)} M☉ · t = ${fmt(t,3)} an`);
+  add(H+27,$('law-formula').textContent,21);
+  for(let i=1;i<=3;i++)add(H+37+i*24,$('label-'+i).textContent+' : '+[...$('metric-'+i).childNodes].map(n=>n.textContent).join(' '),18);
+  add(H+142,'E. Guillaume · MPSI · temps accéléré ; corps agrandis ; distances orbitales à même échelle.',14);
+  clone.setAttribute('font-family','Arial, Helvetica, sans-serif');clone.removeAttribute('id');clone.removeAttribute('aria-labelledby');clone.setAttribute('role','img');clone.setAttribute('aria-label','Schéma exporté de Kepler');clone.querySelector('desc').textContent='Instantané du modèle képlérien avec paramètres et valeurs calculées.';for(const n of clone.querySelectorAll('[id]'))n.removeAttribute('id');
+  exportUrl=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml;charset=utf-8'}));$('download-svg').href=exportUrl;$('download-svg').download='MC6_Kepler_'+view+'.svg';
+  const preview=clone.cloneNode(true);preview.style.width='100%';preview.style.height='auto';$('export-preview').replaceChildren(preview);$('export-info').showModal();
+ });
+ $('close-export').addEventListener('click',()=>$('export-info').close());$('export-info').addEventListener('close',()=>{const old=exportUrl;exportUrl=null;setTimeout(()=>URL.revokeObjectURL(old),10000);playing=wasPlaying;transport();});
+ new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(draw);}).observe($('scene').parentElement);
+ function tick(now){if(last&&playing&&!document.hidden){t+=(now-last)/1000*state.rate;draw();}last=now;requestAnimationFrame(tick);}
+ try{dark=localStorage.getItem('mc6-kepler-theme')==='dark';}catch{}
+ sync();orbitModels();setView('orbit');setTheme(dark);transport();requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

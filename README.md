@@ -2,4 +2,4 @@
 
 Animations interactives d’Émilien Guillaume, classées par thème.
 
-Ouvrir `index.html` pour accéder au catalogue. Chaque animation est également accessible par son propre lien.
+[Ouvrir les animations](https://emiliengui.github.io/animations-physique/). Chaque animation est également accessible par son propre lien.
