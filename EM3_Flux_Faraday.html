@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Surface orientée, flux magnétique et loi de Faraday : atelier autonome MPSI.">
+<title>Du flux à la force électromotrice · EM3 · MPSI</title>
+<style>:root{color-scheme:light;--paper:#eef2f6;--surface:#fff;--ink:#162536;--muted:#536477;--line:#ced8e2;--accent:#254b70;--accent-ink:#254b70;--soft:#e9f0f7;--field:#2869ae;--flux:#256d62;--emf:#8f2227;--current:#995014;--normal:#8558a2;--pos:#c34542;--neg:#366ca4;--shadow:0 4px 22px #19344d09}
+:root[data-theme=dark]{color-scheme:dark;--paper:#101a26;--surface:#182535;--ink:#edf2f9;--muted:#b5c4d6;--line:#384e65;--accent:#a5c7eb;--accent-ink:#a5c7eb;--soft:#22384d;--field:#85bcff;--flux:#7cd4bc;--emf:#ffa3a2;--current:#ffc17c;--normal:#d1b2f1;--pos:#d76c6c;--neg:#668fcb;--shadow:0 4px 22px #0002}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 11px;border:1px solid var(--line);border-radius:6px;color:var(--ink);background:var(--surface);cursor:pointer;white-space:nowrap}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button[aria-pressed=true],button.primary{color:var(--surface);background:var(--accent-ink);border-color:var(--accent-ink)}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--field);outline-offset:3px}input,select{accent-color:var(--accent-ink)}input[type=number],select{color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:6px}input[type=number]{width:82px;text-align:right}input[type=range]{width:100%;height:23px;margin:6px 0 0;cursor:pointer}input[type=checkbox]{width:19px;height:19px;margin:0}select{width:100%;min-height:40px;max-width:100%}p{margin:8px 0}h1{font-size:28px;line-height:1.15;font-weight:500;letter-spacing:-.03em;margin:0}.topline{height:5px;background:#254b70}.shell{height:calc(100dvh - 5px);max-width:2050px;margin:auto;display:flex;flex-direction:column;gap:11px;padding:14px 18px 12px}.masthead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none}.brand{min-width:220px;flex:1}.eyebrow{color:var(--accent-ink);font-size:12px;letter-spacing:.11em;font-weight:bold;margin-bottom:3px;text-transform:uppercase}.global-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.global-actions button{font-size:15px;line-height:1.2}.global-actions #fullscreen{width:40px;max-width:40px;padding:0;font-size:23px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:14px;flex:1;min-height:0}.main{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(220px,1fr) auto minmax(155px,.56fr) auto;gap:9px}.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow)}.scene-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.scene-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 0;flex:none}.scene-top .kicker{font-size:12px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.06em}.scene-tools{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.scene-tools button{min-height:33px;font-size:14px;padding:4px 8px}.scene-tools .square{width:32px;padding:0;font-size:21px}.scene-svg{display:block;width:100%;height:100%;min-height:0;flex:1;touch-action:none;user-select:none}.scene-note{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:31px;font-size:15px;padding:2px 13px 7px;color:var(--muted)}.scene-note .emphasis{font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums}.scene-note .hint{font-size:13px}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:7px 0}.readout{min-width:0;padding:0 14px;border-left:1px solid var(--line)}.readout:first-child{border:0}.metric-label{display:flex;align-items:center;gap:7px;font-size:16px;color:var(--muted)}.metric-label:before{content:'';height:3px;width:16px;background:var(--c);flex:none}.metric-value{font-size:34px;line-height:1.18;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.metric-unit{font-size:.53em;letter-spacing:0;margin-left:4px;color:var(--muted)}.metric-extra{font-size:12px;color:var(--muted);min-height:16px}.plots-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.plot-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 13px 0;font-size:17px}.formula{font:21px Georgia,'Times New Roman',serif;color:var(--ink)}.plot-note{font-size:13px;color:var(--muted);text-align:right}.plot-svg{width:100%;height:100%;display:block;min-height:0;flex:1;touch-action:none}.transport{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-height:42px}.transport button{font-size:15px}.transport .time{color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}.transport .scrub{flex:1;min-width:70px;max-width:400px;margin:0}.status{font-size:15px;color:var(--muted);flex:1;min-width:160px}.controls{overflow:auto;min-height:0;scrollbar-width:thin;background:var(--surface);border:1px solid var(--line);border-radius:9px}.control-section{padding:15px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-title{font-size:12px;color:var(--accent-ink);letter-spacing:.09em;font-weight:bold;text-transform:uppercase;margin:0 0 11px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:16px;margin-top:12px}.field-head:first-child{margin-top:0}.field-head label{max-width:190px}.small-note{font-size:13px;color:var(--muted);line-height:1.5}.control-section .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}.control-section .row>button{font-size:14px;flex:1;min-height:36px;padding:5px 8px}.check{display:flex;gap:9px;align-items:center;font-size:16px;cursor:pointer;margin:10px 0}.explain{padding:9px 11px;background:var(--soft);border-left:3px solid var(--accent);font-size:14px;line-height:1.45;color:var(--muted);margin-top:10px}.mode-tabs{display:flex;gap:4px;margin-bottom:11px}.mode-tabs button{flex:1;padding:7px 5px;min-height:38px;font-size:13px;white-space:normal}.mobile-settings,.panel-close{display:none}.drawer-backdrop{display:none}.timeline-caption{font-size:13px;color:var(--muted)}.answer-masked{color:var(--muted)}.prediction .reveal-answer{visibility:hidden}.prediction .answer-value:after{content:'?';visibility:visible}.prediction .answer-value .metric-unit{visibility:hidden}dialog{width:min(800px,calc(100% - 28px));max-height:87dvh;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:25px;overflow:auto}dialog::backdrop{background:#061427a8}dialog h2{font-size:27px;font-weight:500;margin:0 0 16px}dialog h3{font-size:19px;margin-top:20px}dialog p,dialog li{font-size:17px;line-height:1.6;color:var(--muted)}dialog .close-row{display:flex;justify-content:flex-end;margin-top:22px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);padding:12px 18px;background:var(--accent-ink);color:var(--surface);border-radius:6px;z-index:20;font-size:16px}.toast:empty{display:none}[hidden]{display:none!important}svg text{font-family:Arial,Helvetica,sans-serif}.projection .controls,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{padding:10px 15px;max-width:none}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:20px}.projection .metric-extra{font-size:14px}.projection .scene-note .emphasis{font-size:22px}.projection .scene-note .hint{display:none}.projection .plot-head .formula{font-size:24px}.projection .plot-note{font-size:16px}.projection .transport button,.projection .status{font-size:18px}.projection .main{grid-template-rows:minmax(240px,1fr) auto minmax(165px,.55fr) auto}.projection .mobile-settings{display:none!important}
+@media(max-width:1200px){.workspace{grid-template-columns:minmax(0,1fr) 282px;gap:10px}.shell{padding:10px 12px;gap:9px}h1{font-size:25px}.scene-top{padding:7px 9px 0}.scene-top .kicker{font-size:11px}.metric-value{font-size:31px}.status{font-size:13px}.global-actions button{padding:7px 9px;font-size:14px}.readout{padding:0 10px}.scene-tools button{font-size:13px}.control-section{padding:13px}}
+@media(max-width:1000px){.workspace{grid-template-columns:1fr}.mobile-settings{display:inline-flex}.controls{position:fixed;inset:0 0 0 auto;width:min(340px,88vw);border-radius:0;z-index:12;transform:translateX(102%);transition:transform .18s ease;box-shadow:-8px 0 36px #0003}.panel-open .controls{transform:translateX(0)}.panel-close{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.drawer-backdrop{position:fixed;inset:0;background:#07162577;z-index:11}.panel-open .drawer-backdrop{display:block}.projection .controls{display:none}}
+@media(max-width:760px){.masthead{gap:10px}.brand{flex-basis:100%}.global-actions{justify-content:flex-start}.global-actions button{font-size:14px;padding:6px 9px}.shell{height:auto;min-height:calc(100dvh - 5px);padding:10px;gap:12px}.main{grid-template-rows:340px auto 270px auto}.workspace{flex:none}.scene-top{flex-wrap:wrap}.scene-tools{margin-left:auto}.scene-note .hint{display:none}.metric-label{font-size:14px}.metric-value{font-size:29px}.metric-extra{font-size:11px}.readout{padding:0 8px}.metric-label:before{width:10px}.transport .scrub{order:5;flex-basis:100%;max-width:none}.status{order:6;flex-basis:100%}.plot-head{flex-wrap:wrap;gap:3px;padding:8px 10px 0}.plot-note{text-align:left;font-size:12px}.projection .shell{height:auto;min-height:100dvh}.projection .main{grid-template-rows:350px auto 290px auto}.projection .metric-value{font-size:32px}.projection .metric-label{font-size:15px}.projection .metric-extra{font-size:12px}}
+@media(max-width:420px){h1{font-size:24px}.metric-value{font-size:25px}.metric-label{font-size:12px}.metric-unit{font-size:.5em}.scene-tools button{font-size:12px;padding:4px 6px}.scene-tools .square{width:29px}.scene-note .emphasis{font-size:15px}.scene-top .kicker{display:none}.scene-top{justify-content:flex-end}.scene-note{padding:2px 9px 7px}.projection .metric-value{font-size:29px}}
+.vec{display:inline-block;position:relative;padding-top:.04em}.vec:before{content:'→';position:absolute;left:0;right:0;top:-.66em;text-align:center;font-size:.9em;line-height:1}
+@media(prefers-reduced-motion:reduce){.controls{transition:none}}
+@media print{.controls,.global-actions,.transport{display:none}.shell{height:auto}.workspace{display:block}.main{grid-template-rows:400px auto 240px auto}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<div class="shell">
+  <header class="masthead">
+    <div class="brand"><div class="eyebrow">EM3 · Fondements de l’induction · MPSI</div><h1>Du flux à la force électromotrice</h1></div>
+    <div class="global-actions" aria-label="Commandes générales">
+      <button class="mobile-settings" id="settings" aria-controls="controls" aria-expanded="false">Réglages</button>
+      <span id="extra-actions" style="display:contents"></span>
+      <button id="theme">Sombre</button>
+      <button id="help">Aide</button>
+      <button id="export" title="Exporter la scène, les valeurs et les courbes en SVG">Image</button>
+      <button id="projection" aria-pressed="false">Projection</button>
+      <button id="fullscreen" title="Plein écran (F)" aria-label="Plein écran">⛶</button>
+    </div>
+  </header>
+  <div class="workspace">
+    <main class="main">
+      <section class="card scene-card" aria-label="Expérience">
+        <div class="scene-top"><div class="kicker" id="scene-kicker"></div><div class="scene-tools"><span id="scene-extra" style="display:contents"></span><button id="zoom-out" class="square" aria-label="Réduire le dessin">−</button><button id="zoom-in" class="square" aria-label="Agrandir le dessin">+</button><button id="frame">Cadrer</button></div></div>
+        <svg id="scene" class="scene-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Schéma interactif du phénomène d’induction"></svg>
+        <div class="scene-note"><span class="emphasis" id="scene-state"></span><span class="hint" id="scene-hint"></span></div>
+      </section>
+      <section class="readouts" aria-label="Valeurs instantanées">
+        <div class="readout" style="--c:var(--flux)"><div class="metric-label">Flux lié Φ</div><div class="metric-value" id="phi-value"></div><div class="metric-extra" id="phi-extra"></div></div>
+        <div class="readout" style="--c:var(--emf)"><div class="metric-label">F.é.m. e</div><div class="metric-value" id="e-value"></div><div class="metric-extra" id="e-extra"></div></div>
+        <div class="readout" style="--c:var(--current)"><div class="metric-label">Courant i</div><div class="metric-value" id="i-value"></div><div class="metric-extra" id="i-extra"></div></div>
+      </section>
+      <section class="card plots-card" aria-label="Flux et force électromotrice en fonction du temps"><div class="plot-head"><span id="plot-formula" class="formula"></span><span id="plot-note" class="plot-note"></span></div><svg id="plots" class="plot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Courbes synchronisées ; glisser pour choisir un instant"></svg></section>
+      <div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Lecture</button><button id="reset" title="Réinitialiser (R)">Recommencer</button><span class="time" id="time"></span><input id="scrub" class="scrub" type="range" min="0" max="8" step=".01" value="0" aria-label="Instant physique en secondes"><span id="status" class="status"></span></div>
+    </main>
+    <aside class="controls" id="controls" aria-label="Réglages de l’expérience"><div class="panel-close"><strong>Réglages</strong><button id="close-panel" aria-label="Fermer les réglages">Fermer</button></div><div id="panel-content"></div></aside>
+  </div>
+</div>
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">Du flux à la force électromotrice</h2><h3>Flux, orientation et Faraday</h3>
+<p>Le contour plan orienté définit le vecteur surface S⃗ par la règle de la main droite. Dans un champ uniforme sur chaque spire : Φ = N B S cos α, avec B la norme du champ et α l’angle entre B⃗ et S⃗. Φ est le flux total lié aux N spires, en weber. La loi de Faraday donne e = −dΦ/dt. Le sens de référence de e suit celui du contour (convention générateur).</p>
+<p>La commande d’inversion du sens de référence inverse S⃗, Φ, e et i. Elle laisse identiques la géométrie matérielle et le sens réel du courant. Le paramètre d’inclinaison décrit la position géométrique initiale ; l’angle α affiché tient compte du champ instantané et de la normale orientée.</p>
+<h3>Situations réunies dans cet atelier</h3>
+<p>Champ sinusoïdal B(t) = B₀ cos(2πft) ; champ croissant B(t) = B₀t/(8 s) ; champ exponentiel B(t) = B₀ exp(−t/τ) ; rotation à vitesse angulaire Ω = 2πf ; translation sans rotation ni déformation dans un champ uniforme. La variation temporelle est calculée analytiquement pour chaque programme.</p>
+<p>Pour la déformation, a = √S₀ et x(t) = a[0,6 + 0,8t/(8 s)] ; y(t) = 2a − x(t). Le périmètre 2(x+y) reste constant et S = xy est maximal à t = 4 s. La normale est verticale ; le mouvement se poursuit alors que dS/dt, e et i s’annulent à cet instant. Les paramètres restent définis sur l’intervalle 0–8 s.</p>
+<p>La tangente violette à Φ(t) représente sa pente, égale à −e. Les courbes utilisent les mêmes unités et conventions que les valeurs instantanées. Le champ peut s’annuler dans le programme sinusoïdal : α est alors indéfini, mais le flux et sa dérivée restent parfaitement définis.</p>
+<h3>Manipulation et limites</h3>
+<p>Les poignées règlent la situation initiale : la poignée au bout de S⃗ règle l’inclinaison ; en manipulation libre, celle du contour règle l’aire. Elles remettent le temps à zéro. Les flèches du champ sont proportionnelles à |B| dans cet atelier. Les longueurs des vecteurs B⃗ et S⃗ ont des échelles distinctes ; le remplissage du contour aide à lire son orientation et ne représente aucun matériau.</p>
+<p>Champ extérieur uniforme, spires identiques soumises au même flux, circuit filiforme. La fermeture sur R utilise i = e/R, avec auto-induction négligée. La flèche orange sur le contour indique le sens conventionnel réel du courant, sans représenter le mouvement des électrons. Les effets de peau, capacités parasites, rayonnement et réactions du courant sur le champ extérieur ne sont pas calculés.</p><h3>Utilisation</h3><p>Les réglages se trouvent à droite ; sur une fenêtre étroite, utiliser le bouton Réglages. Projection agrandit les informations et masque le panneau. Le petit bouton ⛶ active séparément le plein écran. Les boutons +, − et Cadrer agissent sur la géométrie, en conservant la taille des légendes. Image exporte le schéma, les valeurs et les courbes en SVG, dans le thème choisi.</p><p>Lecture et Pause font avancer ou figent le temps du modèle : une pause de lecture ne représente pas un arrêt physique imposé à l’objet. La barre du temps et les courbes permettent d’examiner un instant. Les changements des paramètres physiques relancent le programme à t = 0, sauf les changements de résistance, de branchement ou de convention, qui gardent l’instant courant. Un changement de convention réexprime l’ensemble du signal et ne crée aucune impulsion artificielle.</p><p>Raccourcis : Espace, lecture/pause ; R, recommencer ; F, plein écran. Fonctionnement autonome, hors connexion. Réalisation pour le cours EM3 de E. Guillaume.</p><div class="close-row"><button id="close-help" class="primary">Revenir à l’expérience</button></div></dialog>
+<div id="toast" class="toast" role="status"></div><span id="export-caption" hidden></span>
+<script id="physics">'use strict';
+// Moteurs communs aux deux ateliers. Toutes les entrées géométriques sont en SI.
+// L'orientation choisie multiplie Φ, e et i ; le courant physique est orientation × i.
+window.EM3Model = (() => {
+  const MU0 = 4e-7 * Math.PI, TAU = 2 * Math.PI, rad = Math.PI / 180;
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const quadrature = n => Array.from({length:n}, (_, k) => ({
+    c:Math.cos(TAU*(k+.5)/n), s:Math.sin(TAU*(k+.5)/n), w:TAU/n
+  }));
+  const q96 = quadrature(96), q128 = quadrature(128), CORE=.004;
+  function flux(t, p) {
+    let b=p.B0/1000, db=0, S=p.area/10000, dS=0;
+    let theta=p.angle*rad, omega=0, x=0, sideX=Math.sqrt(S), sideY=sideX;
+    const w=TAU*p.frequency;
+    switch(p.preset) {
+      case 'sinus': db=-b*w*Math.sin(w*t); b*=Math.cos(w*t); break;
+      case 'ramp': db=b/8; b*=t/8; break;
+      case 'exp': db=-b/p.tau*Math.exp(-t/p.tau); b*=Math.exp(-t/p.tau); break;
+      case 'rotation': theta+=w*t; omega=w; break;
+      case 'deform': {
+        theta=0;
+        const a=Math.sqrt(S), u=clamp(t/8,0,1), dx=.8*a/8;
+        sideX=a*(.6+.8*u); sideY=2*a-sideX;
+        S=sideX*sideY; dS=(t>=0&&t<=8)?dx*(sideY-sideX):0;
+        break;
+      }
+      case 'translate': x=.16*(t/8-.5); break;
+    }
+    const geometricPhi=p.N*b*S*Math.cos(theta);
+    const geometricE=-p.N*(db*S*Math.cos(theta)+b*dS*Math.cos(theta)-b*S*Math.sin(theta)*omega);
+    const phi=p.orientation*geometricPhi, e=p.orientation*geometricE;
+    const i=p.closed?e/p.R:0, physicalI=p.orientation*i;
+    const alpha=Math.abs(b)<1e-14?null:Math.acos(clamp(Math.sign(b)*p.orientation*Math.cos(theta),-1,1))/rad;
+    return {t,b,db,S,dS,theta,omega,x,sideX,sideY,phi,e,i,physicalI,alpha};
+  }
+  // Neumann pour deux anneaux coaxiaux, sans noyau : M=μ0 ab/2 ∫cos(u)/r du.
+  // Le rayon source reste inférieur au rayon récepteur : aucun fil ne se croise.
+  function mutual(a,b,z,nodes=q96) {
+    let m=0, dz=0;
+    for(const q of nodes) {
+      const r2=a*a+b*b+z*z-2*a*b*q.c+CORE*CORE, r=Math.sqrt(r2);
+      m+=q.c/r*q.w;
+      dz-=z*q.c/(r2*r)*q.w;
+    }
+    return {M:MU0*a*b/2*m,dM:MU0*a*b/2*dz};
+  }
+  function source(p) {
+    // Aimant : deux nappes de courant équivalentes, total m = 0,35 A·m² × force.
+    // Bobine : cinq anneaux portant chacun N1/5 fois le courant imposé i1.
+    if(p.mode==='magnet') return {a:.014,offsets:[-.012,.012],turns:1,
+      equivalent:.35*p.strength/(Math.PI*.014**2)};
+    return {a:.038,offsets:[-.024,-.012,0,.012,.024],turns:100,equivalent:1};
+  }
+  function coupling(x,p,nodes=q96) {
+    const s=source(p); let M=0,dM=0;
+    for(const o of s.offsets) {const r=mutual(s.a,.065,x+o,nodes);M+=r.M;dM+=r.dM;}
+    const scale=p.N*s.turns/s.offsets.length;
+    return {K:M*scale,dK:dM*scale};
+  }
+  function motion(t,p,speed=p.speed) {
+    const T=6/speed;
+    if(p.motion==='hold')return {x:-p.distance/100,v:0,T};
+    let a=-.24,b=-.04;
+    if(p.motion==='away'){a=-.04;b=-.24;}
+    if(p.motion==='pass')b=.24;
+    const u=clamp(t/T,0,1), f=(1-Math.cos(Math.PI*u))/2;
+    return {x:a+(b-a)*f,v:(t>=0&&t<=T)?(b-a)*Math.PI/(2*T)*Math.sin(Math.PI*u):0,T};
+  }
+  function drive(t,p) {
+    const a=TAU*p.frequency*t, I=p.amplitude, w=TAU*p.frequency;
+    if(p.signal==='constant') return {I,dI:0};
+    if(p.signal==='triangle') {
+      const q=(t*p.frequency)%1;
+      return q<.5?{I:I*(-1+4*q),dI:4*p.frequency*I}:{I:I*(3-4*q),dI:-4*p.frequency*I};
+    }
+    if(p.signal==='square') {
+      const h=Math.tanh(5*Math.cos(a));
+      return {I:I*h,dI:-5*I*w*Math.sin(a)*(1-h*h)};
+    }
+    return {I:I*Math.cos(a),dI:-I*w*Math.sin(a)};
+  }
+  function experiment(t,p,override=null) {
+    const src=source(p), moving=p.mode!=='fixed';
+    const traj=override||motion(t,p);
+    const x=moving?traj.x:-p.distance/100, v=moving?traj.v:0;
+    const d=moving?{I:p.mode==='magnet'?src.equivalent:p.amplitude,dI:0}:drive(t,p);
+    const I=p.polarity*d.I, dI=p.polarity*d.dI;
+    const c=coupling(x,p);
+    const phi0=c.K*I, e0=-(c.dK*v*I+c.K*dI);
+    const phi=p.orientation*phi0,e=p.orientation*e0,i=p.closed?e/p.R:0;
+    const physicalI=p.orientation*i, Bind=MU0*p.N*physicalI/(2*.065);
+    const force=moving?physicalI*I*c.dK:0;
+    return {t,x,v,I,dI,phi,e,i,physicalI,Bind,force,power:i*i*p.R,K:c.K,dK:c.dK,T:moving?traj.T||6/p.speed:8};
+  }
+  // Biot-Savart dans le plan méridien (x,y) des mêmes anneaux que le flux.
+  function field(x,y,m,p) {
+    const s=source(p), amp=m.I*s.turns/s.offsets.length;
+    let bx=0,by=0;
+    for(const o of s.offsets)for(const q of q128) {
+      const dx=x-m.x-o, r2=dx*dx+y*y+s.a*s.a-2*y*s.a*q.c+CORE*CORE;
+      const f=MU0/(4*Math.PI)*amp*q.w/(r2*Math.sqrt(r2));
+      bx+=(s.a*s.a-s.a*y*q.c)*f;
+      by+=s.a*q.c*dx*f;
+    }
+    return {bx,by};
+  }
+  return Object.freeze({MU0,flux,mutual,coupling,motion,drive,experiment,field,source,clamp});
+})();
+</script>
+<script>'use strict';
+window.EM3UI = (() => {
+  const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(x)<1e-11?0:x);
+  function si(v,unit,forceScale=null) {
+    const a=Math.abs(v), scale=forceScale||(a<1e-14?1e-3:a>=1?1:a>=1e-3?1e-3:1e-6);
+    return {value:fmt(v/scale,a/scale>=100?1:2),unit:({1:'','0.001':'m','0.000001':'µ'})[scale]+unit,scale};
+  }
+  function palette() {const s=getComputedStyle(document.documentElement),r={};for(const k of ['surface','paper','ink','muted','line','accent','field','flux','emf','current','normal','pos','neg','soft'])r[k]=s.getPropertyValue('--'+k).trim();return r;}
+  const path=(pts)=>pts.map((p,i)=>(i?'L':'M')+p.map(v=>Number(v).toFixed(2)).join(',')).join(' ');
+  const line=(a,b,color,width=2,extra='')=>`<path d="${path([a,b])}" fill="none" stroke="${color}" stroke-width="${width}" ${extra}/>`;
+  function arrow(a,b,color,width=2.5,dash=false) {
+    const d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d<.1)return '';
+    const t=Math.atan2(b[1]-a[1],b[0]-a[0]),l=Math.min(11,d*.4),w=Math.min(4.8,d*.2);
+    const p1=[b[0]-l*Math.cos(t)+w*Math.sin(t),b[1]-l*Math.sin(t)-w*Math.cos(t)];
+    const p2=[b[0]-l*Math.cos(t)-w*Math.sin(t),b[1]-l*Math.sin(t)+w*Math.cos(t)];
+    return line(a,b,color,width,dash?'stroke-dasharray="6 5"':'')+`<path d="${path([b,p1,p2])}Z" fill="${color}"/>`;
+  }
+  function text(x,y,s,color,size=22,anchor='start',extra='') {
+    const str=String(s),vector=/([BSvF])\u20d7/.exec(str),plain=str.replace(/\u20d7/g,'');
+    const content=plain==='Bind'?`B<tspan baseline-shift="sub" font-size="${size*.68}">ind</tspan>`:esc(plain);
+    let r=`<text x="${x}" y="${y}" fill="${color}" font-size="${size}" text-anchor="${anchor}" ${extra}>${content}</text>`;
+    if(vector){
+      const start=x-(anchor==='middle'?.5:anchor==='end'?1:0)*plain.length*size*.58;
+      r+=arrow([start,y-size*.94],[start+size*.65,y-size*.94],color,1.25);
+    }return r;
+  }
+  function halo(x,y,s,color,size=22,anchor='start',extra='') {
+    return text(x,y,s,color,size,anchor,`paint-order="stroke" stroke="${palette().surface}" stroke-width="5" stroke-linejoin="round" ${extra}`);
+  }
+  function field(id,label,min,max,step,value,unit='') {
+    return `<div class="param" data-field="${id}"><div class="field-head"><label for="${id}-number">${label}${unit?' ('+unit+')':''}</label><input id="${id}-number" data-param="${id}" type="number" min="${min}" max="${max}" step="${step}" value="${value}"></div><input id="${id}" data-param="${id}" aria-label="${esc(label)}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;
+  }
+  function bindFields(p,change) {
+    document.querySelectorAll('[data-param]').forEach(el=>el.addEventListener('input',()=>{
+      if(el.value===''||!Number.isFinite(el.valueAsNumber))return;
+      const step=Number(el.step)||1,min=Number(el.min);
+      const value=Number(clamp(min+Math.round((el.valueAsNumber-min)/step)*step,min,Number(el.max)).toFixed(6));
+      change(el.dataset.param,value);
+    }));
+    document.querySelectorAll('input[type=number][data-param]').forEach(el=>el.addEventListener('change',()=>syncFields(typeof p==='function'?p():p)));
+  }
+  function syncFields(p) {document.querySelectorAll('[data-param]').forEach(el=>{if(document.activeElement!==el||el.type==='range')el.value=p[el.dataset.param];});}
+  function vectors(root) {
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+    while(walker.nextNode())if(/[BSvF]\u20d7/.test(walker.currentNode.textContent))nodes.push(walker.currentNode);
+    nodes.forEach(node=>{const parts=node.textContent.split(/([BSvF])\u20d7/g),frag=document.createDocumentFragment();parts.forEach((s,j)=>{if(j%2){const span=document.createElement('span');span.className='vec';span.textContent=s;span.setAttribute('aria-label','vecteur '+s);frag.append(span);}else frag.append(document.createTextNode(s));});node.replaceWith(frag);});
+  }
+  function metric(id,v,unit,options={}) {
+    const el=$(id),q=si(v,unit,options.scale||null);
+    el.innerHTML=options.mask?'?<span class="metric-unit">'+esc(q.unit)+'</span>':`${esc(q.value)}<span class="metric-unit">${esc(q.unit)}</span>`;
+    el.dataset.value=String(v);el.setAttribute('aria-label',options.mask?'Réponse masquée':`${q.value} ${q.unit}`);
+  }
+  let toastTimer;
+  function toast(s){$('toast').textContent=s;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3500);}
+  function dimensions(svg) {const b=svg.getBoundingClientRect();const w=Math.max(260,b.width),h=Math.max(100,b.height);svg.setAttribute('viewBox',`0 0 ${w} ${h}`);return {w,h};}
+  function charts(svg,specs,opt={}) {
+    const {w,h}=dimensions(svg),c=palette(),projection=document.body.classList.contains('projection');
+    const font=projection?19:16, stacked=w<650;
+    const cells=specs.map((s,j)=>({x:stacked?0:j*w/2,y:stacked?j*h/2:0,w:stacked?w:w/2,h:stacked?h/2:h,s}));
+    const scaleSets=[],parts=[];
+    cells.forEach((cell,j)=>{
+      const {s}=cell, measured=Math.max(0,...s.values.map(p=>Math.abs(p.v)),...(s.compare||[]).map(p=>Math.abs(p.v))),max=measured<1e-14?1e-3:measured;
+      const info=si(max,s.unit),lim=max*1.15, x0=cell.x+62,x1=cell.x+cell.w-22,y0=cell.y+30,y1=cell.y+cell.h-29;
+      const t0=opt.t0||0,T=opt.T||8;
+      const X=t=>x0+(t-t0)/(T-t0)*(x1-x0),Y=v=>(y0+y1)/2-v/lim*(y1-y0)/2;
+      const d=path(s.values.map(p=>[X(p.t),Y(p.v)]));
+      parts.push(text(cell.x+12,cell.y+20,`${s.name} (${info.unit})`,s.color,projection?21:18));
+      [-1,0,1].forEach(k=>{
+        const y=Y(k*lim/1.15);
+        parts.push(line([x0,y],[x1,y],c.line,k===0?1.2:.7,k===0?'':'stroke-dasharray="2 5"'));
+        parts.push(text(x0-8,y+5,fmt(k*max/info.scale,max/info.scale<10?2:1),c.muted,font-1,'end'));
+      });
+      [t0,(t0+T)/2,T].forEach(t=>parts.push(text(X(t),y1+22,fmt(t,1),c.muted,font-1,'middle')));
+      parts.push(text(x1,y0+17,'t (s)',c.muted,font-1,'end'));
+      if(!s.mask){
+        if(s.fill)parts.push(`<path d="M${X(s.values[0].t)},${Y(0)} ${d.replace(/^M/,'L')} L${X(s.values.at(-1).t)},${Y(0)}Z" fill="${s.color}" opacity=".09"/>`);
+        parts.push(`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.6" stroke-linecap="round"/>`);
+        if(s.compare) {
+          parts.push(`<path d="${path(s.compare.map(p=>[X(p.t),Y(p.v)]))}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-dasharray="7 5"/>`);
+          parts.push(text(x0+9,y0+16,'continu : trajet choisi · tirets : ×2',c.muted,font-2));
+        }
+        parts.push(`<circle id="point-${j}" r="4.6" fill="${s.color}" stroke="${c.surface}" stroke-width="2"/>`);
+        if(s.tangent)parts.push(`<path id="tangent-${j}" fill="none" stroke="${c.normal}" stroke-width="2.2" stroke-dasharray="5 4"/>`);
+      }else parts.push(text((x0+x1)/2,(y0+y1)/2+8,'À prévoir',c.muted,25,'middle'));
+      parts.push(`<path id="cursor-${j}" d="" stroke="${c.muted}" stroke-width="1" stroke-dasharray="3 4"/>`);
+      scaleSets.push({X,Y,x0,x1,y0,y1,lim,t0,T,s});
+    });
+    svg.innerHTML=parts.join('');
+    const api={
+      update(t,values,derivatives={}) {
+        scaleSets.forEach((a,j)=>{
+          const x=a.X(clamp(t,a.t0,a.T)),v=values[a.s.key];
+          svg.querySelector('#cursor-'+j).setAttribute('d',path([[x,a.y0],[x,a.y1]]));
+          const dot=svg.querySelector('#point-'+j);
+          if(dot){dot.setAttribute('cx',x);dot.setAttribute('cy',a.Y(v));}
+          const tan=svg.querySelector('#tangent-'+j);
+          if(tan){
+            const slope=derivatives[a.s.key]||0;
+            const dt=Math.min((a.T-a.t0)*.07,a.lim/(Math.abs(slope)+1e-30)*.42);
+            const ta=Math.max(a.t0,t-dt),tb=Math.min(a.T,t+dt);
+            tan.setAttribute('d',path([[a.X(ta),a.Y(v+slope*(ta-t))],[a.X(tb),a.Y(v+slope*(tb-t))]]));
+          }
+        });
+      },
+      timeAt(event) {const rect=svg.getBoundingClientRect(),x=event.clientX-rect.left,y=event.clientY-rect.top;const a=scaleSets[stacked?(y>h/2?1:0):(x>w/2?1:0)];return clamp(a.t0+(x-a.x0)/(a.x1-a.x0)*(a.T-a.t0),a.t0,a.T);},
+      scales:scaleSets
+    };return api;
+  }
+  function setup(config) {
+    let dark=false,drawerFocus=null;
+    try{dark=localStorage.getItem('EM3-theme')==='dark';}catch(_){}
+    const redraw=()=>config.redraw&&config.redraw();
+    function theme(){document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-label',dark?'Passer en thème clair':'Passer en thème sombre');try{localStorage.setItem('EM3-theme',dark?'dark':'light');}catch(_){}redraw();}
+    $('theme').onclick=()=>{dark=!dark;theme();};
+    function panel(open){
+      document.body.classList.toggle('panel-open',open);$('settings').setAttribute('aria-expanded',String(open));
+      document.querySelector('.main').inert=open;document.querySelector('.masthead').inert=open;
+      if(open){drawerFocus=document.activeElement;$('controls').setAttribute('role','dialog');$('controls').setAttribute('aria-modal','true');$('close-panel').focus();}
+      else{$('controls').removeAttribute('role');$('controls').removeAttribute('aria-modal');if(drawerFocus)drawerFocus.focus();}
+      $('controls').inert=innerWidth<=1000&&!open;
+      $('controls').setAttribute('aria-hidden',String(innerWidth<=1000&&!open));
+    }
+    $('settings').onclick=()=>panel(!document.body.classList.contains('panel-open'));
+    $('close-panel').onclick=()=>panel(false);$('drawer-backdrop').onclick=()=>panel(false);
+    $('help').onclick=()=>{$('help-dialog').showModal();};$('close-help').onclick=()=>$('help-dialog').close();
+    $('projection').onclick=()=>{panel(false);const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(p));redraw();};
+    async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){toast('Le plein écran est indisponible dans ce navigateur.');}}
+    $('fullscreen').onclick=fullscreen;
+    document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');redraw();});
+    $('export').onclick=()=>{
+      const c=palette(),sc=$('scene'),gr=$('plots'),a=sc.getBoundingClientRect(),b=gr.getBoundingClientRect();
+      const w=Math.ceil(a.width),sceneH=Math.ceil(a.height),plotH=Math.ceil(b.height),height=sceneH+plotH+210;
+      const metrics=[['Φ',$('phi-value').textContent],['e',$('e-value').textContent],['i',$('i-value').textContent]];
+      let content=`<rect width="100%" height="100%" fill="${c.surface}"/>`+text(22,36,config.title,c.ink,27)+text(22,62,$('export-caption').textContent,c.muted,16);
+      content+=`<g transform="translate(0,80)">${sc.innerHTML}</g>`;
+      metrics.forEach((q,j)=>{content+=text(22+j*w/3,sceneH+110,q[0]+' = '+q[1],j===0?c.flux:j===1?c.emf:c.current,24);});
+      content+=`<g transform="translate(0,${sceneH+133})">${gr.innerHTML}</g>`;
+      content+=text(22,height-13,'EM3 · MPSI · E. Guillaume — '+$('status').textContent,c.muted,13);
+      const xml=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${height}" viewBox="0 0 ${w} ${height}" font-family="Arial,Helvetica,sans-serif">${content}</svg>`;
+      const url=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml;charset=utf-8'})),link=document.createElement('a');
+      link.href=url;link.download=config.file+'.svg';link.click();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('Image SVG enregistrée.');
+    };
+    document.addEventListener('keydown',event=>{
+      const input=/INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement.tagName);
+      if(event.key==='Escape'&&document.body.classList.contains('panel-open'))panel(false);
+      if(input||$('help-dialog').open||event.ctrlKey||event.metaKey||event.altKey)return;
+      if(event.code==='Space'){event.preventDefault();config.play();}
+      if(event.key.toLowerCase()==='r')config.reset();
+      if(event.key.toLowerCase()==='f')fullscreen();
+    });
+    new ResizeObserver(()=>{if(document.body.classList.contains('panel-open')&&innerWidth>1000)panel(false);const hidden=innerWidth<=1000&&!document.body.classList.contains('panel-open');$('controls').inert=hidden;$('controls').setAttribute('aria-hidden',String(hidden));redraw();}).observe(document.querySelector('.main'));
+    vectors($('help-dialog'));theme();
+    return {palette,theme:()=>{dark=!dark;theme();},panel};
+  }
+  return {$,esc,clamp,fmt,si,palette,path,line,arrow,text,halo,field,bindFields,syncFields,vectors,metric,toast,dimensions,charts,setup};
+})();
+</script>
+<script>(() => {
+  'use strict';
+  const U=window.EM3UI,M=window.EM3Model,{$,fmt}=U,rad=Math.PI/180;
+  const defaults={preset:'static',B0:40,area:100,N:20,angle:35,frequency:.25,tau:2,R:50,closed:false,orientation:1};
+  let p={...defaults},t=0,playing=false,rate=1,zoom=1,view='perspective',tangent=true;
+  let chart=null,trace=[],dirty=true,last=0,acc=0,drag=null,current=null,geom=null;
+  const names={static:'Flux : manipulation libre',sinus:'Champ sinusoïdal',ramp:'Champ croissant',exp:'Champ décroissant exponentiel',rotation:'Spire en rotation',deform:'Boucle déformable',translate:'Translation dans un champ uniforme'};
+  $('panel-content').innerHTML=`
+    <section class="control-section"><h2 class="section-title">Situation</h2>
+      <label for="preset" class="small-note">Un même circuit, plusieurs causes de variation</label>
+      <select id="preset">${Object.entries(names).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+      <div class="explain" id="scenario-help"></div>
+    </section>
+    <section class="control-section"><h2 class="section-title">Champ et géométrie</h2>
+      ${U.field('B0','Champ de référence B₀',0,100,1,p.B0,'mT')}
+      ${U.field('area','Aire de référence S₀',20,250,.1,p.area,'cm²')}
+      ${U.field('angle','Inclinaison initiale',0,360,.1,p.angle,'°')}
+      <p class="small-note">À 0°, la normale géométrique est dirigée vers le haut. α est mesuré entre B⃗ et S⃗.</p>
+      <div class="row"><button data-angle="0">0°</button><button data-angle="90">90°</button><button data-angle="180">180°</button></div>
+      ${U.field('N','Nombre de spires N',1,200,1,p.N)}
+    </section>
+    <section class="control-section"><h2 class="section-title">Évolution dans le temps</h2>
+      ${U.field('frequency','Fréquence',.05,.5,.05,p.frequency,'Hz')}
+      ${U.field('tau','Temps caractéristique τ',.5,4,.1,p.tau,'s')}
+      <label class="check"><input id="tangent" type="checkbox" checked>Tangente au flux</label>
+      <div class="field-head"><label for="rate">Vitesse de lecture</label><select id="rate" style="width:110px"><option value=".25">×0,25</option><option value=".5">×0,5</option><option value="1" selected>×1</option><option value="2">×2</option></select></div>
+      <p class="small-note">La lecture ralentie conserve les valeurs physiques de Φ et e.</p>
+    </section>
+    <section class="control-section"><h2 class="section-title">Conventions et circuit</h2>
+      <button id="orientation" style="width:100%">Inverser le sens de référence</button>
+      <p class="small-note" id="orientation-note"></p>
+      <label class="check"><input id="closed" type="checkbox">Fermer sur une résistance</label>
+      ${U.field('R','Résistance R',10,200,5,p.R,'Ω')}
+      <p class="small-note">Circuit résistif ; auto-induction négligée. Flèche du courant : sens conventionnel réel.</p>
+    </section>`;
+  $('extra-actions').innerHTML='';
+  $('scene-extra').innerHTML='<button id="perspective" aria-pressed="true">Perspective</button><button id="cut" aria-pressed="false">Coupe</button>';
+  $('plot-formula').innerHTML='<i>Φ</i> = <i>N</i> B S cos α &nbsp; · &nbsp; <i>e</i> = −d<i>Φ</i>/d<i>t</i>';
+  $('scene-kicker').textContent='Surface orientée · champ uniforme';
+  const scenarioHints={
+    static:'Régler B₀, l’aire et l’inclinaison. La situation est stationnaire : e = 0.',
+    sinus:'La spire est fixe : B(t) = B₀ cos(2πft). Lire la pente du flux, puis la f.é.m.',
+    ramp:'La spire est fixe : le champ augmente linéairement de 0 à B₀ en 8 s.',
+    exp:'Application du cours : B(t) = B₀ exp(−t/τ). Le courant fermé renforce la composante normale du champ décroissant.',
+    rotation:'B et l’aire sont constants. La spire tourne à vitesse angulaire constante Ω = 2πf.',
+    deform:'Boucle rectangulaire de périmètre constant. S₀ est l’aire maximale, atteinte au carré à t = 4 s.',
+    translate:'La boucle se déplace sans tourner ni se déformer, dans un champ uniforme : le flux reste constant.'
+  };
+  function controls(){
+    $('preset').value=p.preset;U.syncFields(p);$('closed').checked=p.closed;
+    $('tangent').checked=tangent;$('rate').value=rate;
+    $('orientation-note').textContent=p.orientation===1?'Référence initiale : contour et normale reliés par la main droite.':'Référence inversée : Φ, e et i changent de signe ; le courant réel est identique.';
+    $('scenario-help').textContent=scenarioHints[p.preset];
+    for(const id of ['frequency','tau','angle','R']){
+      const disabled=id==='frequency'?!['sinus','rotation'].includes(p.preset):id==='tau'?p.preset!=='exp':id==='angle'?p.preset==='deform':!p.closed;
+      $(id).disabled=disabled;$(id+'-number').disabled=disabled;
+      document.querySelector(`[data-field="${id}"]`).style.opacity=disabled?'.48':'1';
+    }
+    $('play').textContent=playing?'Pause':'▶ Lecture';$('play').setAttribute('aria-pressed',String(playing));
+    $('time').textContent=fmt(t,2)+' / 8 s';$('scrub').value=t;
+    U.vectors($('panel-content'));
+  }
+  function invalidate(){dirty=true;}
+  function change(key,value){p[key]=value;playing=false;if(!['orientation','R','closed'].includes(key))t=0;invalidate();controls();render();}
+  function choose(s){p.preset=s;t=0;playing=false;zoom=1;invalidate();controls();render();}
+  function play(){if(t>=8-1e-8)t=0;playing=!playing;controls();render();}
+  function reset(){p={...defaults};t=0;playing=false;zoom=1;view='perspective';tangent=true;rate=1;invalidate();controls();render();}
+  U.bindFields(()=>p,(key,value)=>change(key,value));
+  // p est remplacé à la réinitialisation : synchroniser alors explicitement tous les champs.
+  $('preset').onchange=e=>choose(e.target.value);
+  $('orientation').onclick=()=>change('orientation',-p.orientation);
+  $('closed').onchange=e=>change('closed',e.target.checked);
+  $('tangent').onchange=e=>{tangent=e.target.checked;invalidate();render();};
+  $('rate').onchange=e=>rate=Number(e.target.value);
+  document.querySelectorAll('[data-angle]').forEach(el=>el.onclick=()=>change('angle',Number(el.dataset.angle)));
+  $('perspective').onclick=()=>{view='perspective';render();};$('cut').onclick=()=>{view='cut';render();};
+  $('zoom-in').onclick=()=>{zoom=U.clamp(zoom*1.15,.65,1.9);render();};
+  $('zoom-out').onclick=()=>{zoom=U.clamp(zoom/1.15,.65,1.9);render();};
+  $('frame').onclick=()=>{zoom=1;render();};$('play').onclick=play;$('reset').onclick=reset;
+  $('scrub').oninput=e=>{t=Number(e.target.value);playing=false;controls();render();};
+  $('scrub').max=8;
+  function buildCharts(){
+    trace=Array.from({length:321},(_,j)=>M.flux(j/40,p));const c=U.palette();
+    chart=U.charts($('plots'),[
+      {key:'phi',name:'Flux lié Φ',unit:'Wb',color:c.flux,values:trace.map(m=>({t:m.t,v:m.phi})),tangent},
+      {key:'e',name:'F.é.m. e',unit:'V',color:c.emf,values:trace.map(m=>({t:m.t,v:m.e})),fill:true}
+    ],{T:8});dirty=false;
+    const delta=trace[0].phi-trace.at(-1).phi,q=U.si(delta,'Wb');
+    $('plot-note').textContent=tangent?'Tangente violette : pente dΦ/dt = −e':`Sur 0–8 s : ∫ e dt = ${q.value} ${q.unit}`;
+  }
+  function drawScene(m){
+    const svg=$('scene'),{w,h}=U.dimensions(svg),c=U.palette(),projection=document.body.classList.contains('projection');
+    const fs=projection?26:w<420?20:23,small=projection?21:17;
+    const aside=w>760,center=[w*(aside?.43:.49),h*.50];
+    const extent=Math.max(.10,.8*Math.sqrt(p.area/10000));
+    const scale=Math.min((w-(aside?280:60))/.35,(h-32)/(2*extent))*zoom;
+    const P=(x,y,z)=>[center[0]+scale*(x+(view==='perspective'?-.45*y:0)),center[1]+scale*(-z+(view==='perspective'?.60*y:0))];
+    const n=[Math.sin(m.theta),0,Math.cos(m.theta)],e1=[Math.cos(m.theta),0,-Math.sin(m.theta)];
+    const hx=m.sideX/2,hy=m.sideY/2;
+    const point=(a,b)=>P(m.x+e1[0]*a,b,e1[2]*a);
+    const corners=[point(-hx,-hy),point(hx,-hy),point(hx,hy),point(-hx,hy)];
+    const O=P(m.x,0,0),L=.09,tip=P(m.x+p.orientation*n[0]*L,0,p.orientation*n[2]*L);
+    let s='';
+    // Champ uniforme : la longueur des flèches suit |B|, la grille est fixe.
+    const strength=Math.min(1,Math.abs(m.b)/.1),len=65*strength;
+    if(len>1)for(let ix=0;ix<7;ix++)for(let iy=0;iy<2;iy++){
+      const x=28+(w-56)*ix/6,y=36+(h-72)*iy;
+      if(Math.abs(x-O[0])<scale*.09)continue;
+      s+=U.arrow([x,y+Math.sign(m.b)*len/2],[x,y-Math.sign(m.b)*len/2],c.field,1.6);
+    }
+    s+=U.halo(18,29,'B⃗',c.field,fs);
+    s+=U.text(18,51,'uniforme',c.muted,small);
+    if(view==='perspective'){
+      s+=`<path d="${U.path(corners)}Z" fill="${c.flux}" fill-opacity="${.08+.13*Math.abs(Math.cos(m.theta))}" stroke="${c.accent}" stroke-width="3.3" stroke-linejoin="round"/>`;
+      if(p.N>1)s+=`<path d="${U.path(corners.map(a=>[a[0]+4,a[1]-4]))}Z" fill="none" stroke="${c.accent}" stroke-width="1.1" opacity=".45"/>`;
+    }else{
+      s+=U.line(point(-hx,0),point(hx,0),c.accent,5);
+      s+=U.text(O[0],Math.min(h-14,O[1]+42),'vue suivant l’axe de rotation',c.muted,small,'middle');
+    }
+    const start=corners[0],end=corners[1];
+    const A=[start[0]+.35*(end[0]-start[0]),start[1]+.35*(end[1]-start[1])];
+    const B=[start[0]+.65*(end[0]-start[0]),start[1]+.65*(end[1]-start[1])];
+    if(view==='perspective')s+=U.arrow(p.orientation>0?A:B,p.orientation>0?B:A,c.accent,3.4);
+    s+=U.arrow(O,tip,c.normal,3.3);
+    const tx=U.clamp(tip[0]+(tip[0]>=O[0]?15:-15),45,w-45),ty=U.clamp(tip[1]-9,25,h-18);
+    s+=U.halo(tx,ty,'S⃗',c.normal,fs,tip[0]>=O[0]?'start':'end');
+    s+=U.halo(O[0]-8,O[1]-8,'S',c.accent,fs,'end');
+    const circ=(pt,id,label)=>`<circle cx="${pt[0]}" cy="${pt[1]}" r="18" fill="transparent" data-drag="${id}" style="cursor:grab"/><circle cx="${pt[0]}" cy="${pt[1]}" r="6.5" fill="${c.surface}" stroke="${c.normal}" stroke-width="2.5" data-drag="${id}" tabindex="0" role="slider" aria-label="${label}" aria-valuemin="${id==='angle'?0:20}" aria-valuemax="${id==='angle'?360:250}" aria-valuenow="${p[id]}" style="cursor:grab"/>`;
+    s+=circ(tip,'angle','Régler l’inclinaison initiale');
+    if(p.preset==='static'&&view==='perspective')s+=circ(corners[2],'area','Régler l’aire initiale');
+    if(p.closed&&Math.abs(m.physicalI)>1e-12){
+      const a=corners[1],b=corners[2],a1=[a[0]+.22*(b[0]-a[0]),a[1]+.22*(b[1]-a[1])],b1=[a[0]+.78*(b[0]-a[0]),a[1]+.78*(b[1]-a[1])];
+      if(view==='perspective')s+=U.arrow(m.physicalI>0?a1:b1,m.physicalI>0?b1:a1,c.current,5);
+    }
+    if(m.alpha!==null){
+      // Arc mesuré entre la direction du champ et la normale orientée, dans la coupe xz.
+      const aa=Math.atan2(p.orientation*n[0],p.orientation*n[2]),ba=m.b>=0?0:Math.PI;
+      let diff=aa-ba;while(diff>Math.PI)diff-=2*Math.PI;while(diff< -Math.PI)diff+=2*Math.PI;
+      const r=32,pts=Array.from({length:33},(_,j)=>[O[0]+r*Math.sin(ba+diff*j/32),O[1]-r*Math.cos(ba+diff*j/32)]);
+      s+=`<path d="${U.path(pts)}" fill="none" stroke="${c.normal}" stroke-width="1.6"/>`;
+    }
+    if(aside){
+      const ax=w*.76,ay=55;
+      s+=U.text(ax,ay,'Flux orienté',c.muted,small);
+      s+=U.text(ax,ay+38,Math.abs(m.phi)<1e-12?'Φ = 0':m.phi>0?'Φ > 0':'Φ < 0',c.flux,projection?34:30);
+      s+=U.text(ax,ay+77,m.alpha===null?'B = 0':`α = ${fmt(m.alpha,1)}°`,c.normal,fs);
+      s+=U.text(ax,ay+110,`S = ${fmt(m.S*10000,1)} cm²`,c.muted,small);
+      if(p.preset==='deform')s+=U.text(ax,ay+138,`x + y = ${fmt((m.sideX+m.sideY)*100,1)} cm`,c.muted,small);
+    }
+    if(p.preset==='translate')s+=U.arrow([O[0]-25,Math.min(h-13,O[1]+60)],[O[0]+25,Math.min(h-13,O[1]+60)],c.ink,2.5);
+    svg.innerHTML=s;geom={O,P,scale,tip};
+    $('perspective').setAttribute('aria-pressed',String(view==='perspective'));$('cut').setAttribute('aria-pressed',String(view==='cut'));
+    const alpha=m.alpha===null?'α non défini (B = 0)':`α = ${fmt(m.alpha,1)}°`;
+    $('scene-state').textContent=alpha+' · S = '+fmt(m.S*10000,1)+' cm²';
+    $('scene-hint').textContent='Poignées : réglage initial · courbes : déplacer l’instant';
+  }
+  function render(){
+    if(!document.documentElement.isConnected)return;
+    current=M.flux(t,p);if(dirty||!chart)buildCharts();drawScene(current);
+    chart.update(t,{phi:current.phi,e:current.e},{phi:-current.e});
+    const maxPhi=Math.max(...trace.map(m=>Math.abs(m.phi))),maxE=Math.max(...trace.map(m=>Math.abs(m.e)));
+    U.metric('phi-value',current.phi,'Wb',{scale:U.si(maxPhi,'Wb').scale});
+    U.metric('e-value',current.e,'V',{scale:U.si(maxE,'V').scale});
+    U.metric('i-value',current.i,'A',{scale:U.si(maxE/p.R,'A').scale});
+    $('i-extra').textContent=p.closed?'circuit fermé · i = e/R':'circuit ouvert · i = 0';
+    $('phi-extra').textContent=p.N+' spire'+(p.N>1?'s':'')+' · flux total lié';
+    $('e-extra').textContent='convention générateur';
+    const cause=p.preset==='static'?'Situation stationnaire : aucune f.é.m.':p.preset==='translate'?'Translation sans variation du flux : e = 0.':p.preset==='deform'&&Math.abs(t-4)<.03?'Au carré : aire maximale, pente nulle, e = 0.':Math.abs(current.e)<1e-9?'À cet instant, la pente du flux est nulle.':current.e>0?'Le flux algébrique diminue : e > 0.':'Le flux algébrique augmente : e < 0.';
+    $('status').textContent=cause;$('export-caption').textContent=names[p.preset]+` · t = ${fmt(t,2)} s · B₀ = ${p.B0} mT · N = ${p.N}`;
+    controls();
+  }
+  let chartDrag=false;
+  $('plots').addEventListener('pointerdown',e=>{chartDrag=true;$('plots').setPointerCapture(e.pointerId);t=chart.timeAt(e);playing=false;render();});
+  $('plots').addEventListener('pointermove',e=>{if(chartDrag){t=chart.timeAt(e);render();}});
+  $('plots').addEventListener('pointerup',()=>chartDrag=false);$('plots').addEventListener('pointercancel',()=>chartDrag=false);
+  $('scene').addEventListener('pointerdown',e=>{
+    const type=e.target.dataset.drag;if(!type)return;
+    e.preventDefault();playing=false;t=0;
+    if(type==='area'&&p.preset!=='static')return;
+    drag={type,area:p.area,startY:e.clientY};$('scene').setPointerCapture(e.pointerId);
+  });
+  $('scene').addEventListener('pointermove',e=>{
+    if(!drag)return;
+    if(drag.type==='angle'){
+      const b=$('scene').getBoundingClientRect(),dx=e.clientX-b.left-geom.O[0],dy=e.clientY-b.top-geom.O[1];
+      let a=Math.atan2(dx,-dy)/rad;if(p.orientation<0)a-=180;p.angle=Math.round(((a+720)%360)*10)/10;
+    }else p.area=Math.round(U.clamp(drag.area*Math.exp((drag.startY-e.clientY)/120),20,250)*10)/10;
+    invalidate();render();
+  });
+  $('scene').addEventListener('pointerup',()=>drag=null);$('scene').addEventListener('pointercancel',()=>drag=null);
+  $('scene').addEventListener('keydown',e=>{const type=e.target.dataset.drag;if(!type||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();change(type,U.clamp(p[type]+(['ArrowRight','ArrowUp'].includes(e.key)?1:-1)*(type==='angle'?5:10),type==='angle'?0:20,type==='angle'?360:250));});
+  U.setup({title:'Du flux à la force électromotrice',file:'EM3_Flux_Faraday',redraw:()=>{invalidate();render();},play,reset});
+  function frame(now){if(!last)last=now;const dt=Math.min((now-last)/1000,.1);last=now;acc=playing?acc+dt:0;if(playing&&acc>=1/30){t=Math.min(8,t+acc*rate);acc=0;if(t>=8)playing=false;render();}requestAnimationFrame(frame);}
+  requestAnimationFrame(frame);controls();render();
+  window.EM3App={getState:()=>({p:{...p},t,playing,zoom,view,current:{...current}}),choose,setTime:v=>{t=U.clamp(v,0,8);playing=false;render();},setParams:values=>{Object.assign(p,values);invalidate();render();},reset};
+})();
+</script>
+</body>
+</html>

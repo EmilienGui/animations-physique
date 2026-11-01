@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Spire en rotation, flux, f.é.m., courant et couple : à vide, sur résistance et en circuit RL."><title>Alternateur · EM5 · MPSI</title>
+<style>:root{color-scheme:light;--paper:#f0f3f5;--surface:#fff;--ink:#152b40;--muted:#5c6c7b;--line:#ced8e1;--grid:#e6edf2;--accent:#254b70;--accent-ink:#254b70;--soft:#eaf1f7;--electric:#b55222;--motion:#256e60;--field:#3b6eaa;--loss:#a43f58;--metal:#b4c3cf;--metal-dark:#718698;--shadow:#1b365319}
+:root[data-theme=dark]{color-scheme:dark;--paper:#101b27;--surface:#182735;--ink:#ecf2f7;--muted:#b3c1ce;--line:#3c5061;--grid:#2a3b4b;--accent:#a3c7ee;--accent-ink:#a3c7ee;--soft:#233d54;--electric:#ffb07e;--motion:#91d9c0;--field:#91bfff;--loss:#ffa1b4;--metal:#849cae;--metal-dark:#516b80;--shadow:#0005}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 11px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;white-space:nowrap}button:hover{border-color:var(--accent);background:var(--soft)}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--field);outline-offset:2px}button.primary{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--surface)}button.small{min-height:31px;padding:4px 7px;font-size:13px}button.square{width:40px;padding:0;font-size:23px}button.small.square{width:30px;font-size:19px}button[aria-pressed=true]:not(.primary){background:var(--soft);border-color:var(--accent-ink);color:var(--accent-ink)}select{padding:6px 7px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);min-width:0}input[type=range]{accent-color:var(--accent-ink);width:100%;min-height:23px;margin:5px 0 0;cursor:pointer}input[type=number]{width:78px;padding:4px 5px;text-align:right;font-variant-numeric:tabular-nums;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:4px}input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent-ink)}[hidden]{display:none!important}.topline{height:4px;background:#254b70}.shell{height:calc(100dvh - 4px);min-height:650px;max-width:2350px;padding:12px 18px 8px;margin:auto;display:flex;flex-direction:column;gap:10px}header{flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.heading{flex:1 1 260px;min-width:0}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}h1{font-size:31px;line-height:1.13;font-weight:550;letter-spacing:-.025em;margin:0}.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.actions>button{font-size:15px;font-weight:400}.actions>.square{font-size:23px}.mobile-settings{display:none}.tabs{display:flex;gap:5px;flex-wrap:wrap;flex:none}.tabs button{background:transparent;border-color:transparent;min-height:38px;font-size:16px}.tabs button[aria-selected=true]{background:var(--surface);border-color:var(--line);box-shadow:inset 0 -2px var(--accent-ink);color:var(--accent-ink)}.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:12px}.visual{display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0}.stagegrid{flex:1;min-height:280px;display:grid;grid-template-columns:minmax(0,1.13fr) minmax(0,1fr);gap:10px}.panel{min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px 4px;flex:none;min-height:43px;flex-wrap:wrap}.panel-head h2{font-size:15px;font-weight:550;color:var(--muted);line-height:1.2;margin:0;flex:1}.view-tools{display:flex;align-items:center;gap:3px;flex:none;margin-left:auto}.view-tools output{min-width:34px;text-align:center;font-size:11px;color:var(--muted)}.plot-panel select{font-size:13px;padding:4px;max-width:175px}.canvas-wrap{min-height:190px;position:relative;flex:1;overflow:hidden}canvas{width:100%;height:100%;display:block;touch-action:none}.scene-note{margin:0;min-height:29px;padding:4px 12px 8px;font-size:12px;line-height:1.3;color:var(--muted);flex:none}.transport{display:flex;align-items:center;gap:7px;flex-wrap:wrap;flex:none}.transport>button{min-height:35px;font-size:14px}.timeline{display:flex;align-items:center;gap:7px;flex:1;min-width:120px}.timeline input{margin:0}.timeline output{font-size:13px;min-width:62px;text-align:right;font-variant-numeric:tabular-nums}.speed,.loop{font-size:12px;display:flex;align-items:center;gap:4px;color:var(--muted)}.speed select{font-size:13px;width:62px;padding:4px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;flex:none}.metric{padding-left:12px;border-left:1px solid var(--line);min-width:0}.metric:first-child{padding-left:0;border-left:0}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:31px;letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.22;white-space:nowrap}.metric-unit{font-size:16px;letter-spacing:normal;margin-left:4px}.metric-detail{font-size:12px;color:var(--muted);line-height:1.25;min-height:16px}.principle{border-top:1px solid var(--line);padding-top:9px;display:flex;align-items:center;gap:16px;min-height:54px;flex:none}.equation{font:23px/1.3 Georgia,"Times New Roman",serif;flex:none;color:var(--accent-ink)}.principle p{font-size:14px;line-height:1.35;color:var(--muted);margin:0}.controls{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:15px 14px;border-bottom:1px solid var(--line)}.control-section:last-child{border-bottom:0}.control-section h3{margin:0 0 13px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-ink)}.field{margin:0 0 14px}.field:last-child{margin-bottom:0}.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px}.numeric{display:flex;align-items:center;gap:5px}.unit{font-size:12px;color:var(--muted)}.check{display:flex;align-items:center;gap:7px;font-size:14px;margin:10px 0}.select-field{display:block;font-size:14px;margin-bottom:13px}.select-field span{display:block;margin-bottom:6px}.select-field select{width:100%}.presets{display:flex;flex-wrap:wrap;gap:5px}.presets button{font-size:13px;min-height:33px;padding:4px 8px}.hint{font-size:13px;line-height:1.5;color:var(--muted);margin:8px 0 0}.formula{font:19px/1.65 Georgia,"Times New Roman",serif;margin:7px 0}.tag{display:inline-block;border:1px solid var(--line);color:var(--accent-ink);font-size:12px;padding:3px 6px;border-radius:4px}footer{flex:none;font-size:11px;display:flex;justify-content:space-between;color:var(--muted)}.projection .controls,.projection footer,.projection .eyebrow,.projection .mobile-settings{display:none}.projection .workspace{grid-template-columns:minmax(0,1fr)}.projection .shell{max-width:none;padding:8px 12px}.projection h1{font-size:31px}.projection .metric-label{font-size:20px}.projection .metric-value{font-size:40px}.projection .metric-unit{font-size:21px}.projection .metric-detail{font-size:15px}.projection .equation{font-size:29px}.projection .principle p{font-size:18px}.projection .panel-head h2{font-size:19px}.projection .scene-note{font-size:15px}.projection .tabs button{font-size:18px}.projection .transport>button{font-size:16px}.projection .plot-panel select{font-size:15px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}dialog{width:min(860px,calc(100% - 26px));max-height:87dvh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:24px}dialog::backdrop{background:#071625a8}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}dialog h2{font-size:27px;font-weight:550;margin:0}dialog h3{font-size:19px;margin:22px 0 7px;color:var(--accent-ink)}dialog p,dialog li{font-size:16px;line-height:1.65;color:var(--muted)}#toast{position:fixed;z-index:50;bottom:16px;left:50%;transform:translateX(-50%);max-width:90vw;background:var(--ink);color:var(--surface);padding:10px 15px;border-radius:7px;font-size:14px;box-shadow:0 5px 25px #0002}#toast:empty{display:none}sub,sup{font-size:.7em;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.4em}a{color:var(--accent-ink)}
+@media(max-width:1300px){.workspace{grid-template-columns:minmax(0,1fr) 255px}.shell{padding:10px 12px 7px;gap:8px}h1{font-size:28px}.control-section{padding:13px 11px}.panel-head{padding:7px 8px 3px}.metric-value{font-size:28px}.metric-label{font-size:13px}.metric-detail{font-size:11px}.equation{font-size:21px}.principle p{font-size:13px}.principle{gap:12px}.actions button{padding:7px 9px}footer{display:none}.plot-panel .panel-head h2{display:none}}
+@media(max-width:1000px){.workspace{grid-template-columns:minmax(0,1fr)}.controls{display:none;position:fixed;right:10px;top:145px;bottom:12px;width:min(315px,calc(100% - 22px));z-index:20;box-shadow:0 12px 50px #0004}.controls.open{display:block}.mobile-settings{display:inline-flex}.actions{justify-content:flex-start}.stagegrid{min-height:350px}.heading{flex-basis:100%}}
+@media(max-width:650px){.shell{height:auto;min-height:100dvh;padding:10px;gap:10px}h1{font-size:26px}.actions{gap:5px}.actions>button{font-size:14px;padding:6px 9px}.actions>.square{width:40px;padding:0;font-size:22px}.tabs button{font-size:14px;min-height:36px;padding:5px 8px}.workspace{flex:none}.stagegrid{display:flex;flex-direction:column;min-height:0;flex:none}.scene-panel{height:440px;flex:none}.plot-panel{height:380px;flex:none}.panel-head{flex-wrap:nowrap;min-height:44px}.plot-panel select{max-width:180px}.scene-note{font-size:12px}.timeline{order:5;flex-basis:100%}.metrics{grid-template-columns:1fr 1fr;gap:13px}.metric:nth-child(3){padding-left:0;border-left:0}.metric-label{font-size:14px}.metric-value{font-size:30px}.metric-detail{font-size:12px}.principle{display:block}.equation{font-size:23px;margin-bottom:7px}.principle p{font-size:14px}.loop{margin-left:auto}.controls{top:155px}.projection .scene-panel{height:500px}.projection .plot-panel{height:430px}.projection .metric-label{font-size:17px}.projection .metric-value{font-size:36px}.projection .metric-unit{font-size:17px}.projection .metric-detail{font-size:13px}.projection .equation{font-size:25px}.projection .principle p{font-size:16px}.projection .tabs button{font-size:15px}.projection .scene-note{font-size:13px}.projection .panel-head h2{font-size:16px}}
+@media(min-width:1001px) and (max-height:780px){.shell{gap:7px}.stagegrid{min-height:265px}.visual{gap:8px}.metric-value{font-size:29px}.principle{min-height:47px}.projection .metric-value{font-size:36px}.projection .metric-label{font-size:18px}.projection .metric-detail{font-size:13px}.projection .principle p{font-size:16px}.projection .equation{font-size:25px}}
+@media(min-width:1001px) and (min-height:650px){body{overflow:hidden}}
+@media(max-width:420px){.metric-unit{display:block;margin-left:0;font-size:14px;line-height:1.3}.projection .metric-unit{font-size:16px}.equation{font-size:21px}.projection .equation{font-size:22px}.plot-panel select{max-width:166px}.view-tools{gap:2px}}
+@media print{.controls,.actions,.transport,.view-tools,footer{display:none}.shell{height:auto}.workspace{display:block}.stagegrid{height:530px}.panel{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<main class="shell">
+ <header><div class="heading"><div class="eyebrow">MPSI · EM5 · Induction de Lorentz</div><h1>Alternateur</h1></div><div class="actions"><button id="mobileSettings" class="mobile-settings" aria-expanded="false">Réglages</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Enregistrer la scène, les courbes et les valeurs en PNG">Image</button><button id="projection">Projection</button><button id="fullscreen" class="square" aria-label="Plein écran">⛶</button></div></header>
+ <nav id="tabs" class="tabs" role="tablist" aria-label="Situations physiques"></nav>
+ <div class="workspace" id="experiment" role="tabpanel">
+  <section class="visual" aria-label="Expérience et résultats">
+   <div class="stagegrid">
+    <section class="panel scene-panel"><div class="panel-head"><h2 id="sceneTitle"></h2><div class="view-tools"><button id="zoomOut" class="small square" aria-label="Réduire la scène">−</button><output id="zoomValue">100 %</output><button id="zoomIn" class="small square" aria-label="Agrandir la scène">+</button><button id="fit" class="small">Cadrer</button></div></div><div class="canvas-wrap"><canvas id="scene" role="img" aria-label="Schéma de l’expérience"></canvas></div><p class="scene-note" id="sceneNote"></p></section>
+    <section class="panel plot-panel"><div class="panel-head"><h2>Observer</h2><select id="plotMode" aria-label="Grandeurs représentées"></select><div class="view-tools"><button id="plotZoomOut" class="small square" aria-label="Réduire les courbes">−</button><button id="plotZoomIn" class="small square" aria-label="Agrandir les courbes">+</button><button id="plotFit" class="small" title="Afficher toute la durée">Cadrer</button></div></div><div class="canvas-wrap"><canvas id="plot" role="img" aria-label="Courbes synchronisées avec l’expérience"></canvas></div><p class="scene-note" id="plotNote">Glisser sur les courbes pour choisir l’instant.</p></section>
+   </div>
+   <div class="transport"><button id="play" class="primary" aria-pressed="false">Démarrer</button><button id="reset">Recommencer</button><label class="timeline"><span class="sr-only">Instant observé</span><input id="progress" type="range" min="0" max="1000" value="0"><output id="progressValue">0,00 s</output></label><label class="speed">Lecture<select id="speed" aria-label="Vitesse de lecture"><option value="0.01">× 0,01</option><option value="0.1">× 0,1</option><option value="0.25">× ¼</option><option value="0.5">× ½</option><option value="1" selected>× 1</option><option value="2">× 2</option><option value="5">× 5</option><option value="10">× 10</option></select></label><label class="loop"><input id="loop" type="checkbox">Boucle</label></div>
+   <div id="metrics" class="metrics" aria-label="Valeurs à l’instant choisi"></div>
+   <div class="principle"><div id="equation" class="equation"></div><p id="explanation"></p></div>
+  </section>
+  <aside class="controls" id="controls" aria-label="Réglages de l’expérience"></aside>
+ </div>
+ <footer><span>E. Guillaume · MPSI · EM5 · Hors connexion</span><span>Espace : lecture/pause · R : recommencer · F : plein écran</span></footer>
+</main>
+<dialog id="helpDialog"><div class="dialog-head"><h2>Utiliser l’atelier</h2><button id="closeHelp">Fermer</button></div><div id="helpContent"></div><h3>Commandes communes</h3><p>La lecture suit le temps physique, multiplié par le facteur indiqué. Pause arrête simultanément le mouvement et les courbes. Lorsque le préaffichage est actif, les courbes pâles montrent l’évolution complète calculée ; les traits appuyés suivent le temps déjà parcouru. Glisser sur les courbes ou utiliser le curseur permet de choisir un instant. Un changement de paramètre prépare une nouvelle expérience, à l’arrêt.</p><p>La molette et les boutons − / + règlent le zoom. Maj + glisser déplace le cadrage ; Cadrer rétablit la vue entière. Les légendes gardent leur taille lors du zoom. Le graphique dispose de son propre cadrage temporel. Sur fenêtre étroite, Réglages ouvre un panneau depuis le bord droit.</p><p>Projection masque les réglages et agrandit les informations. Le petit carré ⛶ commande séparément le plein écran. Image enregistre la scène, les courbes et les valeurs dans une image PNG. Espace : lecture/pause ; ← / → : parcourir le temps ; R : recommencer ; F : plein écran ; Échap : fermer l’aide ou le panneau de réglages.</p></dialog>
+<div id="toast" role="status"></div>
+<script id="physics">/* EM5 — modèles SI. Aucune bibliothèque ni ressource distante. */
+'use strict';
+globalThis.EM5 = (() => {
+  const PI=Math.PI, TAU=2*PI, G=9.81;
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  function integralExp(rate,t){return Math.abs(rate*t)<1e-5?t*(1-rate*t/2+(rate*t)**2/6-(rate*t)**3/24):-Math.expm1(-rate*t)/rate;}
+  function displacement(v0,acc,rate,t){
+    if(Math.abs(rate*t)<1e-4)return v0*integralExp(rate,t)+acc*t*t*(.5-rate*t/6+(rate*t)**2/24-(rate*t)**3/120);
+    return v0*integralExp(rate,t)+acc*(t-integralExp(rate,t))/rate;
+  }
+  // Gauss-Legendre à 16 points ; indépendant du bilan d'énergie.
+  const gx=[.09501250983763744,.2816035507792589,.4580167776572274,.6178762444026438,.755404408355003,.8656312023878318,.9445750230732326,.9894009349916499];
+  const gw=[.1894506104550685,.1826034150449236,.16915651939500254,.14959598881657673,.12462897125553387,.09515851168249278,.06225352393864789,.027152459411754095];
+  function quad(f,a,b){let q=0,m=(a+b)/2,d=(b-a)/2;for(let j=0;j<8;j++)q+=gw[j]*(f(m-d*gx[j])+f(m+d*gx[j]));return q*d;}
+  function rails(p,mode,t){
+    const k=p.a*p.B, E=mode==='moteur'?p.E:0, F=mode==='generateur'?p.F:mode==='moteur'?-p.f:0;
+    const closed=mode==='moteur'||p.closed, v0=mode==='freinage'?p.v0:0;
+    const rate=closed?k*k/(p.m*p.R):0, acc=(F+(closed?k*E/p.R:0))/p.m;
+    const vel=u=>v0*Math.exp(-rate*u)+acc*integralExp(rate,u);
+    const v=vel(t), dx=displacement(v0,acc,rate,t), x=.18+dx, e=-k*v;
+    const i=closed?(E+e)/p.R:0, FL=k*i, Ec=.5*p.m*v*v, Ec0=.5*p.m*v0*v0;
+    const Wm=F*dx, We=closed?E/p.R*(E*t-k*dx):0;
+    // Le terme Joule est intégré directement, sans utiliser le bilan à vérifier.
+    const segments=Math.max(1,Math.min(80,Math.ceil(rate*t/4)));
+    let Q=0;
+    if(closed)for(let n=0;n<segments;n++)Q+=quad(u=>(E-k*vel(u))**2/p.R,n*t/segments,(n+1)*t/segments);
+    return {t,x,dx,v,i,e,flux:k*x,FL,F,E,Ec,Ec0,Q,Wm,We,Pm:F*v,Pe:E*i,PJ:p.R*i*i,Pind:e*i,PL:FL*v,dEc:(F+FL)*v,tau:rate>0?1/rate:Infinity,vlim:rate>0?acc/rate:null};
+  }
+  function alternateur(p,mode,t){
+    const omega=TAU*p.freq, theta=omega*t, S=p.N*p.a*p.b, K=p.B*S, L=mode==='rl'?p.L:0;
+    const e=K*omega*Math.sin(theta), flux=K*Math.cos(theta);
+    const phase=Math.atan2(omega*L,p.R), I0=mode==='ouvert'?0:K*omega/Math.hypot(p.R,omega*L);
+    const i=I0*Math.sin(theta-phase), di=I0*omega*Math.cos(theta-phase);
+    const gammaL=-K*i*Math.sin(theta), gamma=-gammaL, Pind=e*i, PL=gammaL*omega;
+    return {t,theta,omega,S,K,L,e,flux,i,di,phase,I0,gammaL,gamma,Pind,PL,Pm:gamma*omega,PJ:p.R*i*i,Em:.5*L*i*i,dEm:L*i*di,meanP:.5*p.R*I0*I0};
+  }
+  function smoothBand(value,half,edge){const a=Math.abs(value);if(a<=half-edge)return 1;if(a>=half+edge)return 0;const t=(a-half+edge)/(2*edge);return 1-t*t*(3-2*t);}
+  const SHEET={radius:.12,length:.62,halfWidth:.072,halfHeight:.145,edge:.012,slots:10,hub:.025};
+  function sheetMesh(slotted=false,n=20){
+    const r=SHEET.radius,h=2*r/n, nodes=[], map=new Map(),edges=[];
+    for(let iy=0;iy<=n;iy++)for(let ix=0;ix<=n;ix++){
+      const x=-r+ix*h,y=-r+iy*h;if(x*x+y*y>r*r+1e-10)continue;
+      map.set(ix+','+iy,nodes.length);nodes.push([x,y,ix,iy]);
+    }
+    function cut(a,b){
+      if(!slotted)return false;
+      for(let k=0;k<SHEET.slots;k++){
+        const angle=PI/24+TAU*k/SHEET.slots, ux=Math.cos(angle),uy=Math.sin(angle);
+        const sa=ux*a[1]-uy*a[0],sb=ux*b[1]-uy*b[0];
+        if(sa*sb>0||Math.abs(sa-sb)<1e-14)continue;
+        const t=sa/(sa-sb);if(t<0||t>1)continue;
+        const radius=(a[0]+t*(b[0]-a[0]))*ux+(a[1]+t*(b[1]-a[1]))*uy;
+        if(radius>SHEET.hub&&radius<SHEET.radius+.002)return true;
+      }return false;
+    }
+    nodes.forEach((a,i)=>{for(const [dx,dy] of [[1,0],[0,1]]){const j=map.get((a[2]+dx)+','+(a[3]+dy));if(j!==undefined&&!cut(a,nodes[j]))edges.push([i,j]);}});
+    const degree=new Float64Array(nodes.length);for(const [a,b]of edges){degree[a]++;degree[b]++;}
+    return {nodes,edges,degree,h,slotted};
+  }
+  // Nappe résistive 2D : I_ab/(sigma*h) = V_a-V_b + ∫(v×B).dl.
+  // Résolution de div(j)=0, bords isolants, pour B=1 T et theta'=1 rad/s.
+  function sheetSolve(mesh,theta,uniform=false){
+    const {nodes,edges,degree}=mesh,n=nodes.length,co=Math.cos(theta),si=Math.sin(theta),ell=SHEET.length;
+    const world=nodes.map(p=>[co*p[0]+si*(ell+p[1]),-si*p[0]+co*(ell+p[1])]);
+    const rhs=new Float64Array(n),emfs=new Float64Array(edges.length);
+    edges.forEach(([a,b],j)=>{
+      const A=world[a],C=world[b],dx=C[0]-A[0],dy=C[1]-A[1];let u=0;
+      for(const [f,w]of [[.1127016654,5/18],[.5,8/18],[.8872983346,5/18]]){
+        const x=A[0]+f*dx,y=A[1]+f*dy;
+        const field=uniform?1:smoothBand(x,SHEET.halfWidth,SHEET.edge)*smoothBand(y-ell,SHEET.halfHeight,SHEET.edge);
+        u+=w*field*(x*dx+y*dy);
+      }
+      emfs[j]=u;rhs[a]-=u;rhs[b]+=u;
+    });
+    const V=new Float64Array(n),res=rhs.slice(),d=rhs.slice(),Ad=new Float64Array(n);
+    let rr=res.reduce((s,v)=>s+v*v,0),initial=rr;
+    for(let iter=0;iter<500&&rr>Math.max(1e-28,initial*1e-19);iter++){
+      for(let j=0;j<n;j++)Ad[j]=degree[j]*d[j];
+      for(const[a,b]of edges){Ad[a]-=d[b];Ad[b]-=d[a];}
+      let denom=0;for(let j=0;j<n;j++)denom+=d[j]*Ad[j];if(Math.abs(denom)<1e-30)break;
+      const alpha=rr/denom;let rr2=0;
+      for(let j=0;j<n;j++){V[j]+=alpha*d[j];res[j]-=alpha*Ad[j];rr2+=res[j]*res[j];}
+      const beta=rr2/rr;for(let j=0;j<n;j++)d[j]=res[j]+beta*d[j];rr=rr2;
+    }
+    let damping=0,work=0,maxFlow=0;const flow=edges.map(([a,b],j)=>{
+      const f=V[a]-V[b]+emfs[j];damping+=f*f;work+=f*emfs[j];maxFlow=Math.max(maxFlow,Math.abs(f));return f;
+    });
+    return {theta,damping,flow,maxFlow,work,residual:Math.sqrt(rr)};
+  }
+  let sheetCache=null;
+  function prepareSheet(){
+    if(sheetCache)return sheetCache;
+    const table={step:.01,min:-.7,max:.7,plain:{mesh:sheetMesh(false),rows:[]},slit:{mesh:sheetMesh(true),rows:[]}};
+    for(const key of ['plain','slit'])for(let j=0;j<=140;j++)table[key].rows.push(sheetSolve(table[key].mesh,-.7+j*.01));
+    sheetCache=table;return table;
+  }
+  function sheetAt(table,key,theta){
+    const u=clamp((theta-table.min)/table.step,0,140),a=Math.floor(u),b=Math.min(140,a+1),f=u-a;
+    const A=table[key].rows[a],B=table[key].rows[b];return {a,b,f,damping:A.damping*(1-f)+B.damping*f};
+  }
+  function rk4(fun,y,dt){
+    const a=fun(y),b=fun(y.map((v,j)=>v+dt*a[j]/2)),c=fun(y.map((v,j)=>v+dt*b[j]/2)),d=fun(y.map((v,j)=>v+dt*c[j]));
+    return y.map((v,j)=>v+dt*(a[j]+2*b[j]+2*c[j]+d[j])/6);
+  }
+  function pendulumData(p,table=prepareSheet()){
+    const ell=SHEET.length,r=SHEET.radius,J=p.m*(ell*ell+r*r/2),gain=p.sigma*p.h*p.B*p.B;
+    const theta0=p.angle*PI/180,step=.0025,T=p.duration,rows=[];let y=[theta0,0,0,theta0,0,0];
+    const fun=q=>{
+      const c0=gain*sheetAt(table,'plain',q[0]).damping,c1=gain*sheetAt(table,'slit',q[3]).damping;
+      return [q[1],(-p.m*G*ell*Math.sin(q[0])-c0*q[1])/J,c0*q[1]*q[1],q[4],(-p.m*G*ell*Math.sin(q[3])-c1*q[4])/J,c1*q[4]*q[4]];
+    };
+    for(let j=0;j<=Math.round(T/step);j++){
+      const t=j*step,c0=gain*sheetAt(table,'plain',y[0]).damping,c1=gain*sheetAt(table,'slit',y[3]).damping;
+      if(j%4===0||j===Math.round(T/step))rows.push({t,theta:y[0],omega:y[1],Q:y[2],thetaS:y[3],omegaS:y[4],QS:y[5],Ec:.5*J*y[1]**2,Ep:p.m*G*ell*(1-Math.cos(y[0])),EcS:.5*J*y[4]**2,EpS:p.m*G*ell*(1-Math.cos(y[3])),PJ:c0*y[1]**2,PJS:c1*y[4]**2,c:c0,cS:c1,E0:p.m*G*ell*(1-Math.cos(theta0))});
+      y=rk4(fun,y,step);
+    }return {rows,tmax:T,table,J};
+  }
+  function tubeCoefficient(p){return 45*p.sigma*p.h*(p.phi*1e-6)**2/(256*p.radius*p.z0);}
+  function tube(p,t){
+    const c=tubeCoefficient(p),rate=c/p.m,v=G*integralExp(rate,t),z=displacement(0,G,rate,t);
+    const Ec=.5*p.m*v*v,W=p.m*G*z,Q=W-Ec;
+    return {t,z,v,c,tau:c>0?p.m/c:Infinity,vlim:c>0?p.m*G/c:Infinity,Ec,W,Q,PJ:c*v*v,zPVC:.5*G*t*t,vPVC:G*t};
+  }
+  function tubeDuration(p){let lo=0,hi=1;while(tube(p,hi).z<p.length)hi*=2;for(let j=0;j<70;j++){const m=(lo+hi)/2;if(tube(p,m).z<p.length)lo=m;else hi=m;}return (lo+hi)/2;}
+  function sampleRows(rows,t){
+    if(t<=rows[0].t)return {...rows[0],t};if(t>=rows.at(-1).t)return {...rows.at(-1),t};
+    let lo=0,hi=rows.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(rows[m].t>t)hi=m;else lo=m;}
+    const f=(t-rows[lo].t)/(rows[hi].t-rows[lo].t),out={};for(const k of Object.keys(rows[lo]))out[k]=rows[lo][k]+f*(rows[hi][k]-rows[lo][k]);return out;
+  }
+  return Object.freeze({PI,TAU,G,clamp,quad,rails,alternateur,sheetMesh,sheetSolve,prepareSheet,sheetAt,pendulumData,tubeCoefficient,tube,tubeDuration,sampleRows,SHEET});
+})();
+</script><script>/* Coordonnées en pixels CSS : les légendes restent indépendantes du zoom. */
+'use strict';
+globalThis.EM5Draw=(()=>{
+ const fmt=(v,d=2)=>{
+   if(!Number.isFinite(v))return v===Infinity?'∞':'—';if(Math.abs(v)<1e-10)v=0;
+   const a=Math.abs(v);if(a>=1e4||(a>0&&a<.001)){const [mantissa,exponent]=v.toExponential(1).split('e'),superDigits={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return mantissa.replace('.',',').replace('-','−')+' × 10'+String(Number(exponent)).split('').map(c=>superDigits[c]).join('');}
+   return new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:0}).format(v).replace(/-/g,'−');
+ };
+ const sign=v=>v>1e-10?'+':v<-1e-10?'−':'0';
+ function richLayout(c,text,size,opts={},factor=1){
+   const runs=[];let script='base',width=0;
+   for(const part of String(text).split(/(<\/?(?:sub|sup)>)/g)){
+     if(part==='<sub>'){script='sub';continue;}if(part==='<sup>'){script='sup';continue;}
+     if(part==='</sub>'||part==='</sup>'){script='base';continue;}if(!part)continue;
+     const fontSize=size*factor*(script==='base'?1:.7),offset=size*factor*(script==='sub'?.28:script==='sup'?-.45:0);
+     const font=`${opts.bold?'600 ':''}${fontSize}px ${opts.serif?'Georgia,serif':'-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif'}`;
+     c.font=font;const advance=c.measureText(part).width;runs.push({text:part,font,offset,x:width});width+=advance;
+   }return {runs,width};
+ }
+ function richText(c,x,y,text,color,size=21,align='left',opts={},factor=1){
+   c.save();const {runs,width}=richLayout(c,text,size,opts,factor),left=align==='right'?x-width:align==='center'?x-width/2:x;
+   c.textAlign='left';c.textBaseline=opts.baseline||'middle';c.fillStyle=color;
+   for(const run of runs){c.font=run.font;if(opts.halo){c.strokeStyle=opts.haloColor||'#fff';c.lineWidth=5;c.lineJoin='round';c.strokeText(run.text,left+run.x,y+run.offset);}c.fillText(run.text,left+run.x,y+run.offset);}
+   c.restore();return width;
+ }
+ class Stage{
+   constructor(canvas){this.canvas=canvas;this.c=canvas.getContext('2d');this.view={zoom:1,dx:0,dy:0};this.w=400;this.h=300;this.projection=false;this.palette={};this.resize();}
+   resize(){
+     const rect=this.canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+     this.w=Math.max(240,rect.width);this.h=Math.max(150,rect.height);this.dpr=dpr;
+     if(this.canvas.width!==Math.round(this.w*dpr)||this.canvas.height!==Math.round(this.h*dpr)){this.canvas.width=Math.round(this.w*dpr);this.canvas.height=Math.round(this.h*dpr);}
+     this.c.setTransform(dpr,0,0,dpr,0,0);this.projection=document.body.classList.contains('projection');
+     const css=getComputedStyle(document.documentElement);for(const key of ['paper','surface','ink','muted','line','grid','accent','electric','motion','field','loss','metal','metal-dark'])this.palette[key]=css.getPropertyValue('--'+key).trim();
+   }
+   clear(){this.resize();this.c.fillStyle=this.palette.surface;this.c.fillRect(0,0,this.w,this.h);}
+   p(x,y){return [this.w/2+(x-this.w/2)*this.view.zoom+this.view.dx,this.h/2+(y-this.h/2)*this.view.zoom+this.view.dy];}
+   unp(x,y){return [(x-this.w/2-this.view.dx)/this.view.zoom+this.w/2,(y-this.h/2-this.view.dy)/this.view.zoom+this.h/2];}
+   line(a,b,color=this.palette.line,width=1,dash=[]){const c=this.c;c.save();c.beginPath();c.moveTo(...a);c.lineTo(...b);c.strokeStyle=color;c.lineWidth=width;c.setLineDash(dash);c.lineCap='round';c.stroke();c.restore();}
+   path(points,color,width=1,fill=null,closed=false,dash=[]){if(!points.length)return;const c=this.c;c.save();c.beginPath();let started=false;for(const p of points){if(!p.every(Number.isFinite)){started=false;continue;}if(started)c.lineTo(...p);else{c.moveTo(...p);started=true;}}if(closed)c.closePath();if(fill){c.fillStyle=fill;c.fill();}if(color){c.strokeStyle=color;c.lineWidth=width;c.lineJoin='round';c.lineCap='round';c.setLineDash(dash);c.stroke();}c.restore();}
+   circle(x,y,r,fill=null,stroke=null,width=1){if(r<=0)return;const c=this.c;c.save();c.beginPath();c.arc(x,y,r,0,2*Math.PI);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke();}c.restore();}
+   rect(x,y,w,h,fill,stroke=null,r=0){const c=this.c;c.save();c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=1;c.stroke();}c.restore();}
+   text(x,y,text,color=this.palette.ink,size=21,align='left',opts={}){
+     return richText(this.c,x,y,text,color,size,align,{...opts,haloColor:this.palette.surface},this.projection?1.12:1);
+   }
+   measure(text,size=21,opts={}){this.c.save();const width=richLayout(this.c,text,size,opts,this.projection?1.12:1).width;this.c.restore();return width;}
+   arrow(a,b,color,width=2.5,head=9){const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);if(len<2)return;this.line(a,b,color,width);const ux=dx/len,uy=dy/len;this.path([b,[b[0]-head*ux+head*.45*uy,b[1]-head*uy-head*.45*ux],[b[0]-head*ux-head*.45*uy,b[1]-head*uy+head*.45*ux]],null,0,color,true);}
+   ring(x,y,r,positive,color,width=1.5){this.circle(x,y,r,null,color,width);if(positive)this.circle(x,y,2.2,color);else{this.line([x-r*.52,y-r*.52],[x+r*.52,y+r*.52],color,width);this.line([x-r*.52,y+r*.52],[x+r*.52,y-r*.52],color,width);}}
+   badge(x,y,text,color=this.palette.accent){const c=this.c;c.save();c.font=`${this.projection?19:17}px -apple-system,BlinkMacSystemFont,Arial,sans-serif`;const width=c.measureText(text).width+20;c.restore();this.rect(x,y,width,31,this.palette.surface,this.palette.line,6);this.text(x+10,y+15.5,text,color,17);return width;}
+   grid(){const {w,h,palette:p}=this;for(let x=20;x<w;x+=28)for(let y=20;y<h;y+=28)this.circle(x,y,.75,p.grid);}
+ }
+ function range(values,includeZero=true){let lo=includeZero?0:Infinity,hi=includeZero?0:-Infinity;for(const v of values){if(Number.isFinite(v)){lo=Math.min(lo,v);hi=Math.max(hi,v);}}if(!Number.isFinite(lo))return [-1,1];if(Math.abs(hi-lo)<1e-10){const d=Math.max(1,Math.abs(lo)*.2);return [lo-d,hi+d];}const d=(hi-lo)*.13;return [lo-(lo<0?d:0),hi+d];}
+ function plot(stage,lab,spec){
+   stage.clear();const {w,h,c,palette:p,projection}=stage;
+   const tracks=spec.tracks, count=tracks.length,right=17,top=12,bottom=tracks.some(t=>t.series.length>3)?60:32,gap=17;
+   let left=projection?66:58;
+   const each=(h-top-bottom-gap*(count-1))/count,z=lab.plotView.zoom;
+   const span=lab.data.tmax/z;lab.plotView.center=EM5.clamp(lab.plotView.center,span/2,lab.data.tmax-span/2);
+   const xmin=lab.plotView.center-span/2,xmax=xmin+span;
+   const visible=lab.data.rows.filter(row=>row.t>=xmin-span*.02&&row.t<=xmax+span*.02);
+   const bounds=tracks.map(track=>{
+     const raw=track.range||range(visible.flatMap(row=>track.series.map(s=>s.value(row))));
+     const step=10**Math.floor(Math.log10(Math.max(1e-12,Math.abs(raw[0]),Math.abs(raw[1]))));
+     return track.range?raw:[Math.floor(raw[0]/step)*step,Math.ceil(raw[1]/step)*step];
+   });
+   c.save();c.font=`${(projection?15:13)*(projection?1.12:1)}px Arial`;
+   for(const [lo,hi]of bounds)for(const value of [lo,(lo+hi)/2,hi])left=Math.max(left,c.measureText(fmt(value,Math.abs(hi-lo)<.2?3:2)).width+14);
+   c.restore();left=Math.min(left,w*.37);
+   const X=t=>left+(w-left-right)*(t-xmin)/(xmax-xmin);
+   lab.plotMap={left,right:w-right,xmin,xmax,X};
+   tracks.forEach((track,k)=>{
+     const ytop=top+k*(each+gap)+25,ybottom=top+(k+1)*each+k*gap-15;
+     const series=track.series,[ymin,ymax]=bounds[k];
+     const Y=v=>ybottom-(ybottom-ytop)*(v-ymin)/(ymax-ymin);
+     stage.text(left,top+k*(each+gap)+10,track.label,p.muted,projection?18:16);
+     for(let j=0;j<=2;j++){
+       const value=ymin+(ymax-ymin)*j/2,y=Y(value);stage.line([left,y],[w-right,y],p.grid,1);
+       stage.text(left-8,y,fmt(value,Math.abs(ymax-ymin)<.2?3:2),p.muted,projection?15:13,'right');
+     }
+     if(ymin<=0&&ymax>=0)stage.line([left,Y(0)],[w-right,Y(0)],p.line,1);
+     stage.line([left,ytop],[left,ybottom],p.line);
+     for(let j=0;j<=4;j++){
+       const t=xmin+span*j/4,x=X(t);stage.line([x,ytop],[x,ybottom],p.grid,1);
+       if(k===count-1)stage.text(x,ybottom+18,fmt(t,span<1?2:1),p.muted,projection?15:13,'center');
+     }
+     c.save();c.beginPath();c.rect(left-1,ytop-1,w-left-right+2,ybottom-ytop+2);c.clip();
+     series.forEach(s=>{
+       const color=p[s.color]||s.color,points=lab.data.rows.map(row=>[X(row.t),Y(s.value(row))]);
+       if(lab.previewCurves!==false){c.save();c.globalAlpha=.44;stage.path(points,color,1.6,null,false,s.dash||[]);c.restore();}
+       const past=lab.data.rows.filter(row=>row.t<=lab.t);past.push(lab.state);
+       stage.path(past.map(row=>[X(row.t),Y(s.value(row))]),color,2.6,null,false,s.dash||[]);
+       if(lab.t>=xmin&&lab.t<=xmax&&Number.isFinite(s.value(lab.state))){const y=Y(s.value(lab.state));stage.circle(X(lab.t),y,4,p.surface,color,2);}
+     });
+     if(track.mean!==undefined)stage.line([left,Y(track.mean)],[w-right,Y(track.mean)],p.muted,1,[3,5]);
+     if(lab.t>=xmin&&lab.t<=xmax)stage.line([X(lab.t),ytop],[X(lab.t),ybottom],p.muted,1,[3,5]);
+     c.restore();
+     let lx=left,ly=ybottom+36;for(const s of series){if(series.length<2)continue;const color=p[s.color]||s.color;const length=stage.measure(s.name,projection?16:14)+44;if(lx+length>w-right&&lx>left){lx=left;ly+=22;}stage.line([lx,ly],[lx+16,ly],color,2,s.dash||[]);stage.text(lx+23,ly,s.name,color,projection?16:14);lx+=length;}
+   });
+   stage.text(w-right,h-7,'t (s)',p.muted,projection?15:13,'right');
+ }
+ function energyBars(stage,items,x,y,width){
+   const p=stage.palette,total=Math.max(1e-12,...items.map(it=>Math.abs(it.value)));
+   for(let j=0;j<items.length;j++){const it=items[j],yy=y+j*37;stage.text(x,yy,it.label,p.muted,16);stage.rect(x+88,yy-8,width-88,15,p.grid,null,4);stage.rect(x+88,yy-8,(width-88)*Math.abs(it.value)/total,15,p[it.color],null,4);}
+ }
+ return {Stage,plot,fmt,sign,range,energyBars,richText};
+})();
+</script><script>'use strict';
+globalThis.EM5UI=(()=>{
+ const $=id=>document.getElementById(id),fmt=EM5Draw.fmt;
+ const section=(title,content)=>`<section class="control-section"><h3>${title}</h3>${content}</section>`;
+ function field(f,p){
+   if(f.type==='check')return `<label class="check"><input type="checkbox" data-param="${f.key}" ${p[f.key]?'checked':''}>${f.label}</label>`;
+   if(f.type==='select')return `<label class="select-field"><span>${f.label}</span><select data-param="${f.key}">${f.options.map(([v,l])=>`<option value="${v}" ${String(p[f.key])===String(v)?'selected':''}>${l}</option>`).join('')}</select></label>`;
+   return `<div class="field"><div class="field-head"><label for="range-${f.key}">${f.label}</label><div class="numeric"><input id="number-${f.key}" type="number" data-param="${f.key}" aria-label="${f.aria||f.key}" min="${f.min}" max="${f.max}" step="${f.step}" value="${p[f.key]}"><span class="unit">${f.unit||''}</span></div></div><input id="range-${f.key}" type="range" data-param="${f.key}" aria-label="${f.aria||f.key}" min="${f.min}" max="${f.max}" step="${f.step}" value="${p[f.key]}"></div>`;
+ }
+ function boot(config){
+   const lab={config,params:{...config.defaults},mode:config.tabs[0].id,t:0,playing:false,speed:config.speed||1,loop:config.loop||false,previewCurves:config.previewCurves!==false,plotMode:config.plots[0][0],plotView:{zoom:1,center:1},scene:new EM5Draw.Stage($('scene')),plot:new EM5Draw.Stage($('plot')),dirty:true,drag:null};
+   window.EM5Lab=lab;
+   lab.notice=(text)=>{$('toast').textContent=text;clearTimeout(lab.toastTimer);lab.toastTimer=setTimeout(()=>$('toast').textContent='',5000);};
+   lab.controls=()=>{
+     $('controls').innerHTML=config.controls(lab,{field:f=>field(f,lab.params),section});
+   };
+   lab.getState=t=>config.sample(lab,t);
+   lab.rebuild=(reset=true)=>{
+     config.constrain?.(lab);lab.data=config.data(lab);
+     if(reset){lab.t=0;lab.playing=false;lab.plotView={zoom:1,center:lab.data.tmax/2};}
+     lab.t=Math.min(lab.t,lab.data.tmax);lab.dirty=true;syncFields();lab.draw();
+   };
+   function syncFields(){
+     for(const el of $('controls').querySelectorAll('[data-param]')){const key=el.dataset.param;if(el.type==='checkbox')el.checked=Boolean(lab.params[key]);else if(document.activeElement!==el)el.value=lab.params[key];}
+   }
+   lab.seek=t=>{lab.t=EM5.clamp(t,0,lab.data.tmax);lab.playing=false;lab.dirty=true;lab.draw();};
+   lab.switchMode=mode=>{lab.mode=mode;config.switchMode?.(lab);lab.scene.view={zoom:1,dx:0,dy:0};lab.controls();lab.rebuild();syncTabs();};
+   function syncTabs(){for(const button of $('tabs').children){const selected=button.dataset.mode===lab.mode;button.setAttribute('aria-selected',selected);button.tabIndex=selected?0:-1;}}
+   $('tabs').innerHTML=config.tabs.map((tab,j)=>`<button role="tab" type="button" id="tab-${tab.id}" data-mode="${tab.id}" aria-controls="experiment" aria-selected="${j===0}">${tab.title}</button>`).join('');
+   $('tabs').addEventListener('click',event=>{const b=event.target.closest('[data-mode]');if(b)lab.switchMode(b.dataset.mode);});
+   $('tabs').addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();event.stopPropagation();let j=config.tabs.findIndex(t=>t.id===lab.mode);j=event.key==='Home'?0:event.key==='End'?config.tabs.length-1:(j+(event.key==='ArrowRight'?1:-1)+config.tabs.length)%config.tabs.length;lab.switchMode(config.tabs[j].id);$('tab-'+lab.mode).focus();});
+   $('plotMode').innerHTML=config.plots.map(([value,label])=>`<option value="${value}">${label}</option>`).join('');
+   $('plotMode').onchange=()=>{lab.plotMode=$('plotMode').value;lab.dirty=true;lab.draw();};
+   function updateParam(event){
+     const el=event.target,key=el.dataset.param;if(!key)return;
+     if((event.type==='input'&&el.type!=='range')||(event.type==='change'&&el.type==='range'))return;
+     let value=el.type==='checkbox'?el.checked:el.tagName==='SELECT'?el.value:Number(el.value);
+     if(typeof value==='number'){if(!Number.isFinite(value))return;value=EM5.clamp(value,Number(el.min),Number(el.max));}
+     lab.params[key]=value;lab.rebuild();
+     for(const sibling of $('controls').querySelectorAll(`[data-param="${key}"]`))if(sibling!==el){if(sibling.type==='checkbox')sibling.checked=value;else sibling.value=lab.params[key];}
+     if(el.type==='number'||el.type==='range')el.value=lab.params[key];
+   }
+   $('controls').addEventListener('input',updateParam);$('controls').addEventListener('change',updateParam);
+   $('controls').addEventListener('click',event=>{const preset=event.target.closest('[data-preset]');if(preset){config.preset(lab,preset.dataset.preset);lab.controls();lab.rebuild();}});
+   function togglePlay(){if(lab.t>=lab.data.tmax-1e-8)lab.t=0;lab.playing=!lab.playing;lab.dirty=true;lab.draw();}
+   $('play').onclick=togglePlay;$('reset').onclick=()=>lab.seek(0);
+   $('progress').oninput=()=>lab.seek(Number($('progress').value)/1000*lab.data.tmax);
+   $('speed').value=String(lab.speed);$('speed').onchange=()=>lab.speed=Number($('speed').value);
+   $('loop').checked=lab.loop;$('loop').onchange=()=>lab.loop=$('loop').checked;
+   $('theme').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';$('theme').textContent=document.documentElement.dataset.theme==='dark'?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',document.documentElement.dataset.theme==='dark');lab.dirty=true;lab.draw();};
+   $('projection').onclick=()=>{document.body.classList.toggle('projection');const on=document.body.classList.contains('projection'),drawer=!on&&innerWidth<=1000;$('controls').classList.toggle('open',drawer);$('mobileSettings').setAttribute('aria-expanded',drawer);$('projection').textContent=on?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',on);lab.scene.view={zoom:1,dx:0,dy:0};requestAnimationFrame(()=>{lab.dirty=true;lab.draw();});};
+   $('mobileSettings').onclick=()=>{const on=$('controls').classList.toggle('open');$('mobileSettings').setAttribute('aria-expanded',on);};
+   async function full(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{lab.notice('Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}}
+   $('fullscreen').onclick=full;document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');$('fullscreen').setAttribute('aria-pressed',Boolean(document.fullscreenElement));lab.dirty=true;});
+   $('helpContent').innerHTML=config.help;$('help').onclick=()=>$('helpDialog').showModal();$('closeHelp').onclick=()=>$('helpDialog').close();
+   $('helpDialog').addEventListener('click',event=>{if(event.target===$('helpDialog')){const r=$('helpDialog').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)$('helpDialog').close();}});
+   function zoomScene(factor,x=lab.scene.w/2,y=lab.scene.h/2){const v=lab.scene.view,old=v.zoom,zoom=EM5.clamp(old*factor,.65,3.5),ratio=zoom/old;v.dx=x-lab.scene.w/2-(x-lab.scene.w/2-v.dx)*ratio;v.dy=y-lab.scene.h/2-(y-lab.scene.h/2-v.dy)*ratio;v.zoom=zoom;lab.dirty=true;lab.draw();}
+   function zoomPlot(factor,anchor=lab.t){const v=lab.plotView,oldspan=lab.data.tmax/v.zoom;v.zoom=EM5.clamp(v.zoom*factor,1,16);const span=lab.data.tmax/v.zoom;v.center=anchor+(v.center-anchor)*span/oldspan;lab.dirty=true;lab.draw();}
+   $('zoomIn').onclick=()=>zoomScene(1.25);$('zoomOut').onclick=()=>zoomScene(.8);$('fit').onclick=()=>{lab.scene.view={zoom:1,dx:0,dy:0};config.fit?.(lab);lab.dirty=true;lab.draw();};
+   $('plotZoomIn').onclick=()=>zoomPlot(1.5);$('plotZoomOut').onclick=()=>zoomPlot(1/1.5);$('plotFit').onclick=()=>{lab.plotView={zoom:1,center:lab.data.tmax/2};lab.dirty=true;lab.draw();};
+   const point=(event,canvas)=>{const r=canvas.getBoundingClientRect();return [event.clientX-r.left,event.clientY-r.top];};
+   $('scene').addEventListener('wheel',event=>{event.preventDefault();const pos=point(event,$('scene'));zoomScene(Math.exp(-event.deltaY*.0015),...pos);},{passive:false});
+   $('plot').addEventListener('wheel',event=>{event.preventDefault();const [x]=point(event,$('plot')),m=lab.plotMap;zoomPlot(Math.exp(-event.deltaY*.002),m.xmin+(x-m.left)/(m.right-m.left)*(m.xmax-m.xmin));},{passive:false});
+   for(const which of ['scene','plot']){
+     const canvas=$(which);
+     canvas.addEventListener('pointerdown',event=>{if(event.button!==0)return;canvas.setPointerCapture(event.pointerId);const [x,y]=point(event,canvas);lab.playing=false;lab.drag={which,x,y,t:lab.t,dx:lab.scene.view.dx,dy:lab.scene.view.dy,center:lab.plotView.center,yaw:lab.yaw||.55,shift:event.shiftKey,alt:event.altKey};if(which==='plot'&&!event.shiftKey){const m=lab.plotMap;lab.seek(m.xmin+(x-m.left)/(m.right-m.left)*(m.xmax-m.xmin));}lab.dirty=true;});
+     canvas.addEventListener('pointermove',event=>{const d=lab.drag;if(!d||d.which!==which)return;const [x,y]=point(event,canvas);
+       if(which==='plot'){const m=lab.plotMap;if(d.shift)lab.plotView.center=d.center-(x-d.x)/(m.right-m.left)*(m.xmax-m.xmin);else lab.t=EM5.clamp(m.xmin+(x-m.left)/(m.right-m.left)*(m.xmax-m.xmin),0,lab.data.tmax);}
+       else if(d.shift){lab.scene.view.dx=d.dx+x-d.x;lab.scene.view.dy=d.dy+y-d.y;}
+       else config.drag?.(lab,{x,y,start:d});lab.dirty=true;lab.draw();
+     });
+     const release=()=>{lab.drag=null;};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('lostpointercapture',release);
+   }
+   document.addEventListener('keydown',event=>{
+     if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(event.target.tagName)||$('helpDialog').open)return;
+     if(event.code==='Space'){event.preventDefault();togglePlay();}else if(event.key.toLowerCase()==='r')lab.seek(0);else if(event.key.toLowerCase()==='f')full();else if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();lab.seek(lab.t+(event.key==='ArrowRight'?1:-1)*lab.data.tmax/100);}else if(event.key==='Escape'){$('controls').classList.remove('open');$('mobileSettings').setAttribute('aria-expanded','false');}
+   });
+   $('export').onclick=async()=>{
+     lab.draw();const canvas=document.createElement('canvas'),c=canvas.getContext('2d');canvas.width=1920;canvas.height=1200;const p=lab.scene.palette;
+     c.fillStyle=p.paper;c.fillRect(0,0,1920,1200);c.fillStyle=p.accent;c.fillRect(0,0,1920,6);c.fillStyle=p.ink;c.font='44px Arial';c.fillText(config.title,48,72);c.font='24px Arial';c.fillStyle=p.muted;c.fillText('EM5 · '+config.tabs.find(t=>t.id===lab.mode).title+' · t = '+fmt(lab.t,3)+' s',48,115);
+     for(const [stage,x,width] of [[lab.scene,40,970],[lab.plot,1030,850]]){
+       c.fillStyle=p.surface;c.fillRect(x,145,width,720);const ratio=Math.min((width-24)/stage.canvas.width,690/stage.canvas.height),sw=stage.canvas.width*ratio,sh=stage.canvas.height*ratio;c.drawImage(stage.canvas,x+(width-sw)/2,160+(690-sh)/2,sw,sh);
+     }
+     const metrics=config.metrics(lab);metrics.forEach((item,j)=>{const x=48+j*470;c.fillStyle=p.muted;c.font='23px Arial';c.fillText(item.label,x,930);c.fillStyle=p.ink;c.font='40px Arial';c.fillText(item.text+' '+(item.unit||''),x,982);});
+     EM5Draw.richText(c,48,1055,$('equation').innerHTML,p.accent,28,'left',{serif:true});c.fillStyle=p.muted;c.font='21px Arial';const note=$('explanation').textContent;const words=note.split(' ');let line='',y=1100;for(const word of words){if(c.measureText(line+word).width>1810){c.fillText(line,48,y);line='';y+=28;}line+=word+' ';}c.fillText(line,48,y);c.font='18px Arial';c.fillText('E. Guillaume · MPSI · Modèle et conventions : voir l’aide de l’atelier.',48,1173);
+     canvas.toBlob(blob=>{if(!blob){lab.notice('L’image n’a pas pu être créée.');return;}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=config.key+'_'+lab.mode+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);lab.notice('Image PNG enregistrée.');},'image/png');
+   };
+   lab.draw=()=>{
+     if(!lab.data)return;lab.state=lab.getState(lab.t);lab.scene.clear();config.draw(lab,lab.scene);const plotSpec=config.plot(lab);EM5Draw.plot(lab.plot,lab,plotSpec);$('plotNote').textContent=lab.previewCurves===false?'Les courbes se tracent au fil du temps.':plotSpec.note||'Glisser sur les courbes pour choisir l’instant.';
+     const info=config.info(lab);$('sceneTitle').textContent=info.title;$('sceneNote').textContent=info.note;$('equation').innerHTML=info.equation;$('explanation').textContent=info.explanation;
+     $('metrics').innerHTML=config.metrics(lab).map(item=>`<div class="metric"><div class="metric-label">${item.label}</div><div class="metric-value" style="color:var(--${item.color||'ink'})">${item.text}<span class="metric-unit">${item.unit||''}</span></div><div class="metric-detail">${item.detail||''}</div></div>`).join('');
+     $('progress').value=Math.round(lab.t/lab.data.tmax*1000);$('progressValue').textContent=fmt(lab.t,lab.data.tmax>10?1:2)+' s';$('play').textContent=lab.playing?'Pause':lab.t>0&&lab.t<lab.data.tmax?'Reprendre':'Démarrer';$('play').setAttribute('aria-pressed',lab.playing);$('zoomValue').textContent=Math.round(lab.scene.view.zoom*100)+' %';
+     $('experiment').setAttribute('aria-labelledby','tab-'+lab.mode);$('scene').setAttribute('aria-label',info.title+'. '+info.note);lab.dirty=false;
+   };
+   lab.controls();lab.rebuild();syncTabs();
+   const resize=new ResizeObserver(()=>{lab.dirty=true;});resize.observe($('scene').parentElement);resize.observe($('plot').parentElement);
+   let last=0;function frame(now){const dt=last?Math.min(.06,(now-last)/1000):0;last=now;if(lab.playing){lab.t+=dt*lab.speed;if(lab.t>=lab.data.tmax){if(lab.loop)lab.t%=lab.data.tmax;else{lab.t=lab.data.tmax;lab.playing=false;}}lab.dirty=true;}if(lab.dirty)lab.draw();requestAnimationFrame(frame);}requestAnimationFrame(frame);
+   return lab;
+ }
+ return {boot,section,field,fmt};
+})();
+</script><script>(()=>{
+'use strict';
+const fmt=EM5Draw.fmt;
+const config={
+ key:'EM5_Alternateur',title:'Alternateur',speed:.25,loop:true,
+ tabs:[{id:'ouvert',title:'Circuit ouvert'},{id:'resistif',title:'Charge résistive'},{id:'rl',title:'Circuit RL'}],
+ plots:[['flux','Flux et f.é.m.'],['courant','F.é.m. et courant'],['couple','Courant et couple'],['puissances','Puissances']],
+ defaults:{B:.6,N:40,a:.12,b:.16,freq:1.5,R:4,L:.2,view:'perspective'},
+ preset(lab,name){Object.assign(lab.params,{B:.6,N:40,a:.12,b:.16,freq:1.5,R:4,L:.2,view:'perspective'});if(name==='lent')lab.params.freq=.5;if(name==='inductif')lab.params.L=1;if(name==='quart')lab.t=1/(4*lab.params.freq);},
+ controls(lab,u){return u.section('01 / La rotation',`<div class="presets"><button data-preset="reference">Référence</button><button data-preset="lent">Rotation lente</button>${lab.mode==='rl'?'<button data-preset="inductif">L élevée</button>':''}</div><p class="hint">La vitesse de rotation est imposée. Le couple extérieur s’adapte à chaque instant.</p>`+u.field({key:'freq',label:'Fréquence f',aria:'Fréquence de rotation en hertz',unit:'Hz',min:.2,max:3,step:.1})+u.field({type:'select',key:'view',label:'Vue',options:[['perspective','Perspective'],['axiale','Suivant l’axe de rotation']]}))
+ +u.section('02 / Champ et bobinage',u.field({key:'B',label:'Champ B',aria:'Champ magnétique en teslas',unit:'T',min:0,max:1.2,step:.05})+u.field({key:'N',label:'Nombre de spires N',aria:'Nombre de spires',unit:'',min:1,max:100,step:1})+u.field({key:'a',label:'Largeur a',aria:'Largeur de la spire en mètres',unit:'m',min:.06,max:.2,step:.01})+u.field({key:'b',label:'Hauteur b',aria:'Hauteur de la spire en mètres',unit:'m',min:.08,max:.25,step:.01}))
+ +u.section('03 / Circuit électrique',(lab.mode!=='ouvert'?u.field({key:'R',label:'Résistance totale R',aria:'Résistance totale en ohms',unit:'Ω',min:1,max:20,step:.5}):'<p class="hint">À vide : aucun courant et aucun couple de Laplace dans ce modèle idéal.</p>')+(lab.mode==='rl'?u.field({key:'L',label:'Inductance propre L',aria:'Inductance en henrys',unit:'H',min:.01,max:2,step:.01}):''))
+ +u.section('04 / Les relations',`<div class="formula">S = Nab<br>Φ<sub>ext</sub> = BS cos θ<br>e = BSω sin θ<br>Γ<sub>ℒ</sub> = −BSi sin θ</div><p class="hint">θ est l’angle entre B et la normale n. Le circuit RL est étudié en régime sinusoïdal établi. Le temps de lecture peut être ralenti.</p>`);},
+ constrain(lab){lab.params.N=Math.round(lab.params.N);},
+ data(lab){const T=2/lab.params.freq,rows=[];for(let j=0;j<=600;j++)rows.push(EM5.alternateur(lab.params,lab.mode,T*j/600));return {rows,tmax:T};},
+ sample:(lab,t)=>EM5.alternateur(lab.params,lab.mode,t),
+ fit(lab){lab.yaw=.55;},
+ drag(lab,{x,start}){if(start.alt){lab.yaw=EM5.clamp(start.yaw+(x-start.x)*.004,.2,1.0);return;}lab.t=EM5.clamp(start.t+(x-start.x)*.016/(EM5.TAU*lab.params.freq),0,lab.data.tmax);},
+ draw(lab,s){
+   const {w,h,palette:c}=s,p=lab.params,q=lab.state,theta=q.theta,n=[Math.cos(theta),Math.sin(theta),0],t=[Math.sin(theta),-Math.cos(theta),0];s.grid();
+   s.badge(12,10,lab.mode==='ouvert'?'À vide':lab.mode==='rl'?'R + L · RSF':'Charge R',c.accent);s.text(w-14,26,'θ = '+fmt((theta*180/Math.PI)%360,0)+'°',c.ink,21,'right');
+   const cx=w*.48,cy=h*.53,scale=Math.min((w-80)/.53,(h-100)/.34),yaw=lab.yaw||.55,elev=.30;
+   function P(x,y,z=0){let X,Y;if(p.view==='axiale'){X=x;Y=-y;}else{X=x*Math.cos(yaw)-y*Math.sin(yaw);Y=-z*Math.cos(elev)+(x*Math.sin(yaw)+y*Math.cos(yaw))*Math.sin(elev);}return s.p(cx+X*scale,cy+Y*scale);}
+   if(p.view==='axiale'){
+     const r=Math.min(w*.27,h*.30),o=s.p(cx,cy);s.circle(...o,r*s.view.zoom,null,c.grid,1);s.arrow(P(-.2,0),P(.2,0),c.field,2);s.text(...P(.21,0),'B',c.field,23,'left',{halo:true});
+     const a=P(-p.a*t[0]/2,-p.a*t[1]/2),b=P(p.a*t[0]/2,p.a*t[1]/2);s.line(a,b,c.ink,7);s.arrow(P(0,0),P(.15*n[0],.15*n[1]),c.motion,3);
+     const np=P(.165*n[0],.165*n[1]);s.text(np[0]+8,np[1]-8,'n',c.motion,24,'center',{halo:true});
+     const rr=.085,arc=[];let angle=theta%EM5.TAU;if(angle<0)angle+=EM5.TAU;for(let j=0;j<=50;j++)arc.push(P(rr*Math.cos(angle*j/50),rr*Math.sin(angle*j/50)));s.path(arc,c.accent,1.8);if(arc.length>1)s.arrow(arc.at(-2),arc.at(-1),c.accent,1.8,6);
+     if(Math.abs(q.i)>1e-9){s.ring(...a,8,q.i>0,c.electric,2);s.ring(...b,8,q.i<0,c.electric,2);}
+     s.text(14,h-45,'Vue suivant +z · normale n dans le plan',c.muted,16);
+   }else{
+     s.c.save();s.c.globalAlpha=.18+.25*p.B/1.2;
+     if(p.B>0)for(const y of [-.11,0,.11])for(const z of [-.095,.095])s.arrow(P(-.23,y,z),P(.23,y,z),c.field,1.2,6);
+     s.c.restore();s.line(P(0,0,-p.b*.7),P(0,0,p.b*.86),c.muted,1.5,[5,5]);s.text(...P(0,0,p.b*.97),'z',c.muted,18,'center');
+     const vertices=[[-p.a*t[0]/2,-p.a*t[1]/2,p.b/2],[p.a*t[0]/2,p.a*t[1]/2,p.b/2],[p.a*t[0]/2,p.a*t[1]/2,-p.b/2],[-p.a*t[0]/2,-p.a*t[1]/2,-p.b/2]];
+     const pts=vertices.map(a=>P(...a));s.c.save();s.c.globalAlpha=.07;s.path(pts,null,0,c.field,true);s.c.restore();
+     const turns=Math.min(5,Math.ceil(p.N/20));for(let k=turns-1;k>=0;k--)s.path(pts.map(a=>[a[0]+k*2,a[1]+k]),c['metal-dark'],2,null,true);
+     s.path(pts,c.ink,3.5,null,true);
+     if(Math.abs(q.i)>1e-9)for(let j=0;j<4;j++){
+       const a=pts[j],b=pts[(j+1)%4],u=q.i>0?.42:.68,v=q.i>0?.68:.42;
+       if(Math.hypot(b[0]-a[0],b[1]-a[1])>24)s.arrow([a[0]+u*(b[0]-a[0]),a[1]+u*(b[1]-a[1])],[a[0]+v*(b[0]-a[0]),a[1]+v*(b[1]-a[1])],c.electric,3,7);
+     }
+     s.arrow(P(0,0),P(.14*n[0],.14*n[1]),c.motion,3);const np=P(.16*n[0],.16*n[1]);s.text(np[0]+(n[0]>=0?10:-10),np[1]-10,'n',c.motion,24,n[0]>=0?'left':'right',{halo:true});
+     const b0=P(-.19,-.12,-.11),b1=P(-.07,-.12,-.11);s.arrow(b0,b1,c.field,3);s.text((b0[0]+b1[0])/2,b0[1]-18,'B',c.field,23,'center',{halo:true});
+     if(Math.abs(q.gammaL)>1e-7){const points=[],dir=Math.sign(q.gammaL);for(let j=0;j<=32;j++){const a=.4+dir*2.1*j/32;points.push(P(.045*Math.cos(a),.045*Math.sin(a),p.b*.72));}s.path(points,c.loss,2.4);s.arrow(points.at(-3),points.at(-1),c.loss,2.4,7);const a=points[15];s.text(a[0]+24,a[1]-13,'Γℒ',c.loss,21,'left',{halo:true});}
+     s.text(14,h-45,'Glisser la spire pour choisir l’angle',c.muted,16);
+   }
+   s.text(14,h-18,p.N+' spires · S = '+fmt(q.S,3)+' m²',c.ink,18);s.text(w-14,h-18,'f = '+fmt(p.freq,1)+' Hz',c.muted,18,'right');
+ },
+ plot(lab){const one=(label,key,color)=>({label,series:[{name:label,value:s=>s[key],color}]});
+   if(lab.plotMode==='courant')return {tracks:[one('e (V)','e','field'),one('i (A)','i','electric')]};
+   if(lab.plotMode==='couple')return {tracks:[one('i (A)','i','electric'),one('Γℒ (N·m)','gammaL','loss')]};
+   if(lab.plotMode==='puissances')return {note:'Trait fin pointillé : puissance mécanique moyenne sur une période.',tracks:[{label:'Puissances (W)',mean:lab.state.meanP,series:[{name:'Mécanique',color:'accent',value:s=>s.Pm},{name:'Joule',color:'loss',value:s=>s.PJ,dash:[6,4]},{name:'dEm/dt',color:'motion',value:s=>s.dEm,dash:[2,4]}]}]};
+   return {tracks:[one('Φext (Wb)','flux','field'),one('e (V)','e','field')]};
+ },
+ metrics(lab){const q=lab.state;return [{label:'Flux extérieur Φext',text:fmt(q.flux,3),unit:'Wb',color:'field',detail:'BS cos θ, avec S = Nab'},{label:'F.é.m. e',text:fmt(q.e,2),unit:'V',color:'field',detail:'Maximum : '+fmt(q.K*q.omega,2)+' V'},{label:'Courant i',text:fmt(q.i,3),unit:'A',color:'electric',detail:lab.mode==='rl'?'Retard : '+fmt(q.phase*180/Math.PI,1)+'°':lab.mode==='ouvert'?'Circuit ouvert':'En phase avec e'},{label:'Couple de Laplace Γℒ',text:fmt(q.gammaL,3),unit:'N·m',color:'loss',detail:'Γext = −Γℒ, vitesse imposée'}];},
+ info(lab){const q=lab.state;return {title:lab.params.view==='axiale'?'La normale définit l’angle θ':'Spire en rotation dans un champ stationnaire',note:lab.mode==='rl'?'Régime sinusoïdal établi ; ω constante. Alt + glisser règle la perspective.':'Vitesse de rotation imposée ; couple extérieur adapté. Les flèches orange suivent le courant réel.',equation:'Γ<sub>ext</sub>ω = Ri² + d(½Li²)/dt',explanation:lab.mode==='ouvert'?'Une tension existe à vide ; sans courant, le couple de Laplace est nul dans ce modèle idéal.':lab.mode==='rl'?(q.Pm<-.00001?'À cet instant, la bobine restitue de l’énergie magnétique au mouvement. Sur une période, l’effet de Laplace reste résistant.':'Le courant retarde sur la f.é.m. La bobine stocke et restitue de l’énergie ; la puissance moyenne fournit les pertes Joule.'):'Sur une charge résistive, le couple de Laplace est résistant et la puissance mécanique reçue est dissipée dans R.'};},
+ help:`<h3>Géométrie et conventions</h3><p>La bobine rectangulaire tourne autour de +z à vitesse angulaire imposée ω = 2πf. Le champ stationnaire est B e_x. Sa normale n = (cos θ, sin θ, 0) définit θ ; l’orientation positive du courant est associée à n par la règle de la main droite. La surface équivalente S = Nab inclut le nombre de spires. Quelques traits représentent le bobinage ; le nombre exact N reste affiché.</p><p>Glisser horizontalement la spire permet de choisir son angle dans les deux tours observés. La vue suivant +z donne une lecture géométrique de θ : ⊙ et ⊗ indiquent le sens du courant sur les deux côtés parallèles à l’axe. En perspective, Alt + glisser change l’angle de vue dans des limites lisibles ; Cadrer rétablit la vue initiale.</p><h3>Modèles électriques</h3><p>Le flux affiché est le flux extérieur BS cos θ. La f.é.m. de mouvement vaut e = BSω sin θ. Circuit ouvert : i = 0. Charge résistive : e = Ri et L = 0. Circuit RL : e = Ri + L di/dt, en régime sinusoïdal établi ; le démarrage électrique n’est pas représenté. R est la résistance totale du circuit, bobinage et récepteur confondus. Changer de situation prépare une autre expérience.</p><h3>Couple et puissance</h3><p>Le couple de Laplace est Γℒ = −BSi sin θ. Pour maintenir ω constante, le couple extérieur doit satisfaire Γext = −Γℒ à chaque instant. L’énergie cinétique du rotor est constante. Le bilan instantané est Γext ω = Ri² + d(½Li²)/dt. En régime périodique, la moyenne de la variation d’énergie magnétique est nulle.</p><p>Avec une inductance, le couple de Laplace peut temporairement être moteur : l’énergie magnétique stockée est alors restituée. Son effet moyen reste résistant si R &gt; 0. Le modèle néglige les frottements et les pertes magnétiques. Il s’agit de la bobine mobile du cours ; les alternateurs industriels utilisent souvent un inducteur tournant et des bobinages fixes.</p>`
+};
+EM5UI.boot(config);
+})();
+</script>
+</body></html>

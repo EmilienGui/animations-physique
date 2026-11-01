@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Atelier autonome MPSI EM2 : boussole, champ tournant et moteur synchrone."><title>Boussole et moteur synchrone · EM2</title><style>:root{color-scheme:light;--paper:#edf2f6;--surface:#fff;--ink:#162b3d;--muted:#586d7e;--line:#d4dfe8;--accent:#254b70;--soft:#e7eff6;--field:#168574;--force:#ae3c50;--mu:#ae731b;--velocity:#3a6fce;--secondary:#8d66a1;--grid:#e8eef3;--halo:#fff}
+:root[data-theme=dark]{color-scheme:dark;--paper:#101b28;--surface:#182737;--ink:#ecf2f8;--muted:#b3c6d7;--line:#354e65;--accent:#9ac3eb;--soft:#263f55;--field:#64dbc2;--force:#ff9cac;--mu:#ffd184;--velocity:#9bbfff;--secondary:#d0b0eb;--grid:#243c50;--halo:#182737}
+*{box-sizing:border-box}body{margin:0;border-top:5px solid var(--accent);background:var(--paper);color:var(--ink);font:16px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button,select,input[type=number]{border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}button{min-height:38px;padding:6px 12px}button:hover{background:var(--soft);border-color:var(--accent)}button[aria-pressed=true],button.primary{background:var(--accent);color:var(--surface);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}select{padding:6px 9px;max-width:100%}input{accent-color:var(--accent)}input[type=number]{width:88px;padding:5px 7px;text-align:right}input[type=range]{width:100%;margin:7px 0 4px;cursor:pointer}input[type=checkbox]{width:18px;height:18px;flex-shrink:0}h1{font-size:29px;font-weight:500;line-height:1.18;letter-spacing:-.025em;margin:0}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}.app{height:calc(100dvh - 5px);max-width:2200px;margin:auto;padding:12px 18px 8px;display:flex;flex-direction:column;gap:10px}.header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}.header>div:first-child{min-width:0;flex:1 1 290px}.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.actions button{min-height:40px;font-size:15px;padding:7px 11px;white-space:nowrap}#fullscreen{width:40px;padding:5px 0;font-size:22px}.tabs{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.tabs button{min-height:37px}.chapter-mark{color:var(--muted);font-size:13px;margin-left:auto;white-space:nowrap}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:14px;flex:1;min-height:0}.visual{display:flex;flex-direction:column;min-width:0;min-height:0;gap:8px}.scene-card{flex:1;min-height:235px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:var(--surface)}.scene-tools{position:absolute;left:12px;right:12px;top:11px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none;z-index:2}.scene-tools>div{display:flex;gap:5px;pointer-events:auto;flex-wrap:wrap}.scene-tools button,.scene-tools select{font-size:14px;min-height:33px;padding:4px 9px}.scene-tools .zoom{margin-left:auto;flex-wrap:nowrap}#scene{display:block;width:100%;height:100%;touch-action:none;user-select:none}#scene [data-drag]{cursor:grab}#scene.dragging{cursor:grabbing}.scene-note{position:absolute;bottom:10px;left:13px;right:13px;display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);pointer-events:none}.scene-note span{background:var(--surface);border-radius:3px;padding:2px 3px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:1px 0}.metric{padding-left:15px;border-left:1px solid var(--line)}.metric:first-child{padding-left:2px;border:0}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:31px;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap}.metric-value small{font-size:.55em;margin-left:4px}.formula-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:7px;background:var(--surface);padding:7px 12px;min-height:42px}.formula{font:20px/1.25 Georgia,'Times New Roman',serif}.formula sub,.formula sup{font-size:.7em}.state-note{font-size:14px;color:var(--accent);text-align:right}.transport{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.transport button{font-size:15px;min-height:35px;padding:5px 11px}.transport .time{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto;white-space:nowrap}.transport select{font-size:14px;min-height:34px;padding:4px 6px}.chart-card{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:7px 10px 3px;height:139px;flex-shrink:0;display:none}.show-chart .chart-card{display:block}.chart-heading{height:25px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}.chart-heading select{font-size:13px;min-height:23px;padding:1px 5px;margin-left:auto}.chart-heading .key{display:inline-flex;align-items:center;gap:5px}.chart-heading .key:before{content:'';width:17px;height:3px;background:var(--key)}#graph{height:101px;width:100%;display:block}.controls{border:1px solid var(--line);border-radius:10px;background:var(--surface);min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:15px 16px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.control-section h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 11px}.control-section p{margin:6px 0;font-size:13px;color:var(--muted)}.control-section>.full{width:100%}.control{margin-top:11px}.control:first-of-type{margin-top:0}.control-row{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:15px}.control-row label{flex:1}.control-row .unit{color:var(--muted);font-size:13px}.check{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:15px}.button-pair{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.button-pair button{font-size:14px;padding:5px}.small-output{display:block;font-size:14px;color:var(--accent);font-variant-numeric:tabular-nums;margin-top:8px}.footer{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}.mobile-settings,.drawer-close{display:none}.veil{display:none}dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);width:min(830px,calc(100vw - 30px));max-height:88dvh;overflow:auto;padding:25px;box-shadow:0 20px 70px #0003}dialog::backdrop{background:#0b1726ad}dialog h2{font-size:25px;font-weight:500;margin:0 0 17px}dialog h3{font-size:17px;margin:20px 0 5px}dialog p,dialog li{color:var(--muted);line-height:1.6}dialog .close-dialog{float:right;margin-left:10px}.help-equation{font:22px/1.5 Georgia,serif;color:var(--ink)!important}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;background:var(--surface);border:1px solid var(--accent);color:var(--ink);border-radius:7px;padding:10px 16px;box-shadow:0 4px 25px #0002;font-size:14px}.toast:empty{display:none}[hidden]{display:none!important}.projection .controls,.projection .footer,.projection .eyebrow,.projection .chapter-mark{display:none}.projection .workspace{grid-template-columns:1fr}.projection .app{max-width:none;padding:10px 15px}.projection h1{font-size:27px}.projection .metric-value{font-size:41px}.projection .metric-label{font-size:19px}.projection .formula{font-size:24px}.projection .state-note{font-size:18px}.projection .scene-note{font-size:15px}.projection .transport button{font-size:18px}.projection .scene-tools button,.projection .scene-tools select{font-size:17px}.projection .tabs button{font-size:18px}.projection .mobile-settings{display:none!important}.projection .chart-card{height:150px}.projection #graph{height:111px}
+@media(max-height:800px) and (min-width:981px){.app{gap:7px;padding-top:9px}.chart-card{height:115px}#graph{height:77px}h1{font-size:25px}.eyebrow{font-size:10px}.metric-value{font-size:28px}.scene-card{min-height:220px}.formula-strip{min-height:37px;padding:5px 10px}.formula{font-size:18px}.projection .metric-value{font-size:36px}.projection .chart-card{height:120px}.projection #graph{height:81px}}
+@media(max-width:1150px) and (min-width:981px){.workspace{grid-template-columns:minmax(0,1fr) 280px;gap:10px}.app{padding-left:10px;padding-right:10px}.header>div:first-child{flex-basis:230px}.actions button{padding:7px 9px;font-size:14px}h1{font-size:24px}.control-section{padding:13px}.metric-value{font-size:27px}.formula{font-size:18px}}
+@media(max-width:980px){.app{height:auto;min-height:calc(100dvh - 5px);padding:10px}.header>div:first-child{flex-basis:100%}.header{gap:9px}.actions{width:100%}.workspace{grid-template-columns:1fr;min-height:0;flex:none}.scene-card{height:clamp(300px,50vh,560px);flex:none}.controls{display:none;position:fixed;right:0;top:0;bottom:0;width:min(355px,90vw);max-height:100dvh;border-radius:12px 0 0 12px;z-index:15;box-shadow:-15px 0 40px #0003}.drawer-open .controls{display:block}.drawer-close{display:block;position:sticky;top:0;width:100%;border-radius:0;border-width:0 0 1px;background:var(--surface);z-index:2;text-align:right}.drawer-open .veil{display:block;position:fixed;inset:0;background:#0b172674;z-index:14}.mobile-settings{display:block}.chapter-mark{display:none}.footer{margin-top:4px}.projection .scene-card{height:clamp(330px,57vh,650px)}.projection .metric-value{font-size:34px}.projection .metric-label{font-size:16px}}
+@media(max-width:560px){h1{font-size:24px}.eyebrow{font-size:10px}.actions{gap:5px}.actions button{font-size:14px;padding:6px 8px;min-height:38px}.tabs{gap:5px}.tabs button{font-size:14px;padding:6px 9px}.scene-tools{left:7px;right:7px;top:8px;gap:4px}.scene-tools button,.scene-tools select{font-size:13px;padding:4px 7px;min-height:31px}.scene-tools>div:first-child{max-width:52%}.scene-tools .zoom{gap:3px}.scene-card{height:350px}.metric{padding-left:7px}.metric-label{font-size:12px}.metric-value{font-size:23px}.metrics{gap:5px}.formula-strip{align-items:flex-start;flex-direction:column;gap:3px;padding:7px 9px}.formula{font-size:18px}.state-note{font-size:13px;text-align:left}.transport{gap:5px}.transport button{font-size:13px;padding:5px 8px}.transport select{font-size:13px}.transport .time{font-size:13px}.scene-note{font-size:11px;left:8px;right:8px;gap:6px}.scene-note span{max-width:58%}.scene-note span:last-child{text-align:right}.footer{font-size:10px}.projection .metric-value{font-size:26px}.projection .formula{font-size:20px}.projection .state-note{font-size:15px}.projection .scene-note{font-size:12px}.projection .tabs button{font-size:14px}.projection .scene-tools button,.projection .scene-tools select{font-size:13px}.projection .transport button{font-size:14px}.projection h1{font-size:23px}dialog{padding:18px}dialog h2{font-size:23px}}
+@media print{.actions,.tabs,.controls,.transport,.footer,.scene-tools{display:none}.app{height:auto}.workspace{display:block}.scene-card{height:500px}.metrics{margin:14px 0}}
+.vec{position:relative;display:inline-block;margin:0 .05em}.vec:before{content:'→';position:absolute;left:-.1em;right:-.1em;top:-.62em;font:.75em/1 Arial,Helvetica,sans-serif;text-align:center}
+sub,.math-index{font-size:.70em;line-height:0;position:relative;vertical-align:baseline;bottom:-.25em;font-style:normal}
+.math-symbol{white-space:nowrap;display:inline-block}.math-accent{position:relative;display:inline-block;line-height:1}
+.math-accent:before,.math-accent[data-dots="2"]:after{content:'';position:absolute;width:.105em;height:.105em;border-radius:50%;background:currentColor;top:-.075em;left:50%;transform:translateX(-50%)}
+.math-accent[data-dots="2"]:before{left:calc(50% - .13em)}.math-accent[data-dots="2"]:after{left:calc(50% + .13em)}
+</style></head>
+<body><main class="app">
+<header class="header"><div><div class="eyebrow">EM2 · Actions d’un champ magnétique · MPSI</div><h1>Boussole et moteur synchrone</h1></div><div class="actions"><button class="mobile-settings" id="mobile-settings">Réglages</button><button id="chart-toggle" aria-pressed="true">Courbes</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter le schéma et ses valeurs au format SVG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran">⛶</button></div></header>
+<nav class="tabs" aria-label="Expérience"><button data-mode="fixed" aria-pressed="true">Boussole</button><button data-mode="field" aria-pressed="false">Champ tournant</button><button data-mode="motor" aria-pressed="false">Moteur synchrone</button><span class="chapter-mark">Un même couple, trois expériences</span></nav>
+<div class="workspace"><section class="visual" aria-label="Moment magnétique et mouvement">
+<div class="scene-card"><div class="scene-tools"><div><button id="representation" aria-pressed="false">Voir la spire</button><button id="perturb">Petite perturbation</button></div><div class="zoom"><button id="zoom-out" aria-label="Réduire le zoom">−</button><button id="zoom-in" aria-label="Agrandir le zoom">+</button><button id="fit">Cadrer</button></div></div><svg id="scene" role="img" aria-label="Moment magnétique dans le champ extérieur"></svg><div class="scene-note"><span id="scene-hint">Tourner l’aiguille à la souris, puis la lâcher</span><span id="scene-scale">Vue suivant +z · champ uniforme au niveau du rotor</span></div></div>
+<div class="metrics"><div class="metric" id="metric-0"><div class="metric-label"></div><div class="metric-value"></div></div><div class="metric" id="metric-1"><div class="metric-label"></div><div class="metric-value"></div></div><div class="metric" id="metric-2"><div class="metric-label"></div><div class="metric-value"></div></div></div>
+<div class="formula-strip"><div id="formula" class="formula"></div><div id="state-note" class="state-note" aria-live="polite"></div></div>
+<div class="chart-card"><div class="chart-heading"><span id="chart-title">Angle de l’aiguille</span><span id="chart-key"></span><select id="chart-type" aria-label="Grandeur représentée"><option value="angle">Angle θ</option><option value="energy">Énergie mécanique</option></select></div><svg id="graph" role="img" aria-label="Courbe temporelle de l’expérience"></svg></div>
+<div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Lire</button><button id="reset">↺ Replacer</button><button id="step">Un pas</button><select id="rate" aria-label="Vitesse de lecture"><option value="0.03">Ralenti ×0,03</option><option value="0.1">Ralenti ×0,1</option><option value="0.5">Ralenti ×0,5</option><option value="1" selected>Temps réel</option><option value="2">Accéléré ×2</option></select><span id="time" class="time"></span></div>
+</section><aside class="controls" aria-label="Réglages physiques"><button id="drawer-close" class="drawer-close">Fermer les réglages ×</button><div id="settings"></div></aside></div>
+<footer class="footer"><span>EM2 · E. Guillaume · HTML autonome</span><span>Espace : lecture · R : replacer · C : cadrer · P : projection</span></footer></main><div id="veil" class="veil"></div><div id="toast" class="toast" role="status"></div>
+<dialog id="help-dialog"><button class="close-dialog" data-close="help-dialog">Fermer ×</button><h2>Boussole et moteur synchrone</h2><p>Le couple magnétique est <span class="vec">Γ</span> = <span class="vec">μ</span> ∧ <span class="vec">B</span><sub>ext</sub>. La même loi relie l’orientation d’une boussole, ses oscillations et l’entraînement d’un rotor. L’aimant et la spire sont deux représentations d’un même moment magnétique ; les forces locales sur un aimant réel ne sont pas calculées.</p><h3>Boussole : champ fixe horizontal</h3><p class="help-equation">J θ̈ + h θ̇ + μ B sin θ = 0</p><p>L’axe vertical est fixe, θ est orienté de +x, direction du champ, vers <span class="vec">μ</span>. Le frottement est visqueux, de couple −h θ̇ ; le réglage donne h/J en s⁻¹. Sans frottement, les oscillations ne s’amortissent pas. La position θ = π est un équilibre exact lorsque la vitesse est nulle : le bouton « Petite perturbation » permet de mettre son instabilité en évidence.</p><p class="help-equation">T₀ = 2π √(J / μ B)</p><p>T₀ est la période théorique des <strong>petites</strong> oscillations sans amortissement. Pour un champ nul, cette période n’est pas définie. Les valeurs initiales reprennent l’application du cours : μ = 5,0 × 10⁻³ A·m², J = 8,0 × 10⁻⁸ kg·m² et B = 20 µT.</p><h3>Deux bobines orthogonales</h3><p class="help-equation">B<sub>x</sub> = B₀ cos(ωt) · B<sub>y</sub> = r B₀ cos(ωt − φ)</p><p>Les champs sont proportionnels aux courants imposés dans les deux bobines, supposées identiques et assez grandes pour que le champ soit uniforme au niveau du rotor. r = 1 et φ = 90° donnent le champ circulaire du cours ; φ = −90° inverse le sens de rotation ; φ = 0° donne un champ alternatif suivant une droite. Le lieu de l’extrémité du vecteur est affiché. Une teinte plus soutenue du disque repère une amplitude B₀ plus élevée ; elle ne représente pas une propriété matérielle. Pour B₀ = 0, les deux courants sont nuls : la normalisation par i₀ n’est plus définie et les courbes montrent les courants nuls en ampères. L’axe de la bobine x est horizontal ; celui de la bobine y est vertical. Leurs axes se croisent en O, où les composantes sont représentées et additionnées par le parallélogramme. Les courants sont algébriques selon les références fixes des bobines ; la géométrie est schématique.</p><h3>Moteur : dynamique calculée</h3><p class="help-equation">δ = Φ(t) − θ · J θ̈ = μ B₀ sin δ − Γ<sub>c</sub>(t) − h θ̇</p><p>À vitesse imposée constante du champ, Φ(t) = Ωt. Le rotor n’est pas contraint de suivre le champ. Le couple de charge est constant ou augmente linéairement pendant la durée de mise en charge choisie. Le frottement est défini par η = hΩ/(μB₀), avec Ω la vitesse finale du champ. Le couple de charge −Γc e<sub>z</sub> garde son signe même si le rotor change de sens : ce prolongement du modèle du TD ne représente donc pas un frottement qui s’oppose au mouvement dans les deux sens. Les premières pertes de synchronisme sont le phénomène étudié.</p><p>Un régime synchrone stable en rotation positive existe si λ + η &lt; 1, où λ = Γ<sub>c</sub>/(μB₀). Son retard vérifie sin δ = λ + η. La condition ne garantit pas l’accrochage pour toute condition initiale. Dans la courbe du retard, la ligne en tirets « δsyn final » donne le retard synchrone théorique associé à la charge finale. Si la charge et le frottement ne permettent plus de régime synchrone en charge, l’état initial est replacé sur le régime synchrone à vide. Sans amortissement, un retard perturbé peut osciller durablement autour du retard stable.</p><p>Les préréglages « Charge brusque » reprennent le TD : un rotor initialement synchrone à vide reçoit une charge à t = 0. Dans ce modèle sans frottement, une charge de 0,80 Γ<sub>max</sub> peut provoquer le décrochage bien qu’un régime synchrone stable existe. Le seuil propre à ces conditions initiales est environ 0,7246 Γ<sub>max</sub>.</p><p>Le démarrage progressif impose une rampe linéaire de vitesse du champ. La phase est l’intégrale de cette vitesse : Φ = Ωt²/(2T<sub>r</sub>) pendant la rampe, puis Φ = Ω(t − T<sub>r</sub>/2). La puissance mécanique affichée vaut Γ<sub>mag</sub> θ̇, y compris pendant les transitoires.</p><h3>Lecture et dessin</h3><p>Les temps et vitesses physiques sont affichés ; un ralenti n’affecte que la lecture. Les couleurs identifient <span class="vec">B</span> (vert), <span class="vec">μ</span> (ocre) et le couple (rouge). Les vecteurs ont des échelles distinctes, ajustées au cadrage. Le retard du graphe est suivi sans réduction modulo 360° : cela rend visibles les tours perdus lors d’un décrochage. La scène représente les orientations modulo un tour.</p><p>Les calculs utilisent un schéma de Runge–Kutta d’ordre 4 avec un pas interne adapté aux constantes du modèle. La durée de lecture est limitée à 60 s pour la boussole et 6 s pour le moteur. Image exporte la scène et les valeurs au format SVG. Projection et plein écran sont deux commandes distinctes.</p></dialog>
+<script>'use strict';
+globalThis.EM2Physics = (() => {
+  const add = (a,b) => a.map((v,i)=>v+b[i]);
+  const mul = (a,k) => a.map(v=>v*k);
+  const dot = (a,b) => a.reduce((s,v,i)=>s+v*b[i],0);
+  const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const norm = a => Math.hypot(...a);
+  const segment = (a,b,current,B) => mul(cross(add(b,mul(a,-1)),B),current);
+  function loop(current,B,a,b,theta) {
+    const n=[Math.cos(theta),Math.sin(theta),0],et=[-n[1],n[0],0];
+    const vertices=[add(mul(et,a/2),[0,0,b/2]),add(mul(et,-a/2),[0,0,b/2]),add(mul(et,-a/2),[0,0,-b/2]),add(mul(et,a/2),[0,0,-b/2])];
+    const forces=vertices.map((p,i)=>segment(p,vertices[(i+1)%4],current,[B,0,0]));
+    const centers=vertices.map((p,i)=>mul(add(p,vertices[(i+1)%4]),.5));
+    const resultant=forces.reduce(add,[0,0,0]);
+    const torque=forces.reduce((v,F,i)=>add(v,cross(centers[i],F)),[0,0,0]);
+    return {vertices,centers,forces,resultant,torque,n,mu:mul(n,current*a*b)};
+  }
+  function bar(p,t) {
+    const force=p.current*p.length*p.B,acceleration=force/p.mass;
+    const v=p.v0+acceleration*t,x=p.x0+p.v0*t+acceleration*t*t/2;
+    return {x,v,force,acceleration,power:force*v,work:force*(x-p.x0),kinetic:p.mass*v*v/2};
+  }
+  function barEnd(p,limit=.18,maxTime=5) {
+    const acceleration=p.current*p.length*p.B/p.mass,roots=[];
+    for(const edge of [-limit,limit]) {
+      if(Math.abs(acceleration)<1e-14) {if(Math.abs(p.v0)>1e-14)roots.push((edge-p.x0)/p.v0);}
+      else {const D=p.v0*p.v0-2*acceleration*(p.x0-edge);if(D>=0)for(const sign of [-1,1])roots.push((-p.v0+sign*Math.sqrt(D))/acceleration);}
+    }
+    return Math.min(maxTime,...roots.filter(t=>t>1e-9));
+  }
+  function field(p,t) {
+    const phi=p.omega*t;
+    return [p.B0*Math.cos(phi),p.B0*p.ratio*Math.cos(phi-p.phase),0];
+  }
+  function phase(p,t) {
+    if(!p.speedRamp)return p.omega*t;
+    const T=p.rampTime;
+    return t<T?p.omega*t*t/(2*T):p.omega*(t-T/2);
+  }
+  const speed = (p,t) => !p.speedRamp?p.omega:p.omega*Math.min(1,t/p.rampTime);
+  const load = (p,t) => p.load*(p.loadRamp?Math.min(1,t/p.loadTime):1)*p.mu*p.B0;
+  function motor(p,y,t) {
+    const delta=phase(p,t)-y[0],torque=p.mu*p.B0*Math.sin(delta);
+    const h=p.friction*p.mu*p.B0/p.omega;
+    return {delta,torque,omega:speed(p,t),load:load(p,t),h,power:torque*y[1],acceleration:(torque-load(p,t)-h*y[1])/p.J};
+  }
+  function rk4(y,t,dt,derivative) {
+    const k1=derivative(y,t),k2=derivative(add(y,mul(k1,dt/2)),t+dt/2),k3=derivative(add(y,mul(k2,dt/2)),t+dt/2),k4=derivative(add(y,mul(k3,dt)),t+dt);
+    return add(y,mul(add(add(k1,mul(k2,2)),add(mul(k3,2),k4)),dt/6));
+  }
+  const fixedDerivative=p=>(y,t)=>{const sine=Math.sin(y[0]);return [y[1],-p.mu*p.B/p.J*(Math.abs(sine)<1e-14?0:sine)-p.beta*y[1]];};
+  const motorDerivative=p=>(y,t)=>[y[1],motor(p,y,t).acceleration];
+  const fixedEnergy=(p,y)=>p.J*y[1]*y[1]/2-p.mu*p.B*Math.cos(y[0]);
+  return Object.freeze({add,mul,dot,cross,norm,segment,loop,bar,barEnd,field,phase,speed,load,motor,rk4,fixedDerivative,motorDerivative,fixedEnergy});
+})();
+</script><script>'use strict';
+globalThis.EM2UI = (() => {
+ const NS='http://www.w3.org/2000/svg', $=id=>document.getElementById(id),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(x)<1e-10?0:x);
+ const wrap=x=>Math.atan2(Math.sin(x),Math.cos(x));
+ const deg=x=>x*180/Math.PI,rad=x=>x*Math.PI/180;
+ const colors=()=>{const c=getComputedStyle(document.documentElement);return Object.fromEntries(['surface','ink','muted','line','accent','soft','field','force','mu','velocity','secondary','grid','halo'].map(k=>[k,c.getPropertyValue('--'+k).trim()]));};
+ function el(tag,attrs={},parent){const n=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(parent)parent.append(n);return n;}
+ const indexChars={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₓ':'x','ᵧ':'y','ₐ':'a','ₑ':'e','ₕ':'h','ᵢ':'i','ⱼ':'j','ₖ':'k','ₗ':'l','ₘ':'m','ₙ':'n','ₒ':'o','ₚ':'p','ᵣ':'r','ₛ':'s','ₜ':'t','ᵤ':'u','ᵥ':'v','₊':'+','₋':'−'};
+ const aliases={FMN:['F','MN'],FNP:['F','NP'],FPQ:['F','PQ'],FQM:['F','QM'],Bext:['B','ext'],Bx:['B','x'],By:['B','y'],Γz:['Γ','z'],Γc:['Γ','c'],Γmax:['Γ','max'],Γmag:['Γ','mag'],Fℒ:['F','ℒ'],Pℒ:['P','ℒ'],vd:['v','d'],fmag:['f','mag'],fE:['f','E'],δsyn:['δ','syn'],Ωchamp:['Ω','champ']};
+ const mathRE=new RegExp('(?<![A-Za-zΑ-ω])(?:'+Object.keys(aliases).sort((a,b)=>b.length-a.length).join('|')+')(?![A-Za-zΑ-ω])|[A-Za-zΑ-ω][\\u0307\\u0308]?(?:_\\{[^}]+\\}|['+Object.keys(indexChars).join('')+']+)|[A-Za-zΑ-ω][\\u0307\\u0308]','g');
+ function mathParts(value){
+   const input=String(value),runs=[];let end=0;
+   for(const m of input.matchAll(mathRE)){
+     if(m.index>end)runs.push({text:input.slice(end,m.index)});
+     const a=aliases[m[0]];if(a)runs.push({base:a[0],index:a[1]});
+     else{const base=m[0][0];let tail=m[0].slice(1),dots=0;if(tail[0]==='\u0307'||tail[0]==='\u0308'){dots=tail[0]==='\u0307'?1:2;tail=tail.slice(1);}const index=tail.startsWith('_{')?tail.slice(2,-1):[...tail].map(c=>indexChars[c]||c).join('');runs.push({base,index,dots});}
+     end=m.index+m[0].length;
+   }
+   if(end<input.length)runs.push({text:input.slice(end)});return runs;
+ }
+ function appendMath(parent,value){
+   for(const r of mathParts(value)){
+     if(r.text!==undefined){parent.append(document.createTextNode(r.text));continue;}
+     const token=document.createElement('span');token.className='math-symbol';token.dataset.mathProcessed='true';
+     const base=document.createElement('span');base.textContent=r.base;base.className=r.dots?'math-accent':'math-base';if(r.dots)base.dataset.dots=r.dots;token.append(base);
+     if(r.index){const sub=document.createElement('sub');sub.className='math-index';sub.textContent=r.index;token.append(sub);}parent.append(token);
+   }
+ }
+ function mathHTML(value){const n=document.createElement('span');appendMath(n,value);return n.innerHTML;}
+ function typeset(root){
+   if(!root)return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];let n;
+   while(n=walker.nextNode())if(n.parentElement?.namespaceURI!==NS&&!n.parentElement?.closest('script,style,sub,sup,textarea,option,title,[data-math-processed]'))nodes.push(n);
+   for(const n of nodes){const parts=mathParts(n.data);if(!parts.some(r=>r.base))continue;const fragment=document.createDocumentFragment();appendMath(fragment,n.data);n.replaceWith(fragment);}
+   root.querySelectorAll('option').forEach(o=>{o.textContent=o.textContent.replaceAll('Γmax','Γₘₐₓ');});
+ }
+ function notationText(root){
+   if(root.nodeType===Node.TEXT_NODE)return root.data;if(root.nodeType!==Node.ELEMENT_NODE)return '';
+   if(root.matches('sub'))return '_{'+root.textContent+'}';
+   if(root.matches('.math-accent'))return root.textContent+(root.dataset.dots==='2'?'\u0308':'\u0307');
+   return [...root.childNodes].map(notationText).join('');
+ }
+ const measureContext=document.createElement('canvas').getContext('2d'),measureCache=new Map();
+ function measure(value,size){const key=size+'|'+value;if(measureCache.has(key))return measureCache.get(key);measureContext.font=`${size}px Arial,Helvetica,sans-serif`;const w=measureContext.measureText(value).width;if(measureCache.size>3000)measureCache.clear();measureCache.set(key,w);return w;}
+ function shiftText(p,dx,dy){p.setAttribute('x',Number(p.getAttribute('x'))+dx);p.setAttribute('y',Number(p.getAttribute('y'))+dy);p.querySelectorAll('tspan[x]').forEach(n=>n.setAttribute('x',Number(n.getAttribute('x'))+dx));p.querySelectorAll('tspan[y]').forEach(n=>n.setAttribute('y',Number(n.getAttribute('y'))+dy));}
+ function text(parent,x,y,value,color,size=20,anchor='start',extra={}){
+   const p=el('text',{x,y,fill:color,'font-size':size,'font-family':'Arial,Helvetica,sans-serif','text-anchor':'start','paint-order':'stroke',stroke:colors().halo,'stroke-width':4,'stroke-linejoin':'round',...extra},parent);
+   const runs=mathParts(value),indexSize=size*.70,widths=runs.map(r=>r.text!==undefined?measure(r.text,size):measure(r.base,size)+(r.index?size*.025+measure(r.index,indexSize):0)),width=widths.reduce((a,b)=>a+b,0);let cursor=x-(anchor==='end'?width:anchor==='middle'?width/2:0);
+   for(let i=0;i<runs.length;i++){
+     const r=runs[i];if(r.text!==undefined){el('tspan',{x:cursor,y,'text-anchor':'start'},p).textContent=r.text;}
+     else{const baseWidth=measure(r.base,size);el('tspan',{x:cursor,y,'text-anchor':'start','data-math-base':r.base},p).textContent=r.base;
+       if(r.index)el('tspan',{x:cursor+baseWidth+size*.025,y:y+size*.25,'font-size':indexSize,'text-anchor':'start','data-math-index':r.index},p).textContent=r.index;
+       if(r.dots)el('tspan',{x:cursor+baseWidth/2,y:y-size*.18,'font-size':size,'text-anchor':'middle','data-math-dots':r.dots},p).textContent=r.dots===2?'¨':'˙';
+     }cursor+=widths[i];
+   }
+   const svg=p.ownerSVGElement;if(svg?.id==='scene'&&p.isConnected){const b=p.getBBox(),W=svg.viewBox.baseVal.width,H=svg.viewBox.baseVal.height,dx=Math.max(8-b.x,Math.min(0,W-8-b.x-b.width)),dy=Math.max(57-b.y,Math.min(0,H-34-b.y-b.height));if(dx||dy)shiftText(p,dx,dy);}return p;
+ }
+ function line(parent,a,b,color,width=2,extra={}){return el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:color,'stroke-width':width,'stroke-linecap':'round',...extra},parent);}
+ function label(parent,x,y,value,color,size=20,anchor='start'){
+   const p=text(parent,x,y,value,color,size,anchor),svg=p.ownerSVGElement;if(svg?.id!=='scene')return p;
+   const others=[...svg.querySelectorAll('text')].filter(n=>n!==p).map(n=>n.getBBox()),box=p.getBBox(),W=svg.viewBox.baseVal.width,H=svg.viewBox.baseVal.height;
+   let best={score:Infinity,dx:0,dy:0};
+   for(const [a,b]of [[0,0],[0,-24],[0,24],[-25,0],[25,0],[0,-44],[0,44],[-48,-18],[48,18],[-65,0],[65,0]]){
+     const dx=clamp(a,8-box.x,W-8-box.x-box.width),dy=clamp(b,57-box.y,H-34-box.y-box.height),r={x:box.x+dx,y:box.y+dy,width:box.width,height:box.height};let score=Math.hypot(dx,dy)*.8;
+     for(const q of others)score+=10*Math.max(0,Math.min(r.x+r.width+4,q.x+q.width)-Math.max(r.x-4,q.x))*Math.max(0,Math.min(r.y+r.height+4,q.y+q.height)-Math.max(r.y-4,q.y));
+     if(score<best.score)best={score,dx,dy};
+   }
+   shiftText(p,best.dx,best.dy);
+   if(Math.hypot(best.dx,best.dy)>25){const r=p.getBBox();line(parent,[x,y-size*.35],[clamp(x,r.x,r.x+r.width),clamp(y-size*.35,r.y,r.y+r.height)],color,1,{opacity:.45});parent.append(p);}
+   return p;
+ }
+ function path(parent,pts,color,width=2,extra={}){return el('path',{d:pts.map((p,i)=>(i?'L':'M')+p.map(x=>x.toFixed(3)).join(',')).join(' '),fill:'none',stroke:color,'stroke-width':width,'stroke-linejoin':'round','stroke-linecap':'round',...extra},parent);}
+ function arrow(parent,a,b,color,caption='',options={}){const size=options.size||20,L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<1)return;line(parent,a,b,color,options.width||3,options.dash?{'stroke-dasharray':'5 5'}:{});const angle=Math.atan2(b[1]-a[1],b[0]-a[0]),h=Math.min(11,L*.33),w=h*.42;el('path',{d:`M${b}L${b[0]-h*Math.cos(angle)+w*Math.sin(angle)},${b[1]-h*Math.sin(angle)-w*Math.cos(angle)}L${b[0]-h*Math.cos(angle)-w*Math.sin(angle)},${b[1]-h*Math.sin(angle)+w*Math.cos(angle)}Z`,fill:color},parent);if(caption)label(parent,b[0]+(options.dx??9),b[1]+(options.dy??-8),caption,color,size,options.anchor||'start');}
+ function symbol(parent,p,out,color,r=9){el('circle',{cx:p[0],cy:p[1],r,stroke:color,'stroke-width':2,fill:colors().surface},parent);if(out)el('circle',{cx:p[0],cy:p[1],r:r*.25,fill:color},parent);else{line(parent,[p[0]-r*.42,p[1]-r*.42],[p[0]+r*.42,p[1]+r*.42],color,2);line(parent,[p[0]-r*.42,p[1]+r*.42],[p[0]+r*.42,p[1]-r*.42],color,2);}}
+ function arc(parent,c,r,start,end,color,label='',size=19){const pts=Array.from({length:45},(_,i)=>{const a=start+(end-start)*i/44;return[c[0]+r*Math.cos(a),c[1]-r*Math.sin(a)];});path(parent,pts,color,1.6);if(Math.abs(end-start)>.08)arrow(parent,pts[41],pts[44],color,'',{width:1.6});if(label){const a=(start+end)/2;text(parent,c[0]+(r+18)*Math.cos(a),c[1]-(r+18)*Math.sin(a)+size*.3,label,color,size,'middle');}}
+ function scene(svg){const b=svg.getBoundingClientRect(),W=Math.max(280,b.width),H=Math.max(svg.id==='graph'?65:180,b.height);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren();return {W,H,c:colors(),font:document.body.classList.contains('projection')?25:21};}
+ function grid(parent,W,H,c){const g=el('g',{'aria-hidden':'true'},parent);for(let x=35;x<W;x+=50)for(let y=75;y<H-25;y+=50)el('circle',{cx:x,cy:y,r:.8,fill:c.grid},g);}
+ function control(id,label,value,min,max,step,unit=''){return `<div class="control"><div class="control-row"><label for="${id}-number">${mathHTML(label)}</label><input id="${id}-number" type="number" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}"><span class="unit">${unit}</span></div><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${label}"></div>`;}
+ function bind(id,value,change){const r=$(id),n=$(id+'-number');if(!r)return;r.value=n.value=value;const update=e=>{let v=Number(e.target.value);if(!Number.isFinite(v))return;v=clamp(v,Number(r.min),Number(r.max));r.value=n.value=v;change(v);};r.addEventListener('input',update);n.addEventListener('change',update);}
+ function metric(i,label,value,unit=''){const a=$('metric-'+i),caption=a.querySelector('.metric-label');caption.replaceChildren();appendMath(caption,label);const v=a.querySelector('.metric-value');v.replaceChildren(document.createTextNode(value));if(unit){const u=document.createElement('small');u.textContent=unit;v.append(u);}}
+ function graph(svg,{series,tMin=0,tMax=1,xNow=null,unit='',yMin,yMax,reference=[]}){
+   const {W,H,c}=scene(svg),left=W<480?44:55,right=16,top=13,bottom=25;
+   const vals=series.flatMap(s=>s.points.map(p=>p[1])).filter(Number.isFinite);if(yMin===undefined)yMin=Math.min(0,...vals);if(yMax===undefined)yMax=Math.max(0,...vals);if(yMax-yMin<1e-9){yMin-=1;yMax+=1;}else{const pad=(yMax-yMin)*.1;yMin-=pad;yMax+=pad;}
+   const X=x=>left+(x-tMin)/(tMax-tMin)*(W-left-right),Y=y=>H-bottom-(y-yMin)/(yMax-yMin)*(H-top-bottom);
+   for(let i=0;i<=2;i++){const y=yMin+(yMax-yMin)*i/2;line(svg,[left,Y(y)],[W-right,Y(y)],c.grid,1);text(svg,left-7,Y(y)+4,fmt(y,Math.abs(y)<.1?3:1),c.muted,11,'end',{'stroke-width':0});}
+   line(svg,[left,top],[left,H-bottom],c.line,1);line(svg,[left,H-bottom],[W-right,H-bottom],c.line,1);
+   for(let i=0;i<=4;i++){const x=tMin+(tMax-tMin)*i/4;text(svg,X(x),H-7,fmt(x,2),c.muted,11,'middle',{'stroke-width':0});}
+   text(svg,4,11,unit,c.muted,11,'start',{'stroke-width':0});text(svg,W-3,H-7,'s',c.muted,11,'end',{'stroke-width':0});
+   for(const r of reference){if(r.y>=yMin&&r.y<=yMax)line(svg,[left,Y(r.y)],[W-right,Y(r.y)],r.color||c.muted,1,{'stroke-dasharray':'5 4'});}
+   const clip=el('clipPath',{id:'graph-clip'},el('defs',{},svg));el('rect',{x:left,y:top,width:W-left-right,height:H-top-bottom},clip);const g=el('g',{'clip-path':'url(#graph-clip)'},svg);
+   for(const s of series){const pts=s.points.filter(p=>p[0]>=tMin&&p[0]<=tMax).map(p=>[X(p[0]),Y(p[1])]);if(pts.length>1)path(g,pts,s.color,2.2,s.dash?{'stroke-dasharray':'5 4'}:{});}
+   if(xNow!==null&&xNow>=tMin&&xNow<=tMax)line(g,[X(xNow),top],[X(xNow),H-bottom],c.ink,1.4,{'stroke-dasharray':'3 3'});
+ }
+ function init({name,title,render,onPlay,onReset,onStep,onZoom,onFit,onChart}){
+   const root=document.documentElement;let dark=false,projection=false,toastTimer;
+   typeset($('help-dialog'));typeset($('micro-dialog'));
+   const toast=message=>{$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3600);};
+   $('theme').onclick=()=>{dark=!dark;root.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';render();};
+   $('projection').onclick=()=>{projection=!projection;document.body.classList.toggle('projection',projection);document.body.classList.remove('drawer-open');$('projection').textContent=projection?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',projection);requestAnimationFrame(render);};
+   $('help').onclick=()=>{$('help-dialog').showModal();};
+   document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
+   $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran dans cette fenêtre.');}};
+   document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');$('fullscreen').title=$('fullscreen').getAttribute('aria-label');render();});
+   $('play').onclick=onPlay;$('reset').onclick=onReset;$('step').onclick=onStep;
+   $('zoom-in').onclick=()=>onZoom(1.18);$('zoom-out').onclick=()=>onZoom(1/1.18);$('fit').onclick=onFit;
+   $('scene').addEventListener('wheel',e=>{e.preventDefault();onZoom(e.deltaY<0?1.08:1/1.08);},{passive:false});
+   $('chart-toggle').onclick=()=>{const show=document.body.classList.toggle('show-chart');$('chart-toggle').setAttribute('aria-pressed',show);onChart?.(show);requestAnimationFrame(render);};
+   $('mobile-settings').onclick=()=>{document.body.classList.add('drawer-open');$('drawer-close').focus();};
+   const closeDrawer=()=>document.body.classList.remove('drawer-open');$('drawer-close').onclick=closeDrawer;$('veil').onclick=closeDrawer;
+   $('export').onclick=()=>{
+     const src=$('scene'),b=src.viewBox.baseVal,c=colors(),w=Math.max(600,b.width),sx=w/b.width,header=76,footer=112,h=header+b.height*sx+footer;
+     const svg=el('svg',{xmlns:NS,width:w,height:h,viewBox:`0 0 ${w} ${h}`});el('rect',{width:w,height:h,fill:c.surface},svg);text(svg,24,31,'EM2 · MPSI — '+title,c.accent,22);text(svg,24,57,document.querySelector('.tabs button[aria-pressed=true]').textContent,c.muted,16);
+     const sceneClone=src.cloneNode(true);sceneClone.setAttribute('x',0);sceneClone.setAttribute('y',header);sceneClone.setAttribute('width',w);sceneClone.setAttribute('height',b.height*sx);svg.append(sceneClone);
+     document.querySelectorAll('.metric').forEach((m,i)=>{text(svg,24+i*w/3,h-77,notationText(m.querySelector('.metric-label')),c.muted,15);text(svg,24+i*w/3,h-43,m.querySelector('.metric-value').textContent,c.ink,25);});
+     text(svg,24,h-15,notationText($('formula')),c.muted,16);
+     const blob=new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name+'_'+(dark?'Sombre':'Clair')+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Image SVG exportée avec les valeurs affichées.');
+   };
+   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();if(e.target.matches('input,select,textarea')||document.querySelector('dialog[open]'))return;if(e.code==='Space'){e.preventDefault();onPlay();}else if(e.key.toLowerCase()==='r')onReset();else if(e.key.toLowerCase()==='c')onFit();else if(e.key.toLowerCase()==='p')$('projection').click();else if(e.key.toLowerCase()==='l')$('theme').click();});
+   new ResizeObserver(()=>requestAnimationFrame(render)).observe($('scene'));
+   return {toast,get dark(){return dark;},get projection(){return projection;},playing:active=>{$('play').textContent=active?'❚❚ Pause':'▶ Lire';$('play').setAttribute('aria-pressed',active);}};
+ }
+ return Object.freeze({NS,$,clamp,fmt,wrap,deg,rad,colors,el,text,label,line,path,arrow,symbol,arc,scene,grid,control,bind,metric,graph,init,typeset,notationText,mathParts});
+})();
+</script><script>(() => {'use strict';
+ const U=EM2UI,M=EM2Physics,{$,el,text,line,path,arrow,symbol,arc,fmt,clamp,rad,deg}=U;
+ const fixed={B:20e-6,mu:.005,J:8e-8,beta:.35,theta0:rad(55),u0:0};
+ const field={B0:.005,ratio:1,phase:Math.PI/2,omega:2*Math.PI*.4};
+ const motor={mu:.2,B0:.05,J:2e-5,omega:100,load:.5,friction:0,loadRamp:false,loadTime:1.5,speedRamp:false,rampTime:1.5,initial:'empty',theta0:0};
+ let mode='fixed',y=[fixed.theta0,0],t=0,playing=false,last=0,zoom=1,history=[],sampleTime=-1,drag=null,geometry=null,spire=false,components=true,ui;
+ const scene=$('scene'),graph=$('graph'),section=(title,body)=>`<section class="control-section"><h2>${title}</h2>${body}</section>`,control=U.control;
+ function pause(){playing=false;ui?.playing(false);}
+ function initial(){
+   if(mode==='fixed')return [fixed.theta0,fixed.u0];
+   if(mode==='field')return [0,0];
+   if(motor.speedRamp||motor.initial==='rest')return [motor.theta0,0];
+   const demand=motor.initial==='loaded'&&!motor.loadRamp?motor.load+motor.friction:motor.friction;
+   return [-Math.asin(clamp(demand,0,.999999)),motor.omega];
+ }
+ function record(force=false){
+   const every=mode==='motor'?.002:.025;if(!force&&t-sampleTime<every-1e-9)return;
+   const q=mode==='motor'?M.motor(motor,y,t):null;
+   history.push({t,theta:y[0],u:y[1],energy:mode==='fixed'?M.fixedEnergy(fixed,y):0,delta:q?.delta||0,fieldSpeed:q?.omega||0,torque:q?.torque||0,power:q?.power||0});sampleTime=t;
+   if(history.length>8000)history=history.filter((_,i)=>i%2===0);
+ }
+ function reset(){pause();if(mode==='motor'&&motor.initial==='loaded'&&motor.load+motor.friction>=1){motor.initial='empty';if($('initial'))$('initial').value='empty';}t=0;y=initial();history=[];sampleTime=-1;record(true);render();}
+ function settings(){
+   let html='',cases='';
+   if(mode==='fixed')cases='<option value="damped">Aiguille amortie</option><option value="oscillation">Oscillations sans frottement</option><option value="small">Petites oscillations</option><option value="stable">Équilibre stable</option><option value="unstable">Équilibre instable exact</option><option value="large">Grand écart initial</option>';
+   if(mode==='field')cases='<option value="circle">Champ circulaire</option><option value="reverse">Sens de rotation inversé</option><option value="ellipse">Champ elliptique</option><option value="line">Champ alternatif</option><option value="single">Une seule bobine</option>';
+   if(mode==='motor')cases='<option value="steady">Synchrone en charge</option><option value="step50">Charge brusque · 0,50 Γmax</option><option value="step80">Charge brusque · 0,80 Γmax</option><option value="ramp80">Charge progressive · 0,80 Γmax</option><option value="overload">Surcharge · 1,10 Γmax</option><option value="rest">Départ arrêté · champ déjà rapide</option><option value="startup">Démarrage progressif du champ</option>';
+   html+=section('Situations du cours et du TD',`<select class="full" id="preset" aria-label="Situation préparée"><option value="custom">Choisir une situation…</option>${cases}</select>`);
+   if(mode==='fixed'){
+     html+=section('Moment magnétique et champ',control('B','Champ horizontal B',fixed.B*1e6,0,1000,1,'µT')+control('mu','Moment μ',fixed.mu*1000,1,20,.5,'mA·m²')+control('J','Inertie J / 10⁻⁸',fixed.J*1e8,1,40,.5,'kg·m²'));
+     html+=section('État initial et frottement',control('theta','Angle initial θ₀',deg(fixed.theta0),-180,180,1,'°')+control('u0','Vitesse initiale θ̇₀',fixed.u0,-3,3,.1,'rad/s')+control('beta','Frottement h/J',fixed.beta,0,3,.05,'s⁻¹')+'<p>Le couple de frottement vaut −h θ̇. À h = 0, l’énergie mécanique est conservée.</p>');
+   }else if(mode==='field'){
+     html+=section('Courants dans les deux bobines',control('B0','Amplitude B₀',field.B0*1000,0,10,.1,'mT')+control('frequency','Fréquence f',field.omega/(2*Math.PI),.05,2,.05,'Hz')+control('ratio','Rapport d’amplitudes r',field.ratio,0,1.5,.05,'')+control('phase','Retard de iᵧ sur iₓ',deg(field.phase),-180,180,5,'°'));
+     html+=section('Somme vectorielle',`<label class="check"><input id="components" type="checkbox" ${components?'checked':''}>Composantes Bx et By</label><p id="currents-equations">iₓ/i₀ = cos(ωt)<br>iᵧ/i₀ = r cos(ωt − φ)</p><p>Les champs des bobines identiques sont proportionnels aux courants. Le lieu de l’extrémité de B est tracé.</p>`);
+   }else{
+     html+=section('Rotor et champ tournant',control('mu','Moment μ',motor.mu,.05,.5,.01,'A·m²')+control('B0','Champ B₀',motor.B0*1000,10,100,1,'mT')+control('J','Inertie J / 10⁻⁵',motor.J*1e5,.5,10,.1,'kg·m²')+control('omega','Vitesse finale Ω',motor.omega,20,150,5,'rad/s'));
+     html+=section('Charge et frottement',control('load','Charge λ = Γc / Γmax',motor.load,0,1.3,.01,'')+control('friction','Frottement η = hΩ / Γmax',motor.friction,0,.25,.01,'')+`<label class="check"><input id="load-ramp" type="checkbox" ${motor.loadRamp?'checked':''}>Appliquer la charge progressivement</label>`+control('load-time','Durée de mise en charge',motor.loadTime,.2,3,.1,'s')+'<p>Γmax = μB₀. La mise en charge commence à t = 0. En charge brusque, la position et la vitesse initiales restent continues.</p>');
+     html+=section('État initial et démarrage',`<label for="initial" class="check">État du rotor à t = 0</label><select class="full" id="initial"><option value="empty" ${motor.initial==='empty'?'selected':''}>Synchrone à vide</option><option value="loaded" ${motor.initial==='loaded'?'selected':''}>Synchrone en charge</option><option value="rest" ${motor.initial==='rest'?'selected':''}>Au repos</option></select><label class="check"><input id="speed-ramp" type="checkbox" ${motor.speedRamp?'checked':''}>Démarrage progressif du champ</label>`+control('ramp-time','Durée de démarrage',motor.rampTime,.3,3,.1,'s')+'<p>La rampe du champ part du repos et impose un rotor initialement arrêté. La lecture au ralenti conserve les temps physiques.</p>');
+   }
+   $('settings').innerHTML=html;$('preset').onchange=e=>preset(e.target.value);
+   const bind=(id,value,callback)=>U.bind(id,value,v=>{callback(v);reset();});
+   if(mode==='fixed'){
+     bind('B',fixed.B*1e6,v=>fixed.B=v*1e-6);bind('mu',fixed.mu*1000,v=>fixed.mu=v/1000);bind('J',fixed.J*1e8,v=>fixed.J=v*1e-8);bind('theta',deg(fixed.theta0),v=>fixed.theta0=rad(v));bind('u0',fixed.u0,v=>fixed.u0=v);bind('beta',fixed.beta,v=>fixed.beta=v);
+   }else if(mode==='field'){
+     bind('B0',field.B0*1000,v=>field.B0=v/1000);bind('frequency',field.omega/(2*Math.PI),v=>field.omega=v*2*Math.PI);bind('ratio',field.ratio,v=>field.ratio=v);bind('phase',deg(field.phase),v=>field.phase=rad(v));$('components').onchange=e=>{components=e.target.checked;render();};
+   }else{
+     bind('mu',motor.mu,v=>motor.mu=v);bind('B0',motor.B0*1000,v=>motor.B0=v/1000);bind('J',motor.J*1e5,v=>motor.J=v*1e-5);bind('omega',motor.omega,v=>motor.omega=v);bind('load',motor.load,v=>motor.load=v);bind('friction',motor.friction,v=>motor.friction=v);bind('load-time',motor.loadTime,v=>motor.loadTime=v);bind('ramp-time',motor.rampTime,v=>motor.rampTime=v);
+     $('load-ramp').onchange=e=>{motor.loadRamp=e.target.checked;if(motor.loadRamp&&motor.initial==='loaded')motor.initial='empty';settings();reset();};$('speed-ramp').onchange=e=>{motor.speedRamp=e.target.checked;if(motor.speedRamp)motor.initial='rest';settings();reset();};$('initial').onchange=e=>{motor.initial=e.target.value;if(motor.initial==='loaded')motor.loadRamp=false;if(motor.initial!=='rest')motor.speedRamp=false;settings();reset();};
+   }
+   U.typeset($('settings'));
+ }
+ function preset(id){
+   if(id==='custom')return;
+   if(mode==='fixed'){
+     Object.assign(fixed,{B:20e-6,mu:.005,J:8e-8,beta:.35,theta0:rad(55),u0:0});
+     if(id==='oscillation')fixed.beta=0;if(id==='small')Object.assign(fixed,{beta:0,theta0:rad(8)});if(id==='stable')Object.assign(fixed,{beta:0,theta0:0});if(id==='unstable')Object.assign(fixed,{beta:0,theta0:Math.PI});if(id==='large')Object.assign(fixed,{beta:0,theta0:rad(150)});
+   }else if(mode==='field'){
+     Object.assign(field,{B0:.005,ratio:1,phase:Math.PI/2,omega:2*Math.PI*.4});if(id==='reverse')field.phase=-Math.PI/2;if(id==='ellipse')field.ratio=.5;if(id==='line')field.phase=0;if(id==='single')field.ratio=0;
+   }else{
+     Object.assign(motor,{mu:.2,B0:.05,J:2e-5,omega:100,load:.5,friction:0,loadRamp:false,loadTime:1.5,speedRamp:false,rampTime:1.5,initial:'empty',theta0:0});
+     if(id==='steady')motor.initial='loaded';if(id==='step80')motor.load=.8;if(id==='ramp80')Object.assign(motor,{load:.8,loadRamp:true,friction:.03});if(id==='overload')motor.load=1.1;if(id==='rest')Object.assign(motor,{load:0,initial:'rest'});if(id==='startup')Object.assign(motor,{load:0,initial:'rest',speedRamp:true,friction:.08,rampTime:1.5});
+   }
+   reset();settings();$('preset').value=id;
+ }
+ function switchMode(next){
+   mode=next;zoom=1;pause();document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));$('representation').hidden=mode==='field';$('perturb').hidden=mode==='field';
+   $('chart-type').innerHTML=mode==='fixed'?'<option value="angle">Angle θ</option><option value="energy">Énergie mécanique</option>':mode==='field'?'<option value="currents">Courants normalisés</option>':'<option value="delta">Retard δ</option><option value="speeds">Vitesses angulaires</option><option value="torque">Couple magnétique</option>';
+   $('rate').value=mode==='motor'?'0.03':'1';$('step').textContent=mode==='fixed'?'+ 0,1 s':'+ ⅛ T';settings();reset();
+ }
+ function advance(dt){
+   const end=mode==='motor'?6:60,target=Math.min(end,t+dt);
+   if(mode==='field')t=target;
+   else {
+     const p=mode==='fixed'?fixed:motor,derivative=mode==='fixed'?M.fixedDerivative(p):M.motorDerivative(p);
+     const natural=Math.sqrt(p.mu*(mode==='fixed'?p.B:p.B0)/p.J),step=Math.min(.004,.025/(natural+(mode==='motor'?p.omega:0)+(p.beta||0)+1));
+     while(t<target-1e-12){const h=Math.min(step,target-t);y=M.rk4(y,t,h,derivative);t+=h;record();}
+   }
+   if(t>=end-1e-9)pause();
+ }
+ function needle(parent,center,R,theta,c,font){
+   const v=[Math.cos(theta),-Math.sin(theta)],e=[-v[1],v[0]],P=(a,b)=>[center[0]+v[0]*a+e[0]*b,center[1]+v[1]*a+e[1]*b];
+   const g=el('g',{'data-drag':'needle','aria-label':'Tourner le moment magnétique'},parent);el('circle',{cx:center[0],cy:center[1],r:R*.92,fill:'transparent'},g);
+   if(!spire){path(g,[P(0,-R*.13),P(R*.8,0),P(0,R*.13),P(0,-R*.13)],c.mu,1.5,{fill:c.mu,'fill-opacity':.75});path(g,[P(0,-R*.13),P(-R*.65,0),P(0,R*.13),P(0,-R*.13)],c.muted,1.5,{fill:c.soft});}
+   else{const a=P(0,-R*.63),b=P(0,R*.63);line(g,a,b,c.mu,7);symbol(g,a,true,c.mu,7);symbol(g,b,false,c.mu,7);}
+   arrow(g,center,P(R*.98,0),c.mu,'',{width:3.2});const end=P(R*1.09,0);text(g,clamp(end[0],25,geometry.W-25),clamp(end[1]+(Math.abs(v[1])<.25?25:7),65,geometry.H-45),'μ',c.mu,font,'middle');el('circle',{cx:center[0],cy:center[1],r:5,fill:c.ink},g);
+ }
+ function coil(parent,x,y,axis,value,c,zero=false,R=60){
+   const g=el('g',{'data-coil-axis':axis,'data-center-x':x,'data-center-y':y},parent),color=axis==='x'?c.velocity:c.secondary;
+   if(axis==='x'){for(let i=0;i<4;i++)el('ellipse',{cx:x+(i-1.5)*R*.12,cy:y,rx:R*.09,ry:R*.42,fill:c.surface,stroke:color,'stroke-width':1.9,opacity:.45+.55*Math.min(1,Math.abs(value))},g);}
+   else{for(let i=0;i<4;i++)el('ellipse',{cx:x,cy:y+(i-1.5)*R*.10,rx:R*.42,ry:R*.08,fill:c.surface,stroke:color,'stroke-width':1.9,opacity:.45+.55*Math.min(1,Math.abs(value))},g);}
+   const titleSize=geometry.W<550?14:document.body.classList.contains('projection')?21:17,labelSize=geometry.W<550?13:16;
+   const lx=axis==='x'?x:x+R*.62,ly=axis==='x'?y+R*.42+19:y+4,anchor=axis==='x'?'middle':'start';
+   U.label(g,lx,ly,'Bobine '+axis,color,titleSize,anchor);U.label(g,lx,ly+21,zero?'i'+(axis==='x'?'ₓ':'ᵧ')+' = 0':'i'+(axis==='x'?'ₓ':'ᵧ')+'/i₀ = '+fmt(value,2),color,labelSize,anchor);
+ }
+ function torqueBadge(parent,x,y,G,c){
+   if(Math.abs(G)<1e-16){text(parent,x,y+5,'Γz = 0',c.force,17,'middle');return;}
+   arc(parent,[x,y],21,.3,.3+Math.sign(G)*4.1,c.force);text(parent,x,y+6,'Γz',c.force,18,'middle');
+ }
+ function drawFixed(){
+   const {W,H,c,font}=U.scene(scene);U.grid(scene,W,H,c);const center=[W*.49,(H+25)/2],R=Math.min(W*.29,(H-97)*.44)*zoom;geometry={W,H,center,R};
+   el('circle',{cx:center[0],cy:center[1],r:R,fill:'none',stroke:c.line,'stroke-width':1.3,'stroke-dasharray':'3 6'},scene);
+   line(scene,[center[0]-R*1.35,center[1]],[center[0]+R*1.7,center[1]],c.line,1,{'stroke-dasharray':'4 5'});
+   if(fixed.B>0)arrow(scene,center,[center[0]+R*1.38,center[1]],c.field,'Bext',{size:W<550?17:font,dy:-13});else text(scene,center[0]+R,center[1]-18,'Bext = 0',c.field,18);
+   arc(scene,center,Math.max(24,R*.38),0,U.wrap(y[0]),c.muted,'θ',W<550?17:font);needle(scene,center,R,y[0],c,font);
+   const G=-fixed.mu*fixed.B*Math.sin(y[0]);torqueBadge(scene,W-64,H-69,G,c);
+   if(W>550){text(scene,30,78,'Champ fixe',c.field,18);text(scene,30,104,fmt(fixed.B*1e6,0)+' µT',c.field,22);}
+   U.metric(0,'Angle θ',fmt(deg(U.wrap(y[0])),1),'°');U.metric(1,'Moment Γz',fmt(G*1e9,1),'nN·m');U.metric(2,'Période T₀',fixed.B>0?fmt(2*Math.PI*Math.sqrt(fixed.J/(fixed.mu*fixed.B)),2):'—',fixed.B>0?'s':'');
+   $('formula').innerHTML='J θ̈ + h θ̇ = −μB sin θ';
+   const a=Math.abs(U.wrap(y[0])),rest=Math.abs(y[1])<1e-8;
+   $('state-note').textContent=fixed.B===0?'Couple magnétique nul':rest&&a<1e-9?'Équilibre stable':rest&&Math.abs(a-Math.PI)<1e-9?'Équilibre instable · perturber pour le voir':fixed.beta===0?'Oscillations sans amortissement':'Dissipation par frottement';
+   $('scene-hint').textContent=spire?'Tourner la spire à la souris, puis la lâcher':'Tourner l’aiguille à la souris, puis la lâcher';$('scene-scale').textContent='Vue suivant +z · T₀ : petites oscillations';
+ }
+ function drawField(){
+   const {W,H,c,font}=U.scene(scene);U.grid(scene,W,H,c);const baseR=Math.min(W*.22,(H-116)/2.6),R=baseR*zoom,center=[W*.56,65+baseR];geometry={W,H,center,R};const B=M.field(field,t),scale=R/Math.max(.005,field.B0*Math.max(1,field.ratio)),P=b=>[center[0]+b[0]*scale,center[1]-b[1]*scale];
+   arrow(scene,[center[0]-R*1.95,center[1]],[center[0]+R*1.18,center[1]],c.line,'x',{size:16,dy:5,width:1});arrow(scene,[center[0],center[1]+R*1.65],[center[0],center[1]-R*1.18],c.line,'y',{size:16,dy:-4,width:1});
+   coil(scene,center[0]-R*1.5,center[1],'x',field.B0===0?0:Math.cos(field.omega*t),c,field.B0===0,R);coil(scene,center[0],center[1]+R*1.35,'y',field.B0===0?0:field.ratio*Math.cos(field.omega*t-field.phase),c,field.B0===0,R);
+   el('circle',{cx:center[0],cy:center[1],r:R,fill:c.field,'fill-opacity':field.B0/.01*.10},scene);const pts=Array.from({length:161},(_,i)=>P(M.field(field,i/(160)*2*Math.PI/field.omega)));path(scene,pts,c.field,1.5,{'stroke-dasharray':'4 5',opacity:.65});
+   if(components){
+     const bx=P([B[0],0,0]),by=P([0,B[1],0]),sum=P(B);line(scene,bx,sum,c.secondary,1.5,{'stroke-dasharray':'4 4'});line(scene,by,sum,c.velocity,1.5,{'stroke-dasharray':'4 4'});
+     if(Math.abs(B[0])>1e-9)arrow(scene,center,bx,c.velocity,'Bx',{size:W<550?17:font,dy:B[1]>=0?22:-10,dx:B[0]>=0?8:-8,anchor:B[0]>=0?'start':'end'});
+     if(Math.abs(B[1])>1e-9)arrow(scene,center,by,c.secondary,'By',{size:W<550?17:font,dy:B[1]>=0?-10:23,dx:-12,anchor:'end'});
+     else U.label(scene,center[0]-12,center[1]-30,'By = 0',c.secondary,W<550?16:19,'end');
+   }
+   arrow(scene,center,P(B),c.field,'B',{size:font,dx:10,dy:-8,width:4});el('circle',{cx:center[0],cy:center[1],r:4,fill:c.ink,'data-superposition-origin':'true'},scene);U.label(scene,center[0]-10,center[1]+22,'O',c.ink,16,'end');
+   U.metric(0,'Norme |B|',fmt(M.norm(B)*1000,2),'mT');U.metric(1,'Direction de B',M.norm(B)>1e-12?fmt(deg(Math.atan2(B[1],B[0])),0):'—',M.norm(B)>1e-12?'°':'');U.metric(2,'Fréquence f',fmt(field.omega/(2*Math.PI),2),'Hz');
+   $('formula').innerHTML='<span class="vec">B</span> = <span class="vec">B</span><sub>x</sub> + <span class="vec">B</span><sub>y</sub>';
+   const circular=Math.abs(field.ratio-1)<1e-8&&Math.abs(Math.abs(field.phase)-Math.PI/2)<1e-8,linear=field.ratio===0||Math.abs(Math.sin(field.phase))<1e-8;
+   $('state-note').textContent=field.B0===0?'Champ nul':circular?'Norme constante · champ circulaire':linear?'Champ alternatif · direction fixe':'Norme variable · champ elliptique';
+   $('currents-equations').innerHTML=field.B0===0?'iₓ = iᵧ = 0 A<br>i₀ = 0 : normalisation non définie':'iₓ/i₀ = cos(ωt)<br>iᵧ/i₀ = r cos(ωt − φ)';
+   U.typeset($('currents-equations'));$('scene-hint').textContent='Les deux axes se croisent en O : les champs s’y additionnent';$('scene-scale').textContent='B = Bx + By · bobines schématiques';U.typeset($('scene-scale'));
+ }
+ function drawMotor(){
+   const {W,H,c,font}=U.scene(scene);U.grid(scene,W,H,c);const center=[W*.49,(H+23)/2],R=Math.min(W*.28,(H-99)*.43)*zoom;geometry={W,H,center,R};const q=M.motor(motor,y,t),phi=M.phase(motor,t),v=[Math.cos(phi),-Math.sin(phi)];
+   el('circle',{cx:center[0],cy:center[1],r:R*1.22,fill:'none',stroke:c.field,'stroke-width':2,'stroke-dasharray':'5 7',opacity:.5},scene);
+   if(W>550){text(scene,30,77,'Stator · champ imposé',c.field,17);text(scene,30,103,'Ωchamp = '+fmt(q.omega,1)+' rad/s',c.field,20);text(scene,30,130,'λ(t) = '+fmt(q.load/(motor.mu*motor.B0),2),c.muted,17);}
+   arrow(scene,center,[center[0]+v[0]*R*1.2,center[1]+v[1]*R*1.2],c.field,'',{width:4});text(scene,clamp(center[0]+v[0]*R*1.37,25,W-25),clamp(center[1]+v[1]*R*1.37-5,65,H-43),'B',c.field,font,'middle');
+   arc(scene,center,Math.max(26,R*.42),y[0],y[0]+U.wrap(q.delta),c.muted,'δ',W<550?17:font);needle(scene,center,R,y[0],c,font);torqueBadge(scene,W-64,H-69,q.torque,c);
+   U.metric(0,'Retard δ',fmt(deg(q.delta),1),'°');U.metric(1,'Vitesse du rotor',fmt(y[1],1),'rad/s');U.metric(2,'Puissance Pℒ',fmt(q.power*1000,1),'mW');
+   $('formula').innerHTML='Γ<sub>mag</sub> = μB₀ sin δ &nbsp;·&nbsp; P<sub>ℒ</sub> = Γ<sub>mag</sub> θ̇';
+   const effective=q.load/(motor.mu*motor.B0)+motor.friction,turns=Math.floor(Math.abs(q.delta)/(2*Math.PI));
+   $('state-note').textContent=turns>=1?'Décrochage · '+turns+' tour'+(turns>1?'s':'')+' de retard':motor.speedRamp&&t<motor.rampTime?'Accélération du champ':effective>=1?'Charge + frottement ≥ couple maximal':Math.abs(q.omega-y[1])<.02&&Math.abs(q.acceleration)<.02?'Régime synchrone':'Retard en évolution';
+   $('scene-hint').textContent='Le rotor est entraîné par le couple calculé';$('scene-scale').textContent='Retard déroulé dans la courbe · orientations modulo 360°';
+ }
+ function drawGraph(){
+   if(!document.body.classList.contains('show-chart'))return;const c=U.colors(),type=$('chart-type').value;let series=[],tMax,tMin=0,unit='',reference=[];$('chart-key').innerHTML='';
+   if(mode==='fixed'){
+     tMax=Math.max(12,t);unit=type==='energy'?'nJ':'°';series=[{points:history.map(s=>[s.t,type==='energy'?s.energy*1e9:deg(s.theta)]),color:type==='energy'?c.force:c.mu}];$('chart-title').textContent=type==='energy'?'Énergie mécanique de l’aiguille':'Angle de l’aiguille · θ(t)';
+   }else if(mode==='field'){
+     const T=2*Math.PI/field.omega;tMax=Math.max(2*T,t);tMin=Math.max(0,tMax-2*T);unit=field.B0===0?'A':'i / i₀';$('chart-type').querySelector('option').textContent=field.B0===0?'Courants nuls':'Courants normalisés';
+     series=[{points:Array.from({length:321},(_,i)=>{const x=tMin+(tMax-tMin)*i/320;return[x,field.B0===0?0:Math.cos(field.omega*x)];}),color:c.velocity},{points:Array.from({length:321},(_,i)=>{const x=tMin+(tMax-tMin)*i/320;return[x,field.B0===0?0:field.ratio*Math.cos(field.omega*x-field.phase)];}),color:c.secondary}];$('chart-title').textContent=field.B0===0?'Courants nuls · i₀ = 0':'Courants dans les bobines';$('chart-key').innerHTML='<span class="key" style="--key:var(--velocity)">iₓ</span> <span class="key" style="--key:var(--secondary)">iᵧ</span>';
+   }else{
+     tMax=Math.max(.6,t);unit=type==='speeds'?'rad/s':type==='torque'?'mN·m':'°';
+     if(type==='speeds'){series=[{points:history.map(s=>[s.t,s.u]),color:c.mu},{points:history.map(s=>[s.t,s.fieldSpeed]),color:c.field,dash:true}];$('chart-key').innerHTML='<span class="key" style="--key:var(--mu)">rotor</span> <span class="key" style="--key:var(--field)">champ</span>';}
+     else series=[{points:history.map(s=>[s.t,type==='torque'?s.torque*1000:deg(s.delta)]),color:type==='torque'?c.force:c.mu}];
+     if(type==='delta'&&motor.load+motor.friction<1&&!motor.speedRamp){reference=[{y:deg(Math.asin(motor.load+motor.friction)),color:c.muted}];$('chart-key').innerHTML='<span class="key" style="--key:var(--muted)">δsyn final</span>';}
+     $('chart-title').textContent=type==='speeds'?'Vitesses angulaires':type==='torque'?'Couple magnétique':'Retard du rotor · δ(t)';
+   }
+   U.graph(graph,{series,tMin,tMax,xNow:t,unit,reference});
+ }
+ function render(){if(!ui)return;if(mode==='fixed')drawFixed();else if(mode==='field')drawField();else drawMotor();drawGraph();U.typeset($('formula'));U.typeset($('scene-scale'));U.typeset($('chart-key'));U.typeset($('chart-title'));$('time').textContent='t = '+fmt(t,mode==='motor'?3:2)+' s';ui.playing(playing);}
+ function play(){if(playing)pause();else{if(t>=(mode==='motor'?6:60)-1e-9)reset();playing=true;last=performance.now();}render();}
+ function step(){pause();advance(mode==='fixed'?.1:Math.PI/(4*(mode==='field'?field.omega:motor.omega)));render();}
+ ui=U.init({name:'EM2_Boussole_Moteur',title:'Boussole et moteur synchrone',render,onPlay:play,onReset:reset,onStep:step,onZoom:k=>{zoom=clamp(zoom*k,.6,2.2);render();},onFit:()=>{zoom=1;render();}});
+ document.body.classList.add('show-chart');document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>switchMode(b.dataset.mode));$('chart-type').onchange=render;
+ $('representation').onclick=()=>{spire=!spire;$('representation').textContent=spire?'Voir l’aimant':'Voir la spire';$('representation').setAttribute('aria-pressed',spire);render();};
+ $('perturb').onclick=()=>{y[0]+=rad(3);record(true);playing=true;last=performance.now();render();};
+ scene.addEventListener('pointerdown',e=>{if(mode==='field'||!e.target.closest('[data-drag]'))return;drag={wasPlaying:playing};pause();scene.setPointerCapture(e.pointerId);scene.classList.add('dragging');});
+ scene.addEventListener('pointermove',e=>{if(!drag)return;const r=scene.getBoundingClientRect(),angle=Math.atan2(geometry.center[1]-(e.clientY-r.top),e.clientX-r.left-geometry.center[0]);if(mode==='fixed'){fixed.theta0=angle;t=0;y=[angle,0];history=[];sampleTime=-1;$('theta').value=$('theta-number').value=Math.round(deg(angle));}else y[0]+=U.wrap(angle-y[0]);record(true);render();});
+ const endDrag=()=>{if(!drag)return;playing=mode==='fixed'||drag.wasPlaying;drag=null;last=performance.now();scene.classList.remove('dragging');render();};scene.addEventListener('pointerup',endDrag);scene.addEventListener('pointercancel',()=>{drag=null;scene.classList.remove('dragging');});
+ function frame(now){if(playing){advance(Math.min(.06,(now-last)/1000)*Number($('rate').value));render();}last=now;requestAnimationFrame(frame);}switchMode('fixed');requestAnimationFrame(frame);
+ window.EM2App={get state(){return {mode,t,y:[...y],playing,zoom,fixed:{...fixed},field:{...field},motor:{...motor},history:history.map(p=>({...p}))};},advance:dt=>{pause();advance(dt);record(true);render();},preset,switchMode};
+})();
+</script></body></html>

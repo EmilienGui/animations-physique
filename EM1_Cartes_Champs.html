@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Cartes, superposition, boussole et moment magnétique : un atelier autonome pour EM1.">
+<title>Explorer les champs magnétiques · EM1 · MPSI</title>
+<style>:root{color-scheme:light;--paper:#eef2f5;--surface:#fff;--ink:#121d29;--secondary:#53595e;--line:#ccd5de;--accent:#254b70;--accent-ink:#254b70;--soft:#e7eef5;--red:#8f2227;--blue:#2366aa;--green:#16785c;--gold:#a56913;--shadow:0 6px 25px #254b7009}
+:root[data-theme=dark]{color-scheme:dark;--paper:#0f1722;--surface:#162231;--ink:#edf3fb;--secondary:#b7c6d7;--line:#35495f;--accent:#8cb8e4;--accent-ink:#a7caee;--soft:#223850;--red:#ff9da1;--blue:#8ac1ff;--green:#7fdbb6;--gold:#f1c477;--shadow:0 6px 25px #0002}
+*{box-sizing:border-box}body{margin:0;font:17px/1.4 Arial,Helvetica,sans-serif;background:var(--paper);color:var(--ink);border-top:5px solid var(--accent)}button,input,select{font:inherit}button{min-height:40px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);padding:7px 11px;cursor:pointer;line-height:1.2}button:hover{border-color:var(--accent);background:var(--soft)}button:focus-visible,select:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button[aria-pressed=true],button.active{color:var(--surface);background:var(--accent-ink);border-color:var(--accent-ink)}button:disabled{opacity:.5;cursor:default}select{border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);padding:8px;width:100%;max-width:100%;cursor:pointer}input[type=range]{accent-color:var(--accent-ink);width:100%;height:25px;margin:6px 0 0;cursor:pointer}input[type=number]{width:83px;border:1px solid var(--line);border-radius:4px;padding:5px;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums;text-align:right}input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent-ink);margin:0}
+.shell{height:calc(100dvh - 5px);min-height:590px;max-width:2200px;margin:auto;padding:13px 20px 9px;display:flex;flex-direction:column;gap:11px}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--accent-ink);margin-bottom:4px}.heading{display:flex;align-items:center;gap:12px}.chapter{font-size:18px;padding:6px 8px;border:1px solid var(--accent);border-radius:4px;color:var(--accent-ink)}h1{margin:0;font-size:28px;line-height:1.12;font-weight:500;letter-spacing:-.025em}.tabs{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.tabs button{font-size:16px;padding:8px 14px;min-height:38px}.tabs .tab-note{margin-left:auto;color:var(--secondary);font-size:14px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:14px;flex:1;min-height:0}.scene-column{display:flex;flex-direction:column;min-height:0;min-width:0;gap:9px}.scene-card{position:relative;display:flex;flex-direction:column;flex:1;min-height:240px;background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:var(--shadow)}.scene-title{display:flex;align-items:center;gap:10px;justify-content:space-between;min-height:41px;padding:8px 13px;border-bottom:1px solid var(--line);font-size:17px;color:var(--accent-ink)}.scene-title small{font-size:13px;font-weight:400;color:var(--secondary);text-align:right}.canvas-area{position:relative;flex:1;min-height:170px;overflow:hidden}canvas.scene{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}canvas.plot{display:block;width:100%;height:150px;background:var(--surface);border-top:1px solid var(--line)}.scene-tools{position:absolute;bottom:9px;left:10px;display:flex;gap:5px;align-items:center;z-index:1}.scene-tools button{min-height:35px;padding:5px 9px;font-size:15px;background:var(--surface)}.scene-tools button.square{width:35px;padding:5px}.scene-key{position:absolute;bottom:11px;right:12px;background:var(--surface);padding:3px 6px;border-radius:4px;color:var(--secondary);font-size:13px;max-width:52%;text-align:right;pointer-events:none}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;flex:none}.readout{min-width:0;border-left:2px solid var(--line);padding-left:12px}.readout:first-child{border-left:0;padding-left:0}.metric-label{font-size:15px;color:var(--secondary);margin-bottom:2px}.metric-value{font-size:30px;line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}.metric-sub{font-size:14px;color:var(--secondary);min-height:19px;overflow-wrap:anywhere}.teaching{min-height:48px;padding:9px 12px;border-left:3px solid var(--accent);background:var(--soft);border-radius:0 5px 5px 0;font-size:16px;color:var(--ink)}.controls{overflow-y:auto;overscroll-behavior:contain;background:var(--surface);border:1px solid var(--line);border-radius:8px;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:15px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 10px}.control-label{display:block;font-size:16px;margin:10px 0 5px}.control-label:first-child{margin-top:0}.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px;margin:12px 0 0}.field-head .unit{font-size:14px;color:var(--secondary);margin-left:4px}.range-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--secondary)}.check{display:flex;gap:9px;align-items:center;cursor:pointer;margin:10px 0;font-size:16px}.button-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.button-row button{font-size:14px;min-height:35px;padding:6px 9px}.button-row.fill button{flex:1}.hint{font-size:13px;color:var(--secondary);margin:9px 0 0;line-height:1.5}.formula{font:23px/1.5 Georgia,'Times New Roman',serif;overflow-wrap:anywhere}.formula small{font:14px/1.5 Arial,Helvetica,sans-serif;color:var(--secondary)}.footer{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--secondary);flex:none}.mobileSettings{display:none}.veil{display:none}.projection .controls,.projection .footer,.projection .eyebrow,.projection .chapter,.projection .tab-note{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:9px}.projection .metric-label{font-size:20px}.projection .metric-value{font-size:40px}.projection .metric-sub{font-size:17px}.projection .teaching{font-size:21px;min-height:48px}.projection .scene-title{font-size:22px;min-height:46px}.projection .scene-title small{font-size:16px}.projection .tabs button{font-size:18px}.projection .scene-key{font-size:16px}.projection .scene-tools button{font-size:18px;min-height:38px}.projection canvas.plot{height:170px}dialog{width:min(820px,calc(100vw - 30px));max-height:86dvh;overflow:auto;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:var(--surface);padding:25px}dialog::backdrop{background:#071525aa}dialog h2{font-size:27px;font-weight:500;margin:0 0 18px}dialog h3{font-size:19px;font-weight:600;margin:18px 0 5px}dialog p,dialog li{font-size:17px;color:var(--secondary);line-height:1.65}dialog .close-row{display:flex;justify-content:flex-end}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);font-size:16px;box-shadow:var(--shadow);z-index:100}.toast:empty{display:none}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1250px){.shell{padding:10px 12px 8px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 290px;gap:10px}h1{font-size:25px}.metric-value{font-size:28px}.tabs .tab-note{display:none}.teaching{font-size:15px;min-height:43px}}
+@media(max-width:980px){.mobileSettings{display:inline-flex}.workspace{grid-template-columns:1fr}.controls{position:fixed;right:0;top:0;bottom:0;width:min(340px,89vw);z-index:30;border-radius:10px 0 0 10px;transform:translateX(102%);transition:transform .18s ease;box-shadow:-8px 0 30px #0002}.panel-open .controls{transform:translateX(0)}.panel-open .veil{display:block;position:fixed;inset:0;background:#07152566;z-index:29}.controls .drawer-close{display:block;width:calc(100% - 30px);margin:12px 15px 0}.cpge-menu-header> :first-child{flex-basis:230px}.eyebrow{font-size:11px}.footer{display:none}}
+@media(min-width:981px){.drawer-close{display:none}}
+@media(max-width:640px){.shell{height:auto;min-height:100dvh;padding:10px 8px;gap:10px}.masthead{gap:8px!important}h1{font-size:24px}.eyebrow{display:none}.chapter{font-size:16px}.scene-card{height:530px;flex:none}.workspace{flex:none}.tabs{gap:5px}.tabs button{padding:7px 9px;font-size:14px}.readouts{gap:6px}.readout{padding-left:7px}.metric-label{font-size:13px}.metric-value{font-size:22px}.metric-sub{font-size:12px}.teaching{font-size:15px;min-height:0}.scene-title{font-size:15px}.scene-title small{display:none}.scene-key{display:none}.projection .shell{height:auto;min-height:100dvh}.projection .metric-value{font-size:24px}.projection .metric-label{font-size:14px}.projection .metric-sub{font-size:13px}.projection .teaching{font-size:17px}.projection .scene-title{font-size:18px}.projection .scene-card{height:540px}.projection .tabs button{font-size:15px}}
+.formula sub,.metric-sub sub{font-size:.7em;vertical-align:-.28em;line-height:0}
+.metric-value{--value-size:30px}.projection .metric-value{--value-size:40px}
+@media(max-width:1250px){.metric-value{--value-size:28px}}
+@media(max-width:640px){.metric-value{--value-size:22px}.projection .metric-value{--value-size:24px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style id="cpge-common-menu-style">/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
+.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
+.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
+.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
+.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
+.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
+.cpge-global-actions>button.cpge-common-button>svg{display:none}
+.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
+.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
+.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
+.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
+.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
+.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
+.cpge-menu-status[hidden]{display:none!important}
+@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
+.projection .cpge-global-actions>.mobileSettings{display:none!important}
+@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+
+/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
+html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
+html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
+html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
+html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+html[data-cpge-film] button:hover{border-color:var(--accent)}
+html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
+html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
+html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
+html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="masthead">
+ <div><div class="eyebrow">Électromagnétisme · MPSI</div><div class="heading"><span class="chapter">EM1</span><h1>Explorer les champs magnétiques</h1></div></div>
+ <div class="header-actions"><button id="panel" class="mobileSettings" aria-expanded="false" aria-controls="controls">Panneau</button><button id="reset">Réinitialiser</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Enregistrer la scène et les valeurs au format PNG">Image</button><button id="projection">Projection</button><button id="fullscreen" aria-label="Plein écran">⛶</button></div>
+</header>
+<nav class="tabs" aria-label="Vues de l’atelier"><button data-tab="maps" aria-pressed="false">Cartes</button><button data-tab="sum" aria-pressed="false">Superposition</button><button data-tab="moment" aria-pressed="false">Moment magnétique</button><span class="tab-note">Sources · intensité · comparaison</span></nav>
+<div class="workspace">
+ <div class="scene-column">
+  <div class="scene-card">
+   <div class="scene-title"><span id="scene-name"></span><small id="scene-hint"></small></div>
+   <div id="scene-area" class="canvas-area">
+    <canvas id="scene" class="scene" tabindex="0" role="img" aria-label="Champ magnétique interactif. Déplacer la sonde avec la souris ou les flèches du clavier."></canvas>
+    <div class="scene-tools" role="group" aria-label="Lecture et cadrage"><button id="local-play" hidden>Lire</button><button id="local-start" hidden>Début</button><button id="zoom-out" class="square" aria-label="Réduire le dessin">−</button><button id="zoom-in" class="square" aria-label="Agrandir le dessin">+</button><button id="fit">Cadrer</button></div>
+    <div class="scene-key" id="scene-key"></div>
+   </div>
+   <canvas id="plot" class="plot" role="img" aria-label="Profil du champ ou de la circulation" hidden></canvas>
+  </div>
+  <div class="readouts" aria-live="off">
+   <div class="readout"><div class="metric-label" id="label0"></div><div class="metric-value" id="value0"></div><div class="metric-sub" id="sub0"></div></div>
+   <div class="readout"><div class="metric-label" id="label1"></div><div class="metric-value" id="value1"></div><div class="metric-sub" id="sub1"></div></div>
+   <div class="readout"><div class="metric-label" id="label2"></div><div class="metric-value" id="value2"></div><div class="metric-sub" id="sub2"></div></div>
+  </div>
+  <div id="teaching" class="teaching"></div>
+ </div>
+ <aside id="controls" class="controls" aria-label="Réglages physiques"><button id="drawer-close" class="drawer-close">Fermer les réglages</button><div id="control-content"></div></aside>
+</div>
+<footer class="footer"><span>E. Guillaume · EM1 — Champs magnétiques</span><span>Hors connexion · Maj + glisser : déplacer la vue · 0 : cadrer · R : réinitialiser</span></footer>
+</main>
+<div id="veil" class="veil"></div>
+<dialog id="about"><h2>Explorer les champs magnétiques</h2>
+<h3>Trois vues d’un même atelier</h3>
+<p><strong>Cartes.</strong> Explorer le fil infini, la spire, la bobine finie et les deux aimants.
+La sonde est exclue d’un voisinage des fils idéaux et de l’intérieur des aimants. La grille des mesures reste limitée à ces régions valides ;
+le calcul des lignes est indépendant de cette grille et traverse le matériau des aimants, où il est dessiné en pointillés.
+Un conducteur dessiné avec une épaisseur n’est pas un modèle de répartition volumique du courant.</p>
+<p><strong>Superposition.</strong> Deux bobines minces identiques, de N spires chacune, peuvent être éloignées et parcourues par des courants de même sens ou opposés.
+Le préréglage Helmholtz impose d = R et I₂ = I₁. Le préréglage anti-Helmholtz utilise d = √3 R et I₂ = −I₁, conformément au TD.
+Le fond vert du profil indique l’intervalle central sur l’axe où |B(z)/B(0) − 1| ≤ 2 %, quand B(0) est non nul et les courants égaux.
+Ce contrôle axial ne constitue pas une mesure complète de l’uniformité dans tout un volume.</p>
+<p>Dans la situation « Boussole et champ terrestre », seul le champ horizontal terrestre Bₕ est représenté.
+La bobine est orientée est–ouest ; une aiguille idéale, sans perturbation des sources, s’aligne sur le champ horizontal résultant.
+θ est mesuré depuis l’axe positif de la bobine ; la relation tan θ = Bₕ/Bbobine s’interprète avec les signes et le quadrant.
+Le réglage terrestre est un modèle local uniforme, sans données géographiques actuelles.</p>
+<p><strong>Moment.</strong> Comparer une boucle de N tours confondus et un aimant cylindrique à même moment μ = NIπR².
+La direction de la surface orientée se règle au curseur ou en saisissant le bout de la flèche μ.
+L’orientation de S est conventionnelle ; inverser le courant inverse μ et le champ.
+Le mode lointain augmente les distances avec la même échelle sur les deux cartes. L’écart vectoriel est calculé au même point relatif M.
+Le terme dipolaire est dominant à grande distance pour ces sources localisées de moment non nul.</p>
+<h3>Modèles des sources</h3>
+<p>Le champ du fil infini est analytique. Celui d’une spire circulaire est évalué par les intégrales elliptiques de Biot–Savart.
+La bobine finie est une nappe cylindrique de courant : on intègre une distribution continue de spires par quadrature de Gauss.
+Les quelques symboles dessinés sur le bobinage sont schématiques et ne comptent pas les N spires.
+Le champ sur l’axe est calculé par son expression analytique exacte dans ce modèle.</p>
+<p>L’aimant droit est un cylindre à aimantation uniforme imposée, représenté par ses courants liés de surface équivalents.
+Le champ B est calculé à l’extérieur et à l’intérieur ; seule la sonde est limitée à l’air.
+L’aimant en U est un fer à cheval 2D, de profondeur infinie, avec une aimantation imposée tangentielle dans la partie arrondie et parallèle aux branches.
+Ses faces terminales, à x = 0, portent des distributions polaires liées équivalentes, opposées.
+Le champ B = μ₀(H + M) tient compte de l’aimantation dans le matériau, ce qui conserve la continuité des lignes.
+Sa norme au centre de l’entrefer est réglée par le champ central imposé.
+Ce modèle illustre l’entrefer, les fuites et les effets de bord ; il ne calcule ni la réponse du matériau ni la saturation.
+Les pôles liés ne sont pas des charges magnétiques isolées.</p>
+
+<h3>Manipuler et projeter</h3>
+<p>Les réglages se trouvent à droite ; sur une fenêtre étroite, « Panneau » les ouvre depuis le bord droit.
+Cliquer ou glisser dans une carte déplace la sonde M. Les flèches du clavier déplacent M lorsque la scène est sélectionnée.
+La molette et les boutons +/− changent le zoom ; « Cadrer » ou 0 rétablit la vue entière. Maj + glisser déplace la vue.
+« Projection » masque les réglages et agrandit les informations ; « Réglages » les rétablit. Le petit carré ⛶ commande le plein écran, indépendamment de Projection.
+R réinitialise l’atelier. Image exporte un PNG de la scène, du profil éventuel et des valeurs courantes.</p>
+<h3>Lire une carte</h3>
+<p>Les lignes donnent la direction et le sens du champ ; leur nombre et leur espacement sont des choix de tracé et ne mesurent pas sa norme.
+Le curseur « Densité des lignes », de 1 à 10, règle le nombre de lignes réellement calculées et dessinées dans les cartes. Le niveau initial est 6.
+Ce choix de représentation reste conservé lors d’un changement de source ou de vue ; Réinitialiser rétablit le niveau initial.
+Les lignes sont calculées dans un plan de coupe ; elles peuvent sortir du cadre. Aucun déplacement de matière n’est représenté.
+Pour la bobine finie, la spire et l’aimant droit, les boucles sont calculées au-delà du cadre :
+les retours des lignes proches de l’axe peuvent être très éloignés. Dézoomer permet de les retrouver ; « Cadrer » revient à la source.
+Dans les aimants, les pointillés indiquent le prolongement intérieur des lignes de B.
+La norme est donnée par la sonde. Les flèches de la carte et la teinte utilisent l’échelle choisie ; la longueur des flèches est plafonnée pour conserver la lisibilité.
+Les couleurs ne représentent pas une couleur réelle du champ. Dans une coupe méridienne, z est l’axe horizontal et y l’ordonnée algébrique ; le rayon cylindrique est r = |y|.</p>
+<p>Les calculs utilisent μ₀ = 4π × 10⁻⁷ H·m⁻¹ à la précision du cours. Les symboles ⊙ et ⊗ indiquent respectivement un courant vers vous et vers l’arrière.
+Les cartes sont magnétostatiques : modifier un réglage compare des états stationnaires. Les transitoires et l’induction ne sont pas modélisés.</p>
+<div class="close-row"><button id="close-about">Revenir à l’atelier</button></div></dialog>
+<div id="toast" class="toast" role="status"></div>
+<script id="em1-physics">/* Modèles en unités SI. Axe des sources axisymétriques : x (noté z au cours).
+ * Les coordonnées du plan méridien sont (x,y), avec y rayon algébrique. */
+'use strict';
+globalThis.EM1 = (() => {
+  const mu0 = 4 * Math.PI * 1e-7;
+  const norm = v => Math.hypot(...v);
+  const add = (a,b) => a.map((v,i) => v+b[i]);
+  const scale = (a,k) => a.map(v => v*k);
+  function elliptic(m) {
+    if (!(m >= 0 && m < 1)) throw new RangeError('Paramètre elliptique hors domaine');
+    let a=1, b=Math.sqrt(1-m), sum=m/2, weight=1;
+    for (let i=0;i<20;i++) {
+      const c=(a-b)/2, na=(a+b)/2;
+      sum+=weight*c*c; weight*=2; b=Math.sqrt(a*b); a=na;
+      if (Math.abs(c)<2e-16*a) break;
+    }
+    const K=Math.PI/(2*a);
+    return [K,K*(1-sum)];
+  }
+  function wire(x,y,I=1,cx=0,cy=0) {
+    x-=cx;y-=cy;const r2=x*x+y*y;
+    if(r2<1e-24)return [NaN,NaN];
+    const k=mu0*I/(2*Math.PI*r2);
+    return [-k*y,k*x];
+  }
+  function loop(x,y,R,I=1,center=0) {
+    x-=center;const r=Math.abs(y);
+    if(r<1e-7*R) return [mu0*I*R*R/(2*Math.pow(R*R+x*x,1.5)),0];
+    const d=(R+r)*(R+r)+x*x,q=(R-r)*(R-r)+x*x;
+    if(q<1e-24)return [NaN,NaN];
+    const [K,E]=elliptic(Math.min(1-1e-15,4*R*r/d));
+    const k=mu0*I/(2*Math.PI*Math.sqrt(d));
+    return [k*(K+(R*R-r*r-x*x)/q*E),
+      Math.sign(y)*k*x/r*(-K+(R*R+r*r+x*x)/q*E)];
+  }
+  function gauss(n) {
+    const out=[];
+    for(let i=1;i<=n;i++) {
+      let z=Math.cos(Math.PI*(i-.25)/(n+.5)),pp=0;
+      for(let k=0;k<16;k++) {
+        let p1=1,p2=0;
+        for(let j=1;j<=n;j++){const p3=p2;p2=p1;p1=((2*j-1)*z*p2-(j-1)*p3)/j;}
+        pp=n*(z*p1-p2)/(z*z-1);
+        const next=z-p1/pp;
+        if(Math.abs(next-z)<1e-15){z=next;break;}z=next;
+      }
+      out.push([z,2/((1-z*z)*pp*pp)]);
+    }
+    return out;
+  }
+  const quadrature=gauss(14);
+  function solenoid(x,y,R,L,N,I) {
+    // N tours répartis continûment : intégration de spires, nappe cylindrique.
+    if(Math.abs(y)<1e-7*R) {
+      const a=x+L/2,b=x-L/2;
+      return [mu0*N*I/(2*L)*(a/Math.hypot(R,a)-b/Math.hypot(R,b)),0];
+    }
+    // Découpage géométrique autour du point observé : la précision doit
+    // rester valable même pour L/R grand et près de la nappe (hors surface).
+    const cuts=[-L/2,L/2],delta=Math.max(Math.abs(Math.abs(y)-R),R*.025);
+    for(let width=delta;width<L*4+Math.abs(x)*2;width*=3){
+      for(const z of [x-width,x+width])if(z>-L/2&&z<L/2)cuts.push(z);
+    }
+    if(x>-L/2&&x<L/2)cuts.push(x);
+    cuts.sort((a,b)=>a-b);
+    let bx=0,by=0;
+    for(let i=1;i<cuts.length;i++){
+      const half=(cuts[i]-cuts[i-1])/2,center=(cuts[i]+cuts[i-1])/2;
+      for(const [u,w] of quadrature){
+        const v=loop(x,y,R,N*I*w*half/L,center+half*u);bx+=v[0];by+=v[1];
+      }
+    }
+    return [bx,by];
+  }
+  function magnet(x,y,R,L,moment) {
+    // Cylindre à aimantation uniforme : courants liés de surface équivalents.
+    return solenoid(x,y,R,L,1,moment/(Math.PI*R*R));
+  }
+  function dipole(x,y,moment) {
+    const r2=x*x+y*y,r=Math.sqrt(r2);
+    if(r<1e-15)return [NaN,NaN];
+    const k=mu0*moment/(4*Math.PI*r*r*r);
+    return [k*(3*x*x/r2-1),k*3*x*y/r2];
+  }
+  function idealSolenoid(x,y,R,n,I) {return Math.abs(y)<R?[mu0*n*I,0]:[0,0];}
+  function pair(x,y,R,d,N,I,ratio=1) {
+    return add(loop(x,y,R,N*I,-d/2),loop(x,y,R,N*I*ratio,d/2));
+  }
+  function rotateField(fn,angle) {
+    const c=Math.cos(angle),s=Math.sin(angle);
+    return (x,y)=>{const b=fn(c*x+s*y,-s*x+c*y);return [c*b[0]-s*b[1],s*b[0]+c*b[1]];};
+  }
+  function horseshoeMaterial(x,y,gap,width,thickness=.025) {
+    const a=gap/2,b=a+thickness;
+    if(x>=-width&&x<0&&Math.abs(y)>=a&&Math.abs(y)<=b)return [Math.sign(y),0];
+    const dx=x+width,r=Math.hypot(dx,y);
+    if(x<-width&&r>=a&&r<=b)return [y/r,-dx/r];
+    return [0,0];
+  }
+  function uRaw(x,y,gap,thickness) {
+    // H extérieur 2D : deux faces terminales verticales, à x = 0.
+    // Les branches aboutissent aux intervalles [a,b] et [-b,-a].
+    // La magnétisation tangentielle est ajoutée séparément pour obtenir B.
+    const a=gap/2,b=a+thickness;
+    let bx=0,by=0;
+    const dx=Math.abs(x)<1e-15?(x<0?-1e-15:1e-15):x;
+    for(const [lo,hi,sign] of [[a,b,1],[-b,-a,-1]]) {
+      bx+=sign*(Math.atan((hi-y)/dx)-Math.atan((lo-y)/dx));
+      by+=sign*.5*Math.log(Math.max(1e-30,x*x+(y-lo)*(y-lo))/Math.max(1e-30,x*x+(y-hi)*(y-hi)));
+    }
+    return [bx,by];
+  }
+  function horseshoe(x,y,gap,width,Bcenter,thickness=.025) {
+    // Aimantation imposée de norme constante, tangente au fer à cheval.
+    // B = mu0(H + M), y compris dans le matériau. Les faces terminales
+    // représentent les pôles liés ; elles ne sont pas des monopôles isolés.
+    const h=uRaw(x,y,gap,thickness),m=horseshoeMaterial(x,y,gap,width,thickness);
+    const ref=Math.abs(uRaw(0,0,gap,thickness)[1]);
+    return [(h[0]+2*Math.PI*m[0])*Bcenter/ref,(h[1]+2*Math.PI*m[1])*Bcenter/ref];
+  }
+  function circle(r,deform=0,offset=0,orientation=1,centerY=0) {
+    return t=>{
+      const a=orientation*2*Math.PI*t;
+      return [r*((1+.35*deform)*Math.cos(a)+.45*deform+offset),
+        centerY+r*(1-.35*deform)*Math.sin(a)];
+    };
+  }
+  function rectangle(L,y0,y1,orientation=1) {
+    const verts=[[-L/2,y0],[L/2,y0],[L/2,y1],[-L/2,y1]];
+    const lengths=[L,Math.abs(y1-y0),L,Math.abs(y1-y0)],P=lengths.reduce((a,b)=>a+b,0);
+    return t=>{
+      let u=((orientation*t)%1+1)%1,dist=u*P;
+      for(let i=0;i<4;i++){
+        if(dist<=lengths[i]+1e-14) {
+          const a=verts[i],b=verts[(i+1)%4],f=dist/lengths[i];
+          return [a[0]+f*(b[0]-a[0]),a[1]+f*(b[1]-a[1])];
+        }dist-=lengths[i];
+      }return verts[0].slice();
+    };
+  }
+  function winding(contour,p) {
+    let angle=0,prev=contour(0);
+    for(let i=1;i<=512;i++){
+      const q=contour(i/512),a=[prev[0]-p[0],prev[1]-p[1]],b=[q[0]-p[0],q[1]-p[1]];
+      angle+=Math.atan2(a[0]*b[1]-a[1]*b[0],a[0]*b[0]+a[1]*b[1]);prev=q;
+    }return Math.round(angle/(2*Math.PI));
+  }
+  function circulation(field,contour,segments=2048) {
+    let total=0,length=0,minNorm=Infinity;
+    const samples=[{t:0,s:0,c:0,b:0,p:contour(0)}];
+    let prev=contour(0);
+    for(let i=1;i<=segments;i++){
+      const p=contour(i/segments),dx=p[0]-prev[0],dy=p[1]-prev[1],dl=Math.hypot(dx,dy);
+      const mid=[(prev[0]+p[0])/2,(prev[1]+p[1])/2],v=field(...mid);
+      const dot=v[0]*dx+v[1]*dy;
+      total+=dot;length+=dl;minNorm=Math.min(minNorm,norm(v));
+      samples.push({t:i/segments,s:length,c:total,b:dl?dot/dl:0,p});prev=p;
+    }
+    if(samples.length>1)samples[0].b=samples[1].b;
+    return {total,length,samples,minNorm};
+  }
+  function axis3D(field,r,theta,z) {
+    const v=field(z,r),c=Math.cos(theta),s=Math.sin(theta);
+    return [v[1]*c,v[1]*s,v[0]];
+  }
+  function wire3D(r,theta,z,I) {
+    const b=mu0*I/(2*Math.PI*r);
+    return [-b*Math.sin(theta),b*Math.cos(theta),0];
+  }
+  return Object.freeze({mu0,norm,add,scale,elliptic,wire,loop,solenoid,magnet,dipole,
+    idealSolenoid,pair,rotateField,horseshoe,horseshoeMaterial,circle,rectangle,winding,circulation,axis3D,wire3D});
+})();
+
+/* Tracés indépendants de la grille d'affichage.
+ * Intégration directe du champ, à pas adaptatif ; la symétrie complète
+ * uniquement une trajectoire ayant effectivement recoupé son plan initial. */
+'use strict';
+globalThis.EMLines=(()=>{
+  const M=EM1,cache=new Map(),rotations=new Map(),cores=new Map();
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const spaced=(n,a,b)=>Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+  function half(field,seed,{axis,side,size,detail}) {
+    const unit=p=>{
+      const b=field(...p),n=Math.hypot(...b);
+      return Number.isFinite(n)&&n>1e-28?[b[0]/n,b[1]/n]:null;
+    };
+    const v=unit(seed);
+    if(!v||Math.abs(v[axis])<1e-10)return {points:[],reason:'champ tangent au plan de départ'};
+    const direction=Math.sign(v[axis])*side;
+    const velocity=p=>{const a=unit(p);return a?[direction*a[0],direction*a[1]]:null;};
+    const tolerance=detail*.00015,minStep=detail*1e-7,maxStep=size*.07;
+    let h=Math.min(detail*.04,maxStep),p=seed.slice(),distance=0;
+    const points=[p];
+    for(let i=0;i<16000;i++){
+      const k1=velocity(p);if(!k1)return {points,reason:'champ nul ou singulier'};
+      const euler=[p[0]+h*k1[0],p[1]+h*k1[1]],k2=velocity(euler);
+      if(!k2){h*=.3;if(h<minStep)return {points,reason:'singularité'};continue;}
+      const q=[p[0]+h*(k1[0]+k2[0])/2,p[1]+h*(k1[1]+k2[1])/2];
+      const error=Math.hypot(q[0]-euler[0],q[1]-euler[1]);
+      if(error>tolerance&&h>minStep*1.01){h=Math.max(minStep,h*clamp(.8*Math.sqrt(tolerance/error),.1,.7));continue;}
+      const length=Math.hypot(q[0]-p[0],q[1]-p[1]);
+      if(points.length>10&&distance>detail*.25&&side*p[axis]>0&&side*q[axis]<=0){
+        const t=p[axis]/(p[axis]-q[axis]),end=[p[0]+t*(q[0]-p[0]),p[1]+t*(q[1]-p[1])];
+        end[axis]=0;points.push(end);
+        return {points,closed:true,direction};
+      }
+      points.push(q);distance+=length;p=q;
+      if(distance>size*150||Math.hypot(...p)>size*60)return {points,reason:'hors domaine de calcul'};
+      h=clamp(h*(error>0?.9*Math.sqrt(tolerance/error):2),minStep,maxStep);
+    }
+    return {points,reason:'limite de pas'};
+  }
+  function remember(key,result){
+    result.key=key;cache.set(key,result);
+    if(cache.size>24)cache.delete(cache.keys().next().value);
+    return result;
+  }
+  function solenoid(R,L,density,bounds) {
+    const box=bounds||[-3*R,3*R,-2*R,2*R];
+    const ymax=Math.max(Math.abs(box[2]),Math.abs(box[3]));
+    const xmax=Math.max(R*1.5,Math.min(Math.abs(box[0]),Math.abs(box[1])));
+    const outerMax=Math.max(R*1.3,Math.min(ymax*.82,R+Math.max(0,xmax-L/2)*.72,Math.max(R,L)*2.5));
+    const d=clamp(Math.round(density),1,10),key=JSON.stringify(['solenoid',R,L,d,outerMax]);
+    if(cache.has(key))return cache.get(key);
+    const field=L>0?(x,y)=>M.solenoid(x,y,R,L,1,1):(x,y)=>M.loop(x,y,R,1);
+    const lines=[],failures=[];
+    function addTrace(radius,size,target,errors){
+      const trace=half(field,[0,radius],{axis:0,side:1,size,detail:R});
+      if(!trace.closed){errors.push({radius,reason:trace.reason});return;}
+      const right=trace.points.slice().reverse();
+      const curve=[...right,...trace.points.slice(1).map(([x,y])=>[-x,y])];
+      // Sens du courant positif : B est dirigé vers +z à l'intérieur.
+      const p=curve[Math.floor(curve.length/4)],q=curve[Math.floor(curve.length/4)+1],b=field((p[0]+q[0])/2,(p[1]+q[1])/2);
+      if((q[0]-p[0])*b[0]+(q[1]-p[1])*b[1]<0)curve.reverse();
+      target.push(curve,curve.map(([x,y])=>[x,-y]));
+    }
+    for(const radius of spaced(d+2,R*1.12,outerMax))addTrace(radius,Math.max(R,L,outerMax),lines,failures);
+    // Les lignes du cœur se referment souvent très loin de la bobine :
+    // elles sont aussi intégrées entièrement, et non arrêtées au cadre.
+    const coreKey=JSON.stringify([R,L,d]);
+    let core=cores.get(coreKey);
+    if(!core){
+      core={lines:[],failures:[]};
+      for(const radius of spaced(1+Math.ceil(d/3),R*.25,R*.75)){
+        const estimate=Math.hypot(R,L/2)*R*R/(radius*radius);
+        addTrace(radius,Math.max(R,L,estimate*1.5),core.lines,core.failures);
+      }
+      cores.set(coreKey,core);
+      if(cores.size>24)cores.delete(cores.keys().next().value);
+    }
+    return remember(key,{lines:[...lines,...core.lines],failures:[...failures,...core.failures],
+      requested:2*(d+2+1+Math.ceil(d/3)),outerMax});
+  }
+  function horseshoe(gap,width,thickness,density) {
+    const d=clamp(Math.round(density),1,10),key=JSON.stringify(['horseshoe',gap,width,thickness,d]);
+    if(cache.has(key))return cache.get(key);
+    const field=(x,y)=>M.horseshoe(x,y,gap,width,1,thickness);
+    const lines=[],failures=[];
+    const outerCount=Math.max(1,Math.round(d/3)),backRadius=gap/2+thickness;
+    const positions=[...spaced(4+2*d,-width*.62,Math.max(gap*.9,thickness*.7)),
+      ...Array.from({length:outerCount},(_,i)=>-width-backRadius*(1.18+.42*(i+1)/outerCount))];
+    for(const x of positions){
+      const trace=half(field,[x,0],{axis:1,side:-1,size:width+gap+thickness,detail:Math.min(gap,thickness)});
+      if(!trace.closed){failures.push({x,reason:trace.reason});continue;}
+      const curve=[...trace.points,...trace.points.slice(0,-1).reverse().map(([x,y])=>[x,-y])];
+      const p=curve[0],q=curve[1],b=field(...p);
+      if((q[0]-p[0])*b[0]+(q[1]-p[1])*b[1]<0)curve.reverse();
+      lines.push(curve);
+    }
+    return remember(key,{lines,failures,requested:4+2*d+outerCount});
+  }
+  function orient(result,angle=0,sign=1) {
+    const key=result.key+':'+angle+':'+sign;
+    if(rotations.has(key))return rotations.get(key);
+    const c=Math.cos(angle),s=Math.sin(angle);
+    const lines=result.lines.map(line=>{
+      const points=angle?line.map(([x,y])=>[c*x-s*y,s*x+c*y]):line;
+      return sign<0?points.slice().reverse():points;
+    });
+    rotations.set(key,lines);
+    if(rotations.size>36)rotations.delete(rotations.keys().next().value);
+    return lines;
+  }
+  return Object.freeze({solenoid,horseshoe,orient});
+})();
+</script>
+<script id="em1-common">'use strict';
+globalThis.EMUI=(()=>{
+  const $=id=>document.getElementById(id);
+  const fmt=(n,d=2)=>Number.isFinite(n)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(n)<1e-12?0:n):'—';
+  const signed=(n,d=2)=>(n>1e-12?'+':'')+fmt(n,d);
+  function fieldUnit(n,unit='T'){
+    if(!Number.isFinite(n))return '—';
+    const a=Math.abs(n);
+    if(a<1e-14)return '0 '+unit;
+    const scales=[[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n'],[1e-12,'p']];
+    const [s,p]=scales.find(([s])=>a>=s*.999)||scales.at(-1);
+    return fmt(n/s,a/s>=100?0:a/s>=10?1:2)+' '+p+unit;
+  }
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let app,queued=false,toastTimer;
+  function palette(){
+    const style=getComputedStyle(document.documentElement),p={};
+    for(const k of ['paper','surface','ink','secondary','line','accent','accent-ink','soft','red','blue','green','gold'])p[k]=style.getPropertyValue('--'+k).trim();
+    p.dark=document.documentElement.dataset.theme==='dark';return p;
+  }
+  function roundRect(c,x,y,w,h,r=5){c.beginPath();c.roundRect(x,y,w,h,r);}
+  class Stage {
+    constructor(canvas){this.canvas=canvas;this.c=canvas.getContext('2d');this.zoom=1;this.pan=[0,0];this.cache=new Map();this.w=1;this.h=1;this.resize();}
+    resize(){
+      const b=this.canvas.getBoundingClientRect();this.w=Math.max(100,b.width);this.h=Math.max(100,b.height);
+      const dpr=Math.min(2,window.devicePixelRatio||1);
+      this.canvas.width=Math.round(this.w*dpr);this.canvas.height=Math.round(this.h*dpr);this.c.setTransform(dpr,0,0,dpr,0,0);this.dpr=dpr;
+    }
+    begin(){this.colors=palette();this.projection=document.body.classList.contains('projection');this.c.clearRect(0,0,this.w,this.h);this.c.fillStyle=this.colors.surface;this.c.fillRect(0,0,this.w,this.h);}
+    view(span,center=[0,0],rect=null){return new View(this,span,center,rect||{x:0,y:0,w:this.w,h:this.h});}
+    reset(){this.zoom=1;this.pan=[0,0];}
+  }
+  class View {
+    constructor(stage,span,center,rect){
+      this.stage=stage;this.c=stage.c;this.colors=stage.colors;this.rect=rect;this.span=span;this.center=center;
+      const narrow=rect.w<440,top=stage.projection?38:31,bottom=52;
+      this.scale=Math.min((rect.w-36)/(2*span),(rect.h-top-bottom)/(1.3*span))*stage.zoom;
+      this.origin=[rect.x+rect.w/2,rect.y+top+(rect.h-top-bottom)/2];
+      this.bounds=[this.q([rect.x,rect.y])[0],this.q([rect.x+rect.w,rect.y+rect.h])[0],
+        this.q([rect.x,rect.y+rect.h])[1],this.q([rect.x,rect.y])[1]];
+      this.labelSize=(stage.projection?25:20)-(narrow?2:0);
+    }
+    p(x,y){return [this.origin[0]+(x-this.center[0]+this.stage.pan[0])*this.scale,this.origin[1]-(y-this.center[1]+this.stage.pan[1])*this.scale];}
+    q(p){return [(p[0]-this.origin[0])/this.scale+this.center[0]-this.stage.pan[0],-(p[1]-this.origin[1])/this.scale+this.center[1]-this.stage.pan[1]];}
+    clipped(fn){const c=this.c;c.save();c.beginPath();c.rect(this.rect.x,this.rect.y,this.rect.w,this.rect.h);c.clip();fn();c.restore();}
+    line(a,b,color,width=1,dash=[]){const c=this.c;c.beginPath();c.moveTo(...a);c.lineTo(...b);c.strokeStyle=color;c.lineWidth=width;c.setLineDash(dash);c.stroke();c.setLineDash([]);}
+    path(points,color,width=1.5,dash=[]){if(points.length<2)return;const c=this.c;c.beginPath();points.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.strokeStyle=color;c.lineWidth=width;c.setLineDash(dash);c.stroke();c.setLineDash([]);}
+    worldLine(a,b,color,width=1,dash=[]){this.line(this.p(...a),this.p(...b),color,width,dash);}
+    arrow(a,b,color,width=2.5,head=8){
+      if(Math.hypot(b[0]-a[0],b[1]-a[1])<1)return;
+      this.line(a,b,color,width);const c=this.c,t=Math.atan2(b[1]-a[1],b[0]-a[0]);
+      c.beginPath();c.moveTo(...b);c.lineTo(b[0]-head*Math.cos(t)+head*.45*Math.sin(t),b[1]-head*Math.sin(t)-head*.45*Math.cos(t));
+      c.lineTo(b[0]-head*Math.cos(t)-head*.45*Math.sin(t),b[1]-head*Math.sin(t)+head*.45*Math.cos(t));c.closePath();c.fillStyle=color;c.fill();
+    }
+    dot(p,r=4,color=this.colors.ink,fill=this.colors.surface){const c=this.c;c.beginPath();c.arc(p[0],p[1],r,0,2*Math.PI);c.fillStyle=fill;c.fill();c.strokeStyle=color;c.lineWidth=2;c.stroke();}
+    label(p,text,color=this.colors.ink,size=this.labelSize,align='left',box=true){
+      size=Math.max(this.stage.projection?22:16,size);
+      const c=this.c,rr=this.rect;c.font=size+'px Arial, Helvetica, sans-serif';c.textBaseline='middle';c.textAlign=align;
+      const w=c.measureText(text).width,left=align==='center'?w/2:align==='right'?w:0;
+      const x=clamp(p[0],rr.x+left+7,Math.max(rr.x+left+7,rr.x+rr.w-(w-left)-7));
+      const y=clamp(p[1],rr.y+size/2+5,rr.y+rr.h-size/2-5);
+      if(box){c.fillStyle=this.colors.surface;c.globalAlpha=.91;roundRect(c,x-left-4,y-size/2-3,w+8,size+6,4);c.fill();c.globalAlpha=1;}
+      c.fillStyle=color;c.fillText(text,x,y);
+    }
+    indexedLabel(p,base,index,color=this.colors.ink,size=this.labelSize,align='left'){
+      size=Math.max(this.stage.projection?22:16,size);
+      const c=this.c,rr=this.rect,indexSize=size*.68;
+      c.font=size+'px Arial';const baseWidth=c.measureText(base).width;
+      c.font=indexSize+'px Arial';const width=baseWidth+c.measureText(index).width;
+      const left=align==='center'?width/2:align==='right'?width:0;
+      const x=clamp(p[0],rr.x+left+7,Math.max(rr.x+left+7,rr.x+rr.w-(width-left)-7));
+      const y=clamp(p[1],rr.y+size*.55+6,rr.y+rr.h-size*.75-6);
+      c.fillStyle=this.colors.surface;c.globalAlpha=.91;
+      roundRect(c,x-left-4,y-size*.55-3,width+8,size*1.3+6,4);c.fill();c.globalAlpha=1;
+      c.fillStyle=color;c.textAlign='left';c.textBaseline='middle';
+      c.font=size+'px Arial';c.fillText(base,x-left,y);
+      c.font=indexSize+'px Arial';c.fillText(index,x-left+baseWidth,y+size*.32);
+    }
+    rectWorld(x0,y0,x1,y1,fill,stroke=null){const a=this.p(x0,y0),b=this.p(x1,y1),c=this.c;c.fillStyle=fill;c.fillRect(a[0],b[1],b[0]-a[0],a[1]-b[1]);if(stroke){c.strokeStyle=stroke;c.lineWidth=1.5;c.strokeRect(a[0],b[1],b[0]-a[0],a[1]-b[1]);}}
+    axis(label='z',radial='r'){
+      const [xmin,xmax,ymin,ymax]=this.bounds;
+      this.worldLine([xmin,0],[xmax,0],this.colors.line,1,[5,5]);
+      this.worldLine([0,ymin],[0,ymax],this.colors.line,1,[5,5]);
+      this.label(this.p(xmax,0).map((x,i)=>x+(i===0?-16:16)),label,this.colors.secondary,16,'right',false);
+      this.label(this.p(0,ymax).map((x,i)=>x+(i===0?12:18)),radial,this.colors.secondary,16,'left',false);
+    }
+    symbol(pos,current=1,r=8){
+      const p=this.p(...pos),c=this.c;this.dot(p,r,this.colors.ink,this.colors.surface);
+      if(Math.abs(current)<1e-15)return;
+      if(current>0){c.beginPath();c.arc(p[0],p[1],2.4,0,Math.PI*2);c.fillStyle=this.colors.ink;c.fill();}
+      else{this.line([p[0]-r*.45,p[1]-r*.45],[p[0]+r*.45,p[1]+r*.45],this.colors.ink,2);this.line([p[0]+r*.45,p[1]-r*.45],[p[0]-r*.45,p[1]+r*.45],this.colors.ink,2);}
+    }
+    field(fn,valid,seeds,options){
+      const key=options.key+':'+this.bounds.map(v=>v.toFixed(6)).join(',');
+      let g=this.stage.cache.get(key);
+      if(!g){
+        const nx=81,ny=55,[xmin,xmax,ymin,ymax]=this.bounds,values=[];
+        for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+          const x=xmin+(xmax-xmin)*i/(nx-1),y=ymax-(ymax-ymin)*j/(ny-1);
+          const v=valid(x,y)?fn(x,y):[NaN,NaN];values.push(v);
+        }
+        g={nx,ny,values,bounds:this.bounds.slice(),lines:null};this.stage.cache.set(key,g);
+        if(this.stage.cache.size>14)this.stage.cache.delete(this.stage.cache.keys().next().value);
+      }
+      const interp=(x,y)=>{
+        if(!valid(x,y))return null;
+        const [xmin,xmax,ymin,ymax]=g.bounds,u=(x-xmin)/(xmax-xmin)*(g.nx-1),v=(ymax-y)/(ymax-ymin)*(g.ny-1);
+        if(u<0||u>=g.nx-1||v<0||v>=g.ny-1)return null;
+        const i=Math.floor(u),j=Math.floor(v),a=u-i,b=v-j;
+        const ps=[g.values[j*g.nx+i],g.values[j*g.nx+i+1],g.values[(j+1)*g.nx+i],g.values[(j+1)*g.nx+i+1]];
+        if(ps.some(p=>!p.every(Number.isFinite)))return null;
+        return [0,1].map(k=>ps[0][k]*(1-a)*(1-b)+ps[1][k]*a*(1-b)+ps[2][k]*(1-a)*b+ps[3][k]*a*b);
+      };
+      this.clipped(()=>{
+        if(options.heat){
+          const off=document.createElement('canvas');off.width=g.nx;off.height=g.ny;
+          const oc=off.getContext('2d'),im=oc.createImageData(g.nx,g.ny);
+          const low=this.colors.dark?[22,34,49]:[255,255,255],high=this.colors.dark?[110,167,219]:[37,105,167];
+          g.values.forEach((v,i)=>{
+            const n=EM1.norm(v);if(!Number.isFinite(n))return;
+            const t=clamp((Math.log10(Math.max(n,options.ref*1e-5)/options.ref)+2)/2.4,0,1);
+            for(let k=0;k<3;k++)im.data[4*i+k]=low[k]+(high[k]-low[k])*t;im.data[4*i+3]=140;
+          });oc.putImageData(im,0,0);this.c.drawImage(off,this.rect.x,this.rect.y,this.rect.w,this.rect.h);
+        }
+        if(options.lines){
+          const seedKey=options.pathKey||JSON.stringify(seeds);
+          if(!g.lines||g.seedKey!==seedKey){
+            if(options.paths){
+              g.lines=options.paths;
+            }else if(options.circular){
+              // Pour un fil infini, les cercles sont connus exactement.
+              // Le cercle entier est construit avant découpe au cadre afin
+              // de conserver ses deux arcs visibles sur une fenêtre large.
+              const direction=Math.sign(fn(Math.max(this.span*.1,1e-9),0)[1]);
+              g.lines=direction?seeds.map(seed=>{
+                const r=Math.hypot(...seed);
+                return Array.from({length:193},(_,i)=>{
+                  const a=direction*2*Math.PI*i/192;return [r*Math.cos(a),r*Math.sin(a)];
+                });
+              }):[];
+            }else{
+            const step=this.span*.015,lines=[];
+            for(const seed of seeds){
+              const halves=[];
+              let closed=false,closedLine=null;
+              for(const direction of [-1,1]){
+                let p=seed.slice();const pts=[p];
+                for(let j=0;j<850;j++){
+                  const v=interp(...p),n=v?EM1.norm(v):0;if(n<options.ref*1e-7)break;
+                  const m=[p[0]+direction*step*v[0]/n/2,p[1]+direction*step*v[1]/n/2],v2=interp(...m),n2=v2?EM1.norm(v2):0;
+                  if(n2<options.ref*1e-7)break;
+                  p=[p[0]+direction*step*v2[0]/n2,p[1]+direction*step*v2[1]/n2];
+                  if(!valid(...p))break;pts.push(p);
+                  if(j>10&&Math.hypot(p[0]-seed[0],p[1]-seed[1])<step*.8){pts.push(seed);closed=true;break;}
+                }halves.push(pts);
+                if(closed){closedLine=direction<0?pts.reverse():pts;break;}
+              }
+              lines.push(closed?closedLine:[...halves[0].reverse(),...halves[1].slice(1)]);
+            }g.lines=lines;
+            }g.seedKey=seedKey;
+          }
+          // Taille en pixels d'affichage, indépendante du zoom géométrique.
+          const arrowLength=this.stage.projection?26:20;
+          const arrowHead=this.stage.projection?16:12;
+          const arrowWidth=this.stage.projection?3:2.2;
+          for(const pts of g.lines){
+            const pp=pts.map(p=>this.p(...p));this.path(pp,this.colors.blue,this.stage.projection?2:1.45);
+            let pixelLength=0;
+            for(let i=1;i<pp.length;i++)pixelLength+=Math.hypot(pp[i][0]-pp[i-1][0],pp[i][1]-pp[i-1][1]);
+            if(pp.length>10&&pixelLength>arrowLength*3){
+              const rr=this.rect,margin=arrowHead+4;
+              const visible=p=>p[0]>rr.x+margin&&p[0]<rr.x+rr.w-margin&&p[1]>rr.y+margin&&p[1]<rr.y+rr.h-margin;
+              const eligible=[];
+              for(let k=0;k<pp.length-1;k++)if(visible(pp[k])&&visible(pp[k+1])&&valid(...pts[k])&&valid(...pts[k+1]))eligible.push(k);
+              for(const f of options.circular?[.125,.625]:[.27,.65]){
+                if(!eligible.length)break;
+                const k=eligible[Math.floor((eligible.length-1)*f)],a=pp[k],b=pp[k+1];
+                const n=Math.hypot(b[0]-a[0],b[1]-a[1]);
+                if(n>0)this.arrow(a,[a[0]+(b[0]-a[0])*arrowLength/n,a[1]+(b[1]-a[1])*arrowLength/n],this.colors.blue,arrowWidth,arrowHead);
+              }
+            }
+          }
+        }
+        if(options.vectors){
+          for(let py=this.rect.y+45;py<this.rect.y+this.rect.h-40;py+=65)for(let px=this.rect.x+38;px<this.rect.x+this.rect.w-20;px+=65){
+            const p=this.q([px,py]),b=interp(...p);if(!b)continue;const n=EM1.norm(b);if(n<options.ref*1e-7)continue;
+            const len=clamp(n/options.ref*24,1,40),v=[b[0]/n*len,-b[1]/n*len];
+            this.arrow([px-v[0]/2,py-v[1]/2],[px+v[0]/2,py+v[1]/2],this.colors.secondary,1.25,5);
+          }
+        }
+      });
+      return g;
+    }
+    probe(pos,b,ref,label='M',compass=false){
+      const p=this.p(...pos),n=EM1.norm(b);this.dot(p,5,this.colors.red);
+      const dx=Number.isFinite(n)&&n>0?b[0]/n:1,dy=Number.isFinite(n)&&n>0?-b[1]/n:0;
+      this.label([p[0]-dx*20,p[1]-dy*20+12],label,this.colors.red,this.labelSize,dx>0?'right':'left');
+      if(!Number.isFinite(n)||n<ref*1e-8){this.label([p[0]+12,p[1]+38],n<ref*1e-8?'B = 0':'hors modèle',this.colors.red,18);return;}
+      if(compass){
+        const c=this.c,theta=Math.atan2(-b[1],b[0]),L=27;
+        c.save();c.translate(...p);c.rotate(theta);c.beginPath();c.moveTo(L,0);c.lineTo(0,-7);c.lineTo(0,7);c.closePath();c.fillStyle=this.colors.red;c.fill();
+        c.beginPath();c.moveTo(-L,0);c.lineTo(0,-7);c.lineTo(0,7);c.closePath();c.fillStyle=this.colors.ink;c.fill();c.restore();
+        this.label([p[0]+36*Math.cos(theta),p[1]+36*Math.sin(theta)],'N',this.colors.red,16,'center');
+      }else{
+        const len=clamp(n/ref*58,16,96),q=[p[0]+b[0]/n*len,p[1]-b[1]/n*len];
+        this.arrow(p,q,this.colors.red,3.3,11);
+        this.label([q[0]+10,q[1]-12],'B',this.colors.red,this.labelSize,'left');
+      }
+    }
+    scaleBar(){
+      const target=this.span*.45/this.stage.zoom,base=Math.pow(10,Math.floor(Math.log10(target))),n=target/base;
+      const len=(n>=5?5:n>=2?2:1)*base,x=this.rect.x+this.rect.w-21,y=this.rect.y+this.rect.h-52;
+      this.line([x-len*this.scale,y],[x,y],this.colors.secondary,2);
+      this.line([x,y-4],[x,y+4],this.colors.secondary,2);this.line([x-len*this.scale,y-4],[x-len*this.scale,y+4],this.colors.secondary,2);
+      this.label([x,y-15],len>=1?fmt(len,2)+' m':fmt(len*100,2)+' cm',this.colors.secondary,14,'right');
+    }
+  }
+  function plot(canvas,series,options={}){
+    const box=canvas.getBoundingClientRect(),w=box.width,h=box.height,dpr=Math.min(2,devicePixelRatio||1),colors=palette();
+    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle=colors.surface;c.fillRect(0,0,w,h);
+    const projection=document.body.classList.contains('projection'),font=projection?20:16,L=w<500?53:72,R=options.right?62:20,T=32,B=h-33;
+    let xmin=options.xmin??Math.min(...series.flatMap(s=>s.points.map(p=>p[0]))),xmax=options.xmax??Math.max(...series.flatMap(s=>s.points.map(p=>p[0])));
+    let ymin=options.ymin??Math.min(0,...series.filter(s=>!s.right).flatMap(s=>s.points.map(p=>p[1]))),ymax=options.ymax??Math.max(0,...series.filter(s=>!s.right).flatMap(s=>s.points.map(p=>p[1])));
+    if(Math.abs(ymax-ymin)<1e-20){ymax=1;ymin=-1;}else{const pad=(ymax-ymin)*.12;ymin-=pad;ymax+=pad;}
+    const yr=options.rightMax||1,X=x=>L+(x-xmin)/(xmax-xmin)*(w-L-R),Y=y=>B-(y-ymin)/(ymax-ymin)*(B-T);
+    c.font=font+'px Arial';c.textBaseline='middle';c.fillStyle=colors.secondary;
+    for(let i=0;i<5;i++){
+      const x=xmin+(xmax-xmin)*i/4,xx=X(x);c.strokeStyle=colors.line;c.lineWidth=.7;c.beginPath();c.moveTo(xx,T);c.lineTo(xx,B);c.stroke();c.textAlign='center';c.fillText(fmt(x,1),xx,B+14);
+    }
+    for(let i=0;i<3;i++){
+      const y=ymin+(ymax-ymin)*i/2,yy=Y(y);c.strokeStyle=colors.line;c.beginPath();c.moveTo(L,yy);c.lineTo(w-R,yy);c.stroke();c.textAlign='right';c.fillText(fmt(y,Math.abs(y)>10?0:2),L-8,yy);
+    }
+    if(options.band){c.fillStyle=colors.dark?'#7fdbb61a':'#16785c12';c.fillRect(X(options.band[0]),T,X(options.band[1])-X(options.band[0]),B-T);}
+    for(const s of series){
+      c.save();c.beginPath();c.rect(L,T,w-L-R,B-T);c.clip();c.beginPath();
+      s.points.forEach((p,i)=>{const x=X(p[0]),y=s.right?B-p[1]/yr*(B-T):Y(p[1]);if(i)c.lineTo(x,y);else c.moveTo(x,y);});
+      c.strokeStyle=colors[s.color]||s.color;c.lineWidth=s.width||2;c.setLineDash(s.dash||[]);c.stroke();c.restore();
+    }
+    if(options.marker!=null){const xx=X(options.marker);c.strokeStyle=colors.red;c.setLineDash([4,3]);c.beginPath();c.moveTo(xx,T);c.lineTo(xx,B);c.stroke();c.setLineDash([]);}
+    c.fillStyle=colors.ink;c.textAlign='left';c.font=font+'px Arial';c.fillText(w<600?(options.shortTitle||options.title||''):(options.title||''),L,14);
+    c.textAlign='right';c.fillStyle=colors.secondary;c.fillText(options.xlabel||'',w-R,13);
+    if(options.right){c.textAlign='right';c.fillStyle=colors.gold;c.fillText(options.right,w-8,h-13);}
+  }
+  const range=(id,label,min,max,step,value,unit='')=>'<div class="field-head"><label for="'+id+'">'+label+'</label><span><input id="'+id+'Number" type="number" aria-label="'+escape(label)+' — valeur" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'"><span class="unit">'+unit+'</span></span></div><input id="'+id+'" data-key="'+id+'" type="range" aria-label="'+escape(label)+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'">';
+  const select=(id,label,options,value)=>'<label class="control-label" for="'+id+'">'+label+'</label><select id="'+id+'">'+options.map(([v,t])=>'<option value="'+v+'"'+(v===value?' selected':'')+'>'+t+'</option>').join('')+'</select>';
+  const check=(id,label,value)=>'<label class="check"><input type="checkbox" id="'+id+'"'+(value?' checked':'')+'>'+label+'</label>';
+  const section=(title,body)=>'<section class="control-section"><h2 class="section-label">'+title+'</h2>'+body+'</section>';
+  function bindRanges(state,callback){
+    document.querySelectorAll('input[data-key]').forEach(el=>{
+      const number=$(el.id+'Number'),update=source=>{
+        const n=Number(source.value);if(source.value===''||!Number.isFinite(n))return;
+        const min=Number(el.min),max=Number(el.max),step=Number(el.step)||1;
+        const value=clamp(Number((min+Math.round((n-min)/step)*step).toFixed(9)),min,max);el.value=value;number.value=value;state[el.dataset.key]=value;callback(el.dataset.key);
+      };el.oninput=()=>update(el);number.oninput=()=>update(number);number.onchange=()=>{if(number.value===''||!Number.isFinite(Number(number.value)))number.value=state[el.dataset.key];else update(number);};
+    });
+  }
+  const measuring=document.createElement('canvas').getContext('2d');
+  function metrics(items){
+    items.forEach((item,i)=>{
+      $('label'+i).textContent=item[0];const el=$('value'+i);el.textContent=item[1];
+      if(item[3])$('sub'+i).innerHTML=item[3];else $('sub'+i).textContent=item[2]||'';
+      const base=parseFloat(getComputedStyle(el).getPropertyValue('--value-size'))||30;
+      measuring.font=base+'px Arial';const width=measuring.measureText(item[1]).width;
+      el.style.fontSize=Math.max(16,Math.min(base,base*(el.clientWidth-1)/Math.max(1,width)))+'px';
+    });
+  }
+  function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;toastTimer=setTimeout(()=>$('toast').textContent='',4000);}
+  function schedule(){if(!queued){queued=true;requestAnimationFrame(()=>{queued=false;render();});}}
+  function render(){if(!app)return;app.stage.begin();app.draw();}
+  function init(a){
+    app=a;
+    $('theme').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';schedule();};
+    $('help').onclick=()=>$('about').showModal();$('close-about').onclick=()=>$('about').close();
+    $('reset').onclick=()=>{app.reset();schedule();};
+    $('projection').onclick=()=>{document.body.classList.remove('panel-open');document.body.classList.toggle('projection');requestAnimationFrame(()=>{app.stage.resize();schedule();});};
+    const panel=()=>{document.body.classList.toggle('panel-open');$('panel').setAttribute('aria-expanded',document.body.classList.contains('panel-open'));};
+    $('panel').onclick=panel;$('drawer-close').onclick=panel;$('veil').onclick=panel;
+    $('zoom-in').onclick=()=>{app.stage.zoom=clamp(app.stage.zoom*1.25,app.minZoom??.4,5);schedule();};
+    $('zoom-out').onclick=()=>{app.stage.zoom=clamp(app.stage.zoom/1.25,app.minZoom??.4,5);schedule();};
+    $('fit').onclick=()=>{app.stage.reset();schedule();};
+    $('export').onclick=()=>{
+      render();const main=app.stage.canvas,extra=$('plot'),showExtra=!extra.hidden;
+      const out=document.createElement('canvas'),ratio=2,W=Math.max(900,app.stage.w),H=app.stage.h+(showExtra?extra.getBoundingClientRect().height:0)+150;
+      out.width=W*ratio;out.height=H*ratio;const c=out.getContext('2d'),p=palette();c.scale(ratio,ratio);c.fillStyle=p.surface;c.fillRect(0,0,W,H);
+      c.fillStyle=p.ink;c.font='25px Arial';c.fillText(document.title+' · '+$('scene-name').textContent,24,35,W-48);
+      c.drawImage(main,0,55,W,app.stage.h);let yy=55+app.stage.h;
+      if(showExtra){const hh=extra.getBoundingClientRect().height;c.drawImage(extra,0,yy,W,hh);yy+=hh;}
+      c.font='17px Arial';const info=[0,1,2].map(i=>$('label'+i).textContent+' : '+$('value'+i).textContent).join('   ·   ');
+      c.fillText(info,24,yy+30,W-48);c.fillStyle=p.secondary;c.font='14px Arial';c.fillText($('teaching').textContent,24,yy+59,W-48);
+      out.toBlob(blob=>{if(!blob)return;const link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=app.filename+'.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Image PNG enregistrée avec les valeurs affichées.');},'image/png');
+    };
+    let panDrag=null;
+    const pos=e=>{const b=app.stage.canvas.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top];};
+    app.stage.canvas.onpointerdown=e=>{
+      if(e.button!==0&&e.button!==1)return;
+      const p=pos(e);app.stage.canvas.setPointerCapture(e.pointerId);
+      if(e.shiftKey||e.button===1)panDrag={p,pan:app.stage.pan.slice()};else app.pointer?.(p,'down');schedule();
+    };
+    app.stage.canvas.onpointermove=e=>{
+      if(!app.stage.canvas.hasPointerCapture(e.pointerId))return;
+      const p=pos(e);if(panDrag){const scale=app.lastView?.scale||1000;app.stage.pan=[panDrag.pan[0]+(p[0]-panDrag.p[0])/scale,panDrag.pan[1]-(p[1]-panDrag.p[1])/scale];}
+      else app.pointer?.(p,'move');schedule();
+    };
+    app.stage.canvas.onpointerup=e=>{if(app.stage.canvas.hasPointerCapture(e.pointerId))app.stage.canvas.releasePointerCapture(e.pointerId);panDrag=null;app.pointer?.(pos(e),'up');};
+    app.stage.canvas.onpointercancel=()=>{panDrag=null;app.pointer?.(null,'up');};
+    app.stage.canvas.onwheel=e=>{e.preventDefault();app.stage.zoom=clamp(app.stage.zoom*Math.exp(-e.deltaY*.001),app.minZoom??.4,5);schedule();};
+    document.addEventListener('keydown',e=>{
+      if(e.target.closest('input,select,button,dialog'))return;
+      if(e.key==='r'||e.key==='R'){app.reset();schedule();}
+      if(e.key==='f'||e.key==='F')$('fullscreen').click();
+      if(e.key==='0')$('fit').click();
+      if(e.key==='+')$('zoom-in').click();if(e.key==='-')$('zoom-out').click();
+      if(e.code==='Space'&&app.play){e.preventDefault();app.play();schedule();}
+      if(e.key.startsWith('Arrow')&&app.arrowKey){e.preventDefault();app.arrowKey(e.key);schedule();}
+    });
+    new ResizeObserver(()=>{app.stage.resize();schedule();}).observe($('scene-area'));
+    a.controls();render();
+    window.EM1App=a;
+  }
+  return { $,fmt,signed,fieldUnit,clamp,escape,palette,Stage,View,plot,range,select,check,section,bindRanges,metrics,toast,schedule,render,init };
+})();
+
+'use strict';
+globalThis.EMDraw=(()=>{
+  function polygon(view,points,fill,stroke){
+    const c=view.c;c.beginPath();points.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=1.5;c.stroke();}
+  }
+  function uOutline(p){
+    const a=p.gap/2,b=a+p.thickness,w=p.width,points=[[0,b],[-w,b]];
+    for(let i=1;i<=64;i++){const t=Math.PI/2+Math.PI*i/64;points.push([-w+b*Math.cos(t),b*Math.sin(t)]);}
+    points.push([0,-b],[0,-a],[-w,-a]);
+    for(let i=1;i<=64;i++){const t=3*Math.PI/2-Math.PI*i/64;points.push([-w+a*Math.cos(t),a*Math.sin(t)]);}
+    points.push([0,a]);return points;
+  }
+  function poles(v,kind,p,angle=0){
+    const c=Math.cos(angle),s=Math.sin(angle),P=(x,y)=>v.p(c*x-s*y,s*x+c*y),col=v.colors;
+    const badge=(q,label,fill)=>{
+      const c=v.c;c.fillStyle=fill;c.beginPath();c.roundRect(q[0]-14,q[1]-14,28,28,4);c.fill();
+      v.label(q,label,col.surface,20,'center',false);
+    };
+    if(kind==='magnet'){
+      const positive=p.moment>=0,a=P(-p.L/2,0),b=P(p.L/2,0),length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      if(length>=65&&2*p.R*v.scale>=28){
+        badge(P(-p.L*.28,0),positive?'S':'N',positive?col.blue:col.red);
+        badge(P(p.L*.28,0),positive?'N':'S',positive?col.red:col.blue);
+      }else{
+        const center=P(0,0),u=[(b[0]-a[0])/length,(b[1]-a[1])/length],dist=Math.max(24,length/2+12);
+        for(const sign of [-1,1]){
+          const north=sign>0?positive:!positive;
+          v.label([center[0]+sign*u[0]*dist-u[1]*28,center[1]+sign*u[1]*dist+u[0]*28],north?'N':'S',north?col.red:col.blue,18,'center');
+        }
+      }
+    }
+    if(kind==='u'){
+      const y=p.gap/2+p.thickness/2,inside=p.width*v.scale>=45&&p.thickness*v.scale>=26;
+      const x=inside?-Math.min(p.width*.3,p.thickness*.8):0;
+      for(const sign of [-1,1]){
+        const q=P(x,sign*y);
+        if(!inside)q[0]+=18;
+        if(inside)badge(q,sign>0?'N':'S',sign>0?col.red:col.blue);
+        else v.label(q,sign>0?'N':'S',sign>0?col.red:col.blue,20,'left');
+      }
+    }
+  }
+  function continuation(v,kind,p,lines,angle=0){
+    if(!lines?.length||!['u','magnet'].includes(kind))return;
+    const co=Math.cos(angle),si=Math.sin(angle),P=([x,y])=>v.p(co*x-si*y,si*x+co*y);
+    const outline=(kind==='u'?uOutline(p):[[-p.L/2,-p.R],[p.L/2,-p.R],[p.L/2,p.R],[-p.L/2,p.R]]).map(P),c=v.c;
+    v.clipped(()=>{
+      c.save();c.beginPath();outline.forEach((q,i)=>i?c.lineTo(...q):c.moveTo(...q));c.closePath();c.clip();
+      c.globalAlpha=.55;
+      for(const line of lines)v.path(line.map(q=>v.p(...q)),v.colors.surface,v.stage.projection?1.45:.85,[6,6]);
+      c.restore();
+    });
+  }
+  function source(v,kind,p,angle=0,showPoles=true){
+    const c=Math.cos(angle),s=Math.sin(angle),world=(x,y)=>[c*x-s*y,s*x+c*y],P=(x,y)=>v.p(...world(x,y)),col=v.colors,R=p.R,L=p.L;
+    const line=(a,b,color,width=2,dash=[])=>v.line(P(...a),P(...b),color,width,dash);
+    const rect=(x0,y0,x1,y1,fill)=>polygon(v,[P(x0,y0),P(x1,y0),P(x1,y1),P(x0,y1)],fill,col.ink);
+    if(kind==='wire'){
+      v.symbol([0,0],p.I,10);v.label([P(0,0)[0]+19,P(0,0)[1]-12],'I',col.ink,19);return;
+    }
+    if(kind==='loop'||kind==='pair'){
+      const centers=kind==='pair'?[-p.d/2,p.d/2]:[0];
+      centers.forEach((z,index)=>{
+        line([z,-R],[z,R],col.secondary,1,[3,4]);
+        const current=p.I*(index===1?p.ratio:1);
+        v.symbol(world(z,R),current,8);v.symbol(world(z,-R),-current,8);
+        v.label([P(z,R)[0]+13,P(z,R)[1]-18],centers.length===1?'I':'I'+(index===0?'₁':'₂'),col.ink,18);
+      });return;
+    }
+    if(kind==='coil'||kind==='ideal'){
+      const length=kind==='ideal'?v.span*2.6:L;
+      line([-length/2,R],[length/2,R],col.accent,3);line([-length/2,-R],[length/2,-R],col.accent,3);
+      const n=kind==='ideal'?15:Math.min(13,Math.max(5,Math.round(p.N/10)));
+      for(let i=0;i<n;i++){
+        const x=-length/2+length*(i+.5)/n;
+        v.symbol(world(x,R),p.I,5);v.symbol(world(x,-R),-p.I,5);
+      }
+      if(kind!=='ideal'){line([-L/2,-R],[-L/2,R],col.line,1,[4,4]);line([L/2,-R],[L/2,R],col.line,1,[4,4]);}
+      else{v.label(P(-v.span*1.04,R*1.25),'…',col.secondary,22);v.label(P(v.span*1.04,R*1.25),'…',col.secondary,22);}
+      return;
+    }
+    if(kind==='magnet'){
+      const positive=p.moment>=0;
+      rect(-L/2,-R,0,R,positive?col.blue:col.red);rect(0,-R,L/2,R,positive?col.red:col.blue);
+      if(showPoles)poles(v,kind,p,angle);
+      return;
+    }
+    if(kind==='u'){
+      const outline=uOutline(p).map(q=>P(...q)),c=v.c,b=p.gap/2+p.thickness,w=p.width;
+      c.save();c.beginPath();outline.forEach((q,i)=>i?c.lineTo(...q):c.moveTo(...q));c.closePath();c.clip();
+      polygon(v,[P(-w-b,0),P(.01,0),P(.01,b+.01),P(-w-b,b+.01)],col.red);
+      polygon(v,[P(-w-b,-b-.01),P(.01,-b-.01),P(.01,0),P(-w-b,0)],col.blue);c.restore();
+      v.path([...outline,outline[0]],col.ink,2);
+      line([0,p.gap/2],[0,b],col.red,4);line([0,-b],[0,-p.gap/2],col.blue,4);
+      if(showPoles)poles(v,kind,p,angle);
+    }
+  }
+  function valid(kind,p){
+    const {R,L}=p,eps=R*.075;
+    if(kind==='wire')return (x,y)=>Math.hypot(x,y)>R*.07;
+    if(kind==='loop')return (x,y)=>Math.hypot(x,Math.abs(y)-R)>eps;
+    if(kind==='pair')return (x,y)=>[-p.d/2,p.d/2].every(z=>Math.hypot(x-z,Math.abs(y)-R)>eps);
+    if(kind==='coil')return (x,y)=>!(Math.abs(x)<L/2+eps&&Math.abs(Math.abs(y)-R)<eps*1.3);
+    if(kind==='magnet')return (x,y)=>!(Math.abs(x)<L/2+eps*.4&&Math.abs(y)<R+eps*.4);
+    if(kind==='u')return (x,y)=>{
+      const a=p.gap/2,b=a+p.thickness,e=Math.min(.001,p.thickness*.04),r=Math.hypot(x+p.width,y);
+      return !((x>=-p.width-e&&x<=e&&Math.abs(y)>=a-e&&Math.abs(y)<=b+e)||
+        (x<-p.width&&r>=a-e&&r<=b+e));
+    };
+    return ()=>true;
+  }
+  const spaced=(n,a,b)=>Array.from({length:n},(_,i)=>a+(b-a)*i/Math.max(1,n-1));
+  function seeds(kind,p,span,density=6,bounds=null){
+    const {R,L}=p,d=Math.max(1,Math.min(10,Math.round(density)));
+    const box=bounds||[-span,span,-span*.65,span*.65];
+    const ymax=Math.max(Math.abs(box[2]),Math.abs(box[3]));
+    if(kind==='wire'){
+      const corners=[[box[0],box[2]],[box[0],box[3]],[box[1],box[2]],[box[1],box[3]]];
+      const far=corners.reduce((a,b)=>Math.hypot(...a)>Math.hypot(...b)?a:b),radius=Math.hypot(...far)*.97;
+      const angle=Math.atan2(far[1],far[0]),count=4+3*d,start=Math.min(radius*.8,Math.max(R*.25,radius/(count*2)));
+      return spaced(count,start,radius).map(r=>[r*Math.cos(angle),r*Math.sin(angle)]);
+    }
+    if(kind==='wires'){
+      const top=Math.max(R*2,ymax*.88);
+      return [-1,1].flatMap(k=>spaced(3+2*d,R*.2,top).map(y=>[k*R,y]));
+    }
+    if(kind==='ideal')return spaced(3+Math.round(1.4*d),-R*.88,R*.88).map(y=>[0,y]);
+    if(kind==='earth'){
+      return [...spaced(4+2*d,-span*.95,span*.95).map(x=>[x,-span*.43]),[0,-R*.5],[0,0],[0,R*.5]];
+    }
+    if(kind==='u')return spaced(4+2*d,-p.width*.44,p.width*.44).map(x=>[x,0]);
+    const outer=spaced(Math.max(1,Math.floor(d/2)),R*1.25,Math.max(R*1.6,ymax*.85));
+    if(kind==='pair'){
+      // En anti-Helmholtz, le plan médian est lui-même une ligne de champ :
+      // des départs uniquement dans ce plan retraceraient la même ligne.
+      const centers=p.ratio<0?[-p.d/2,p.d/2]:[-p.d/2];
+      return [...centers.flatMap(x=>spaced(3+2*d,-R*.84,R*.84).map(y=>[x,y])),
+        ...(p.ratio<0?[]:outer.flatMap(y=>[[0,-y],[0,y]]))];
+    }
+    if(kind==='magnet'){
+      return [...spaced(3+2*d,-R*.92,R*.92).map(y=>[L/2+R*.35,y]),
+        ...outer.flatMap(y=>[[0,-y],[0,y]])];
+    }
+    return [...spaced(3+2*d,-R*.88,R*.88).map(y=>[0,y]),
+      ...outer.flatMap(y=>[[0,-y],[0,y]])];
+  }
+  function farSeeds(span,density=6){
+    const heights=spaced(3+Math.round(density),span*.12,span*.6);
+    return heights.flatMap(y=>[[0,-y],[0,y]]);
+  }
+  return {source,valid,seeds,farSeeds,polygon,poles,continuation};
+})();
+</script>
+<script id="em1-app">(()=>{
+'use strict';
+const U=EMUI,$=U.$,M=EM1,D=EMDraw,T=EMLines;
+const defaults={tab:'maps',source:'wire',pairMode:'helmholtz',I:2,Rcm:5,Lcm:20,N:100,
+  gapcm:4,thicknesscm:2.5,Bgap:30,ratio:1,dR:1,Bh:20,angle:0,far:false,
+  refMicro:10,lines:true,density:6,vectors:false,heat:false,compass:false,components:true,profile:false};
+let state={...defaults},probe=[.065,.05],dragAngle=false,views=[];
+const stage=new U.Stage($('scene'));
+const sourceNames={wire:'Fil rectiligne infini',loop:'Spire circulaire',coil:'Bobine finie',magnet:'Aimant droit',u:'Aimant en U'};
+const app={stage,minZoom:.04,filename:'EM1_Cartes_Champs',get state(){return {...state,probe:probe.slice()};},
+  reset(){state={...defaults};probe=[.065,.05];stage.reset();this.controls();},
+  chooseSource(name){
+    state.source=name;Object.assign(state,{I:1,Rcm:5,Lcm:20,N:100,profile:false,angle:0});
+    const params={wire:[10,[.065,.05]],loop:[20,[.06,.025]],coil:[600,[0,.015]],magnet:[10000,[.13,.03]],u:[30000,[0,0]]};
+    [state.refMicro,probe]=params[name];stage.reset();this.controls();
+  },
+  chooseTab(tab){
+    state.tab=tab;stage.reset();
+    if(tab==='maps'){this.chooseSource(state.source);return;}
+    if(tab==='sum'){this.setPair('helmholtz');return;}
+    Object.assign(state,{I:1,Rcm:5,N:20,angle:0,refMicro:80,far:false,profile:false});
+    probe=[.12,.055];this.controls();
+  },
+  setPair(type){
+    state.pairMode=type;
+    if(type==='earth'){
+      Object.assign(state,{I:.096,N:130,Lcm:60,Rcm:4,Bh:20,refMicro:40,profile:false,compass:true});probe=[0,0];
+    }else{
+      Object.assign(state,{I:1,N:20,Rcm:5,dR:1,ratio:1,refMicro:400,profile:true,compass:false});probe=[0,.018];
+    }stage.reset();this.controls();
+  },
+  controls(){
+    document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===state.tab);b.setAttribute('aria-pressed',b.dataset.tab===state.tab);b.onclick=()=>{this.chooseTab(b.dataset.tab);U.schedule();};});
+    let html='',modelControls='',physical='';
+    if(state.tab==='maps')modelControls=U.select('source','Source',Object.entries(sourceNames),state.source);
+    if(state.tab==='sum'){
+      modelControls=U.select('pairMode','Situation',[['helmholtz','Deux bobines coaxiales'],['earth','Boussole et champ terrestre']],state.pairMode);
+      if(state.pairMode==='helmholtz'){
+        modelControls+='<div class="button-row fill"><button id="preset-helm">Helmholtz</button><button id="preset-anti">Anti-Helmholtz</button></div>';
+      }else modelControls+='<p class="hint">L’axe de la bobine est est–ouest. Le champ terrestre représenté est sa composante horizontale Bₕ, dirigée vers le nord.</p>';
+    }
+    if(state.tab==='moment')modelControls='<p class="hint">Une boucle et un aimant cylindrique à même moment magnétique, orientés ensemble.</p>'+U.range('angle','Orientation de S',-75,75,1,state.angle,'°')+
+      '<div class="button-row fill"><button id="near">Vue proche</button><button id="far">Vue lointaine</button></div>';
+    html+=U.section('Situation',modelControls);
+    const kind=state.tab==='maps'?state.source:state.tab==='sum'?(state.pairMode==='earth'?'coil':'pair'):'loop';
+    if(!['magnet','u'].includes(kind)){
+      physical+=U.range('I','Courant I',-5,5,state.tab==='sum'&&state.pairMode==='earth'?.001:.01,state.I,'A');
+      physical+='<div class="button-row fill"><button id="reverse">Inverser I</button><button id="zero">I = 0</button></div>';
+    }
+    if(kind!=='wire')physical+=U.range('Rcm',kind==='u'?'Longueur des branches':'Rayon R',1,10,.1,state.Rcm,'cm');
+    if(['coil','magnet'].includes(kind))physical+=U.range('Lcm','Longueur L',3,80,1,state.Lcm,'cm');
+    if(kind==='coil'||kind==='pair'||state.tab==='moment')physical+=U.range('N','Nombre de spires N',1,300,1,state.N,'');
+    if(kind==='pair')physical+=U.range('dR','Écartement d / R',.35,3.5,.01,state.dR,'')+U.range('ratio','Rapport I₂ / I₁',-1,1,.01,state.ratio,'');
+    if(state.tab==='sum'&&state.pairMode==='earth')physical+=U.range('Bh','Champ terrestre Bₕ',5,50,.1,state.Bh,'µT');
+    if(kind==='magnet')physical+=U.range('Bgap','Moment de l’aimant',1,100,.1,state.Bgap,'× 0,01 A·m²');
+    if(kind==='u')physical+=U.range('gapcm','Entrefer',1,9,.1,state.gapcm,'cm')+
+      U.range('thicknesscm','Épaisseur de l’aimant',1,4,.1,state.thicknesscm,'cm')+U.range('Bgap','Champ au centre',5,100,1,state.Bgap,'mT');
+    html+=U.section('Paramètres physiques',physical);
+    let display=U.check('lines','Lignes de champ',state.lines)+
+      U.range('density','Densité des lignes',1,10,1,state.density,'/ 10')+
+      '<div class="range-ends"><span>Peu de lignes</span><span>Carte dense</span></div>'+
+      U.check('vectors','Vecteurs du champ',state.vectors)+U.check('heat','Carte d’intensité',state.heat);
+    if(state.tab!=='moment')display+=U.check('compass','Aiguille à la sonde',state.compass);
+    if(state.tab==='sum')display+=U.check('components','Contributions B₁ et B₂',state.components);
+    if(state.tab!=='moment'&&['coil','loop','pair'].includes(kind))display+=U.check('profile','Profil sur l’axe',state.profile);
+    display+=U.select('refMicro','Échelle des flèches',[[1,'1 µT'],[10,'10 µT'],[20,'20 µT'],[40,'40 µT'],[80,'80 µT'],[100,'100 µT'],[400,'400 µT'],[600,'600 µT'],[1000,'1 mT'],[10000,'10 mT'],[30000,'30 mT'],[100000,'100 mT']].map(([v,t])=>[String(v),t]),String(state.refMicro));
+    display+='<p class="hint">Lignes : direction et sens. Flèches et teinte : intensité, avec une échelle fixe lors du réglage du courant. Les flèches les plus longues sont plafonnées.</p>';
+    html+=U.section('Représentation',display);
+    html+=U.section('Repères du cours','<div class="formula" id="formula"></div><p class="hint">Déplacer M dans la scène. En vue « Moment », saisir le bout de la flèche μ pour orienter les deux sources.</p>');
+    $('control-content').innerHTML=html;
+    U.bindRanges(state,key=>{if(key==='angle')dragAngle=false;U.schedule();});
+    if($('source'))$('source').onchange=e=>{this.chooseSource(e.target.value);U.schedule();};
+    if($('pairMode'))$('pairMode').onchange=e=>{this.setPair(e.target.value);U.schedule();};
+    for(const id of ['lines','vectors','heat','compass','components','profile'])if($(id))$(id).onchange=e=>{state[id]=e.target.checked;U.schedule();};
+    $('refMicro').onchange=e=>{state.refMicro=Number(e.target.value);U.schedule();};
+    if($('reverse'))$('reverse').onclick=()=>{state.I=-state.I;this.controls();U.schedule();};
+    if($('zero'))$('zero').onclick=()=>{state.I=0;this.controls();U.schedule();};
+    if($('preset-helm'))$('preset-helm').onclick=()=>{state.dR=1;state.ratio=1;this.controls();U.schedule();};
+    if($('preset-anti'))$('preset-anti').onclick=()=>{state.dR=Math.sqrt(3);state.ratio=-1;this.controls();U.schedule();};
+    if($('near'))$('near').onclick=()=>{state.far=false;state.refMicro=80;probe=[.12,.055];stage.reset();this.controls();U.schedule();};
+    if($('far'))$('far').onclick=()=>{state.far=true;state.refMicro=1;probe=[.65,.25];stage.reset();this.controls();U.schedule();};
+  },
+  getModel(){
+    const R=state.Rcm/100,L=state.Lcm/100,I=state.I,N=state.N;
+    let p={R,L,I,N,d:state.dR*R,ratio:state.ratio,gap:state.gapcm/100,width:R,thickness:state.thicknesscm/100,moment:state.Bgap*.01};
+    let kind=state.source,field,span,parts=null;
+    if(state.tab==='sum'){
+      if(state.pairMode==='helmholtz'){
+        kind='pair';parts=[(x,y)=>M.loop(x,y,R,N*I,-p.d/2),(x,y)=>M.loop(x,y,R,N*I*state.ratio,p.d/2)];
+        field=(x,y)=>M.add(parts[0](x,y),parts[1](x,y));span=Math.max(1.85*R,p.d/2+R*1.05);
+      }else{
+        kind='coil';parts=[(x,y)=>M.solenoid(x,y,R,L,N,I),()=>[0,state.Bh*1e-6]];
+        field=(x,y)=>M.add(parts[0](x,y),parts[1](x,y));span=Math.max(L*.7,R*3);
+      }
+    }else{
+      if(kind==='wire'){field=(x,y)=>M.wire(x,y,I);span=.16;}
+      if(kind==='loop'){field=(x,y)=>M.loop(x,y,R,I);span=R*2.9;}
+      if(kind==='coil'){field=(x,y)=>M.solenoid(x,y,R,L,N,I);span=Math.max(L*.72,R*2.7);}
+      if(kind==='magnet'){field=(x,y)=>M.magnet(x,y,R,L,p.moment);span=Math.max(L*.82,R*3);}
+      if(kind==='u'){field=(x,y)=>M.horseshoe(x,y,p.gap,p.width,state.Bgap*.001,p.thickness);span=Math.max(p.width+p.thickness,p.gap*1.5,p.gap/2+p.thickness);}
+    }
+    return {kind,p,field,parts,span,valid:D.valid(kind,p)};
+  },
+  draw(){
+    $('plot').hidden=state.tab==='moment'||!state.profile;
+    if(state.tab==='moment'){this.drawMoment();return;}
+    const model=this.getModel(),{kind,p,field,parts,span,valid}=model;
+    const v=stage.view(span,kind==='u'?[-p.width*.35,0]:[0,0]),ref=state.refMicro*1e-6;this.lastView=v;views=[v];
+    const seeds=D.seeds(state.tab==='sum'&&state.pairMode==='earth'?'earth':kind,p,span,state.density,v.bounds);
+    const key=JSON.stringify([kind,p,state.tab,state.pairMode,state.Bh,state.Bgap]);
+    const pathOptions={};
+    if(!parts&&state.lines&&['loop','coil','magnet','u'].includes(kind)){
+      const active=kind==='magnet'?p.moment!==0:kind==='u'||p.I!==0;
+      const trace=kind==='u'?T.horseshoe(p.gap,p.width,p.thickness,state.density):
+        T.solenoid(p.R,kind==='loop'?0:p.L,state.density,v.bounds);
+      const sign=kind==='magnet'?Math.sign(p.moment):kind==='u'?1:Math.sign(p.I);
+      pathOptions.paths=active?T.orient(trace,0,sign):[];
+      pathOptions.pathKey=trace.key+':'+sign;
+    }
+    const grid=v.field(field,valid,seeds,{key,ref,circular:kind==='wire',...pathOptions,lines:state.lines,vectors:state.vectors,heat:state.heat});
+    v.axis(['wire','u'].includes(kind)?'x':'z','y');
+    v.clipped(()=>D.source(v,kind,p,0,false));
+    if(['magnet','u'].includes(kind)){D.continuation(v,kind,p,state.lines?grid.lines:[]);D.poles(v,kind,p);}
+    const b=valid(...probe)?field(...probe):[NaN,NaN],bn=M.norm(b);
+    if(parts&&state.components&&Number.isFinite(bn))this.drawSum(v,probe,parts[0](...probe),parts[1](...probe),state.compass);
+    else v.probe(probe,b,ref,'M',state.compass);
+    v.scaleBar();
+    $('scene-name').textContent=state.tab==='maps'?sourceNames[kind]:state.pairMode==='earth'?'Boussole : bobine et champ terrestre':'Superposition de deux bobines';
+    $('scene-hint').textContent=kind==='wire'?'Vue perpendiculaire au fil':kind==='u'?'Coupe plane · pôles aux extrémités des branches':'Coupe méridienne · z : axe de la source';
+    $('scene-key').textContent=['magnet','u'].includes(kind)?'Pointillés : prolongement dans l’aimant':state.heat?'Teinte plus marquée : |B| plus grand':'Déplacer la sonde M';
+    let text,formula,third=['Position de M',(['wire','u'].includes(kind)?'x':'z')+' = '+U.fmt(probe[0]*100,1)+' cm','y = '+U.fmt(probe[1]*100,1)+' cm'];
+    if(kind==='wire'){
+      text='Les lignes sont circulaires. La norme décroît en 1/r ; inverser I inverse le sens du champ.';
+      formula='B = μ₀ |I| / (2πr)<br><small>Fil infini, hors du conducteur.</small>';
+    }
+    if(kind==='loop'){
+      text='La spire crée un champ axial sur son axe. Le sens du courant et celui du champ sont reliés par la main droite.';
+      formula='B(z) = μ₀ I R² / [2(R² + z²)³ᐟ²]<br><small>Composante algébrique sur l’axe.</small>';
+    }
+    if(kind==='coil'){
+      text='Au centre d’une bobine longue, le champ est presque uniforme. Près des extrémités, il se courbe et varie.';
+      formula='B intérieur ≈ μ₀ (N/L) I<br><small>Bobine longue, loin des extrémités. La carte utilise ici une bobine finie.</small>';
+    }
+    if(kind==='magnet'){
+      text='À l’extérieur, les lignes vont de N vers S. Le champ proche dépend de la forme et de l’aimantation de la source.';
+      formula='μ = M V<br><small>Cylindre à aimantation uniforme imposée ; prolongement intérieur en pointillés.</small>';
+    }
+    if(kind==='u'){
+      text='Dans la partie centrale de l’entrefer, le champ est presque uniforme. Les effets de bord deviennent visibles près des faces.';
+      formula='B au centre = '+U.fieldUnit(state.Bgap*.001)+'<br><small>Fer à cheval 2D, aimantation imposée. Les lignes se prolongent dans le matériau.</small>';
+    }
+    if(state.tab==='sum'&&state.pairMode==='helmholtz'){
+      text=state.ratio===1?'À d = R, le profil est particulièrement plat près du centre : configuration de Helmholtz.':'Des courants opposés peuvent annuler le champ au centre tout en laissant un gradient non nul.';
+      if(state.ratio!==1&&state.ratio!==-1)text='Le champ résultant est la somme vectorielle des deux contributions, avec leurs intensités et leurs signes.';
+      formula='B = B₁ + B₂<br><small>Deux bobines minces de N spires chacune. Helmholtz : I₁ = I₂ et d = R.</small>';
+      const bc=field(0,0)[0],delta=bc?Math.abs((field(probe[0],0)[0]-bc)/bc)*100:NaN;
+      third=['Écartement d / R',U.fmt(state.dR,3),'Écart axial à B(0) : '+(Number.isFinite(delta)?U.fmt(delta,1)+' %':'B(0) = 0')];
+    }
+    if(state.tab==='sum'&&state.pairMode==='earth'){
+      const bc=parts[0](...probe),theta=Math.atan2(state.Bh*1e-6,bc[0])*180/Math.PI;
+      text='L’aiguille suit la composante horizontale du champ résultant. L’angle θ est mesuré depuis l’axe est–ouest de la bobine.';
+      formula='B = Bbobine + Bₕ<br>tan θ = Bₕ / Bbobine<br><small>Lecture au centre, avec Bbobine > 0 ; θ depuis l’axe de la bobine.</small>';
+      third=['Angle θ',U.fmt(theta,1)+'°','Bₕ = '+U.fieldUnit(state.Bh*1e-6)];
+      v.label([v.rect.w-15,29],'Nord ↑ · Est →',v.colors.secondary,16,'right');
+    }
+    if(!valid(...probe))text='La sonde est sur le conducteur ou dans le matériau : déplacer M dans la région où le modèle est affiché.';
+    U.metrics([['Norme |B(M)|',U.fieldUnit(bn),state.heat?'Teinte : intensité relative à l’échelle choisie':'Valeur calculée au point M'],
+      ['Composantes',U.fieldUnit(b[0]),(['wire','u'].includes(kind)?'Bₓ':'Bz')+' ci-dessus · Bᵧ = '+U.fieldUnit(b[1])],third]);
+    $('teaching').textContent=text;$('formula').innerHTML=formula;
+    if(state.profile)this.drawProfile(model);
+    $('scene').setAttribute('aria-label',$('scene-name').textContent+'. '+text+' Norme en M : '+U.fieldUnit(bn));
+  },
+  drawSum(v,pos,b1,b2,compass){
+    const total=M.add(b1,b2),max=Math.max(M.norm(b1),M.norm(b2),M.norm(total),1e-12),k=85/max,p=v.p(...pos);
+    const q1=[p[0]+b1[0]*k,p[1]-b1[1]*k],q2=[p[0]+b2[0]*k,p[1]-b2[1]*k],q=[p[0]+total[0]*k,p[1]-total[1]*k];
+    v.line(q1,q,v.colors.gold,1,[4,4]);v.line(q2,q,v.colors.green,1,[4,4]);
+    v.arrow(p,q1,v.colors.green,2.5);v.arrow(p,q2,v.colors.gold,2.5);v.arrow(p,q,v.colors.red,3.2,10);
+    if(M.norm(b1)>max*1e-7)v.label([q1[0]+6,q1[1]-14],'B₁',v.colors.green,18);
+    if(M.norm(b2)>max*1e-7)v.label([q2[0]+7,q2[1]+18],'B₂',v.colors.gold,18);
+    v.label([q[0]+12,q[1]-12],'B',v.colors.red,20);v.label([p[0]-12,p[1]+22],'M',v.colors.red,20,'right');v.dot(p,4,v.colors.red);
+    if(compass)v.probe(pos,total,max,'M',true);
+  },
+  drawProfile(model){
+    const pts=[],p1=[],p2=[],R=model.p.R,span=model.span,extent=Math.min(span,model.kind==='pair'?R*2.2:Math.max(R*2,model.p.L*.8));
+    for(let i=0;i<=180;i++){
+      const x=-extent+2*extent*i/180,b=model.field(x,0);pts.push([x/R,b[0]*1e6]);
+      if(model.parts){p1.push([x/R,model.parts[0](x,0)[0]*1e6]);p2.push([x/R,model.parts[1](x,0)[0]*1e6]);}
+    }
+    const series=[];if(model.parts){series.push({points:p1,color:'green',dash:[4,4]},{points:p2,color:'gold',dash:[7,3]});}
+    series.push({points:pts,color:'red',width:2.6});
+    let band=null;
+    if(model.kind==='pair'&&state.ratio===1){
+      const b0=model.field(0,0)[0];if(Math.abs(b0)>1e-14){let a=0;for(let i=0;i<100;i++){const x=extent*i/100;if(Math.abs(model.field(x,0)[0]/b0-1)>.02)break;a=x;}band=[-a/R,a/R];}
+    }
+    U.plot($('plot'),series,{title:model.parts?'Bz (µT) · somme rouge, B₁ vert, B₂ ocre':'Bz sur l’axe (µT)',shortTitle:'Bz (µT)',xlabel:'z / R',marker:probe[0]/R,band});
+  },
+  drawMoment(){
+    const R=state.Rcm/100,I=state.I,N=state.N,mu=N*I*Math.PI*R*R,angle=state.angle*Math.PI/180,span=state.far?R*18:R*3.3;
+    const half=stage.w/2,rects=stage.w<610?[{x:0,y:0,w:stage.w,h:stage.h/2},{x:0,y:stage.h/2,w:stage.w,h:stage.h/2}]:
+      [{x:0,y:0,w:half,h:stage.h},{x:half,y:0,w:half,h:stage.h}];
+    const loopP={R,L:R*2,I,N,moment:mu},magP={R:R*.45,L:R*2,I,N:1,moment:mu};
+    const local=[(x,y)=>M.loop(x,y,R,N*I),(x,y)=>M.magnet(x,y,magP.R,magP.L,mu)],params=[loopP,magP],names=['Boucle de courant','Aimant cylindrique'],kinds=['loop','magnet'];
+    const fields=local.map(f=>M.rotateField(f,angle)),ref=state.refMicro*1e-6;
+    const validFns=params.map((pp,i)=>{const base=D.valid(kinds[i],pp),c=Math.cos(angle),s=Math.sin(angle);return (x,y)=>base(c*x+s*y,-s*x+c*y);});
+    const bs=fields.map((f,i)=>validFns[i](...probe)?f(...probe):[NaN,NaN]);
+    views=[];
+    rects.forEach((rect,i)=>{
+      const v=stage.view(span,[0,0],rect),pp=params[i],c=Math.cos(angle),s=Math.sin(angle);
+      const valid=validFns[i];
+      const baseSeeds=state.far?D.farSeeds(span,state.density):D.seeds(kinds[i],pp,span,state.density,v.bounds);
+      const seeds=baseSeeds.map(([x,y])=>[c*x-s*y,s*x+c*y]);
+      const extent=Math.min(...v.bounds.map(Math.abs))*.9,localBox=[-extent,extent,-extent,extent];
+      const trace=T.solenoid(pp.R,kinds[i]==='loop'?0:pp.L,state.density,localBox);
+      const paths=mu!==0?T.orient(trace,angle,Math.sign(mu)):[];
+      views.push(v);const grid=v.field(fields[i],valid,seeds,{key:'moment'+i+JSON.stringify([pp,angle]),ref,paths,pathKey:trace.key+':'+angle+':'+Math.sign(mu),lines:state.lines,vectors:state.vectors,heat:state.heat});
+      v.clipped(()=>D.source(v,kinds[i],pp,angle,false));
+      if(kinds[i]==='magnet'){D.continuation(v,'magnet',pp,state.lines?grid.lines:[],angle);D.poles(v,'magnet',pp,angle);}
+      const origin=v.p(0,0),sign=I<0?-1:1,tip=[origin[0]+sign*Math.cos(angle)*68,origin[1]-sign*Math.sin(angle)*68];
+      if(Math.abs(mu)>1e-16){v.arrow(origin,tip,v.colors.green,3,10);v.dot(tip,5,v.colors.green);v.label([tip[0]+8,tip[1]-18],'μ',v.colors.green,23);}
+      else v.label([origin[0]+12,origin[1]-25],'μ = 0',v.colors.green,22);
+      if(i===0){
+        const st=[origin[0]+Math.cos(angle)*42,origin[1]-Math.sin(angle)*42];
+        const so=[origin[0]-Math.sin(angle)*25,origin[1]-Math.cos(angle)*25],sq=[st[0]-Math.sin(angle)*25,st[1]-Math.cos(angle)*25];
+        v.arrow(so,sq,v.colors.secondary,1.8,7);v.label([sq[0]+4,sq[1]-13],'S',v.colors.secondary,18);
+      }
+      v.probe(probe,valid(...probe)?bs[i]:[NaN,NaN],ref);
+      v.label([rect.x+rect.w/2,rect.y+21],names[i],v.colors.accent,stage.projection?24:20,'center');
+      v.scaleBar();
+      v.label([rect.x+rect.w/2,rect.y+49],'|B| = '+U.fieldUnit(M.norm(bs[i])),v.colors.red,18,'center');
+    });
+    if(stage.w>=610)views[0].line([half,0],[half,stage.h],stage.colors.line,1);
+    else views[0].line([0,stage.h/2],[stage.w,stage.h/2],stage.colors.line,1);
+    this.lastView=views[0];
+    const n0=M.norm(bs[0]),delta=n0>1e-20?M.norm([bs[1][0]-bs[0][0],bs[1][1]-bs[0][1]])/n0*100:NaN;
+    const ratio=Math.hypot(...probe)/(2*R);
+    $('scene-name').textContent='Deux sources de même moment magnétique';
+    $('scene-hint').textContent='Même échelle spatiale · même point M relatif à la source';
+    $('scene-key').textContent=stage.w<610?'Cartes superposées verticalement':'Cartes côte à côte';
+    U.metrics([['Moment commun μ',U.fmt(Math.abs(mu),3)+' A·m²','μ = N I S · S = πR²'],
+      ['Écart des champs',Number.isFinite(delta)?U.fmt(delta,2)+' %':'—','|Baimant − Bboucle| / |Bboucle|'],
+      ['Distance / taille',U.fmt(ratio,1),'r / (2R) · taille maximale des sources']]);
+    $('teaching').textContent='À grande distance, ces deux sources localisées de même μ donnent des champs proches. Leurs différences restent visibles près des sources.';
+    if(bs.some(b=>!b.every(Number.isFinite)))$('teaching').textContent='Déplacer M hors des conducteurs et de l’aimant pour comparer les deux champs extérieurs au même point relatif.';
+    $('formula').innerHTML='μ = N I S<br>S = π R²<br><small>Moment de l’aimant choisi égal à celui de la boucle. Approximation dipolaire pertinente pour r ≫ taille.</small>';
+    $('scene').setAttribute('aria-label','Comparaison à même moment magnétique : écart des champs '+U.fmt(delta,2)+' pour cent.');
+  },
+  pointer(p,phase){
+    if(phase==='up'){dragAngle=false;return;}if(!p)return;
+    let v=views.find(v=>p[0]>=v.rect.x&&p[0]<v.rect.x+v.rect.w&&p[1]>=v.rect.y&&p[1]<v.rect.y+v.rect.h)||views[0];if(!v)return;
+    if(state.tab==='moment'){
+      const o=v.p(0,0),angle=state.angle*Math.PI/180,sign=state.I<0?-1:1,tip=[o[0]+sign*Math.cos(angle)*68,o[1]-sign*Math.sin(angle)*68];
+      if(phase==='down'&&Math.hypot(p[0]-tip[0],p[1]-tip[1])<18)dragAngle=true;
+      if(dragAngle){
+        state.angle=U.clamp(Math.round(Math.atan2(sign*(o[1]-p[1]),sign*(p[0]-o[0]))*180/Math.PI),-75,75);
+        $('angle').value=state.angle;$('angleNumber').value=state.angle;return;
+      }
+    }
+    probe=v.q(p);
+  },
+  arrowKey(key){const step=(this.lastView?.span||.1)*.035;if(key==='ArrowLeft')probe[0]-=step;if(key==='ArrowRight')probe[0]+=step;if(key==='ArrowUp')probe[1]+=step;if(key==='ArrowDown')probe[1]-=step;}
+};
+U.init(app);
+})();
+</script>
+<script id="cpge-common-menu-script">/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
+(()=>{
+ 'use strict';
+ if(document.documentElement.dataset.cpgeMenu==='1')return;
+ const header=document.querySelector('header'),theme=document.getElementById('theme');
+ if(!header||!theme)return;
+ document.documentElement.dataset.cpgeMenu='1';
+ const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
+ header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
+ const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
+ let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
+ if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
+ if(!help){
+  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
+  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
+  const instructions=document.createElement('p'),model=document.createElement('p');
+  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
+  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
+  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
+ }
+ if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
+ if(!full)full=make('fullscreen','⛶');
+ if(!image)return;
+ if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
+ const common=[theme,help,image,projection,full];
+ // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
+ const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
+ for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
+ full.classList.add('cpge-fullscreen');
+ const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
+ const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
+ const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
+ const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
+ let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
+ function sync(){
+  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
+  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
+  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
+  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
+  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
+  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
+ }
+ const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
+ function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
+ async function toggleFullscreen(){
+  if(busy)return;busy=true;
+  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
+  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
+  finally{busy=false;queue();}
+ }
+ // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
+ full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
+ function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
+ document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
+ // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
+ document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
+ new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
+ const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
+ sync();
+})();
+</script>
+</body>
+</html>
