@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Labo hors connexion de MPSI OS4 : ressort, pendule et RLC ; signaux, portraits de phase, énergies et amortissement.">
+<title>Labo des oscillateurs · MPSI OS4</title>
+<style>
+:root{color-scheme:light;--paper:#f5f2f7;--surface:#fff;--ink:#0f0f0f;--muted:#53595e;--line:#ddd3e4;--accent:#672c8b;--soft:#eee5f5;--position:#8f2227;--speed:#225bb0;--energy:#19734f;--loss:#956000;--wire:#71687b;--compare1:#19734f;--compare2:#672c8b;--compare3:#b04f16}
+:root[data-theme=dark]{color-scheme:dark;--paper:#15121c;--surface:#211c2b;--ink:#f3eef8;--muted:#c1b9cb;--line:#4c405d;--accent:#d1a6ee;--soft:#33273f;--position:#ffa09f;--speed:#95c1ff;--energy:#85ddba;--loss:#f9cb76;--wire:#c3b9d1;--compare1:#85ddba;--compare2:#d1a6ee;--compare3:#ffb183}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;border-top:5px solid var(--accent);background:var(--paper);color:var(--ink);font:17px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button,select,input[type=number]{border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);padding:6px 10px;min-height:38px}button:hover{background:var(--soft);border-color:var(--accent)}button[aria-pressed=true],button.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}button:disabled{opacity:.4;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input{accent-color:var(--accent)}input[type=range]{width:100%;height:24px;margin:6px 0}input[type=number]{width:88px;text-align:right;padding:4px 6px;font-variant-numeric:tabular-nums}select{max-width:100%}label{cursor:pointer}h1,h2,h3,p{margin:0}h1{font-size:29px;font-weight:500;line-height:1.15;letter-spacing:-.03em}h2{font-size:20px;font-weight:500}svg{display:block;width:100%;height:100%;overflow:hidden}svg text{font-family:Arial,Helvetica,sans-serif}svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}svg .handle{cursor:grab;touch-action:none}svg .handle:active{cursor:grabbing}
+.shell{max-width:2000px;height:calc(100dvh - 5px);min-height:655px;margin:auto;padding:12px 18px 9px;display:flex;flex-direction:column;gap:10px}.masthead,.navline,.row,.actions,.transport,.panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-size:12px;font-weight:bold;margin-bottom:3px}.actions,.row{justify-content:flex-start;flex-wrap:wrap}.actions button{font-size:15px}.navline{flex-wrap:wrap}.tabs{display:flex;gap:7px}.tabs button{font-size:18px;padding:6px 18px}.nav-note{font-size:14px;color:var(--muted)}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;flex:1;min-height:0}.stage{display:flex;flex-direction:column;gap:9px;min-width:0;min-height:0}.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0;min-height:0;display:flex;flex-direction:column}.scene-panel{flex:.8;min-height:185px}.panel-head{padding:8px 12px 4px;flex:none;flex-wrap:wrap}.panel-head button,.panel-head select{font-size:14px;min-height:30px;padding:3px 7px}.panel-head .row{gap:5px}.drawing{flex:1;min-height:0;position:relative}#scene{touch-action:none;user-select:none}.plot-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1.2;min-height:230px}.legend{display:flex;gap:6px 14px;flex-wrap:wrap;padding:0 12px 5px;font-size:14px;min-height:25px;color:var(--muted)}.legend span{white-space:nowrap}.legend i{display:inline-block;width:19px;border-top:3px solid currentColor;vertical-align:middle;margin:0 5px 3px 0}.legend .dash{border-top-style:dashed}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;flex:none}.metric{padding-left:12px;border-left:1px solid var(--line)}.metric:first-child{padding-left:0;border:0}.metric .caption{font-size:14px;color:var(--muted)}.metric .value{font-size:25px;line-height:1.2;letter-spacing:-.025em;font-variant-numeric:tabular-nums}.message{font-size:16px;min-height:24px}.message strong{color:var(--accent);font-weight:500}.transport{flex-wrap:wrap;flex:none}.transport button,.transport select{font-size:15px}.scrub{display:flex;align-items:center;gap:9px;flex:1;min-width:180px}.scrub input{min-width:60px}.scrub output{font-size:14px;white-space:nowrap;min-width:90px;text-align:right;font-variant-numeric:tabular-nums}.controls{overflow-y:auto;min-height:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}.control-section+.control-section{border-top:1px solid var(--line);margin-top:15px;padding-top:13px}.control-section h2{font-size:16px;color:var(--accent);margin-bottom:9px}.control-section>select{width:100%;margin-bottom:8px}.field{margin:10px 0}.field-head{display:flex;justify-content:space-between;align-items:center;gap:6px}.field-head label{font-size:15px}.field-head .unit{font-size:13px;color:var(--muted);margin-left:3px}.note{font-size:13px;line-height:1.4;color:var(--muted);margin-top:6px}.checks{display:flex;flex-direction:column;gap:7px;font-size:14px}.presets{display:flex;flex-wrap:wrap;gap:5px}.presets button{font-size:13px;padding:5px 7px;min-height:33px}.formula{font:19px/1.5 Georgia,'Times New Roman',serif;margin:4px 0;overflow-wrap:anywhere}.regime{font-size:14px;margin-top:7px;color:var(--accent)}.compare-row{display:flex;align-items:center;gap:7px;margin:8px 0;font-size:14px}.compare-row select{flex:1;width:120px;font-size:14px}.swatch{width:12px;height:12px;border-radius:50%;background:var(--compare1);flex:none}.result-row{border-top:1px solid var(--line);padding:7px 0;font-size:14px}.result-row b{font-weight:500;font-size:17px}.footer{font-size:11px;color:var(--muted);text-align:right;flex:none}.help{max-width:820px;width:calc(100% - 36px);max-height:85dvh;border:1px solid var(--line);border-radius:12px;padding:24px;color:var(--ink);background:var(--surface)}.help::backdrop{background:#15121cb0}.help h2{font-size:24px;margin-bottom:15px}.help h3{font-size:18px;color:var(--accent);margin:17px 0 6px}.help p,.help li{font-size:16px;margin-bottom:8px}.help .close{float:right}.help a{color:var(--accent)}
+body.projection .controls{display:none}body.projection .workspace{grid-template-columns:1fr}body.projection .eyebrow,body.projection .nav-note,body.projection .footer{display:none}body.projection .metric .value{font-size:36px}body.projection .metric .caption{font-size:18px}body.projection .message{font-size:21px}body.projection .panel-head h2{font-size:23px}body.projection .legend{font-size:18px}body.projection h1{font-size:30px}body.projection .scene-panel{flex:.85}body.projection .plot-grid{flex:1.15}
+@media(min-width:1600px){.shell{padding:18px 24px 12px;gap:13px}.workspace{grid-template-columns:minmax(0,1fr) 320px;gap:18px}.scene-panel{min-height:280px}.plot-grid{min-height:290px}h1{font-size:34px}.panel-head h2{font-size:23px}.metric .value{font-size:33px}.metric .caption{font-size:16px}.message{font-size:18px}.legend{font-size:17px}.controls{padding:18px}.field-head label{font-size:17px}}
+@media(max-width:1000px){.shell{height:auto;min-height:calc(100dvh - 5px)}.workspace{grid-template-columns:minmax(0,1fr) 260px}.scene-panel{height:270px;flex:none}.plot-grid{height:300px;flex:none}.controls{max-height:720px}.nav-note{display:none}.masthead{align-items:flex-start}.actions{justify-content:flex-end}.actions button{font-size:13px}h1{font-size:25px}.metrics{gap:5px}.metric .value{font-size:22px}.panel-head h2{font-size:18px}}
+@media(max-width:740px){.shell{padding:10px;gap:9px}.masthead{flex-wrap:wrap}.actions{justify-content:flex-start}.workspace{display:flex;flex-direction:column}.controls{max-height:none}.tabs{width:100%}.tabs button{flex:1;font-size:16px;padding:6px 8px}.plot-grid{grid-template-columns:1fr;height:auto;gap:9px}.plot-grid .panel{height:280px}.scene-panel{height:290px}.metrics{grid-template-columns:repeat(2,1fr);row-gap:10px}.metric:nth-child(3){padding-left:0;border:0}.metric .value{font-size:25px}.transport{gap:9px}.scrub{flex-basis:100%}body.projection .plot-grid .panel{height:300px}body.projection .metric .value{font-size:30px}.footer{text-align:left}}
+/* Schéma vertical à gauche, deux graphiques superposés à droite. */
+.visual-workspace{display:grid;grid-template-columns:minmax(250px,.40fr) minmax(0,.60fr);gap:10px;flex:1;min-height:0}
+.visual-workspace .scene-panel{height:auto;min-height:0;flex:none}
+.visual-workspace .plot-grid{grid-template-columns:1fr;grid-template-rows:repeat(2,minmax(0,1fr));height:auto;min-height:0;flex:none}
+.scene-panel .panel-head{align-items:flex-start}.scene-panel .panel-head>.row{width:100%;gap:5px}
+.scene-panel #keep{font-size:13px}.scene-panel #clear{font-size:13px}
+sub,sup{font-size:.72em;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}
+@media(min-width:1600px){.visual-workspace{grid-template-columns:minmax(340px,.38fr) minmax(0,.62fr);gap:14px}}
+@media(min-width:741px) and (max-width:1000px){.visual-workspace{min-height:600px;grid-template-columns:minmax(230px,.4fr) minmax(0,.6fr)}.visual-workspace .plot-grid .panel{height:auto}.controls{max-height:880px}}
+@media(max-width:740px){.visual-workspace{display:flex;flex-direction:column;flex:none}.visual-workspace .scene-panel{height:360px}.visual-workspace .plot-grid{display:grid;grid-template-rows:none;grid-auto-rows:300px}.visual-workspace .plot-grid .panel{height:auto}body.projection .visual-workspace .plot-grid .panel{height:auto}body[data-mode=analogy] .visual-workspace .scene-panel{height:480px}}
+@media print{.controls,.actions,.transport,.tabs,.footer{display:none}.shell{height:auto}.visual-workspace{height:780px;flex:none;grid-template-columns:38% 62%}.visual-workspace .scene-panel,.visual-workspace .plot-grid{height:auto}.panel{break-inside:avoid}body{border:0}}
+</style>
+<!-- CPGE_MENU_STYLE_BEGIN -->
+<style id="cpge-menu-style">
+/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
+.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
+.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
+.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
+.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
+.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
+.cpge-global-actions>button.cpge-common-button>svg{display:none}
+.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
+.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
+.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
+.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
+.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
+.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
+.cpge-menu-status[hidden]{display:none!important}
+@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
+.projection .cpge-global-actions>.mobileSettings{display:none!important}
+@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+
+/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
+html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
+html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
+html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
+html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+html[data-cpge-film] button:hover{border-color:var(--accent)}
+html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
+html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
+html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
+html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+</style>
+<!-- CPGE_MENU_STYLE_END -->
+</head>
+<body data-mode="explore">
+<div class="shell">
+ <header class="masthead"><div><div class="eyebrow">MPSI · Ondes et signaux · OS4</div><h1>Labo des oscillateurs</h1></div><div class="actions"><button id="theme" aria-pressed="false">Thème sombre</button><button id="fullscreen" aria-pressed="false" title="Plein écran (F) · Échap pour quitter">⛶ Plein écran</button><button id="projection" aria-pressed="false">Projection</button><button id="export">Exporter SVG</button><button id="help">Aide</button></div></header>
+ <nav class="navline" aria-label="Mode d’exploration"><div class="tabs"><button data-mode="explore" aria-pressed="true">Explorer</button><button data-mode="compare" aria-pressed="false">Comparer</button><button data-mode="analogy" aria-pressed="false">Analogie</button></div><span class="nav-note">Un même instant · plusieurs regards</span><span id="fullscreen-status" class="note" role="status" hidden></span></nav>
+ <main class="workspace">
+  <div class="stage">
+   <div class="visual-workspace">
+   <section class="panel scene-panel"><div class="panel-head"><h2 id="scene-title">Masse–ressort</h2><div class="row"><button id="zoom-out" aria-label="Réduire le dessin">−</button><button id="zoom-in" aria-label="Agrandir le dessin">+</button><button id="fit">Cadrer</button><button id="keep">Garder la trajectoire</button><button id="clear" title="Effacer les trajectoires gardées">Effacer</button></div></div><div class="drawing"><svg id="scene" role="img" aria-label="Système oscillant animé"></svg></div></section>
+   <div class="plot-grid"><section class="panel"><div class="panel-head"><h2 id="time-title">Signaux temporels</h2><select id="time-view" aria-label="Signaux temporels affichés"><option value="both">Position + vitesse</option><option value="position">Position</option><option value="velocity">Vitesse</option></select><span class="note" id="time-note" hidden>τ = ω₀t</span></div><div class="drawing"><svg id="time-chart" role="img" aria-label="Évolution temporelle"></svg></div><div class="legend" id="time-legend"></div></section><section class="panel"><div class="panel-head"><h2 id="other-title">Trajectoire de phase</h2><select id="other-view" aria-label="Deuxième graphique"><option value="phase">Phase</option><option value="energy">Énergies</option></select></div><div class="drawing"><svg id="other-chart" role="img" aria-label="Trajectoire de phase ou énergies"></svg></div><div class="legend" id="other-legend"></div></section></div>
+   </div>
+   <div class="metrics" aria-live="off"><div class="metric"><div class="caption" id="caption0"></div><div class="value" id="value0"></div></div><div class="metric"><div class="caption" id="caption1"></div><div class="value" id="value1"></div></div><div class="metric"><div class="caption" id="caption2"></div><div class="value" id="value2"></div></div><div class="metric"><div class="caption" id="caption3"></div><div class="value" id="value3"></div></div></div>
+   <div class="message" id="message"></div>
+   <div class="transport"><div class="row"><button id="play" class="primary">▶ Lecture</button><button id="reset" aria-label="Revenir à l’état initial">↺ Début</button><select id="speed" aria-label="Vitesse de lecture"><option value="0.1">× 0,1</option><option value="0.25">× 0,25</option><option value="0.5">× 0,5</option><option value="1" selected>× 1</option><option value="2">× 2</option></select></div><div class="scrub"><label for="timeline" class="note">Instant</label><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="Instant commun aux vues"><output id="clock">t = 0 s</output></div></div>
+  </div>
+  <aside class="controls" aria-label="Réglages du laboratoire">
+   <section class="control-section"><h2>Système</h2><select id="system" aria-label="Système étudié"><option value="spring">Masse–ressort vertical</option><option value="circuit">Circuit LC / RLC série</option><option value="pendulum">Pendule · ouverture</option></select><select id="experiment" aria-label="Expérience électrique" hidden><option value="free">Régime libre · condensateur chargé</option><option value="step">Réponse à un échelon E</option></select><label id="exact-label" hidden style="font-size:14px"><input type="checkbox" id="exact"> Pendule : modèle exact sin θ</label><div id="model-note" class="note"></div></section>
+   <section class="control-section"><h2>Paramètres physiques</h2><div id="physical-fields"></div><p class="formula" id="equation"></p><div id="characteristics" class="note"></div><div id="regime" class="regime"></div></section>
+   <section class="control-section" id="initial-section"><h2>Conditions initiales</h2><div id="initial-fields"></div><p class="note" id="initial-note"></p></section>
+   <section class="control-section" id="compare-section" hidden><h2>Amortissements à comparer</h2><div id="compare-fields"></div><div class="field-head"><label for="tolerance">Bande ± ε</label><span><input type="number" id="tolerance" min="1" max="20" step="1" value="5" aria-label="Tolérance en pour cent"> %</span></div><p class="note">À ω₀ et conditions initiales identiques. Temps réduit τ = ω₀t ; X = (s − sₑq)/a, avec a = √(x₀² + (ṡ₀/ω₀)²).</p><div id="settling-results"></div><p class="note">« Reste » : après la dernière sortie de la bande. Le temps du premier passage est indiqué séparément.</p></section>
+   <section class="control-section" id="preset-section"><h2>Situations caractéristiques</h2><div class="presets" id="presets"></div></section>
+   <section class="control-section"><h2>Affichage</h2><div class="checks"><label><input type="checkbox" id="pretrace"> Prétraçage des courbes</label><label><input type="checkbox" id="forces"> Forces / tensions</label><label><input type="checkbox" id="envelope"> Enveloppe exponentielle</label><label><input type="checkbox" id="linear-reference"> Comparer au pendule linéarisé</label></div><p class="note">Sans prétraçage, les courbes se révèlent au fil de la lecture.</p><div class="field-head" style="margin-top:12px"><label for="duration">Fenêtre temporelle</label><select id="duration"><option value="3">3 T₀</option><option value="6" selected>6 T₀</option><option value="12">12 T₀</option><option value="24">24 T₀</option></select></div><p class="note">Lecture × 1 : une période propre par seconde d’écran. Les secondes physiques restent indiquées.</p></section>
+  </aside>
+ </main><footer class="footer">E. Guillaume · OS4 · Modèles idéalisés · Fonctionne hors connexion</footer>
+</div>
+<dialog class="help" id="help-dialog"><button class="close" id="close-help">Fermer</button><h2>Explorer les oscillateurs</h2><p>Choisir un système, fixer les conditions initiales, puis lancer la lecture. Le curseur temporel déplace le même instant dans toutes les vues. Les réglages physiques relancent l’expérience depuis son état initial.</p><h3>Manipulations directes</h3><p>À l’arrêt, déplacer la masse ou le pendule pour changer la position initiale. Dans le plan de phase, cliquer ou faire glisser le point initial pour fixer position et vitesse. Les champs numériques donnent les mêmes réglages. « Garder la trajectoire » conserve jusqu’à six solutions aux mêmes paramètres physiques.</p><h3>Modèles et conventions</h3><p>Ressort vertical idéal, masse ponctuelle, frottement −αv, axe z vers le haut. Le dessin prend ℓ₀ = 0,40 m et g = 9,81 m·s⁻². Les courbes portent x = z − zₑq. L’énergie potentielle affichée est la somme élastique + pesanteur, avec son minimum pris égal à zéro : Eₚ = kx²/2.</p><p>Circuit série idéal : bobine sans résistance interne, résistance totale R, i = C duC/dt ; flèches de référence fixes. En régime libre, la source est absente. Sous échelon, elle reste connectée : Eₛ = CuC²/2 + Li²/2 ; Eₛ + Wᴊ = Eₛ(0) + Wg, avec Wg = EC[uC(t) − uC(0)]. Wg est signé. L’énergie réelle du condensateur n’est pas C(uC − E)²/2.</p><p>Pendule ponctuel, tige rigide sans masse (la liaison peut pousser comme tirer), amortissement de couple −mℓ²γθ̇. Modèle linéarisé : θ̈ + γθ̇ + (g/ℓ)θ = 0. Modèle exact : remplacer θ par sin θ ; Eₚ = mgℓ(1 − cos θ). Le mode exact et sa référence linéarisée utilisent les mêmes conditions initiales ; à grande amplitude leurs périodes diffèrent. L’angle n’est pas replié modulo 2π.</p><h3>Comparer et comprendre l’analogie</h3><p>« Comparer » utilise les modèles linéaires et superpose trois facteurs de qualité. La bande est définie relativement à l’amplitude de référence a ; les temps de retour sont calculés au-delà de la fenêtre visible si nécessaire. Pour un lâcher sans vitesse et à ω₀ fixé, le régime critique assure le retour le plus rapide sans dépassement ; une oscillation amortie peut rester plus tôt dans une bande donnée.</p><p>« Analogie » associe x/a et q/(Caᵤ), puis v/(ω₀a) et i/(Cω₀aᵤ), en régime libre. Les deux systèmes ont les mêmes ω₀ et Q ; le circuit équivalent est calculé avec C = 1 mF. Les superpositions sont réduites, les énergies E/E₀ aussi.</p><h3>Lecture des courbes</h3><p>Les vecteurs de force sont schématiques, sans échelle de force commune. La case « Prétraçage des courbes », décochée par défaut, permet d’afficher la solution future en pâle. Sans cette option, les signaux, la trajectoire de phase, les énergies, les enveloppes et la référence linéarisée se tracent seulement jusqu’à l’instant choisi. Une trajectoire gardée conserve la portion déjà parcourue au moment de sa mémorisation. Le point et le tracé soutenu suivent l’instant choisi. Les axes du plan de phase ont généralement des unités différentes. En vue temporelle double, l’axe gauche porte la position ou la tension, l’axe droit la vitesse ou le courant. Les échelles s’adaptent aux solutions ; le zoom du dessin ne change pas les paramètres physiques. Une enveloppe exponentielle concerne l’amplitude dans le régime pseudo-périodique ; l’énergie instantanée n’est généralement pas une exponentielle exacte.</p><h3>Présentation</h3><p>Bouton Plein écran (F, sortie par le bouton ou Échap), indépendant du mode projection. Thèmes clair et sombre, mode projection (raccourci P), lecture/pause (Espace hors champs), retour au début (R), fermeture de l’aide ou sortie du plein écran (Échap). L’export SVG rassemble la scène, les deux graphiques, leurs légendes et les paramètres. Le fichier HTML peut être ouvert directement, sans connexion ni installation.</p></dialog>
+<script id="physics-model">
+'use strict';
+// Modèle indépendant de l’interface, également utilisé par Verification_Physique.mjs.
+window.OS4Model = (()=>{
+ const g=9.81, TAU=2*Math.PI;
+ function parameters(s){
+  let w,gamma,eq=0,x0=s.x0,v0=s.v0;
+  if(s.system==='spring'){w=Math.sqrt(s.k/s.m);gamma=s.alpha/s.m;}
+  else if(s.system==='circuit'){w=1/Math.sqrt(s.L*s.C);gamma=s.R/s.L;eq=s.experiment==='step'?s.E:0;x0=s.U0-eq;v0=s.I0/s.C;}
+  else {w=Math.sqrt(g/s.length);gamma=s.gamma;}
+  return {...s,w,gamma,eq,x0,v0,Q:gamma===0?Infinity:w/gamma,T0:TAU/w};
+ }
+ function kind(p){const d=p.gamma/(2*p.w);return d===0?'harmonic':Math.abs(d-1)<1e-9?'critical':d<1?'under':'over';}
+ function coefficients(p){
+  const a=p.gamma/2,k=kind(p);
+  if(k==='harmonic'||k==='under'){const b=Math.sqrt(Math.max(0,p.w*p.w-a*a));return {k,a,b,A:p.x0,B:(p.v0+a*p.x0)/b};}
+  if(k==='critical')return {k,a,A:p.x0,B:p.v0+p.w*p.x0};
+  const d=Math.sqrt(a*a-p.w*p.w),r1=-p.w*p.w/(a+d),r2=-(a+d),c1=(p.v0-r2*p.x0)/(r1-r2),c2=p.x0-c1;
+  return {k,a,r1,r2,c1,c2};
+ }
+ function linear(p,t){
+  const c=coefficients(p);let x,v;
+  if(c.k==='harmonic'||c.k==='under'){const e=Math.exp(-c.a*t),co=Math.cos(c.b*t),si=Math.sin(c.b*t);x=e*(c.A*co+c.B*si);v=e*(p.v0*co-(c.a*c.B+c.b*c.A)*si);}
+  else if(c.k==='critical'){const e=Math.exp(-p.w*t);x=(c.A+c.B*t)*e;v=(p.v0-p.w*c.B*t)*e;}
+  else{x=c.c1*Math.exp(c.r1*t)+c.c2*Math.exp(c.r2*t);v=c.r1*c.c1*Math.exp(c.r1*t)+c.r2*c.c2*Math.exp(c.r2*t);}
+  return {t,x,v,y:x+p.eq,acc:-p.gamma*v-p.w*p.w*x};
+ }
+ function energies(p,z){
+  let potential,kinetic,initial,work=0;
+  if(p.system==='circuit'){potential=.5*p.C*z.y*z.y;kinetic=.5*p.L*(p.C*z.v)**2;initial=.5*p.C*p.U0**2+.5*p.L*p.I0**2;work=p.eq*p.C*(z.y-p.U0);}
+  else if(p.system==='pendulum'){const exact=p.exact;potential=exact?p.m*g*p.length*(1-Math.cos(z.x)):.5*p.m*g*p.length*z.x*z.x;kinetic=.5*p.m*p.length*p.length*z.v*z.v;initial=(exact?p.m*g*p.length*(1-Math.cos(p.x0)):.5*p.m*g*p.length*p.x0*p.x0)+.5*p.m*p.length*p.length*p.v0*p.v0;}
+  else{potential=.5*p.k*z.x*z.x;kinetic=.5*p.m*z.v*z.v;initial=.5*p.k*p.x0*p.x0+.5*p.m*p.v0*p.v0;}
+  const stored=potential+kinetic,loss=Math.max(0,initial+work-stored);
+  return {potential,kinetic,stored,initial,work,loss};
+ }
+ function nonlinear(p,H){
+  const dt=Math.min(p.T0/400, .05/Math.max(p.gamma,1)),count=Math.ceil(H/dt),h=H/count,out=[];let x=p.x0,v=p.v0,joule=0;
+  const f=(x,v)=>-p.gamma*v-p.w*p.w*Math.sin(x),power=v=>p.m*p.length*p.length*p.gamma*v*v;
+  for(let n=0;n<=count;n++){
+   out.push({t:n*h,x,v,y:x,acc:f(x,v),joule});if(n===count)break;
+   const k1x=v,k1v=f(x,v),k2x=v+h*k1v/2,k2v=f(x+h*k1x/2,v+h*k1v/2),k3x=v+h*k2v/2,k3v=f(x+h*k2x/2,v+h*k2v/2),k4x=v+h*k3v,k4v=f(x+h*k3x,v+h*k3v);
+   joule+=h/6*(power(v)+2*power(k2x)+2*power(k3x)+power(k4x));x+=h/6*(k1x+2*k2x+2*k3x+k4x);v+=h/6*(k1v+2*k2v+2*k3v+k4v);
+  }
+  return out;
+ }
+ function experiment(p,H){
+  if(p.system!=='pendulum'||!p.exact)return {p,H,at:t=>linear(p,t)};
+  const points=nonlinear(p,H),dt=points[1].t;
+  return {p,H,points,at:t=>{
+   const i=Math.min(points.length-2,Math.max(0,Math.floor(t/dt))),a=points[i],b=points[i+1],u=Math.min(1,Math.max(0,(t-a.t)/dt)),u2=u*u,u3=u2*u;
+   const x=(2*u3-3*u2+1)*a.x+(u3-2*u2+u)*dt*a.v+(-2*u3+3*u2)*b.x+(u3-u2)*dt*b.v;
+   const v=((6*u2-6*u)*a.x+(-6*u2+6*u)*b.x)/dt+(3*u2-4*u+1)*a.v+(3*u2-2*u)*b.v;
+   return {t,x,y:x,v,acc:-p.gamma*v-p.w*p.w*Math.sin(x),joule:a.joule+u*(b.joule-a.joule)};
+  }};
+ }
+ function bisect(fn,a,b){let fa=fn(a);for(let n=0;n<65;n++){const m=(a+b)/2,fm=fn(m);if(fa*fm>0){a=m;fa=fm;}else b=m;}return (a+b)/2;}
+ function returns(p,eps=.05){
+  const amplitude=Math.hypot(p.x0,p.v0/p.w);if(amplitude<1e-15)return {first:0,settled:0};
+  const tol=eps*amplitude,c=coefficients(p),points=[0];
+  if(c.k==='harmonic'){
+   const phi=Math.atan2(p.v0/p.w,p.x0),theta=((-phi)%TAU+TAU)%TAU,target=p.x0>0?Math.acos(eps):Math.PI+Math.acos(eps),start=Math.abs(p.x0)<=tol?0:((target-theta+TAU)%TAU)/p.w;
+   return {first:start,settled:Infinity};
+  }
+  if(c.k==='under'){
+   const D=p.v0,F=-(c.a*c.B+c.b*c.A),base=Math.atan2(F,D)+Math.PI/2;let n=Math.ceil(-base/Math.PI);
+   for(let j=0;j<20000;j++,n++){const t=(base+n*Math.PI)/c.b;if(t<1e-12)continue;points.push(t);if(Math.abs(linear(p,t).x)<=tol)break;}
+  }else if(c.k==='critical'){
+   const turn=p.v0/(p.w*c.B);if(Number.isFinite(turn)&&turn>0)points.push(turn);
+  }else{
+   const ratio=-c.c2*c.r2/(c.c1*c.r1),turn=Math.log(ratio)/(c.r1-c.r2);if(Number.isFinite(turn)&&turn>0)points.push(turn);
+  }
+  let end=Math.max(points.at(-1)+1/p.w,1/p.w);while(Math.abs(linear(p,end).x)>tol)end*=2;points.push(end);
+  let first=Math.abs(p.x0)<=tol?0:Infinity,lastOutside=-1;
+  for(let i=0;i<points.length;i++){if(Math.abs(linear(p,points[i]).x)>tol)lastOutside=i;
+   if(i&&first===Infinity){const a=points[i-1],b=points[i],xa=linear(p,a).x,xb=linear(p,b).x;if(Math.abs(xa)>tol&&(Math.abs(xb)<=tol||xa*xb<0)){const sign=Math.sign(xa);first=bisect(t=>sign*linear(p,t).x-tol,a,b);}}
+  }
+  const settled=lastOutside<0?0:bisect(t=>Math.abs(linear(p,t).x)-tol,points[lastOutside],points[lastOutside+1]);
+  return {first,settled};
+ }
+ return {g,TAU,parameters,kind,coefficients,linear,energies,nonlinear,experiment,returns};
+})();
+</script>
+<script id="interface">
+'use strict';
+(()=>{
+const M=window.OS4Model,$=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const state={system:'spring',experiment:'free',m:.2,k:8,alpha:.25,L:.1,C:.001,R:2,E:5,U0:5,I0:0,length:1,gamma:0,x0:.16,v0:0,exact:false};
+let mode='explore',t=0,running=false,zoom=1,dirty=true,last=0,p,exp,H,reference,curves=[],saved=[],qValues=[.2,.5,2],phaseMap,sceneMap,drag=null,colors={};
+const baseInitial={spring:{x0:.16,v0:0},pendulum:{x0:Math.PI/6,v0:0},circuit:{U0:5,I0:0}};
+// Vrais indices/exposants dans le HTML et les SVG, indépendants du zoom du dessin.
+function mathParts(value){
+ const str=String(value),re=/[_^]\{[^}]+\}|u[̇̈]?[CLR]|Wg|[zs]ₑq|[₀₁₂₃₄₅₆₇₈₉ₛₚₗₘₑᵤᴊ]+|[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/gu,map={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₛ':'s','ₚ':'p','ₗ':'l','ₘ':'m','ₑ':'e','ᵤ':'u','ᴊ':'J','⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'−','⁺':'+'};let at=0;const parts=[];
+ const add=(text,kind='normal')=>{if(!text)return;if(parts.at(-1)?.kind===kind)parts.at(-1).text+=text;else parts.push({text,kind});};
+ for(const m of str.matchAll(re)){add(str.slice(at,m.index));const v=m[0];if(/^[_^]\{/.test(v))add(v.slice(2,-1),v[0]==='_'?'sub':'sup');else if(/^u[̇̈]?[CLR]$/u.test(v)){add(v.slice(0,-1));add(v.slice(-1),'sub');}else if(v==='Wg'){add('W');add('g','sub');}else if(/^[zs]ₑq$/.test(v)){add(v[0]);add('éq','sub');}else add([...v].map(c=>map[c]||c).join(''),/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]/u.test(v)?'sup':'sub');at=m.index+v.length;}add(str.slice(at));return parts;
+}
+function mathSource(element){return [...element.childNodes].map(node=>node.nodeType===3?node.textContent:node.tagName==='SUB'?'_{'+node.textContent+'}':node.tagName==='SUP'?'^{'+node.textContent+'}':mathSource(node)).join('');}
+function mathHTML(element,value){element.replaceChildren();for(const part of mathParts(value)){if(part.kind==='normal')element.append(document.createTextNode(part.text));else{const e=document.createElement(part.kind);e.textContent=part.text;element.append(e);}}}
+function mathTree(root){const walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];while(walk.nextNode()){const node=walk.currentNode;if(!node.parentElement?.closest('script,style,svg,option,sub,sup')&&mathParts(node.textContent).some(p=>p.kind!=='normal'))nodes.push(node);}for(const node of nodes){const span=document.createElement('span');mathHTML(span,node.textContent);node.replaceWith(span);}}
+const fmt=(x,d=3)=>Number.isFinite(x)?(Math.abs(x)<1e-12?0:x).toLocaleString('fr-FR',{maximumSignificantDigits:d}):'∞';
+function unit(x,u){if(Math.abs(x)<1e-12)x=0;const a=Math.abs(x),prefix=a&&a<.001?[1e6,'µ']:a&&a<1?[1e3,'m']:[1,''];return fmt(x*prefix[0])+' '+prefix[1]+u;}
+const reg=p=>({harmonic:'Harmonique · sans dissipation',under:'Pseudo-périodique · Q > ½',critical:'Critique · Q = ½',over:'Apériodique · Q < ½'})[M.kind(p)];
+function n(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);if(parent)parent.appendChild(e);return e;}
+function line(parent,x1,y1,x2,y2,color='muted',width=1,attrs={}){return n('line',{x1,y1,x2,y2,stroke:colors[color]||color,'stroke-width':width,...attrs},parent);}
+function text(parent,x,y,value,color='ink',size=21,anchor='middle',attrs={}){const e=n('text',{x,y,fill:colors[color]||color,'font-size':size,'text-anchor':anchor,...attrs},parent);let shift=0;for(const part of mathParts(value)){const next=part.kind==='sub'?size*.25:part.kind==='sup'?-size*.43:0,tspan=n('tspan',{'font-size':part.kind==='normal'?size:size*.72,dy:next-shift},e);tspan.textContent=part.text;shift=next;}return e;}
+function path(parent,d,color='accent',width=3,attrs={}){return n('path',{d,fill:'none',stroke:colors[color]||color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...attrs},parent);}
+function arrow(parent,x1,y1,x2,y2,color='muted',width=2){line(parent,x1,y1,x2,y2,color,width);const a=Math.atan2(y2-y1,x2-x1),s=8;path(parent,`M${x2-s*Math.cos(a-.5)},${y2-s*Math.sin(a-.5)} L${x2},${y2} L${x2-s*Math.cos(a+.5)},${y2-s*Math.sin(a+.5)}`,color,width);}
+function dot(parent,x,y,color='position',radius=6,attrs={}){return n('circle',{cx:x,cy:y,r:radius,fill:colors[color]||color,stroke:colors.surface,'stroke-width':2,...attrs},parent);}
+function size(svg){const box=svg.getBoundingClientRect(),w=Math.max(100,box.width),h=Math.max(80,box.height);svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${w} ${h}`);return [w,h];}
+function refreshColors(){const c=getComputedStyle(document.documentElement);for(const name of ['paper','surface','ink','muted','line','accent','soft','position','speed','energy','loss','wire','compare1','compare2','compare3'])colors[name]=c.getPropertyValue('--'+name).trim();}
+function legend(id,items){$(id).replaceChildren();for(const [label,color,dash]of items){const span=document.createElement('span'),i=document.createElement('i'),labelSpan=document.createElement('span');span.style.color=colors[color]||color;i.className=dash?'dash':'';mathHTML(labelSpan,label);span.append(i,labelSpan);$(id).append(span);}}
+function field(parent,key,label,min,max,step,value,u,convert=1){
+ const box=document.createElement('div');box.className='field';box.innerHTML=`<div class="field-head"><label for="${key}-num">${label}</label><span><input id="${key}-num" type="number" min="${min}" max="${max}" step="${step}" value="${value/convert}" aria-label="${label}"><span class="unit">${u}</span></span></div><input id="${key}-range" type="range" min="${min}" max="${max}" step="${step}" value="${value/convert}" aria-label="${label}">`;parent.append(box);
+ const update=e=>{const a=Number(e.target.value);if(!Number.isFinite(a))return;state[key]=Math.max(min,Math.min(max,a))*convert;$(key+'-range').value=state[key]/convert;$(key+'-num').value=+(state[key]/convert).toPrecision(7);rebuild(false,!['x0','v0','U0','I0'].includes(key));};
+ $(key+'-range').addEventListener('input',update);$(key+'-num').addEventListener('change',update);
+}
+function fields(){
+ const physical=$('physical-fields'),initial=$('initial-fields');physical.replaceChildren();initial.replaceChildren();
+ const f=(...args)=>field(physical,...args),ci=(...args)=>field(initial,...args);
+ if(state.system==='spring'){f('m','Masse m',.05,2,.05,state.m,'kg');f('k','Raideur k',2,100,1,state.k,'N/m');if(mode!=='compare')f('alpha','Frottement α',0,Math.max(12,Math.ceil(state.alpha)),.01,state.alpha,'kg/s');ci('x0','Écart initial x₀',-.3,.3,.01,state.x0,'m');ci('v0','Vitesse initiale v₀',-2,2,.05,state.v0,'m/s');}
+ else if(state.system==='circuit'){f('L','Inductance L',.01,1,.01,state.L,'H');f('C','Capacité C',.1,10,.1,state.C,'mF',.001);if(mode!=='compare')f('R','Résistance totale R',0,Math.max(50,Math.ceil(state.R)),.1,state.R,'Ω');if(state.experiment==='step'&&mode==='explore')f('E','Échelon E',-10,10,.5,state.E,'V');ci('U0','Tension initiale uC₀',-10,10,.5,state.U0,'V');ci('I0','Courant initial i₀',-.5,.5,.01,state.I0,'A');}
+ else{f('length','Longueur ℓ',.25,2,.05,state.length,'m');f('m','Masse m',.05,2,.05,state.m,'kg');if(mode!=='compare')f('gamma','Amortissement γ',0,Math.max(6,Math.ceil(state.gamma)),.02,state.gamma,'s⁻¹');ci('x0','Angle initial θ₀',-170,170,1,state.x0,'°',Math.PI/180);ci('v0','Vitesse initiale θ̇₀',-8,8,.1,state.v0,'rad/s');}
+ $('experiment').hidden=state.system!=='circuit'||mode!=='explore';$('exact-label').hidden=state.system!=='pendulum'||mode!=='explore';$('exact').checked=state.exact;
+ $('linear-reference').disabled=state.system!=='pendulum'||!state.exact||mode!=='explore';$('envelope').disabled=mode!=='explore'||state.system==='pendulum'&&state.exact;$('forces').disabled=mode!=='explore';
+ $('system').disabled=mode==='analogy';$('compare-section').hidden=mode!=='compare';$('preset-section').hidden=mode==='compare';$('keep').hidden=mode!=='explore';$('clear').hidden=mode!=='explore';
+ $('initial-note').textContent=mode==='compare'?'Les trois courbes utilisent ces mêmes conditions initiales.':mode==='analogy'?'Les conditions initiales réduites du circuit sont alignées sur celles du ressort.':state.system==='circuit'?'uC et i sont continus à la commutation.':'Position et vitesse initiales réglables aussi dans le plan de phase.';
+ $('model-note').textContent=mode==='analogy'?'Ressort et RLC en régime libre ; mêmes ω₀ et Q.':mode==='compare'?'Trois régimes libres linéaires ; mêmes ω₀ et conditions initiales.':state.system==='spring'?'Axe z vers le haut ; courbes centrées sur zₑq.':state.system==='circuit'?(state.experiment==='free'?'Source absente ; condensateur initialement chargé.':'Source idéale maintenue à E après t = 0.'):'Pendule à tige rigide ; petites oscillations par défaut, modèle exact en option.';
+ const presets=[['harmonic','Sans pertes'],['weak','Faible amortissement'],['critical',state.system==='pendulum'&&state.exact?'Critique (linéarisé)':'Critique'],['strong','Fort amortissement'],['velocity','Départ en vitesse']];if(state.system==='pendulum'&&mode==='explore')presets.push(['large','Grande amplitude']);
+ $('presets').replaceChildren();for(const [key,label]of presets){const b=document.createElement('button');b.textContent=label;b.onclick=()=>preset(key);$('presets').append(b);}
+}
+function syncInitial(){for(const key of ['x0','v0','U0','I0'])if($(key+'-num')){const c=key==='x0'&&state.system==='pendulum'?180/Math.PI:1;$(key+'-num').value=+(state[key]*c).toPrecision(6);$(key+'-range').value=state[key]*c;}}
+function setGamma(value){if(state.system==='spring')state.alpha=value*state.m;else if(state.system==='circuit')state.R=value*state.L;else state.gamma=value;}
+function preset(key){
+ const pp=M.parameters(state);if(key==='large'){state.exact=true;state.x0=120*Math.PI/180;state.v0=0;$('linear-reference').checked=true;$('time-view').value='position';}
+ else if(key==='velocity'){if(state.system==='circuit'){state.U0=state.experiment==='step'?state.E:0;state.I0=.04;}else{state.x0=0;state.v0=state.system==='spring'?.8:1.5;}}
+ else{const gamma=key==='harmonic'?0:key==='weak'?pp.w/8:key==='critical'?2*pp.w:pp.w/.2;setGamma(gamma);}
+ fields();rebuild(true,true);
+}
+function comparisonFields(){
+ $('compare-fields').replaceChildren();for(let i=0;i<3;i++){const row=document.createElement('div');row.className='compare-row';row.innerHTML=`<span class="swatch" style="background:var(--compare${i+1})"></span><label for="q${i}">Q${["₁","₂","₃"][i]}</label><select id="q${i}" aria-label="Facteur de qualité ${i+1}"></select>`;$('compare-fields').append(row);for(const q of [.1,.2,.35,.5,.7,1,2,5,10,20,Infinity]){const o=document.createElement('option');o.value=String(q);o.textContent=q===Infinity?'∞ · harmonique':fmt(q)+(q===.5?' · critique':'');row.querySelector('select').append(o);}row.querySelector('select').value=String(qValues[i]);row.querySelector('select').onchange=e=>{qValues[i]=Number(e.target.value);rebuild(false,false);};}
+}
+function reduced(p,z){const a=Math.hypot(p.x0,p.v0/p.w)||1;return {x:z.x/a,v:z.v/(p.w*a)};}
+function effective(){return M.parameters({...state,exact:mode==='explore'&&state.system==='pendulum'&&state.exact,experiment:mode==='explore'?state.experiment:'free'});}
+function rebuild(updateFields=false,clearSaved=false){
+ t=0;running=false;last=0;$('play').textContent='▶ Lecture';if(clearSaved){saved=[];$('keep').textContent='Garder la trajectoire';}if(updateFields)fields();p=effective();H=Number($('duration').value)*p.T0;exp=M.experiment(p,H);reference=M.experiment({...p,exact:false},H);saved=saved.map(c=>c.H===H?c:{...M.experiment(c.p,H),visibleUntil:Math.min(c.visibleUntil,H)});
+ curves=mode==='compare'?qValues.map((q,i)=>{const pp={...p,gamma:q===Infinity?0:p.w/q,Q:q,exact:false};return {p:pp,exp:M.experiment(pp,H),color:'compare'+(i+1),label:'Q = '+fmt(q),returns:M.returns(pp,Number($('tolerance').value)/100)};}):[];
+ $('equation').textContent=state.system==='spring'?'ẍ + (α/m)ẋ + (k/m)x = 0':state.system==='circuit'?'üC + (R/L)u̇C + uC/(LC) = E/(LC)':'θ̈ + γθ̇ + (g/ℓ)'+(p.exact?'sin θ':'θ')+' = 0';
+ if(state.system==='circuit'&&p.eq===0)$('equation').textContent='üC + (R/L)u̇C + uC/(LC) = 0';
+ $('characteristics').textContent='ω₀ = '+fmt(p.w)+' rad/s · T₀ = '+unit(p.T0,'s')+(mode==='compare'?' · Q réglés ci-dessous':' · Q = '+fmt(p.Q));
+ $('regime').textContent=mode==='compare'?'Modèle linéaire · ω₀ fixé':p.exact?'Modèle non linéaire · ω₀ est la pulsation aux petits angles':reg(p);
+ $('scene-title').textContent=mode==='compare'?'Trois amortissements · même état initial':mode==='analogy'?'Mécanique ↔ électricité':state.system==='spring'?'Masse–ressort vertical':state.system==='circuit'?(state.experiment==='step'?'RLC · réponse à un échelon':'LC / RLC · régime libre'):'Pendule · '+(p.exact?'modèle exact':'petites oscillations');
+ $('time-title').textContent=mode==='compare'?'Déplacements réduits':mode==='analogy'?'Évolutions superposées':'Signaux temporels';
+ $('time-note').hidden=mode==='explore';$('time-view').hidden=mode!=='explore';$('time-view').options[0].textContent=state.system==='circuit'?'Tension + courant':'Position + vitesse';$('time-view').options[1].textContent=state.system==='circuit'?'Tension du condensateur':'Position';$('time-view').options[2].textContent=state.system==='circuit'?'Courant':'Vitesse';
+ if(mode==='compare'){
+  $('settling-results').replaceChildren();for(const c of curves){const d=document.createElement('div');d.className='result-row';d.style.color='var(--'+c.color+')';d.innerHTML=`<b>${c.label}</b><br>Premier passage : ${unit(c.returns.first,'s')}<br>Reste dans ±${$('tolerance').value} % : ${unit(c.returns.settled,'s')}`;$('settling-results').append(d);}
+ }
+ updateMessage();mathTree($('message'));mathTree(document.querySelector('.controls'));dirty=true;
+}
+function samples(ex=exp,count=640){return Array.from({length:count+1},(_,i)=>ex.at(H*i/count));}
+function pretrace(){return $('pretrace').checked;}
+function visibleSamples(ex=exp,until=t){return samples(ex).filter(z=>z.t<until).concat(ex.at(until));}
+function updateMessage(){
+ let message;
+ if(mode==='compare')message='La bande mesure le retour à l’équilibre ; <strong>un premier passage n’est pas un établissement.</strong>';
+ else if(mode==='analogy')message='Même équation réduite : <strong>les deux évolutions se superposent.</strong> m ↔ L · α ↔ R · k ↔ 1/C';
+ else if(state.system==='pendulum'&&p.exact)message='À grande amplitude, <strong>la période dépend de l’amplitude.</strong> Le tracé en tirets est le modèle linéarisé si activé.';
+ else if(state.system==='circuit'&&state.experiment==='step')message='<strong>Eₛ + Wᴊ = Eₛ(0) + Wg.</strong> La source peut fournir ou recevoir de l’énergie.';
+ else if(p.gamma===0)message='<strong>L’énergie totale se conserve.</strong> En régime harmonique, les énergies de stockage varient à la période T₀/2.';
+ else message='<strong>L’énergie stockée diminue.</strong> La dissipation est maximale lorsque la vitesse, ou le courant, est grand.';
+ $('message').innerHTML=message;
+}
+function axes(svg,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel,opts={}){
+ const fs=document.body.classList.contains('projection')?21:17,left=opts.left||66,right=w-(opts.right||20),top=opts.top||33,bottom=h-(opts.bottom||42),X=x=>left+(x-xmin)/(xmax-xmin)*(right-left),Y=y=>bottom-(y-ymin)/(ymax-ymin)*(bottom-top);
+ const clipid=svg.id+'-clip-'+svg.childNodes.length,defs=n('defs',{},svg),clip=n('clipPath',{id:clipid},defs);n('rect',{x:left,y:top,width:Math.max(1,right-left),height:Math.max(1,bottom-top)},clip);
+ const yTicks=bottom-top<135?2:4;for(let i=0;i<=4;i++){const x=xmin+(xmax-xmin)*i/4;line(svg,X(x),top,X(x),bottom,'line',1,{'stroke-dasharray':'3 5'});if(!opts.noX)text(svg,X(x),bottom+23,fmt(x,2),'muted',fs);}for(let i=0;i<=yTicks;i++){const y=ymin+(ymax-ymin)*i/yTicks;line(svg,left,Y(y),right,Y(y),'line',1,{'stroke-dasharray':'3 5'});text(svg,left-8,Y(y)+5,fmt(y,2),'muted',fs,'end');}
+ line(svg,left,top,left,bottom,'muted',1.4);line(svg,left,bottom,right,bottom,'muted',1.4);if(ymin<0&&ymax>0)line(svg,left,Y(0),right,Y(0),'muted',1);if(xmin<0&&xmax>0)line(svg,X(0),top,X(0),bottom,'muted',1);
+ text(svg,left,top-12,ylabel,'muted',fs+2,'start');if(!opts.noX)text(svg,right,h-5,xlabel,'muted',fs+1,'end');
+ return {X,Y,left,right,top,bottom,group:n('g',{'clip-path':`url(#${clipid})`},svg),xmin,xmax,ymin,ymax};
+}
+function poly(group,data,X,Y,color,width=3,attrs={}){if(data.length<2)return;const d=data.map((z,i)=>(i?'L':'M')+X(z[0]).toFixed(2)+','+Y(z[1]).toFixed(2)).join(' ');path(group,d,color,width,attrs);}
+function trace(a,data,color,attrs={},now=t){const past=data.filter(z=>z[0]<=now),next=data.find(z=>z[0]>now);if(past.length&&next&&past.at(-1)[0]<now){const last=past.at(-1),f=(now-last[0])/(next[0]-last[0]);past.push([now,last[1]+f*(next[1]-last[1])]);}if(pretrace())poly(a.group,data.filter(z=>z[0]>=now),a.X,a.Y,color,2,{opacity:.23,'data-curve':'pretrace',...attrs});poly(a.group,past,a.X,a.Y,color,3,{'data-curve':'elapsed',...attrs});}
+function labelState(){return state.system==='spring'?{pos:'x = z − zₑq (m)',vel:'v (m/s)',name:'x',velname:'v',u:'m',vu:'m/s'}:state.system==='circuit'?{pos:'uC (V)',vel:'i (A)',name:'uC',velname:'i',u:'V',vu:'A'}:{pos:'θ (rad)',vel:'θ̇ (rad/s)',name:'θ',velname:'θ̇',u:'rad',vu:'rad/s'};}
+function timeChart(){
+ const svg=$('time-chart'),[w,h]=size(svg),data=samples(),ls=labelState();
+ if(mode!=='explore'){
+  const vals=mode==='compare'?curves:[{p,exp,color:'position',label:'Mécanique'},{p,exp,color:'speed',label:'Électricité'}],sets=vals.map(c=>samples(c.exp).map(z=>[z.t*p.w,reduced(c.p,z).x])),max=Math.max(1,...sets.flat().map(z=>Math.abs(z[1])))*1.15,a=axes(svg,w,h,0,H*p.w,-max,max,'τ = ω₀t','X');
+  if(mode==='compare'){const eps=Number($('tolerance').value)/100;n('rect',{x:a.left,y:a.Y(eps),width:a.right-a.left,height:a.Y(-eps)-a.Y(eps),fill:colors.energy,opacity:.12},a.group);for(const s of [-1,1])line(a.group,a.left,a.Y(s*eps),a.right,a.Y(s*eps),'energy',1.5,{'stroke-dasharray':'5 5'});}
+  vals.forEach((c,i)=>{trace(a,sets[i],c.color,mode==='analogy'&&i===1?{'stroke-dasharray':'8 7'}:{},t*p.w);dot(a.group,a.X(t*p.w),a.Y(reduced(c.p,c.exp.at(t)).x),c.color,i?4:6);});
+  line(a.group,a.X(t*p.w),a.top,a.X(t*p.w),a.bottom,'muted',1,{'stroke-dasharray':'3 5'});legend('time-legend',vals.map((c,i)=>[c.label,c.color,mode==='analogy'&&i===1]));return;
+ }
+ const vel=z=>state.system==='circuit'?p.C*z.v:z.v,refOn=$('linear-reference').checked&&p.system==='pendulum'&&p.exact,ref=refOn?samples(reference):[],all=data.concat(ref),velMax=Math.max(...all.map(z=>Math.abs(vel(z))),1e-5)*1.15,span=Math.max(...all.map(z=>Math.abs(z.y-p.eq)),state.system==='circuit'?.1:.01)*1.15;
+ const view=$('time-view').value,both=view==='both',showPos=view!=='velocity',showVel=view!=='position',a=axes(svg,w,h,0,H,showPos?p.eq-span:-velMax,showPos?p.eq+span:velMax,'t (s)',showPos?ls.pos:ls.vel,{right:both?65:20});
+ const b={...a,Y:v=>a.bottom-(v+velMax)/(2*velMax)*(a.bottom-a.top)};
+ if(both){text(svg,a.right,a.top-12,ls.vel,'speed',document.body.classList.contains('projection')?23:19,'end');line(svg,a.right,a.top,a.right,a.bottom,'speed',1);for(const q of [-1,0,1])text(svg,a.right+8,b.Y(q*velMax)+5,fmt(q*velMax,2),'speed',17,'start');}
+ if(refOn){if(showPos)trace(a,ref.map(z=>[z.t,z.y]),'muted',{'stroke-dasharray':'6 5','stroke-width':2});if(showVel)trace(b,ref.map(z=>[z.t,vel(z)]),'muted',{'stroke-dasharray':'3 5','stroke-width':2});}
+ if(showPos&&$('envelope').checked&&!p.exact&&M.kind(p)==='under'){const c=M.coefficients(p),amp=Math.hypot(c.A,c.B);for(const sign of [-1,1])trace(a,data.map(z=>[z.t,p.eq+sign*amp*Math.exp(-c.a*z.t)]),'loss',{'stroke-dasharray':'5 5','stroke-width':1.8});}
+ const z=exp.at(t);if(showPos){trace(a,data.map(z=>[z.t,z.y]),'position');dot(a.group,a.X(t),a.Y(z.y),'position');}if(showVel){trace(b,data.map(z=>[z.t,vel(z)]),'speed');dot(b.group,b.X(t),b.Y(vel(z)),'speed');}line(a.group,a.X(t),a.top,a.X(t),a.bottom,'muted',1,{'stroke-dasharray':'3 5'});
+ legend('time-legend',[...(showPos?[[ls.name+(both?' · axe gauche':''),'position']]:[]),...(showVel?[[ls.velname+(both?' · axe droit':''),'speed']]:[]),...(refOn?[['Linéarisé','muted',true]]:[])]);
+}
+function phaseChart(){
+ const svg=$('other-chart'),[w,h]=size(svg),ls=labelState();let datasets,normalized=mode!=='explore';
+ if(mode==='compare')datasets=curves.map(c=>({...c,data:samples(c.exp)}));else if(mode==='analogy')datasets=[{p,exp,data:samples(),color:'position',label:'Mécanique'},{p,exp,data:samples(),color:'speed',label:'Électricité',dash:true}];else datasets=[{p,exp,data:samples(),color:'position',label:'Trajectoire actuelle'}];
+ const coords=(z,pp)=>normalized?[reduced(pp,z).x,reduced(pp,z).v]:[z.y,state.system==='circuit'?pp.C*z.v:z.v];
+ let points=datasets.flatMap(c=>c.data.map(z=>coords(z,c.p)));if(!normalized)points=points.concat(saved.flatMap(c=>samples(c).map(z=>coords(z,c.p))));
+ if(!normalized&&$('linear-reference').checked&&p.system==='pendulum'&&p.exact)points=points.concat(samples(reference).map(z=>coords(z,p)));
+ const eq=normalized?0:p.eq,dx=Math.max(...points.map(z=>Math.abs(z[0]-eq)),normalized?1:.01)*1.16,dy=Math.max(...points.map(z=>Math.abs(z[1])),normalized?1:.01)*1.16,a=axes(svg,w,h,eq-dx,eq+dx,-dy,dy,normalized?'X':ls.pos,normalized?'V = ṡ/(ω₀a)':ls.vel);
+ dot(a.group,a.X(eq),a.Y(0),'muted',3);
+ if(!normalized){saved.forEach(c=>poly(a.group,(pretrace()?samples(c):visibleSamples(c,c.visibleUntil)).map(z=>coords(z,c.p)),a.X,a.Y,'muted',1.5,{opacity:.5,'data-curve':'saved'}));if($('linear-reference').checked&&p.system==='pendulum'&&p.exact)poly(a.group,(pretrace()?samples(reference):visibleSamples(reference)).map(z=>coords(z,p)),a.X,a.Y,'muted',2,{'stroke-dasharray':'6 5','data-curve':pretrace()?'pretrace':'elapsed'});}
+ datasets.forEach(c=>{if(pretrace())poly(a.group,c.data.map(z=>coords(z,c.p)),a.X,a.Y,c.color,2,{opacity:.22,'data-curve':'pretrace',...(c.dash?{'stroke-dasharray':'7 6'}:{})});poly(a.group,visibleSamples(c.exp).map(z=>coords(z,c.p)),a.X,a.Y,c.color,3,{'data-curve':'elapsed',...(c.dash?{'stroke-dasharray':'7 6'}:{})});const z=coords(c.exp.at(t),c.p);dot(a.group,a.X(z[0]),a.Y(z[1]),c.color,c.dash?4:6);const ini=coords(c.exp.at(0),c.p);n('circle',{cx:a.X(ini[0]),cy:a.Y(ini[1]),r:8,fill:colors.surface,stroke:colors[c.color],'stroke-width':2},a.group);
+  // Flèche locale calculée sur la solution, indépendante des échelles des axes.
+  const at=Math.min(H*.15,p.T0*.17),end=at+p.T0*.025,z1=coords(c.exp.at(at),c.p),z2=coords(c.exp.at(end),c.p);if((pretrace()||t>=end)&&Math.hypot(a.X(z2[0])-a.X(z1[0]),a.Y(z2[1])-a.Y(z1[1]))>4)arrow(a.group,a.X(z1[0]),a.Y(z1[1]),a.X(z2[0]),a.Y(z2[1]),c.color,2);
+ });
+ phaseMap=!normalized?{...a,w,h}:null;
+ legend('other-legend',normalized?datasets.map(c=>[c.label,c.color,c.dash]):[['Point plein : instant t','position'],['Cercle : état initial','muted']]);
+}
+function energyChart(){
+ const svg=$('other-chart'),[w,h]=size(svg),normalized=mode!=='explore',data=samples();phaseMap=null;
+ if(normalized){const vals=mode==='compare'?curves:[{p,exp,color:'position',label:'Mécanique'},{p,exp,color:'speed',label:'Électricité'}],a=axes(svg,w,h,0,H*p.w,0,1.08,'τ = ω₀t','E / E₀');vals.forEach((c,i)=>{const ini=M.energies(c.p,c.exp.at(0)).initial||1,dd=samples(c.exp).map(z=>[z.t*p.w,M.energies(c.p,z).stored/ini]);trace(a,dd,c.color,mode==='analogy'&&i===1?{'stroke-dasharray':'8 7'}:{},t*p.w);dot(a.group,a.X(t*p.w),a.Y(M.energies(c.p,c.exp.at(t)).stored/ini),c.color,i?4:6);});legend('other-legend',vals.map((c,i)=>[c.label,c.color,mode==='analogy'&&i===1]));return;}
+ const ee=data.map(z=>M.energies(p,z)),work=p.system==='circuit'&&p.eq!==0,items=[['potential','Énergie potentielle','position'],['kinetic',p.system==='circuit'?'Bobine':'Énergie cinétique','speed'],['stored','Total stocké','energy'],['loss','Dissipée','loss',true],...(work?[['work','Travail source','accent',true]]:[])];if(p.system==='circuit')items[0][1]='Condensateur';
+ const all=ee.flatMap(e=>items.map(([key])=>e[key])),max=Math.max(...all,1e-9)*1.1,min=Math.min(0,...all)*1.1,scale=max<.001?1e6:max<1?1e3:1,u=scale===1e6?'µJ':scale===1e3?'mJ':'J',a=axes(svg,w,h,0,H,min*scale,max*scale,'t (s)','Énergies ('+u+')');
+ items.forEach(([key,label,color,dash])=>{trace(a,data.map((z,i)=>[z.t,ee[i][key]*scale]),color,dash?{'stroke-dasharray':'6 5'}:{});dot(a.group,a.X(t),a.Y(M.energies(p,exp.at(t))[key]*scale),color,4);});line(a.group,a.X(t),a.top,a.X(t),a.bottom,'muted',1,{'stroke-dasharray':'3 5'});legend('other-legend',items.map(([key,label,color,dash])=>[label,color,dash]));
+}
+function spring(svg,box,z,pp,options={}){
+ const {x,y,w,h}=box,mini=options.mini||false,c=options.color||'accent',font=mini?19:23,amp=Math.hypot(pp.x0,pp.v0/pp.w)||.1,eqLength=.4+pp.m*M.g/pp.k,total=Math.max(eqLength+amp,.45),scale=(h-45)/total*zoom,cx=x+w*.43,top=y+15,cy=top+(eqLength-z.x)*scale,mass=Math.max(19,Math.min(36,21*Math.cbrt(pp.m/.2))),supportW=Math.min(w*.45,160);
+ line(svg,cx-supportW/2,top,cx+supportW/2,top,'wire',5);const end=cy-mass/2-6,start=top+10,coilAmp=mini?10:16,turns=12;let d=`M${cx},${top} L${cx},${start}`;for(let i=0;i<=turns;i++)d+=` L${cx+(i===0||i===turns?0:(i%2?coilAmp:-coilAmp))},${start+(end-start)*i/turns}`;d+=` L${cx},${cy-mass/2}`;path(svg,d,c,2.4);
+ const eqY=top+eqLength*scale;line(svg,x+15,eqY,x+w-14,eqY,'muted',1,{'stroke-dasharray':'5 6'});text(svg,x+w-16,eqY-9,'zₑq','muted',font,'end',{'class':'halo'});
+ n('rect',{x:cx-mass,y:cy-mass/2,width:mass*2,height:mass,rx:6,fill:colors.soft,stroke:colors[c],'stroke-width':3,'data-drag':options.draggable?'mass':'',class:options.draggable?'handle':''},svg);text(svg,cx,cy+7,'m',c,font,'middle',{'pointer-events':'none'});
+ if(!mini){arrow(svg,x+w*.12,Math.min(y+h-22,eqY+30),x+w*.12,y+28,'muted',2);text(svg,x+w*.12+15,y+35,'z','muted',font,'start');if(options.draggable)sceneMap={kind:'spring',cx,eqY,scale,box};
+  if($('forces').checked){const grav=Math.min(70,18+pp.m*M.g*3),elastic=Math.min(80,Math.abs(pp.m*M.g-pp.k*z.x)*10);arrow(svg,cx+mass+14,cy,cx+mass+14,cy+grav,'loss',3);text(svg,cx+mass+27,cy+grav/2,'mg','loss',font,'start',{'class':'halo'});const sign=pp.m*M.g-pp.k*z.x>=0?-1:1;arrow(svg,cx-mass-17,cy,cx-mass-17,cy+sign*elastic,'position',3);text(svg,cx-mass-29,cy+sign*elastic,'Fᵣ','position',font,'end',{'class':'halo'});if(pp.gamma>0&&Math.abs(z.v)>1e-5){arrow(svg,cx+mass+14,cy,cx+mass+14,cy+Math.sign(z.v)*Math.min(60,12+pp.gamma*pp.m*Math.abs(z.v)*20),'speed',3);text(svg,cx+mass+27,cy-16,'−αv','speed',font,'start',{'class':'halo'});}}
+  text(svg,x+w-18,y+h-13,'x = '+unit(z.x,'m'),'position',font,'end',{'class':'halo'});
+ }
+}
+function pendulum(svg,box,z,pp){
+ const {x,y,w,h}=box,amplitude=pp.exact?Math.acos(Math.max(-1,Math.cos(pp.x0)-pp.v0*pp.v0/(2*pp.w*pp.w))):Math.hypot(pp.x0,pp.v0/pp.w),full=amplitude>Math.PI/2,cx=x+w/2,top=y+(full?h/2:23),len=Math.min(full?(h-42)/2:h-65,w*.37)*zoom,X=cx+len*Math.sin(z.x),Y=top+len*Math.cos(z.x),mass=full?15+3*Math.cbrt(pp.m/.2):19+5*Math.cbrt(pp.m/.2);
+ line(svg,cx,top,cx,top+len,'line',1.5,{'stroke-dasharray':'5 5'});line(svg,cx-45,top,cx+45,top,'wire',5);line(svg,cx,top,X,Y,'wire',3);dot(svg,X,Y,'accent',mass,{'data-drag':'pendulum',class:'handle'});dot(svg,cx,top,'muted',4);
+ if($('linear-reference').checked&&p.exact){const r=reference.at(t),rx=cx+len*Math.sin(r.x),ry=top+len*Math.cos(r.x);line(svg,cx,top,rx,ry,'muted',2,{'stroke-dasharray':'6 5'});n('circle',{cx:rx,cy:ry,r:mass+4,fill:'none',stroke:colors.muted,'stroke-width':2,'stroke-dasharray':'5 4'},svg);}
+ const r=Math.min(45,len*.35),a=Math.min(Math.PI*1.99,Math.abs(z.x)),sg=Math.sign(z.x)||1;path(svg,`M${cx},${top+r} A${r},${r} 0 ${a>Math.PI?1:0} ${sg>0?0:1} ${cx+r*Math.sin(z.x)},${top+r*Math.cos(z.x)}`,'position',2);
+ if($('forces').checked){arrow(svg,X,Y,X,Y+Math.min(65,pp.m*M.g*12),'loss',3);text(svg,X+15,Y+45,'mg','loss',22,'start',{'class':'halo'});const sign=M.g*Math.cos(z.x)+pp.length*z.v*z.v>=0?1:-1,tx=(cx-X)*.35*sign,ty=(top-Y)*.35*sign;arrow(svg,X,Y,X+tx,Y+ty,'speed',3);text(svg,X+tx+12,Y+ty,'Fₗ','speed',22,'start',{'class':'halo'});}
+ text(svg,x+20,y+h-15,'θ = '+fmt(z.x*180/Math.PI)+'°','position',23,'start',{'class':'halo'});text(svg,x+w-18,y+h-15,'ℓ = '+unit(pp.length,'m'),'muted',21,'end',{'class':'halo'});sceneMap={kind:'pendulum',cx,top,len,box};
+}
+function circuit(svg,box,z,pp,options={}){
+ const mini=options.mini||false,sc=zoom,w=box.w*sc,h=box.h*sc,x=box.x+(box.w-w)/2,y=box.y+(box.h-h)/2,c=options.color||'accent',fs=mini?18:22,left=x+w*.14,right=x+Math.min(w*.82,w-(mini?55:82)),top=y+Math.max(35,h*.25),bottom=y+h-42,middle=(top+bottom)/2,cx=x+w*.48,source=pp.experiment==='step',amp=options.voltageScale||Math.max(Math.abs(pp.x0),Math.abs(pp.eq),1),current=pp.C*z.v;
+ path(svg,`M${left},${middle-19} V${top} H${right} V${bottom} H${left} V${middle+19}`,'wire',2.8);
+ // Résistance et bobine sur la branche supérieure ; condensateur à droite.
+ const rx=x+w*.32,lx=x+w*.58,rw=Math.min(48,w*.12);n('rect',{x:rx-rw/2,y:top-12,width:rw,height:24,fill:colors.surface,stroke:colors[c],'stroke-width':2.5},svg);text(svg,rx,top-22,pp.gamma===0?'R = 0':'R',c,fs);
+ n('rect',{x:lx-29,y:top-22,width:58,height:36,fill:colors.surface},svg);let d=`M${lx-28},${top}`;for(let j=0;j<4;j++)d+=' q7,-25 14,0';path(svg,d,c,2.8);text(svg,lx,top-22,'L',c,fs);
+ n('rect',{x:right-18,y:middle-11,width:36,height:22,fill:colors.surface},svg);for(const sign of [-1,1])line(svg,right-23,middle+sign*7,right+23,middle+sign*7,c,4);text(svg,right-33,middle+7,'C',c,fs,'end');
+ const amount=Math.min(4,Math.ceil(Math.abs(z.y)/amp*3));for(let j=0;j<amount;j++){text(svg,right-17+j*11,middle-17,z.y>=0?'+':'−','position',17);text(svg,right-17+j*11,middle+30,z.y>=0?'−':'+','speed',17);}
+ if(source){n('circle',{cx:left,cy:middle,r:19,fill:colors.surface,stroke:colors[c],'stroke-width':2.5},svg);arrow(svg,left,middle+10,left,middle-10,c,2);text(svg,left-26,middle+6,'E',c,fs,'end');}else{line(svg,left,middle-19,left,middle+19,'wire',2.8);text(svg,left-16,middle+5,'libre','muted',mini?15:18,'end');}
+ const arrowX=cx;arrow(svg,arrowX+25,bottom,arrowX-25,bottom,'speed',2.5);text(svg,arrowX,bottom-13,'i','speed',fs);arrow(svg,right+(mini?22:37),middle+30,right+(mini?22:37),middle-30,'position',2);text(svg,right+(mini?29:45),middle+7,'uC','position',fs,'start');
+ if($('forces').checked&&!mini){arrow(svg,rx+25,top+37,rx-25,top+37,'position',2);text(svg,rx,top+62,'uR','position',fs);arrow(svg,lx+25,top+37,lx-25,top+37,'position',2);text(svg,lx,top+62,'uL','position',fs);}
+ // Les marqueurs indiquent le courant conventionnel ; la flèche i reste fixe.
+ if(Math.abs(current)>1e-10){const perimeter=2*(right-left)+2*(bottom-top),offset=(t/pp.T0*.25*Math.sign(current))%1;for(let j=0;j<10;j++){let d=((j/10+offset)%1+1)%1*perimeter,xx,yy;if(d<right-left){xx=left+d;yy=top;}else if((d-=right-left)<bottom-top){xx=right;yy=top+d;}else if((d-=bottom-top)<right-left){xx=right-d;yy=bottom;}else{d-=right-left;xx=left;yy=bottom-d;}dot(svg,xx,yy,'speed',3);}}
+ if(!mini)text(svg,x+16,y+h-10,'uC = '+unit(z.y,'V')+'  ·  i = '+unit(current,'A'),'muted',fs,'start',{'class':'halo'});
+}
+function analogyParams(){const a=Math.hypot(p.x0,p.v0/p.w)||1,C=.001,L=1/(p.w*p.w*C),U=5;return M.parameters({system:'circuit',L,C,R:p.gamma*L,experiment:'free',E:0,U0:p.x0/a*U,I0:p.v0/(p.w*a)*p.w*C*U});}
+function scene(){
+ const svg=$('scene'),[w,h]=size(svg);sceneMap=null;
+ if(mode==='compare'){
+  const size=w/3;curves.forEach((c,i)=>{const x=i*size,cx=x+size*.42,center=(h-5)/2,range=Math.max(12,(h-110)/2)*zoom,z=reduced(c.p,c.exp.at(t));if(i)line(svg,x,12,x,h-15,'line',1);text(svg,x+size/2,25,c.label,c.color,w<600?18:23);line(svg,cx,45,cx,h-48,'line',3);line(svg,cx-27,center,cx+27,center,'muted',1,{'stroke-dasharray':'4 5'});n('rect',{x:cx-19,y:center-z.x*range-13,width:38,height:26,rx:5,fill:colors.soft,stroke:colors[c.color],'stroke-width':3},svg);text(svg,x+size/2,h-22,c.returns.settled===Infinity?'Pas d’établissement':'Reste : '+unit(c.returns.settled,'s'),c.color,w<600?14:18);text(svg,x+size-12,center+6,'X','muted',18,'end');});
+  return;
+ }
+ if(mode==='analogy'){
+  const pp=analogyParams(),zz=M.linear(pp,t);if(w<640){const h2=h/2;line(svg,14,h2,w-14,h2,'line',1);text(svg,w/2,23,'Masse–ressort','position',21);text(svg,w/2,h2+23,'Circuit RLC','speed',21);spring(svg,{x:0,y:30,w,h:h2-33},exp.at(t),p,{mini:true,color:'position'});circuit(svg,{x:0,y:h2+30,w,h:h2-33},zz,pp,{mini:true,color:'speed',voltageScale:5});}
+  else{const w2=w/2;line(svg,w2,14,w2,h-15,'line',1);text(svg,w2/2,25,'Masse–ressort','position',23);text(svg,w2+w2/2,25,'Circuit RLC','speed',23);spring(svg,{x:0,y:35,w:w2,h:h-38},exp.at(t),p,{mini:true,color:'position'});circuit(svg,{x:w2,y:35,w:w2,h:h-38},zz,pp,{mini:true,color:'speed',voltageScale:5});}return;
+ }
+ const box={x:0,y:0,w,h},z=exp.at(t);if(p.system==='spring')spring(svg,box,z,p,{draggable:true});else if(p.system==='pendulum')pendulum(svg,box,z,p);else circuit(svg,box,z,p);
+}
+function readout(){
+ const z=exp.at(t),e=M.energies(p,z),ls=labelState();let captions,values;
+ if(mode==='compare'){captions=['Pulsation propre ω₀','Temps réduit τ','Tolérance','Conditions initiales réduites'];const zz=reduced(p,exp.at(0));values=[fmt(p.w)+' rad/s',fmt(t*p.w),'± '+$('tolerance').value+' %',fmt(zz.x)+' ; '+fmt(zz.v)];}
+ else if(mode==='analogy'){const pp=analogyParams(),L=pp.L;captions=['Pulsation commune ω₀','Facteur commun Q','Circuit équivalent L','Circuit équivalent R'];values=[fmt(p.w)+' rad/s',fmt(p.Q),unit(L,'H'),unit(pp.R,'Ω')];}
+ else{captions=[ls.pos,ls.vel,'Énergie stockée','Énergie dissipée'];values=[unit(z.y,ls.u),unit(p.system==='circuit'?p.C*z.v:z.v,ls.vu),unit(e.stored,'J'),unit(e.loss,'J')];}
+ for(let i=0;i<4;i++){mathHTML($('caption'+i),captions[i]);mathHTML($('value'+i),values[i]);}
+ $('timeline').value=Math.round(t/H*1000);$('clock').textContent='t = '+unit(t,'s');
+}
+function render(){refreshColors();scene();readout();timeChart();const energy=$('other-view').value==='energy';$('other-title').textContent=energy?(mode==='explore'?'Échanges d’énergie':'Énergie stockée réduite'):(mode==='explore'?'Trajectoire de phase':'Phase réduite');if(energy)energyChart();else phaseChart();dirty=false;}
+function tick(timestamp){if(running){if(last){t=Math.min(H,t+(timestamp-last)/1000*p.T0*Number($('speed').value));dirty=true;}last=timestamp;if(t>=H){running=false;$('play').textContent='▶ Lecture';}}else last=0;if(dirty)render();requestAnimationFrame(tick);}
+function setMode(next){mode=next;document.body.dataset.mode=mode;if(mode==='analogy'&&state.system!=='spring'){baseInitial[state.system]=Object.fromEntries((state.system==='circuit'?['U0','I0']:['x0','v0']).map(k=>[k,state[k]]));state.system='spring';Object.assign(state,baseInitial.spring);state.exact=false;$('system').value='spring';}if(mode==='compare'&&state.system==='circuit'&&state.experiment==='step'){state.experiment='free';state.U0=5;state.I0=0;$('experiment').value='free';}document.querySelectorAll('.tabs [data-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));zoom=1;fields();rebuild(false,true);}
+document.querySelectorAll('.tabs [data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$('system').onchange=e=>{baseInitial[state.system]=Object.fromEntries((state.system==='circuit'?['U0','I0']:['x0','v0']).map(k=>[k,state[k]]));state.system=e.target.value;Object.assign(state,baseInitial[state.system]);state.exact=false;zoom=1;fields();rebuild(false,true);};
+$('experiment').onchange=e=>{state.experiment=e.target.value;state.U0=e.target.value==='step'?0:5;state.I0=0;fields();rebuild(false,true);};
+$('exact').onchange=e=>{state.exact=e.target.checked;fields();rebuild(false,true);};
+$('duration').onchange=()=>rebuild(false,false);$('tolerance').onchange=()=>{const v=Number($('tolerance').value);$('tolerance').value=Number.isFinite(v)?Math.max(1,Math.min(20,v)):5;rebuild(false,false);};
+$('other-view').onchange=()=>dirty=true;$('time-view').onchange=()=>dirty=true;for(const id of ['pretrace','forces','envelope','linear-reference'])$(id).onchange=()=>dirty=true;
+$('play').onclick=()=>{if(t>=H)t=0;running=!running;last=0;$('play').textContent=running?'Ⅱ Pause':'▶ Lecture';dirty=true;};
+$('reset').onclick=()=>{running=false;t=0;last=0;$('play').textContent='▶ Lecture';dirty=true;};$('timeline').oninput=e=>{running=false;last=0;t=H*Number(e.target.value)/1000;$('play').textContent='▶ Lecture';dirty=true;};
+$('keep').onclick=()=>{saved.push({...exp,visibleUntil:t});if(saved.length>6)saved.shift();$('keep').textContent='Garder ('+saved.length+'/6)';dirty=true;};$('clear').onclick=()=>{saved=[];$('keep').textContent='Garder la trajectoire';dirty=true;};
+$('zoom-in').onclick=()=>{zoom=Math.min(2,zoom*1.15);dirty=true;};$('zoom-out').onclick=()=>{zoom=Math.max(.5,zoom/1.15);dirty=true;};$('fit').onclick=()=>{zoom=1;dirty=true;};
+$('theme').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').setAttribute('aria-pressed',dark);$('theme').textContent=dark?'Thème clair':'Thème sombre';dirty=true;};
+function projection(){const on=document.body.classList.toggle('projection');$('projection').setAttribute('aria-pressed',on);$('projection').textContent=on?'Réglages':'Projection';dirty=true;}
+function fullscreenElement(){return document.fullscreenElement||document.webkitFullscreenElement;}
+function syncFullscreen(){const active=Boolean(fullscreenElement());$('fullscreen').setAttribute('aria-pressed',String(active));$('fullscreen').textContent=active?'⛶ Quitter le plein écran':'⛶ Plein écran';$('fullscreen').title=active?'Quitter le plein écran (F ou Échap)':'Plein écran (F) · Échap pour quitter';dirty=true;}
+let fullscreenPending=false;
+async function toggleFullscreen(){
+ if(fullscreenPending)return;fullscreenPending=true;
+ $('fullscreen-status').hidden=true;
+ try{if(fullscreenElement()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw new Error('unavailable');await exit.call(document);}else{const root=document.documentElement,enter=root.requestFullscreen||root.webkitRequestFullscreen;if(!enter)throw new Error('unavailable');await enter.call(root);}}
+ catch{const status=$('fullscreen-status');status.textContent='Le plein écran n’est pas autorisé ici. Ouvrir le labo dans une fenêtre de navigateur pour utiliser ce bouton.';status.hidden=false;}
+ fullscreenPending=false;syncFullscreen();
+}
+$('fullscreen').onclick=toggleFullscreen;document.addEventListener('fullscreenchange',syncFullscreen);document.addEventListener('webkitfullscreenchange',syncFullscreen);
+$('projection').onclick=projection;$('help').onclick=()=>{$('help-dialog').showModal();};$('close-help').onclick=()=>{$('help-dialog').close();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('help-dialog').open)return;if(fullscreenElement()||fullscreenPending){if(!fullscreenPending){e.preventDefault();toggleFullscreen();}return;}return;}if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||$('help-dialog').open)return;if(e.code==='Space'){e.preventDefault();$('play').click();}if(e.key.toLowerCase()==='f'&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();toggleFullscreen();}if(e.key.toLowerCase()==='p')projection();if(e.key.toLowerCase()==='r')$('reset').click();});
+function pointIn(svg,e){const b=svg.getBoundingClientRect();return {x:e.clientX-b.left,y:e.clientY-b.top};}
+function dragPhase(e){if(!phaseMap||mode!=='explore'||$('other-view').value!=='phase')return;const a=phaseMap,pt=pointIn($('other-chart'),e);if(pt.x<a.left||pt.x>a.right||pt.y<a.top||pt.y>a.bottom)return;const y=a.xmin+(pt.x-a.left)/(a.right-a.left)*(a.xmax-a.xmin),v=a.ymax-(pt.y-a.top)/(a.bottom-a.top)*(a.ymax-a.ymin);if(p.system==='circuit'){state.U0=Math.max(-10,Math.min(10,y));state.I0=Math.max(-.5,Math.min(.5,v));}else{state.x0=Math.max(p.system==='spring'?-.3:-170*Math.PI/180,Math.min(p.system==='spring'?.3:170*Math.PI/180,y));state.v0=Math.max(p.system==='spring'?-2:-8,Math.min(p.system==='spring'?2:8,v));}syncInitial();rebuild(false,false);}
+$('other-chart').addEventListener('pointerdown',e=>{if(mode!=='explore'||!phaseMap)return;drag={kind:'phase',map:phaseMap};$('other-chart').setPointerCapture(e.pointerId);dragPhase(e);});
+$('other-chart').addEventListener('pointermove',e=>{if(drag?.kind==='phase'){phaseMap=drag.map;dragPhase(e);}});
+function dragScene(e){if(!drag?.map)return;const a=drag.map,pt=pointIn($('scene'),e);if(a.kind==='spring')state.x0=Math.max(-.3,Math.min(.3,(a.eqY-pt.y)/a.scale));else state.x0=Math.max(-170*Math.PI/180,Math.min(170*Math.PI/180,Math.atan2(pt.x-a.cx,pt.y-a.top)));state.v0=0;syncInitial();rebuild(false,false);}
+$('scene').addEventListener('pointerdown',e=>{if(mode!=='explore'||!sceneMap||!e.target.closest('[data-drag]'))return;drag={kind:'scene',map:sceneMap};$('scene').setPointerCapture(e.pointerId);dragScene(e);});$('scene').addEventListener('pointermove',e=>{if(drag?.kind==='scene')dragScene(e);});
+for(const id of ['scene','other-chart'])for(const ev of ['pointerup','pointercancel','lostpointercapture'])$(id).addEventListener(ev,()=>{drag=null;});
+function exportSVG(){
+ render();const root=n('svg',{xmlns:NS,width:1600,height:1300,viewBox:'0 0 1600 1300'});n('rect',{width:1600,height:1300,fill:colors.surface},root);const css=n('style',{},root);css.textContent='text{font-family:Arial,Helvetica,sans-serif}.halo{paint-order:stroke;stroke:'+colors.surface+';stroke-width:5px;stroke-linejoin:round}';text(root,40,48,'OS4 · Labo des oscillateurs','accent',32,'start');text(root,40,82,$('scene-title').textContent+' · t = '+unit(t,'s')+' · '+mathSource($('characteristics')),'muted',21,'start');
+ const copy=(id,x,y,w,h)=>{const source=$(id),clone=source.cloneNode(true);clone.removeAttribute('id');clone.setAttribute('x',x);clone.setAttribute('y',y);clone.setAttribute('width',w);clone.setAttribute('height',h);root.append(clone);};
+ copy('scene',20,120,540,890);text(root,610,125,$('time-title').textContent,'ink',25,'start');text(root,610,615,$('other-title').textContent,'ink',25,'start');copy('time-chart',590,145,980,380);copy('other-chart',590,635,980,380);
+ const wrap=(str,x,y,max=76)=>{let row='',j=0;for(const word of str.split(' ')){if((row+' '+word).length>max){text(root,x,y+j*24,row,'muted',18,'start');row=word;j++;}else row+=(row?' ':'')+word;}text(root,x,y+j*24,row,'muted',18,'start');};
+ wrap([...$('time-legend').children].map(s=>mathSource(s)).join(' · '),610,550,95);wrap([...$('other-legend').children].map(s=>mathSource(s)).join(' · '),610,1040,95);
+ text(root,35,1090,mathSource($('equation')),'accent',24,'start');const params=[...document.querySelectorAll('#physical-fields .field, #initial-fields .field')].map(f=>mathSource(f.querySelector('label'))+' = '+f.querySelector('input[type=number]').value+' '+mathSource(f.querySelector('.unit'))).join(' · ');wrap(params,35,1130,148);wrap([0,1,2,3].map(i=>mathSource($('caption'+i))+' : '+mathSource($('value'+i))).join(' · '),35,1190,145);text(root,35,1240,'Lecture : 1 T₀ par seconde d’écran à × 1 · Énergies physiques sauf vues réduites explicitement indiquées','muted',18,'start');text(root,35,1275,'E. Guillaume · MPSI · '+new Date().toLocaleDateString('fr-FR'),'muted',18,'start');
+ const xml=new XMLSerializer().serializeToString(root),url=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='OS4_Oscillateurs_'+mode+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('export').onclick=exportSVG;
+new ResizeObserver(()=>dirty=true).observe(document.querySelector('.stage'));window.addEventListener('resize',()=>dirty=true);
+// Diagnostic en lecture seule pour les contrôles locaux, sans dépendance externe.
+window.OS4Lab={getState:()=>({...state,mode,t,H,running,Q:p.Q}),getDiagnostics:()=>({energy:M.energies(p,exp.at(t)),sample:exp.at(t),curves:curves.map(c=>({Q:c.p.Q,...c.returns})),saved:saved.length})};
+comparisonFields();fields();rebuild();mathTree(document.body);render();requestAnimationFrame(tick);
+})();
+</script>
+<!-- CPGE_MENU_SCRIPT_BEGIN -->
+<script id="cpge-menu-common">
+/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
+(()=>{
+ 'use strict';
+ if(document.documentElement.dataset.cpgeMenu==='1')return;
+ const header=document.querySelector('header'),theme=document.getElementById('theme');
+ if(!header||!theme)return;
+ document.documentElement.dataset.cpgeMenu='1';
+ const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
+ header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
+ const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
+ let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
+ if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
+ if(!help){
+  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
+  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
+  const instructions=document.createElement('p'),model=document.createElement('p');
+  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
+  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
+  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
+ }
+ if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
+ if(!full)full=make('fullscreen','⛶');
+ if(!image)return;
+ if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
+ const common=[theme,help,image,projection,full];
+ // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
+ const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
+ for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
+ full.classList.add('cpge-fullscreen');
+ const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
+ const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
+ const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
+ const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
+ let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
+ function sync(){
+  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
+  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
+  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
+  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
+  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
+  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
+ }
+ const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
+ function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
+ async function toggleFullscreen(){
+  if(busy)return;busy=true;
+  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
+  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
+  finally{busy=false;queue();}
+ }
+ // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
+ full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
+ function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
+ document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
+ // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
+ document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
+ new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
+ const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
+ sync();
+})();
+</script>
+<!-- CPGE_MENU_SCRIPT_END -->
+</body>
+</html>

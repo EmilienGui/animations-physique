@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>OS5 · Atelier de résonance</title><style>:root{--paper:#f4f1f6;--surface:#fff;--ink:#17141b;--muted:#665d70;--line:#dfd7e5;--accent:#672c8b;--soft:#eee5f5;--input:#246d83;--output:#8f2227;--other:#a56a11;--grid:#ece6f0;--ghost:#82748b;--focus:#ba6aeb}
+body.dark{--paper:#141119;--surface:#211c29;--ink:#f7f0fb;--muted:#c0b3ca;--line:#483b54;--accent:#d4a0f1;--soft:#392647;--input:#7bd6ee;--output:#ff9b9e;--other:#edc176;--grid:#352c3e;--ghost:#b7a4c5;--focus:#e0b4f7}
+.right-column{display:flex;flex-direction:column;gap:9px;min-height:0;min-width:0}.right-column .spectra{flex:1;min-height:220px}.scene-key{flex:none;text-align:center;font-size:14px;color:var(--muted);padding:9px 12px 0}.projection .scene-key{font-size:18px}.timeline .card-head{flex-wrap:wrap;row-gap:2px}.math-symbol{font-family:Georgia,'Times New Roman',serif;white-space:nowrap}.math-symbol i{font-weight:normal}.math-symbol sub,sub{font-size:.72em;line-height:0;vertical-align:baseline;position:relative;top:.28em;font-style:normal}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.35 Arial,Helvetica,sans-serif}h1,h2,h3,p{margin:0}button,input,select{font:inherit;color:inherit}button,select{border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:7px 10px;min-height:36px}button{cursor:pointer}button:hover{background:var(--soft);border-color:var(--accent)}button[aria-pressed=true],button[aria-selected=true]{background:var(--soft);color:var(--accent);border-color:var(--accent)}button.primary{background:var(--accent);color:var(--surface);border-color:var(--accent)}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid var(--focus);outline-offset:2px}button:disabled{opacity:.4;cursor:default}input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin:8px 0 0}input[type=number]{width:90px;border:1px solid var(--line);border-radius:4px;background:var(--paper);padding:5px;min-height:33px;text-align:right;font-variant-numeric:tabular-nums}input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin:0 6px 0 0;vertical-align:middle}select{width:100%;font-size:15px}.shell{height:100dvh;max-width:2200px;margin:auto;padding:10px 16px;border-top:5px solid var(--accent);display:flex;flex-direction:column;gap:9px}header,nav,.identity,.actions,.tabs{display:flex;align-items:center;gap:8px}header,nav{justify-content:space-between}h1{font-size:27px;font-weight:500;letter-spacing:-.035em}.identity{gap:12px}.chapter{font-size:21px;color:var(--accent);padding:7px;border:1px solid var(--accent);border-radius:5px}.eyebrow,.section-title{color:var(--accent);font-size:11px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase}.actions button{font-size:14px}.tabs{gap:5px;flex-wrap:wrap}.tabs button{font-size:16px}.state-badge{font-size:13px;white-space:nowrap;color:var(--accent);background:var(--soft);padding:4px 8px;border-radius:5px}main{display:grid;grid-template-columns:minmax(0,1fr) 276px;gap:11px;flex:1;min-height:0}.experiment{display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}.top-panels{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);gap:9px;flex:1;min-height:245px}.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:hidden}.system,.spectra,.timeline{display:flex;flex-direction:column;min-height:0;min-width:0}.card-head{display:flex;justify-content:space-between;gap:5px;align-items:center;padding:9px 12px 0;flex:none}h2{font-size:17px;font-weight:500}.card-head button{font-size:12px;padding:4px 6px;min-height:27px}.plot-tools{display:flex;gap:3px}canvas{width:100%;display:block;min-height:0;flex:1;touch-action:none}#amplitude{flex:1.28}#phase{flex:.85}.phase-title{display:flex;justify-content:space-between;align-items:center;padding:0 12px;gap:5px}.phase-title h2{font-size:15px}.phase-title span{font-size:15px;color:var(--output)}.scene-note{padding:5px 12px 10px;line-height:1.35;font-size:14px;color:var(--muted);min-height:48px}#view-toggle{max-width:112px}.timeline{height:134px;flex:none}.time-legend{display:flex;gap:12px;font-size:13px}.input-key{color:var(--input)}.output-key{color:var(--output)}.time-legend>span:before{content:'';display:inline-block;width:16px;border-top:2px solid;margin-right:5px;vertical-align:middle}.metrics{display:grid;grid-template-columns:1.4fr 1fr .9fr;padding:2px 1px;gap:10px}.metrics>div{border-left:1px solid var(--line);padding-left:13px}.metrics>div:first-child{border:0;padding-left:0}.metrics>div>span{font-size:14px;color:var(--muted);display:block}.metrics strong{font-size:30px;font-weight:500;letter-spacing:-.04em;white-space:nowrap;font-variant-numeric:tabular-nums}.metrics>div:first-child strong{color:var(--output)}.insight{font-size:15px;color:var(--accent);min-height:21px}.transport{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.transport button{font-size:13px;min-height:32px;padding:5px 8px}.transport label{font-size:13px;display:flex;align-items:center;gap:5px}.transport select{width:auto;font-size:13px;min-height:32px;padding:3px}#clock-note{font-size:12px;color:var(--muted);margin-left:auto}.controls{overflow:auto;min-height:0;scrollbar-width:thin}.controls section{padding:13px;border-bottom:1px solid var(--line)}.controls section:last-child{border:0}.section-title{margin-bottom:10px}.controls>section>label:not(.check){display:block;font-size:14px;margin-bottom:5px}.field-label{margin-top:10px}.field{margin-top:10px}.field>label{display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:15px}.input-unit{display:flex;align-items:center;gap:4px;font-size:13px}.hint{font-size:12px;line-height:1.45;color:var(--muted);margin-top:7px}.wide{width:100%;font-size:13px;margin-top:8px;min-height:32px}.check{display:block;margin-top:11px;font-size:14px}.check sub{font-size:.75em}.formula{font:17px/1.6 Georgia,'Times New Roman',serif;margin-top:11px;overflow-wrap:anywhere}.ruler-label{display:flex;align-items:center;gap:6px;font-size:14px;margin-top:8px}.measure-result{font-size:17px;color:var(--accent);margin-top:9px}footer{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted)}dialog{max-height:88dvh;width:min(790px,calc(100% - 32px));overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:27px;line-height:1.6}dialog::backdrop{background:#180d2499}dialog h2{font-size:27px}dialog h3{font-size:18px;margin-top:20px;color:var(--accent)}dialog p{margin-top:10px}dialog button{margin-top:22px}#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 18px;border-radius:6px;font-size:15px;pointer-events:none;opacity:0;transition:opacity .2s;max-width:90vw}#toast.visible{opacity:1}[hidden]{display:none!important}
+.projection .controls,.projection footer,.projection .eyebrow,.projection .chapter{display:none}.projection main{grid-template-columns:1fr}.projection .shell{max-width:none;padding:8px 12px}.projection h1{font-size:27px}.projection .top-panels{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.projection .metrics strong{font-size:40px}.projection .metrics>div>span{font-size:20px}.projection .scene-note{font-size:20px;min-height:63px}.projection .insight{font-size:20px;min-height:27px}.projection .card-head h2,.projection .phase-title h2{font-size:22px}.projection .phase-title span{font-size:20px}.projection .timeline{height:150px}.projection .time-legend{font-size:18px}.projection .tabs button{font-size:19px}.projection .transport button,.projection .transport label{font-size:16px}.projection #clock-note{font-size:15px}.projection .card-head button{font-size:16px;max-width:none}
+@media(min-height:900px){.timeline{height:175px}.projection .timeline{height:200px}.scene-note{font-size:17px}h2{font-size:20px}.metrics strong{font-size:36px}.metrics>div>span{font-size:17px}.insight{font-size:18px}.transport button{font-size:15px}}
+@media(max-height:820px) and (min-width:741px){.timeline{height:112px}.metrics strong{font-size:28px;line-height:1.15}.metrics>div>span{line-height:1.2}.projection .timeline{height:108px}.projection .metrics strong{font-size:36px;line-height:1.1}.projection .metrics>div>span{font-size:18px;line-height:1.2}.projection .scene-note{font-size:18px;min-height:58px}.projection .time-legend{font-size:16px}.projection .insight{font-size:18px;line-height:1.25;min-height:23px}}
+@media(max-width:1000px){main{grid-template-columns:minmax(0,1fr) 240px}.shell{padding:8px}.actions button{padding:6px}.top-panels{grid-template-columns:1fr 1.15fr}.card-head{padding:8px 8px 0}h2{font-size:15px}.tabs button{font-size:14px}.metrics strong{font-size:25px}.metrics>div>span{font-size:12px}#clock-note{width:100%;margin-left:0}.transport{gap:4px}.scene-note{font-size:12px}}
+@media(max-width:740px){.shell{height:auto;min-height:100dvh}header{align-items:flex-start}h1{font-size:22px}.actions{flex-wrap:wrap;justify-content:flex-end;max-width:175px}.eyebrow{font-size:9px}.chapter{font-size:17px}nav{align-items:flex-start}.state-badge{display:none}main{grid-template-columns:1fr;flex:none}.top-panels,.projection .top-panels{grid-template-columns:1fr;flex:none;min-height:0}.system{height:350px}.spectra{height:400px}.timeline,.projection .timeline{height:155px}.controls{overflow:visible}.metrics{gap:5px}.metrics strong,.projection .metrics strong{font-size:25px}.metrics span,.projection .metrics>div>span{font-size:12px}.metrics>div{padding-left:6px}.transport{gap:6px}.insight,.projection .insight{font-size:16px}.projection .scene-note{font-size:17px}.projection .phase-title h2,.projection .card-head h2{font-size:18px}.projection .time-legend{font-size:13px}footer{font-size:10px}.projection .system{height:400px}.projection .spectra{height:470px}#clock-note{width:100%}}
+@media(max-width:740px){.right-column .spectra{flex:none;height:400px}.projection .right-column .spectra{height:470px}}
+</style><!-- CPGE_MENU_STYLE_BEGIN -->
+<style id="cpge-menu-style">
+/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
+.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
+.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
+.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
+.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
+.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
+.cpge-global-actions>button.cpge-common-button>svg{display:none}
+.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
+.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
+.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
+.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
+.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
+.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
+.cpge-menu-status[hidden]{display:none!important}
+@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
+.projection .cpge-global-actions>.mobileSettings{display:none!important}
+@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+
+/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
+html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
+html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
+html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
+html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+html[data-cpge-film] button:hover{border-color:var(--accent)}
+html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
+html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
+html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
+html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+</style>
+<!-- CPGE_MENU_STYLE_END -->
+</head>
+<body><div class="shell">
+<header><div class="identity"><span class="chapter">OS5</span><div><p class="eyebrow">Ondes et signaux · MPSI</p><h1>Atelier de résonance</h1></div></div><div class="actions"><button id="theme" aria-pressed="false">Sombre</button><button id="projection" aria-pressed="false">Projection</button><button id="export">Image PNG</button><button id="help">Aide</button></div></header>
+<nav aria-label="Modèle étudié"><div class="tabs" role="tablist"><button role="tab" data-tab="rlc" aria-selected="true">RLC série</button><button role="tab" data-tab="spring" aria-selected="false">Ressort forcé</button><button role="tab" data-tab="road" aria-selected="false">Suspension & route</button><button role="tab" data-tab="radio" aria-selected="false">Accord radio</button></div><span class="state-badge" id="regime-badge">Régime établi</span></nav>
+<main><section class="experiment" aria-label="Représentations synchronisées">
+<div class="top-panels"><article class="card system"><div class="card-head"><h2 id="scene-title">Un circuit, deux résonances</h2><button id="view-toggle" title="Alterner schéma et tensions complexes">Tensions complexes</button></div><p class="scene-key" id="instant-note">+ / − : signes instantanés</p><canvas id="scene" role="img" aria-label="Système physique animé"></canvas><p class="scene-note" id="scene-note"></p></article>
+<div class="right-column"><article class="card spectra"><div class="card-head"><h2 id="amplitude-title">Amplitude</h2><div class="plot-tools"><button id="zoom-out" aria-label="Élargir l’axe des fréquences">−</button><button id="zoom-in" aria-label="Resserrer l’axe des fréquences">+</button><button id="frame">Cadrer</button></div></div><canvas id="amplitude" role="img" tabindex="0" aria-label="Amplitude en fonction de la fréquence. Cliquer ou utiliser les flèches pour déplacer la fréquence."></canvas><div class="phase-title"><h2>Phase par rapport à l’excitation</h2><span id="phase-value"></span></div><canvas id="phase" role="img" tabindex="0" aria-label="Phase en fonction de la fréquence. Cliquer ou utiliser les flèches pour déplacer la fréquence."></canvas></article>
+<article class="card timeline"><div class="card-head"><h2 id="time-title">Signaux temporels · valeurs normalisées</h2><div class="time-legend"><span class="input-key" id="input-legend">e / Eₘ</span><span class="output-key" id="output-legend">u_C / Eₘ</span></div></div><canvas id="time" role="img" aria-label="Excitation et réponse en fonction du temps"></canvas></article></div></div>
+<div class="metrics" aria-live="off"><div><span id="metric-1-label">Amplitude de la réponse</span><strong id="metric-1">—</strong></div><div><span id="metric-2-label">Fréquence propre f₀</span><strong id="metric-2">—</strong></div><div><span id="metric-3-label">Facteur de qualité Q</span><strong id="metric-3">—</strong></div></div>
+<p id="insight" class="insight"></p>
+<div class="transport"><button class="primary" id="play" aria-pressed="true">Pause</button><button id="reset">Recommencer</button><label>Lecture <select id="speed"><option value="0.25">× 0,25</option><option value="0.5">× 0,5</option><option value="1" selected>× 1</option><option value="2">× 2</option></select></label><button id="sweep" aria-pressed="false">Balayer les fréquences</button><span id="clock-note">Temps d’illustration</span></div>
+</section>
+<aside class="card controls" aria-label="Réglages et mesures">
+<section><p class="section-title">01 · Explorer</p><label for="preset">Situation caractéristique</label><select id="preset"></select><label class="field-label" for="response">Grandeur étudiée</label><select id="response"></select><div id="frequency-field" class="field"><label><span id="frequency-label">Fréquence f</span><span class="input-unit"><input id="frequency" type="number" min="0" step="any"><span id="frequency-unit">Hz</span></span></label><input id="frequency-range" type="range" min="0" max="4" step="0.001" aria-label="Fréquence d’excitation"></div><p class="hint" id="frequency-hint"></p><button class="wide" id="goto-own">Se placer en f₀</button></section>
+<section><p class="section-title">02 · Paramètres physiques</p><div id="parameters"></div><button class="wide" id="compare">Mémoriser la courbe</button><button class="wide" id="clear-compare" hidden>Effacer la comparaison</button><p class="hint" id="compare-hint" hidden>Ancienne réponse en pointillé, avec sa propre fréquence propre.</p></section>
+<section id="display-section"><p class="section-title">03 · Affichages</p><label class="check"><input id="normalized" type="checkbox" checked>Amplitude normalisée</label><label class="check" id="both-row"><input id="both" type="checkbox">Comparer i et u<sub>C</sub></label><label class="check"><input id="markers" type="checkbox" checked>Repères caractéristiques</label><label class="check" id="startup-row"><input id="startup" type="checkbox">Démarrer depuis le repos</label><label class="check"><input id="equations" type="checkbox">Équation et réponse complexe</label><div id="formula-box" hidden><div class="formula" id="equation"></div><div class="formula" id="transfer"></div><p class="hint" id="model-note"></p></div><p class="hint" id="normalization-note"></p></section>
+<section id="measure-section"><p class="section-title">04 · Mesurer une résonance</p><label class="check"><input id="exercise" type="checkbox">Masquer f₀ et Q</label><label class="check"><input id="rulers" type="checkbox">Deux curseurs de mesure</label><div id="ruler-fields" hidden><label class="ruler-label">f₁ <input id="ruler-1" type="number" min="0" step="any"> Hz</label><label class="ruler-label">f₂ <input id="ruler-2" type="number" min="0" step="any"> Hz</label><p class="hint">Déplacer les lignes avec la souris, ou saisir les fréquences. Pour i : placer les curseurs au niveau Imax / √2.</p><p id="measure-result" class="measure-result"></p></div><button class="wide" id="reveal" hidden>Révéler f₀ et Q</button></section>
+</aside></main><footer><span>OS5 · E. Guillaume · Modèles linéaires idéalisés · Hors connexion</span><span>Espace : pause · P : projection · C : cadrer</span></footer></div>
+<dialog id="about"><h2>Explorer une résonance</h2><p>Choisir un modèle, puis déplacer la ligne de fréquence sur les courbes (ou les flèches du clavier). La scène, l’amplitude, la phase et les signaux temporels sont synchronisés. Les réglages physiques et les champs numériques donnent les mêmes possibilités.</p><h3>RLC série</h3><p>Générateur de tension idéal e(t) = Eₘ cos(ωt), résistance série totale R &gt; 0 ; L et C idéaux. Le courant est orienté dans le sens horaire et les dipôles sont en convention récepteur. Choisir i ou u<sub>C</sub>, ou comparer leurs réponses normalisées. Le diagramme complexe utilise des amplitudes fixes, avec E comme référence de phase. Les tensions sont additionnées bout à bout : E = U<sub>R</sub> + U<sub>L</sub> + U<sub>C</sub>.</p><h3>Ressort du cours</h3><p>Support vertical mobile z<sub>A</sub>(t) = A cos(ωt), axe z orienté vers le bas. y désigne le déplacement de la masse depuis son équilibre pour le support immobile. La force de frottement est −cẏ par rapport au laboratoire ; c est le coefficient α du cours. Le poids est absorbé dans la position d’équilibre. La réponse y/A est identique à u<sub>C</sub>/Eₘ.</p><h3>Suspension et route ondulée</h3><p>Modèle simplifié à un degré de liberté : m représente la masse suspendue associée à une roue. La roue, sans dynamique propre, suit exactement une route sinusoïdale de faible pente ; le pneu est indéformable et reste au contact. Ressort et amortisseur relient roue et caisse. L’amortisseur exerce −c(ẏ − ṙ) sur la caisse. La masse de roue, le rebond du pneu, le tangage, les butées et les pertes de contact ne sont pas modélisés.</p><p>r(t) = A cos(2πvt/λ), avec v en m/s et λ la longueur spatiale des ondulations ; f = v/λ. L’axe y est vertical ascendant et les déplacements sont mesurés depuis l’équilibre. Le débattement affiché est la variation signée y − r, et sa valeur en amplitude n’est pas une course totale crête à crête. L’accélération est un indicateur de sollicitation de la caisse, sans classement normatif du confort. Le seuil f/f₀ = √2 caractérise l’atténuation du déplacement de la caisse par rapport à la route, pas une règle de sécurité routière.</p><h3>Accord radio</h3><p>Trois composantes sinusoïdales simultanées sont appliquées au même RLC série. La sortie est la tension de R, proportionnelle au courant. Le réglage de C déplace f₀ ; R fixe l’amortissement et modifie Q. Chaque composante est filtrée avec sa propre amplitude et sa propre phase. Il n’y a ni modulation, ni démodulation, ni son : ce modèle illustre seulement la sélection fréquentielle.</p><h3>Lire les graphiques</h3><p>La normalisation est explicitée près des courbes ; le passage aux unités réelles est disponible. Pour i, RIₘ/Eₘ a un maximum égal à 1 : modifier R change aussi le courant réel, affiché dans la grande valeur sous les courbes. Les courbes mémorisées conservent leurs paramètres physiques et sont tracées en pointillé. L’axe des fréquences est commun et exprimé en Hz ; la graduation supérieure indique f/f₀ du modèle courant.</p><p>Les repères dépendent de la grandeur étudiée. Pour le courant : f₀, coupures à Imax/√2 et bande passante f₀/Q. Pour u<sub>C</sub> et y du ressort : f₀ et fᵣ seulement si Q &gt; 1/√2. La phase d’une amplitude nulle est indéfinie ; elle n’est pas remplacée par une valeur fictive. En mode mesure, les curseurs sont libres : aucune correction automatique de leur placement.</p><h3>Temps et démarrage</h3><p>La lecture par défaut présente le régime établi, sans calcul de balayage dynamique. À chaque réglage, un nouveau RSF est affiché immédiatement. Le balayage automatique parcourt une succession de régimes établis. Pour la route, le temps garde un rapport fixe avec le temps d’écran : à lecture × 1, une seconde d’écran représente 0,15 seconde physique. La route défile et la roue tourne donc plus vite quand v augmente ; l’échelle du schéma reste fixe lors des changements de vitesse. La phase de la route est conservée quand on règle v. Pour les autres modèles, le temps d’illustration est adapté pour rester lisible. Le rapport des temps et la vitesse de lecture sont indiqués. Le démarrage depuis le repos, disponible pour RLC et ressort, est calculé par la solution exacte (régimes apériodique, critique et pseudo-périodique). Les courbes de fréquence décrivent toujours le RSF final, même pendant le démarrage.</p><h3>Échelles et export</h3><p>Les déplacements mécaniques sont amplifiés à l’écran, avec un facteur commun au support et à la masse, indiqué sur la scène. Le cadrage reste constant pendant l’oscillation. « Cadrer » rétablit les axes complets ; +/− agissent sur l’axe des fréquences autour du point sélectionné. Le mode projection masque les réglages et agrandit les textes. L’export PNG contient les représentations et valeurs visibles dans le thème courant. L’ensemble fonctionne hors connexion ; un essai à l’écran ne remplace pas un essai au vidéoprojecteur.</p><button id="close-help" class="primary">Revenir à l’atelier</button></dialog>
+<div id="toast" role="status"></div><script id="physics">'use strict';
+// Toutes les entrées sont en SI. Convention complexe exp(+jωt).
+window.OS5Model = (() => {
+ const add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+ const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+ const mul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+ const scale=(a,k)=>[a[0]*k,a[1]*k];
+ const div=(a,b)=>{const d=b[0]*b[0]+b[1]*b[1];return [(a[0]*b[0]+a[1]*b[1])/d,(a[1]*b[0]-a[0]*b[1])/d];};
+ const abs=a=>Math.hypot(...a), phase=a=>a[0]===0&&a[1]===0?null:Math.atan2(a[1],a[0]);
+ const at=(a,angle)=>a[0]*Math.cos(angle)-a[1]*Math.sin(angle);
+ function characteristics(p){
+  if(!['rlc','radio','spring','road'].includes(p.kind))throw new RangeError('Modèle inconnu');
+  const electrical=p.kind==='rlc'||p.kind==='radio';
+  const keys=electrical?['R','L','C','E']:['m','k','c','A'];
+  if(!keys.every(k=>Number.isFinite(p[k])&&p[k]>0))throw new RangeError('Paramètres positifs et finis requis');
+  const w0=electrical?1/Math.sqrt(p.L*p.C):Math.sqrt(p.k/p.m);
+  const Q=electrical?Math.sqrt(p.L/p.C)/p.R:Math.sqrt(p.k*p.m)/p.c;
+  const wr=Q>Math.SQRT1_2?w0*Math.sqrt(1-1/(2*Q*Q)):null;
+  const s=Math.sqrt(4+1/(Q*Q)), w1=w0*2/(s+1/Q), w2=w0*(s+1/Q)/2;
+  const roadPeak=w0*Math.sqrt(2/(1+Math.sqrt(1+2/(Q*Q))));
+  return {w0,f0:w0/(2*Math.PI),Q,wr,w1,w2,bandwidth:w0/Q,roadPeak,electrical};
+ }
+ function response(p,w){
+  if(!Number.isFinite(w)||w<0)throw new RangeError('Pulsation positive ou nulle requise');
+  const m=characteristics(p),x=w/m.w0,D=[1-x*x,x/m.Q];
+  const h=div([1,0],D),hi=div([0,x/m.Q],D);
+  const hc=scale(h,p.E||1),ir=scale(hi,(p.E||1)/(p.R||1));
+  const road=div([1,x/m.Q],D);
+  const suspension=sub(road,[1,0]);
+  const y=scale(p.kind==='road'?road:h,p.A||1);
+  return {...m,w,x,D,h,hi,uc:hc,i:ir,ur:scale(hi,p.E||1),ul:scale(h,-(p.E||1)*x*x),road,suspension,y,
+   travel:scale(suspension,p.A||1),acceleration:scale(y,-w*w),velocity:mul(y,[0,w])};
+ }
+ // Solution homogène exacte pour toute valeur de Q, temps réduit τ=ω0 t.
+ function homogeneous(Q,tau,y0,v0){
+  const b=1/(2*Q),d=b*b-1;
+  let y,v;
+  if(Math.abs(d)<1e-9){const B=v0+b*y0,e=Math.exp(-b*tau);y=e*(y0+B*tau);v=e*(B-b*(y0+B*tau));}
+  else if(d<0){const a=Math.sqrt(-d),B=(v0+b*y0)/a,e=Math.exp(-b*tau),co=Math.cos(a*tau),si=Math.sin(a*tau);y=e*(y0*co+B*si);v=-b*y+e*a*(-y0*si+B*co);}
+  else{const a=Math.sqrt(d),r1=-1/(b+a),r2=-b-a,A=(v0-r2*y0)/(r1-r2),B=y0-A; y=A*Math.exp(r1*tau)+B*Math.exp(r2*tau);v=r1*A*Math.exp(r1*tau)+r2*B*Math.exp(r2*tau);}
+  return {y,v};
+ }
+ // État depuis le repos à t=0, excitation cosinus enclenchée en t=0.
+ // Ressort: y(0)=v(0)=0. RLC: uC(0)=i(0)=0.
+ function startup(p,w,t){
+  if(t<0)throw new RangeError('Temps positif requis');
+  const r=response(p,w),theta=w*t,h=r.h;
+  const sh=homogeneous(r.Q,r.w0*t,-h[0],r.x*h[1]);
+  const z=at(h,theta)+sh.y, v=at(mul(h,[0,r.x]),theta)+sh.v;
+  return {...r,z,v,ucValue:r.electrical?p.E*z:null,iValue:r.electrical?p.E*p.C*r.w0*v:null,yValue:r.electrical?null:p.A*z};
+ }
+ return Object.freeze({add,sub,mul,scale,div,abs,phase,at,characteristics,response,homogeneous,startup});
+})();
+</script><script>(() => {
+'use strict';
+const $=id=>document.getElementById(id),M=window.OS5Model,TAU=2*Math.PI,ROAD_TIME_RATE=.15;
+const initial={rlc:{kind:'rlc',R:25,L:.1,C:10e-6,E:5,f:140},spring:{kind:'spring',m:.2,k:20,c:.3,A:.01,f:1.4},road:{kind:'road',m:300,k:18000,c:1500,A:.015,lambda:6,speed:50},radio:{kind:'radio',R:35,L:.01,C:100e-9,E:1,f:5000}};
+const states=structuredClone(initial);
+let tab='rlc',p=states.rlc,output='uc',playing=true,theta=0,elapsed=0,last=0,sweep=false,dark=false,projection=false,phasors=false,ghost=null,startup=false,normalized=true,both=false,exercise=false,revealed=false,rulers=false;
+let range=[0,640],drag=null,drawQueued=false,toastTimer,plotBounds={},rulerValues=[110,200],frameCounter=0,roadView=null;
+const sources=[{f:4200,a:1,name:'A'},{f:5000,a:1,name:'B'},{f:5800,a:.8,name:'C'}];
+const fmt=(v,d=3)=>new Intl.NumberFormat('fr-FR',{maximumSignificantDigits:d}).format(Math.abs(v)<1e-11?0:v);
+const frequency=()=>tab==='road'?p.speed/(3.6*p.lambda):p.f;
+const char=()=>M.characteristics(p);
+const canReveal=()=>!exercise||revealed;
+const colors=()=>{const s=getComputedStyle(document.body),o={};for(const k of ['surface','ink','muted','line','accent','soft','input','output','other','grid','ghost'])o[k]=s.getPropertyValue('--'+k).trim();return o;};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+// Les indices sont composés à leur propre taille et décalage, en HTML et sur canvas.
+function mathRuns(value){
+ const indices={'₀':'0','₁':'1','₂':'2','ₘ':'m','ᵣ':'r'};
+ const source=String(value).replace(/[₀₁₂ₘᵣ]/g,ch=>'_'+indices[ch]).replace(/\bImax\b/g,'I_max');
+ const re=/([A-Za-zωü][\u0300-\u036f]*)_([A-Za-z]+|[0-9]+)/g,runs=[];let start=0;
+ for(const match of source.matchAll(re)){if(match.index>start)runs.push({text:source.slice(start,match.index)});runs.push({text:match[1],math:true},{text:match[2],sub:true});start=match.index+match[0].length;}
+ if(start<source.length)runs.push({text:source.slice(start)});return runs;
+}
+function typeset(root){
+ if(!root)return;
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:node=>node.parentElement.closest('script,style,sub,sup,option,.math-symbol')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}),nodes=[];
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){const runs=mathRuns(node.textContent);if(!runs.some(r=>r.sub))continue;const fragment=document.createDocumentFragment();for(let i=0;i<runs.length;i++){const run=runs[i];if(run.math&&runs[i+1]?.sub){const span=document.createElement('span'),base=document.createElement('i'),sub=document.createElement('sub');span.className='math-symbol';base.textContent=run.text;sub.textContent=runs[++i].text;span.append(base,sub);fragment.append(span);}else fragment.append(document.createTextNode(run.text));}node.replaceWith(fragment);}
+}
+function mathText(root){return [...root.childNodes].map(node=>node.nodeType===Node.TEXT_NODE?node.textContent:node.tagName==='SUB'?'_'+node.textContent:mathText(node)).join('');}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2700);}
+function nice(v){if(v<=0)return 1;const e=10**Math.floor(Math.log10(v)),a=v/e;return ([1,1.5,2,2.5,3,4,5,6,8,10].find(k=>k>=a)||10)*e;}
+function quantity(v,type){const a=Math.abs(v);if(type==='i')return a<1?fmt(v*1000)+' mA':fmt(v)+' A';if(type==='m')return a<.001?fmt(v*1e6)+' µm':a<1?fmt(v*1000)+' mm':fmt(v)+' m';if(type==='V')return fmt(v)+' V';return fmt(v)+' '+(type||'');}
+function outInfo(q=p,key=output,w=TAU*frequency()){
+ const r=M.response(q,w);let h,reference,label,unit,norm;
+ if(q.kind==='radio'){h=r.hi;reference=q.E;label='Tension de R';unit='V';norm='U_R / Eₘ';}
+ else if(q.kind==='rlc'&&key==='i'){h=r.hi;reference=q.E/q.R;label='Intensité';unit='i';norm='RIₘ / Eₘ';}
+ else if(q.kind==='rlc'){h=r.h;reference=q.E;label='Tension de C';unit='V';norm='U_C / Eₘ';}
+ else if(q.kind==='road'&&key==='travel'){h=r.suspension;reference=q.A;label='Débattement';unit='m';norm='|Y − R| / A';}
+ else if(q.kind==='road'&&key==='acc'){h=M.scale(r.road,-((w/r.w0)**2));reference=q.A*r.w0*r.w0;label='Accélération caisse';unit='m/s²';norm='aₘ / (Aω₀²)';}
+ else{h=q.kind==='road'?r.road:r.h;reference=q.A;label=q.kind==='road'?'Déplacement caisse':'Élongation';unit='m';norm='Yₘ / A';}
+ const phase=M.phase(h);
+ return {r,h,reference,label,unit,norm,amplitude:M.abs(h)*reference,gain:M.abs(h),phase};
+}
+function setFrequency(f){
+ if(tab==='road')p.speed=clamp(f*3.6*p.lambda,0,180);
+ else p.f=Math.max(0,f);
+ if(tab!=='road'){theta=0;elapsed=0;}if(frequency()<range[0]||frequency()>range[1])frame();syncFrequency();updateText();requestDraw();
+}
+function frame(){const m=char();range=tab==='radio'?[Math.min(3000,m.f0*.7,frequency()*.9),Math.max(7000,m.f0*1.3,frequency()*1.1)]:[0,tab==='road'?Math.min(180/(3.6*p.lambda),Math.max(m.f0*4,frequency()*1.15)):nice(Math.max(m.f0*3.5,frequency()*1.2))];syncFrequency();requestDraw();}
+const schemas={
+ rlc:[['R','Résistance R','Ω',5,500,1,1],['L','Inductance L','mH',10,1000,1,1000],['C','Capacité C','µF',1,100,1,1e6],['E','Excitation Eₘ','V',.1,10,.1,1]],
+ spring:[['m','Masse m','kg',.05,1,.01,1],['k','Raideur k','N/m',5,100,1,1],['c','Frottement α','kg/s',.05,5,.01,1],['A','Support : amplitude A','mm',1,20,1,1000]],
+ road:[['m','Masse suspendue m','kg',150,500,10,1],['k','Raideur k','kN/m',10,40,.5,.001],['c','Amortissement c','N·s/m',100,5000,50,1],['A','Route : amplitude A','mm',1,30,1,1000],['lambda','Ondulation λ','m',2,20,.5,1]],
+ radio:[['R','Résistance R','Ω',5,200,1,1],['L','Inductance L','mH',5,30,.5,1000],['C','Accord : capacité C','nF',50,200,.1,1e9]]};
+const presets={rlc:[['course','Résonance nette'],['broad','Résonance large'],['threshold','Seuil Q = 1/√2'],['nopeak','Pas de pic en tension'],['large','Surtension à f₀']],spring:[['course','Ressort du cours'],['broad','Amortissement fort'],['threshold','Seuil Q = 1/√2'],['slow','Excitation lente'],['fast','Excitation rapide']],road:[['course','Route ondulée · 50 km/h'],['resonance','Près de la résonance'],['soft','Suspension peu amortie'],['damped','Suspension très amortie'],['isolation','Au-delà de √2 f₀']],radio:[['course','Station B sélectionnée'],['A','Station A sélectionnée'],['C','Station C sélectionnée'],['broad','Sélectivité faible'],['sharp','Sélectivité élevée']]};
+function parameterUI(){
+ $('parameters').replaceChildren();
+ for(const [key,label,unit,min,max,step,factor] of schemas[tab]){
+  const field=document.createElement('div');field.className='field';
+  field.innerHTML=`<label for="param-${key}"><span>${label}</span><span class="input-unit"><input type="number" id="param-${key}" min="${min}" max="${max}" step="any" value="${p[key]*factor}"><span>${unit}</span></span></label><input type="range" id="range-${key}" min="${min}" max="${max}" step="${step}" value="${p[key]*factor}" aria-label="${label}">`;
+  $('parameters').append(field);
+  const number=$('param-'+key),slider=$('range-'+key);
+  const change=(value)=>{if(!Number.isFinite(value))return;p[key]=clamp(value,min,max)/factor;number.value=fmtInput(p[key]*factor);slider.value=p[key]*factor;theta=0;elapsed=0;const f0=char().f0;if((tab==='road'&&key==='lambda')||f0<range[0]||f0>range[1]*.9)frame();syncFrequency();updateText();requestDraw();$('preset').value='';};
+  number.addEventListener('change',()=>change(number.valueAsNumber));slider.addEventListener('input',()=>change(+slider.value));
+ }
+ typeset($('parameters'));
+}
+const fmtInput=v=>Number(v.toPrecision(8));
+function syncFrequency(){
+ const m=char(),f=frequency(),road=tab==='road';
+ $('frequency-label').textContent=road?'Vitesse v':'Fréquence f';$('frequency-unit').textContent=road?'km/h':'Hz';
+ $('frequency').value=fmtInput(road?p.speed:f);$('frequency').max=road?'180':'';
+ $('frequency-range').min=0;$('frequency-range').max=road?180:Math.max(range[1],f,m.f0*4);$('frequency-range').step=road?.1:.001;$('frequency-range').value=road?p.speed:f;
+ $('frequency-hint').textContent=(road?'f = v / λ = '+fmt(f)+' Hz · ':'')+(canReveal()?'f / f₀ = '+fmt(f/m.f0):'Déplacer la ligne sur les courbes.');
+ $('goto-own').textContent=road?'Rouler à la vitesse correspondant à f₀':'Se placer en f₀';
+ $('goto-own').disabled=road&&m.f0*3.6*p.lambda>180;
+ typeset($('frequency-hint'));typeset($('goto-own'));
+}
+function switchTab(kind){
+ tab=kind;p=states[kind];output=kind==='rlc'?'uc':kind==='road'?'body':kind==='radio'?'ur':'y';ghost=null;startup=false;both=false;exercise=false;revealed=false;rulers=false;phasors=false;sweep=false;theta=0;elapsed=0;
+ $('startup').checked=false;$('both').checked=false;$('exercise').checked=false;$('rulers').checked=false;$('ruler-fields').hidden=true;$('reveal').hidden=true;$('clear-compare').hidden=true;$('compare-hint').hidden=true;$('sweep').setAttribute('aria-pressed','false');$('equations').disabled=false;$('goto-own').hidden=false;$('formula-box').hidden=!$('equations').checked;
+ for(const el of document.querySelectorAll('[data-tab]'))el.setAttribute('aria-selected',String(el.dataset.tab===kind));
+ const options=kind==='rlc'?[['uc','Tension du condensateur'],['i','Intensité i']]:kind==='road'?[['body','Déplacement de la caisse y'],['travel','Débattement y − r'],['acc','Accélération de la caisse']]:kind==='radio'?[['ur','Tension de sortie sur R']]:[['y','Élongation de la masse y']];
+ $('response').innerHTML=options.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+ $('preset').innerHTML='<option value="" disabled>Réglages personnels</option>'+presets[kind].map(([v,t])=>`<option value="${v}">${t}</option>`).join('');$('preset').value=Object.keys(initial[kind]).every(k=>p[k]===initial[kind][k])?'course':'';
+ $('both-row').hidden=kind!=='rlc';$('view-toggle').hidden=kind!=='rlc';$('view-toggle').textContent='Tensions complexes';$('startup-row').hidden=!['rlc','spring'].includes(kind);$('measure-section').hidden=['radio','road'].includes(kind);
+ $('scene-title').textContent={rlc:'Un circuit, deux résonances',spring:'Un support qui oscille',road:'Roue, ressort et amortisseur',radio:'Sélectionner une fréquence'}[kind];
+ parameterUI();frame();rulerValues=[char().f0*.8,char().f0*1.2];syncRulers();syncFrequency();updateText();requestDraw();
+}
+function applyPreset(name){
+ if(!name)return;
+ Object.assign(p,initial[tab]);const m=char();
+ if(tab==='rlc'){
+  if(name==='broad')p.R=150;if(name==='threshold')p.R=Math.sqrt(2*p.L/p.C);if(name==='nopeak')p.R=300;if(name==='large'){p.R=8;p.f=m.f0;}else p.f=M.characteristics(p).f0;
+ }else if(tab==='spring'){
+  if(name==='broad')p.c=4;if(name==='threshold')p.c=Math.sqrt(2*p.k*p.m);p.f=M.characteristics(p).f0*(name==='slow'?.15:name==='fast'?3:1);
+ }else if(tab==='road'){
+  if(name==='soft')p.c=250;if(name==='damped')p.c=4000;if(name==='resonance')p.speed=m.roadPeak/TAU*3.6*p.lambda;if(name==='isolation')p.speed=m.f0*3*3.6*p.lambda;
+ }else{
+  const target=name==='A'?4200:name==='C'?5800:5000;p.C=1/((TAU*target)**2*p.L);p.f=target;if(name==='broad')p.R=160;if(name==='sharp')p.R=8;
+ }
+ theta=0;elapsed=0;parameterUI();frame();syncFrequency();updateText();requestDraw();
+}
+function updateText(){
+ const f=frequency(),o=outInfo(),m=o.r,visible=canReveal();
+ $('amplitude-title').textContent='Amplitude · '+(normalized?o.norm:({i:'mA',m:'mm','V':'V','m/s²':'m/s²'}[o.unit]));
+ $('phase-value').textContent=o.phase===null?'indéfinie':fmt(o.phase*180/Math.PI)+'°';
+ $('metric-1-label').textContent=o.label+' · amplitude';$('metric-1').textContent=quantity(o.amplitude,o.unit);
+ $('metric-2-label').textContent='Fréquence propre f₀';$('metric-2').textContent=visible?fmt(m.f0)+' Hz':'À déterminer';
+ $('metric-3-label').textContent='Facteur de qualité Q';$('metric-3').textContent=visible?fmt(m.Q):'À déterminer';
+ $('regime-badge').textContent=startup?'Démarrage → RSF':'Régime établi';
+ $('time-title').textContent=(startup?'Démarrage depuis le repos':'Signaux temporels')+' · valeurs normalisées';
+ $('input-legend').textContent=['rlc','radio'].includes(tab)?'e / Eₘ':tab==='road'?'r / A':'z_A / A';
+ $('output-legend').textContent=tab==='rlc'?(output==='i'?'Ri / Eₘ':'u_C / Eₘ'):tab==='road'?(output==='acc'?'ÿ / (Aω₀²)':output==='travel'?'(y − r) / A':'y / A'):tab==='radio'?'u_R / Eₘ':'y / A';
+ $('normalization-note').textContent=normalized?(output==='i'?'Le pic normalisé vaut 1 ; le courant réel varie avec R et est affiché sous les courbes.':'Normalisation : '+o.norm+'. Les amplitudes réelles restent affichées sous les courbes.'):'Amplitude en unités physiques. Les signaux temporels restent normalisés.';
+ $('scene-note').textContent={rlc:phasors?'Amplitudes complexes · E comme référence de phase.':'Dipôles en convention récepteur · courant horaire. Les jauges indiquent les tensions instantanées.',spring:'y = déplacement depuis l’équilibre · axe vers le bas. Frottement dans le laboratoire : −αẏ.',road:'Roue imposée par la route · amortisseur entre roue et caisse. Débattement = y − r ; modèle à une masse.',radio:'Trois sinusoïdes simultanées · sortie aux bornes de R. Modèle du seul circuit d’accord.'}[tab];
+ $('instant-note').hidden=tab!=='rlc'||phasors;
+ let insight='';
+ if(tab==='rlc')insight=output==='i'?(visible?'Courant maximal à f₀ · largeur à −3 dB : Δf = f₀/Q = '+fmt(m.bandwidth/TAU)+' Hz.':'Lire le maximum, puis les deux coupures au niveau Imax / √2.'):(visible?(m.wr?'Pic en tension à fᵣ = '+fmt(m.wr/TAU)+' Hz ; il se distingue de f₀.':'Q ≤ 1/√2 : aucun pic de tension à fréquence non nulle.'):'Repérer f₀ sur la phase, puis étudier l’existence d’un pic.');
+ if(tab==='spring')insight=visible?(m.wr?'Même réponse normalisée que u_C : pic à fᵣ = '+fmt(m.wr/TAU)+' Hz.':'Q ≤ 1/√2 : pas de résonance en élongation à fréquence non nulle.'):'Utiliser la phase et l’amplitude pour retrouver f₀ et Q.';
+ if(tab==='road'){
+  const trans=M.abs(m.road),acc=M.abs(m.acceleration),travel=M.abs(m.travel);
+  insight='Caisse / route : '+fmt(trans)+' · accélération : '+fmt(acc)+' m/s² · débattement : '+quantity(travel,'m')+'.';
+  if(output==='body')insight+=(m.x>Math.SQRT2?' Déplacement atténué (f/f₀ > √2).':' Déplacement amplifié (f/f₀ < √2).');
+ }
+ if(tab==='radio'){
+  const amplitudes=sources.map(s=>M.abs(M.response(p,TAU*s.f).hi)*s.a),winner=amplitudes.indexOf(Math.max(...amplitudes));
+  insight='Composante dominante en sortie : '+sources[winner].name+' ('+fmt(sources[winner].f)+' Hz) · bande à −3 dB : '+fmt(m.bandwidth/TAU)+' Hz.';
+  $('metric-1-label').textContent='Amplitudes de sortie A · B · C';$('metric-1').textContent=amplitudes.map(a=>fmt(a,2)).join(' · ')+' V';
+ }
+ $('insight').textContent=insight;
+ const common='D = 1 − x² + jx/Q ; x = ω/ω₀.';
+ $('equation').textContent=tab==='rlc'||tab==='radio'?'LC ü_C + RC u̇_C + u_C = e':tab==='road'?'mÿ + c(ẏ − ṙ) + k(y − r) = 0':'mÿ + αẏ + ky = kz_A';
+ $('transfer').textContent=(tab==='rlc'?(output==='i'?'RI / E = (jx/Q) / D':'U_C / E = 1 / D'):tab==='radio'?'U_R / E = (jx/Q) / D':tab==='road'?'Y / R = (1 + jx/Q) / D':'Y / Z_A = 1 / D')+' · '+common;
+ $('model-note').textContent=tab==='road'?'ω₀ = √(k/m) ; Q = √(km)/c ; f = v/λ. Pour le débattement : (Y−R)/R = x²/D.':'ω₀ = '+(['rlc','radio'].includes(tab)?'1/√(LC) ; Q = √(L/C)/R.':'√(k/m) ; Q = √(km)/α.');
+ $('reveal').hidden=!exercise||revealed;syncFrequency();updateMeasurement();
+ for(const id of ['amplitude-title','metric-2-label','input-legend','output-legend','normalization-note','scene-note','insight','equation','transfer','model-note'])typeset($(id));
+}
+function syncRulers(){for(let i=0;i<2;i++)$('ruler-'+(i+1)).value=fmtInput(rulerValues[i]);}
+function updateMeasurement(){
+ const d=Math.abs(rulerValues[1]-rulerValues[0]);
+ $('measure-result').textContent='Δf = '+fmt(d)+' Hz'+(tab==='rlc'&&output==='i'&&d>0?' · Q estimé = '+fmt(Math.sqrt(rulerValues[0]*rulerValues[1])/d):'');
+}
+// Canvas : coordonnées en pixels CSS, textes indépendants de toute échelle physique.
+function surface(id){const canvas=$(id),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(1,rect.width),h=Math.max(1,rect.height);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);return{ctx,w,h,canvas};}
+function text(ctx,t,x,y,color,size=16,align='left'){
+ ctx.save();ctx.fillStyle=color;ctx.textAlign='left';ctx.textBaseline='middle';const runs=mathRuns(t),font=run=>run.sub?`${size*.72}px Georgia,'Times New Roman',serif`:run.math?`italic ${size}px Georgia,'Times New Roman',serif`:`${size}px Arial,Helvetica,sans-serif`;
+ let width=0;for(const run of runs){ctx.font=font(run);run.width=ctx.measureText(run.text).width+(run.sub?size*.035:0);width+=run.width;}
+ let cursor=x-(align==='center'?width/2:align==='right'?width:0);for(const run of runs){ctx.font=font(run);ctx.fillText(run.text,cursor,y+(run.sub?size*.25:0));cursor+=run.width;}ctx.restore();
+}
+function line(ctx,points,color,width=2,dash=[]){if(!points.length)return;ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);let newPath=true;for(const [x,y]of points){if(!Number.isFinite(x)||!Number.isFinite(y)){newPath=true;continue;}if(newPath){ctx.moveTo(x,y);newPath=false;}else ctx.lineTo(x,y);}ctx.stroke();ctx.setLineDash([]);}
+function arrow(ctx,x1,y1,x2,y2,color,width=2){line(ctx,[[x1,y1],[x2,y2]],color,width);const a=Math.atan2(y2-y1,x2-x1),s=8;line(ctx,[[x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45)],[x2,y2],[x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45)]],color,width);}
+function dot(ctx,x,y,color,r=4){ctx.beginPath();ctx.fillStyle=color;ctx.arc(x,y,r,0,TAU);ctx.fill();}
+function box(ctx,x,y,w,h,fill,stroke,r=6){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+function samples(q,key){const a=[];for(let i=0;i<=700;i++)a.push(range[0]+(range[1]-range[0])*i/700);const m=M.characteristics(q),peaks=[m.f0,m.wr/TAU,m.roadPeak/TAU,...sources.map(s=>s.f)];for(const f of peaks)if(Number.isFinite(f)&&f>0){for(let j=-30;j<=30;j++)a.push(f+j*m.f0/m.Q/25);}return [...new Set(a.filter(f=>f>=range[0]&&f<=range[1]))].sort((a,b)=>a-b).map(f=>({f,o:outInfo(q,key,TAU*f)}));}
+function plotGeometry(id,ymin,ymax){const {ctx,w,h}=surface(id),c=colors(),font=projection?20:14;const left=projection?72:60,right=projection?60:45,top=id==='amplitude'?24:10,bottom=projection?32:28;const g={ctx,w,h,c,font,left,right,top,bottom,x:f=>left+(f-range[0])/(range[1]-range[0])*(w-left-right),y:v=>h-bottom-(v-ymin)/(ymax-ymin)*(h-top-bottom),ymin,ymax};plotBounds[id]=g;ctx.fillStyle=c.surface;ctx.fillRect(0,0,w,h);return g;}
+function axes(g,phase=false){const{ctx,w,h,c,font,left,right,top,bottom}=g;for(let i=0;i<=4;i++){const f=range[0]+i*(range[1]-range[0])/4,x=g.x(f);line(ctx,[[x,top],[x,h-bottom]],c.grid,1);text(ctx,fmt(f,3),x,h-bottom+15,c.muted,font,'center');if(!phase&&canReveal())text(ctx,fmt(f/char().f0,2),x,top-11,c.muted,font-2,'center');}
+ const ys=phase?[-Math.PI,-Math.PI/2,0,Math.PI/2,Math.PI].filter(v=>v>=g.ymin-.01&&v<=g.ymax+.01):Array.from({length:4},(_,i)=>g.ymin+(g.ymax-g.ymin)*i/3);
+ for(const v of ys){const y=g.y(v);line(ctx,[[left,y],[w-right,y]],c.grid,1);let label=phase?(Math.abs(v)<.01?'0':Math.abs(Math.abs(v)-Math.PI)<.01?(v<0?'−π':'π'):(v<0?'−π/2':'π/2')):fmt(v,2);text(ctx,label,left-7,y,c.muted,font,'right');}
+ line(ctx,[[left,top],[left,h-bottom],[w-right,h-bottom]],c.line,1.3);text(ctx,'Hz',w-4,h-bottom+15,c.muted,font-2,'right');if(!phase&&canReveal())text(ctx,'f/f₀',w-4,top-11,c.muted,font-2,'right');
+}
+function marker(g,f,label,color,dash=[4,4]){if(f<range[0]||f>range[1])return;const x=g.x(f);line(g.ctx,[[x,g.top],[x,g.h-g.bottom]],color,1.5,dash);if(label)text(g.ctx,label,x+4,g.top+(label==='fᵣ'?30:12),color,g.font-1);}
+function graphValue(o){return normalized?o.gain:o.amplitude*(o.unit==='i'||o.unit==='m'?1000:1);}
+function drawSpectra(){
+ const all=samples(p,output),previous=ghost?samples(ghost.p,ghost.output):null,secondary=both&&tab==='rlc'?samples(p,output==='i'?'uc':'i'):null;
+ let ymax=Math.max(1,...all.map(s=>graphValue(s.o)),...(previous||[]).map(s=>graphValue(s.o)),...(secondary||[]).map(s=>graphValue(s.o)));
+ if(!normalized)ymax=Math.max(1e-5,...all.map(s=>graphValue(s.o)),...(previous||[]).map(s=>graphValue(s.o)));
+ const g=plotGeometry('amplitude',0,nice(ymax*1.1));axes(g);
+ const stroke=(points,color,dash=[])=>{g.ctx.save();g.ctx.beginPath();g.ctx.rect(g.left,g.top,g.w-g.left-g.right,g.h-g.top-g.bottom);g.ctx.clip();line(g.ctx,points,color,projection?3.5:2.5,dash);g.ctx.restore();};
+ if(previous)stroke(previous.map(s=>[g.x(s.f),g.y(graphValue(s.o))]),g.c.ghost,[7,5]);
+ if(secondary)stroke(secondary.map(s=>[g.x(s.f),g.y(graphValue(s.o))]),g.c.other,[9,4]);
+ stroke(all.map(s=>[g.x(s.f),g.y(graphValue(s.o))]),g.c.output);
+ const r=char();
+ if($('markers').checked&&canReveal()){
+  marker(g,r.f0,'f₀',g.c.accent);
+  if((tab==='rlc'&&output==='uc')||tab==='spring'){if(r.wr)marker(g,r.wr/TAU,'fᵣ',g.c.other,[2,5]);}
+  if((tab==='rlc'&&output==='i')||tab==='radio'){
+   const level=normalized?Math.SQRT1_2:p.E/p.R*1000*Math.SQRT1_2;
+   if(tab!=='radio'){line(g.ctx,[[g.left,g.y(level)],[g.w-g.right,g.y(level)]],g.c.other,1.4,[6,4]);text(g.ctx,'Imax / √2',g.w-g.right-4,g.y(level)-10,g.c.other,g.font-1,'right');}
+   marker(g,r.w1/TAU,'',g.c.other);marker(g,r.w2/TAU,'',g.c.other);
+  }
+  if(tab==='road'&&output==='body'){
+   const level=normalized?1:p.A*1000;line(g.ctx,[[g.left,g.y(level)],[g.w-g.right,g.y(level)]],g.c.input,1,[5,4]);marker(g,Math.SQRT2*r.f0,'√2 f₀',g.c.input,[2,5]);
+  }
+ }
+ if(tab==='radio'){
+  for(let i=0;i<sources.length;i++){const s=sources[i],val=graphValue(outInfo(p,'ur',TAU*s.f))*s.a;line(g.ctx,[[g.x(s.f),g.y(0)],[g.x(s.f),g.y(val)]],i===1?g.c.input:g.c.other,4);dot(g.ctx,g.x(s.f),g.y(val),g.c.ink);text(g.ctx,s.name,g.x(s.f),g.y(val)-14,g.c.ink,g.font,'center');}
+ }
+ marker(g,frequency(),'',g.c.ink,[]);const current=outInfo();if(frequency()>=range[0]&&frequency()<=range[1])dot(g.ctx,g.x(frequency()),g.y(graphValue(current)),g.c.output,5);
+ if(rulers)for(let i=0;i<2;i++){marker(g,rulerValues[i],'',g.c.input,[3,4]);const x=g.x(rulerValues[i]);if(x>=g.left&&x<=g.w-g.right){dot(g.ctx,x,g.h-g.bottom,g.c.input,7);text(g.ctx,String(i+1),x,g.h-g.bottom-14,g.c.input,g.font,'center');}}
+ const currentOnly=tab==='radio'||(tab==='rlc'&&output==='i'&&!both),acceleration=tab==='road'&&output==='acc';
+ const phaseMin=acceleration?0:currentOnly?-Math.PI/2:-Math.PI,phaseMax=acceleration?Math.PI:currentOnly||both?Math.PI/2:0;
+ const ph=plotGeometry('phase',phaseMin,phaseMax);axes(ph,true);
+ const phaseStroke=(ss,color,dash=[])=>{const pts=[];let lastPhi=null;for(const s of ss){if(s.o.phase===null){pts.push([NaN,NaN]);lastPhi=null;continue;}if(lastPhi!==null&&Math.abs(s.o.phase-lastPhi)>Math.PI)pts.push([NaN,NaN]);pts.push([ph.x(s.f),ph.y(s.o.phase)]);lastPhi=s.o.phase;}ph.ctx.save();ph.ctx.beginPath();ph.ctx.rect(ph.left,ph.top,ph.w-ph.left-ph.right,ph.h-ph.top-ph.bottom);ph.ctx.clip();line(ph.ctx,pts,color,projection?3:2.2,dash);ph.ctx.restore();};
+ if(previous)phaseStroke(previous,ph.c.ghost,[7,5]);if(secondary)phaseStroke(secondary,ph.c.other,[9,4]);phaseStroke(all,ph.c.output);if($('markers').checked&&canReveal())marker(ph,r.f0,'',ph.c.accent);marker(ph,frequency(),'',ph.c.ink,[]);if(current.phase!==null&&frequency()>=range[0]&&frequency()<=range[1])dot(ph.ctx,ph.x(frequency()),ph.y(current.phase),ph.c.output,4);
+ if(both&&tab==='rlc'){text(g.ctx,'Rouge : '+(output==='uc'?'u_C':'i')+' · ocre : '+(output==='uc'?'i':'u_C'),g.w-g.right,g.top+12,g.c.muted,g.font-2,'right');}
+}
+function timeInfo(){const f=frequency(),m=char(),period=1/(f||m.f0),duration=startup?Math.max(5*period,12*m.Q/m.w0,8/(m.w0*Math.min(1,m.Q))):tab==='radio'?.002:3*period;return{f,m,period,duration,screenRate:startup?duration/12:tab==='radio'?.0005:tab==='road'?ROAD_TIME_RATE:period/3};}
+function normalizedValue(t,phase=TAU*frequency()*t){
+ const o=outInfo();
+ if(tab==='road'&&frequency()===0)phase=theta;
+ if(tab==='radio'){
+  let input=0,output=0;for(const s of sources){const h=M.response(p,TAU*s.f).hi;input+=s.a*Math.cos(TAU*s.f*t);output+=s.a*M.at(h,TAU*s.f*t);}return{input,output};
+ }
+ if(startup){const st=M.startup(p,TAU*frequency(),t),v=tab==='rlc'&&output==='i'?st.v/o.r.Q:st.z;return{input:Math.cos(phase),output:v};}
+ return{input:Math.cos(phase),output:M.at(o.h,phase)};
+}
+function drawTime(){
+ const {ctx,w,h}=surface('time'),c=colors(),font=projection?18:13,info=timeInfo();
+ const left=projection?72:60,right=projection?60:45,top=8,bottom=26,base=outInfo();let max=Math.max(1,base.gain)*1.12;if(tab==='radio')max=3.2;
+ const count=1100,vals=[];for(let i=0;i<=count;i++){const t=info.duration*i/count,v=normalizedValue(t);vals.push({t,...v});if(startup)max=Math.max(max,Math.abs(v.output)*1.07);}
+ const x=t=>left+t/info.duration*(w-left-right),y=v=>top+(max-v)/(2*max)*(h-top-bottom);ctx.fillStyle=c.surface;ctx.fillRect(0,0,w,h);
+ for(const v of [-max,0,max]){line(ctx,[[left,y(v)],[w-right,y(v)]],c.grid,1);text(ctx,fmt(v,2),left-7,y(v),c.muted,font,'right');}
+ const unit=info.duration<.1?'ms':'s',factor=unit==='ms'?1000:1;
+ for(let i=0;i<4;i++){const t=info.duration*i/3;line(ctx,[[x(t),top],[x(t),h-bottom]],c.grid,1);text(ctx,fmt(t*factor,3),x(t),h-bottom+14,c.muted,font,'center');}
+ text(ctx,unit,w-4,h-bottom+14,c.muted,font-1,'right');line(ctx,vals.map(v=>[x(v.t),y(v.input)]),c.input,projection?2.8:2,[5,4]);line(ctx,vals.map(v=>[x(v.t),y(v.output)]),c.output,projection?3.2:2.5);
+ const t=startup?Math.min(elapsed,info.duration):tab==='radio'?elapsed%info.duration:tab==='road'&&info.f===0?0:(theta% (TAU*3))/(TAU*(info.f||info.m.f0));const values=normalizedValue(t);line(ctx,[[x(t),top],[x(t),h-bottom]],c.accent,1);dot(ctx,x(t),y(values.output),c.output,4);
+ $('clock-note').textContent=(startup?'t = '+quantityTime(Math.min(elapsed,info.duration)):'t = '+quantityTime(t))+' · 1 s écran = '+quantityTime(info.screenRate*+$('speed').value);
+}
+function quantityTime(t){return t<.1?fmt(t*1000)+' ms':fmt(t)+' s';}
+function spring(ctx,x,y1,y2,width,color){const n=10,pts=[[x,y1],[x,y1+8]];for(let i=0;i<=n;i++)pts.push([x+(i===0||i===n?0:(i%2?width:-width)),y1+8+(y2-y1-16)*i/n]);pts.push([x,y2]);line(ctx,pts,color,2.5);}
+function damper(ctx,x,y1,y2,color,c){
+ const mid=(y1+y2)/2;
+ // Tige solidaire du châssis jusqu'au piston ; corps relié à l'essieu.
+ line(ctx,[[x,y1],[x,mid+8]],color,2);
+ line(ctx,[[x-13,mid-18],[x-13,mid+22],[x+13,mid+22],[x+13,mid-18]],color,2.5);
+ line(ctx,[[x,mid+22],[x,y2]],color,2);
+ line(ctx,[[x-11,mid+8],[x+11,mid+8]],color,3);
+}
+function drawScene(){
+ const {ctx,w,h}=surface('scene'),c=colors(),font=projection?23:18;
+ ctx.fillStyle=c.surface;ctx.fillRect(0,0,w,h);
+ if(tab==='rlc'){if(phasors)drawPhasors(ctx,w,h,c,font);else drawCircuit(ctx,w,h,c,font);}
+ if(tab==='spring')drawSpring(ctx,w,h,c,font);
+ if(tab==='road')drawRoad(ctx,w,h,c,font);
+ if(tab==='radio')drawRadio(ctx,w,h,c,font);
+}
+function circuitValues(){const r=M.response(p,TAU*frequency());if(startup){const st=M.startup(p,TAU*frequency(),elapsed),e=p.E*Math.cos(TAU*frequency()*elapsed),uc=st.ucValue,i=st.iValue;return{e,uc,i,ur:p.R*i,ul:e-uc-p.R*i};}return{e:p.E*Math.cos(theta),uc:M.at(r.uc,theta),i:M.at(r.i,theta),ur:M.at(r.ur,theta),ul:M.at(r.ul,theta)};}
+function drawCircuit(ctx,w,h,c,font){
+ const left=w*.17,right=w*.8,top=h*.23,bottom=h*.76,mid=(top+bottom)/2,cy=(left+right)/2,v=circuitValues();
+ line(ctx,[[left,top],[left,mid-24]],c.ink,2);line(ctx,[[left,mid+24],[left,bottom],[right,bottom],[right,bottom-24]],c.ink,2);
+ ctx.beginPath();ctx.arc(left,mid,24,0,TAU);ctx.strokeStyle=c.input;ctx.lineWidth=2.5;ctx.stroke();const sine=[];for(let i=0;i<=30;i++)sine.push([left-15+i,mid+7*Math.sin(i/30*TAU)]);line(ctx,sine,c.input,2);arrow(ctx,left-36,mid+24,left-36,mid-24,c.input,2);text(ctx,'e',left-45,mid,c.input,font,'right');
+ const rx=left+(right-left)*.35,rw=50;line(ctx,[[left,top],[rx-rw/2,top]],c.ink,2);box(ctx,rx-rw/2,top-11,rw,22,c.soft,c.ink,1);text(ctx,'R',rx,top-30,c.ink,font,'center');line(ctx,[[rx+rw/2,top],[right,top],[right,top+20]],c.ink,2);
+ const coilStart=top+20,coilEnd=mid+7,coilStep=(coilEnd-coilStart)/4;ctx.beginPath();ctx.moveTo(right,coilStart);for(let i=0;i<4;i++){const y=coilStart+i*coilStep;ctx.bezierCurveTo(right+16,y,right+16,y+coilStep,right,y+coilStep);}ctx.strokeStyle=c.ink;ctx.lineWidth=2.5;ctx.stroke();text(ctx,'L',right+26,(coilStart+coilEnd)/2,c.ink,font);
+ const capY=bottom-37;line(ctx,[[right,mid+7],[right,capY-5]],c.ink,2);line(ctx,[[right-19,capY-5],[right+19,capY-5]],c.output,3);line(ctx,[[right-19,capY+5],[right+19,capY+5]],c.output,3);line(ctx,[[right,capY+5],[right,bottom]],c.ink,2);text(ctx,'C',right+24,capY,c.output,font);
+ arrow(ctx,left+7,top-18,left+50,top-18,c.input,2);text(ctx,'i',left+27,top-37,c.input,font);
+ arrow(ctx,right+58,capY+20,right+58,capY-20,c.output,2);text(ctx,'u_C',right+51,capY+40,c.output,font-2,'center');
+ const meterY=h*.92,scale=Math.max(p.E,M.abs(M.response(p,TAU*frequency()).uc));
+ text(ctx,'e = '+fmt(v.e)+' V',w*.28,meterY,c.input,font-2,'center');text(ctx,'u_C = '+fmt(v.uc)+' V',w*.73,meterY,c.output,font-2,'center');
+ const bar=(x,y,val,col)=>{line(ctx,[[x,y],[x,y-26]],c.line,3);line(ctx,[[x,y-13],[x+38*val/scale,y-13]],col,5);};bar(w*.4,mid,v.e,c.input);bar(w*.4,mid+45,v.uc,c.output);
+}
+function drawPhasors(ctx,w,h,c,font){
+ const r=M.response(p,TAU*frequency()),z=[r.ur,r.ul,r.uc],names=['U_R','U_L','U_C'],cols=[c.other,c.input,c.output];const points=[[0,0]];for(const a of z)points.push(M.add(points.at(-1),a));
+ const maxX=Math.max(p.E,...points.map(a=>a[0])),minX=Math.min(0,...points.map(a=>a[0])),maxY=Math.max(0,...points.map(a=>a[1])),minY=Math.min(0,...points.map(a=>a[1]));
+ const scale=Math.min((w-130)/(maxX-minX||1),(h-110)/(maxY-minY||1)),ox=65-minX*scale,oy=35+maxY*scale,xy=a=>[ox+a[0]*scale,oy-a[1]*scale];
+ line(ctx,[[30,oy],[w-18,oy]],c.grid,1);line(ctx,[[ox,20],[ox,h-20]],c.grid,1);
+ for(let i=0;i<3;i++){const a=xy(points[i]),b=xy(points[i+1]);arrow(ctx,...a,...b,cols[i],3);const tx=(a[0]+b[0])/2+(i===2?-12:i===0?0:12),ty=(a[1]+b[1])/2+(i===0?16:0);text(ctx,names[i],tx,ty,cols[i],font-2,i===2?'right':i===0?'center':'left');}
+ arrow(ctx,ox,oy,...xy([p.E,0]),c.accent,3);text(ctx,'E',xy([p.E,0])[0]+22,oy+37,c.accent,font);
+ text(ctx,'E = U_R + U_L + U_C',w/2,h-15,c.ink,font-1,'center');
+}
+function drawSpring(ctx,w,h,c,font){
+ const o=outInfo(),r=o.r,t=startup?elapsed:theta/(TAU*(frequency()||1)),angle=startup?TAU*frequency()*t:theta;
+ const input=p.A*Math.cos(angle),y=startup?M.startup(p,TAU*frequency(),elapsed).yValue:M.at(r.y,angle);
+ const px=Math.min(h*.15/.01,h*.18/Math.max(p.A,M.abs(r.y)),h*.3/Math.max(p.A+M.abs(r.y),1e-9)),center=w*.45,ay=h*.2+input*px,my=h*.68+y*px;
+ line(ctx,[[center-45,h*.1],[center+45,h*.1]],c.line,3);box(ctx,center-37,ay-6,74,12,c.input,null,3);spring(ctx,center,ay+6,my-22,14,c.accent);box(ctx,center-34,my-22,68,44,c.soft,c.accent,7);text(ctx,'m',center,my,c.accent,font+2,'center');
+ line(ctx,[[w*.2,h*.68],[w*.76,h*.68]],c.grid,1,[5,4]);text(ctx,'équilibre',w*.73,h*.68-13,c.muted,font-4,'center');
+ arrow(ctx,w*.84,h*.2,w*.84,h*.78,c.ink,2);text(ctx,'z ↓',w*.84,h*.88,c.ink,font,'center');
+ text(ctx,'z_A',center+50,ay,c.input,font);text(ctx,'y',center-48,my,c.output,font,'right');text(ctx,'−αẏ',w*.18,h*.43,c.muted,font-2,'center');
+ text(ctx,'Échelle : '+fmt(px/1000)+' px/mm',w/2,h-16,c.muted,font-4,'center');
+}
+function drawRoad(ctx,w,h,c,font){
+ const r=M.response(p,TAU*frequency()),cx=w*.5,roadY=h*.79,radius=Math.min(28,h*.08),baseBody=h*.30;
+ // Cadrage fondé sur l'enveloppe maximale de la suspension, indépendante de v.
+ const maxBody=M.abs(M.response(p,r.roadPeak).y),topRoom=Math.max(10,baseBody-h*.08-(font-2)/2-32),travelRoom=Math.max(20,roadY-radius*1.3-baseBody-70);
+ const px=Math.min(h*.09/.015,topRoom/Math.max(1e-9,maxBody),travelRoom/Math.max(1e-9,p.A+maxBody)),road=p.A*Math.cos(theta),body=M.at(r.y,theta);
+ const wy=roadY-radius-road*px,by=baseBody-body*px,axleY=wy-radius*.3,bodyBottom=by+25;
+ const wavelengthPixels=w*.125*p.lambda;
+ const curve=[];for(let x=0;x<=w;x+=2)curve.push([x,roadY-p.A*px*Math.cos(theta+(x-cx)/wavelengthPixels*TAU)]);line(ctx,curve,c.ink,3);ctx.fillStyle=c.soft;ctx.beginPath();ctx.moveTo(0,h);for(const [x,y]of curve)ctx.lineTo(x,y);ctx.lineTo(w,h);ctx.closePath();ctx.fill();line(ctx,curve,c.ink,3);
+ box(ctx,w*.17,by-22,w*.66,47,c.soft,c.accent,10);text(ctx,'Caisse · m',cx,by,c.accent,font,'center');
+ line(ctx,[[cx-49,axleY],[cx+49,axleY]],c.ink,3);spring(ctx,cx-43,bodyBottom,axleY,11,c.accent);damper(ctx,cx+43,bodyBottom,axleY,c.ink,c);
+ ctx.beginPath();ctx.arc(cx,wy,radius,0,TAU);ctx.fillStyle=c.surface;ctx.fill();ctx.strokeStyle=c.ink;ctx.lineWidth=4;ctx.stroke();dot(ctx,cx,wy,c.ink,5);const rotation=theta*wavelengthPixels/(TAU*radius);line(ctx,[[cx-radius*.65*Math.cos(rotation),wy-radius*.65*Math.sin(rotation)],[cx+radius*.65*Math.cos(rotation),wy+radius*.65*Math.sin(rotation)]],c.muted,2);
+ roadView={verticalScale:px,wavelengthPixels,roadOffset:theta*wavelengthPixels/TAU,wheelAngle:rotation,wheelRadius:radius,physicalTime:elapsed};
+ text(ctx,'k',cx-68,(bodyBottom+axleY)/2,c.accent,font,'right');text(ctx,'c',cx+65,(bodyBottom+axleY)/2,c.ink,font);text(ctx,'y',w*.87,by,c.output,font);text(ctx,'r',w*.87,roadY-road*px-10,c.input,font);
+ text(ctx,fmt(p.speed)+' km/h · λ = '+fmt(p.lambda)+' m',w/2,h*.08,c.ink,font-2,'center');text(ctx,'Échelle fixe : '+fmt(px/1000)+' px/mm',w/2,h-15,c.muted,font-5,'center');
+}
+function drawRadio(ctx,w,h,c,font){
+ const m=char(),margin=35,barW=(w-2*margin)/3,top=h*.17,bottom=h*.56;
+ text(ctx,'Entrée → sortie',w/2,h*.08,c.muted,font-2,'center');
+ for(let i=0;i<sources.length;i++){const s=sources[i],gain=M.abs(M.response(p,TAU*s.f).hi),x=margin+barW*(i+.5);box(ctx,x-20,bottom-(bottom-top)*s.a,14,(bottom-top)*s.a,c.input,null,2);box(ctx,x+3,bottom-(bottom-top)*s.a*gain,17,(bottom-top)*s.a*gain,c.output,null,2);text(ctx,s.name,x,bottom+h*.1,c.ink,font,'center');text(ctx,fmt(s.f/1000)+' kHz',x,bottom+h*.19,c.muted,font-3,'center');text(ctx,fmt(gain*100,2)+' %',x,bottom+h*.28,c.output,font-2,'center');}
+ line(ctx,[[margin-12,bottom],[w-margin+12,bottom]],c.line,1.5);text(ctx,'Accord : f₀ = '+fmt(m.f0)+' Hz',w/2,h-13,c.accent,font-2,'center');
+}
+function requestDraw(){if(drawQueued)return;drawQueued=true;requestAnimationFrame(()=>{drawQueued=false;drawSpectra();drawScene();drawTime();});}
+function interaction(id,event){const g=plotBounds[id];if(!g)return;const rect=$(id).getBoundingClientRect(),x=event.clientX-rect.left,f=clamp(range[0]+(x-g.left)/(g.w-g.left-g.right)*(range[1]-range[0]),range[0],range[1]);if(drag?.type==='ruler'){rulerValues[drag.index]=f;syncRulers();updateMeasurement();requestDraw();}else setFrequency(f);}
+for(const id of ['amplitude','phase']){
+ $(id).addEventListener('pointerdown',e=>{const g=plotBounds[id],x=e.clientX-$(id).getBoundingClientRect().left;let nearest=-1;if(id==='amplitude'&&rulers){let distance=18;for(let i=0;i<2;i++){const d=Math.abs(x-g.x(rulerValues[i]));if(d<distance){nearest=i;distance=d;}}}drag=nearest>=0?{type:'ruler',index:nearest}:{type:'frequency'};$(id).setPointerCapture(e.pointerId);interaction(id,e);});
+ $(id).addEventListener('pointermove',e=>{if(drag)interaction(id,e);});for(const name of ['pointerup','pointercancel'])$(id).addEventListener(name,()=>drag=null);
+ $(id).addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();setFrequency(clamp(frequency()+(e.key==='ArrowRight'?1:-1)*(range[1]-range[0])/(e.shiftKey?20:200),range[0],range[1]));}});
+}
+for(const el of document.querySelectorAll('[data-tab]'))el.addEventListener('click',()=>switchTab(el.dataset.tab));
+$('preset').addEventListener('change',()=>applyPreset($('preset').value));
+$('response').addEventListener('change',()=>{output=$('response').value;if(ghost&&ghost.output!==output){ghost=null;$('clear-compare').hidden=true;$('compare-hint').hidden=true;}theta=0;elapsed=0;updateText();requestDraw();});
+$('frequency').addEventListener('change',()=>{const value=$('frequency').valueAsNumber;if(Number.isFinite(value)){setFrequency(tab==='road'?value/(3.6*p.lambda):value);if(frequency()>range[1])frame();}else syncFrequency();});
+$('frequency-range').addEventListener('input',()=>setFrequency(tab==='road'?+$('frequency-range').value/(3.6*p.lambda):+$('frequency-range').value));
+$('goto-own').addEventListener('click',()=>setFrequency(char().f0));
+$('frame').addEventListener('click',frame);
+function zoom(factor){let center=clamp(frequency(),range[0],range[1]),span=(range[1]-range[0])*factor,lo=Math.max(0,center-span/2);range=[lo,lo+span];requestDraw();}
+$('zoom-in').addEventListener('click',()=>zoom(.65));$('zoom-out').addEventListener('click',()=>zoom(1.5));
+$('theme').addEventListener('click',()=>{dark=!dark;document.body.classList.toggle('dark',dark);$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',String(dark));requestDraw();});
+function toggleProjection(){projection=!projection;document.body.classList.toggle('projection',projection);$('projection').textContent=projection?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(projection));requestDraw();}
+$('projection').addEventListener('click',toggleProjection);
+$('view-toggle').addEventListener('click',()=>{phasors=!phasors;$('view-toggle').textContent=phasors?'Circuit':'Tensions complexes';updateText();requestDraw();});
+$('normalized').addEventListener('change',()=>{normalized=$('normalized').checked;if(!normalized){both=false;$('both').checked=false;}updateText();requestDraw();});
+$('both').addEventListener('change',()=>{both=$('both').checked;if(both){normalized=true;$('normalized').checked=true;}requestDraw();updateText();});
+$('markers').addEventListener('change',requestDraw);
+$('startup').addEventListener('change',()=>{startup=$('startup').checked;elapsed=0;theta=0;sweep=false;$('sweep').setAttribute('aria-pressed','false');updateText();requestDraw();});
+$('equations').addEventListener('change',()=>{$('formula-box').hidden=!$('equations').checked;});
+$('compare').addEventListener('click',()=>{ghost={p:structuredClone(p),output};$('clear-compare').hidden=false;$('compare-hint').hidden=false;toast('Courbe mémorisée : modifier un paramètre pour comparer.');requestDraw();});
+$('clear-compare').addEventListener('click',()=>{ghost=null;$('clear-compare').hidden=true;$('compare-hint').hidden=true;requestDraw();});
+$('exercise').addEventListener('change',()=>{exercise=$('exercise').checked;revealed=false;$('formula-box').hidden=exercise||!$('equations').checked;$('equations').disabled=exercise;$('goto-own').hidden=exercise;updateText();requestDraw();});
+$('reveal').addEventListener('click',()=>{revealed=true;$('goto-own').hidden=false;updateText();requestDraw();});
+$('rulers').addEventListener('change',()=>{rulers=$('rulers').checked;$('ruler-fields').hidden=!rulers;requestDraw();});
+for(let i=0;i<2;i++)$('ruler-'+(i+1)).addEventListener('change',()=>{const v=$('ruler-'+(i+1)).valueAsNumber;if(Number.isFinite(v)&&v>=0)rulerValues[i]=v;syncRulers();updateMeasurement();requestDraw();});
+function togglePlay(){playing=!playing;$('play').textContent=playing?'Pause':'Lecture';$('play').setAttribute('aria-pressed',String(playing));last=0;}
+$('play').addEventListener('click',togglePlay);$('reset').addEventListener('click',()=>{elapsed=0;theta=0;requestDraw();});
+$('sweep').addEventListener('click',()=>{sweep=!sweep;if(sweep){startup=false;$('startup').checked=false;playing=true;$('play').textContent='Pause';$('play').setAttribute('aria-pressed','true');}$('sweep').setAttribute('aria-pressed',String(sweep));updateText();});
+$('help').addEventListener('click',()=>$('about').showModal());$('close-help').addEventListener('click',()=>$('about').close());
+document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(document.activeElement.tagName)||$('about').open)return;if(e.code==='Space'){e.preventDefault();togglePlay();}if(e.key.toLowerCase()==='p')toggleProjection();if(e.key.toLowerCase()==='c')frame();});
+$('export').addEventListener('click',()=>{
+ const canvas=document.createElement('canvas'),scale=2,width=1400,height=1050;canvas.width=width*scale;canvas.height=height*scale;const ctx=canvas.getContext('2d');ctx.scale(scale,scale);const c=colors();ctx.fillStyle=c.surface;ctx.fillRect(0,0,width,height);text(ctx,'OS5 · Atelier de résonance — '+mathText($('scene-title')),35,38,c.accent,29);text(ctx,mathText($('amplitude-title')),650,85,c.ink,20);text(ctx,'Phase',650,400,c.ink,20);text(ctx,mathText($('time-title')),650,620,c.ink,20);const scene=$('scene'),fit=Math.min(600/scene.width,730/scene.height);ctx.drawImage(scene,25+(600-scene.width*fit)/2,80+(730-scene.height*fit)/2,scene.width*fit,scene.height*fit);ctx.drawImage($('amplitude'),640,100,735,270);ctx.drawImage($('phase'),640,425,735,160);ctx.drawImage($('time'),640,650,735,160);text(ctx,mathText($('scene-note')),35,855,c.muted,16);for(let i=1;i<=3;i++){const x=35+(i-1)*450;text(ctx,mathText($('metric-'+i+'-label')),x,905,c.muted,19);text(ctx,mathText($('metric-'+i)),x,944,i===1?c.output:c.ink,30);}text(ctx,mathText($('insight')),35,995,c.accent,17);text(ctx,'Modèles idéalisés · '+(startup?'Démarrage depuis le repos':'Régime établi')+' · Export hors connexion',35,1028,c.muted,15);
+ canvas.toBlob(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='OS5_Resonance_'+tab+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);},'image/png');toast('Image enregistrée avec le thème et les courbes visibles.');
+});
+new ResizeObserver(requestDraw).observe(document.querySelector('.experiment'));
+function animate(now){const dt=last?Math.min((now-last)/1000,.1):0;last=now;if(playing&&!$('about').open){const info=timeInfo(),rate=+$('speed').value,physicalStep=dt*info.screenRate*rate;elapsed+=physicalStep;if(frequency()>0)theta+=tab==='road'?TAU*info.f*physicalStep:dt*TAU/3*rate;if(startup&&elapsed>=info.duration){elapsed=info.duration;playing=false;$('play').textContent='Lecture';$('play').setAttribute('aria-pressed','false');}if(sweep){const next=frequency()+(range[1]-range[0])*dt*rate/20;setFrequency(next>range[1]?range[0]:next);}if(frameCounter++%2===0){drawScene();drawTime();}}requestAnimationFrame(animate);}
+// Interface en lecture seule utilisée par les vérifications locales.
+window.OS5App={get state(){return{tab,p:structuredClone(p),output,frequency:frequency(),normalized,startup,range:[...range],animationPhase:theta,elapsedPhysical:elapsed};},snapshot:()=>({model:outInfo(),time:timeInfo(),roadView:roadView?{...roadView}:null}),redraw:requestDraw};
+switchTab('rlc');typeset(document.querySelector('.shell'));typeset($('about'));requestAnimationFrame(animate);
+})();
+</script><!-- CPGE_MENU_SCRIPT_BEGIN -->
+<script id="cpge-menu-common">
+/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
+(()=>{
+ 'use strict';
+ if(document.documentElement.dataset.cpgeMenu==='1')return;
+ const header=document.querySelector('header'),theme=document.getElementById('theme');
+ if(!header||!theme)return;
+ document.documentElement.dataset.cpgeMenu='1';
+ const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
+ header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
+ const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
+ let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
+ if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
+ if(!help){
+  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
+  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
+  const instructions=document.createElement('p'),model=document.createElement('p');
+  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
+  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
+  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
+ }
+ if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
+ if(!full)full=make('fullscreen','⛶');
+ if(!image)return;
+ if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
+ const common=[theme,help,image,projection,full];
+ // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
+ const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
+ for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
+ full.classList.add('cpge-fullscreen');
+ const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
+ const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
+ const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
+ const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
+ let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
+ function sync(){
+  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
+  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
+  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
+  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
+  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
+  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
+ }
+ const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
+ function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
+ async function toggleFullscreen(){
+  if(busy)return;busy=true;
+  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
+  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
+  finally{busy=false;queue();}
+ }
+ // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
+ full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
+ function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
+ document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
+ // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
+ document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
+ new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
+ const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
+ sync();
+})();
+</script>
+<!-- CPGE_MENU_SCRIPT_END -->
+</body></html>

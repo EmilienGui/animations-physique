@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Atelier TH3 : bilans d’entropie, contacts thermiques, loi de Laplace et changement d’état. Autonome hors connexion."><title>TH3 · Bilans d’entropie et loi de Laplace</title><style>:root{color-scheme:light;--paper:#f5f2ed;--surface:#fffefa;--ink:#0f0f0f;--muted:#53595e;--line:#ddd4c9;--accent:#da6c00;--accent-ink:#974500;--soft:#fff0dc;--blue:#226f9d;--red:#8f2227;--green:#28766a;--violet:#77539a;--grid:#e8e1d7;--glass:#e9f4f8}
+:root[data-theme=dark]{color-scheme:dark;--paper:#171b20;--surface:#20262d;--ink:#f7f2e9;--muted:#c0c8d0;--line:#46515b;--accent:#ffad5b;--accent-ink:#ffc082;--soft:#3d3025;--blue:#8eccef;--red:#ff9c9d;--green:#8bd1bb;--violet:#d0b0ef;--grid:#343e47;--glass:#293f4c}
+*{box-sizing:border-box}body{margin:0;border-top:4px solid var(--accent);background:var(--paper);color:var(--ink);font:16px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button,select{cursor:pointer}button,.button-link{min-height:40px;border:1px solid var(--line);border-radius:7px;padding:7px 11px;background:var(--surface);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}button:hover,.button-link:hover{border-color:var(--accent);background:var(--soft)}button.primary,button[aria-pressed=true]{background:var(--soft);border-color:var(--accent);color:var(--accent-ink)}button.primary{font-weight:700}button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}button.square{width:40px;padding:0;font-size:22px}h1,h2,p{margin:0}h1{font-size:27px;font-weight:500;letter-spacing:-.025em;line-height:1.15}h2{font-size:17px;font-weight:600}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}.shell{height:calc(100dvh - 4px);max-width:2200px;margin:auto;padding:12px 18px 10px;display:flex;flex-direction:column;gap:10px}.header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none}.actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.actions button,.actions a{font-size:14px}.tabs{display:flex;gap:7px;flex:none}.tabs button{flex:1;justify-content:flex-start;padding:9px 14px;font-size:17px}.tabs small{opacity:.7;font-size:13px;margin-right:5px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:12px;min-height:0;flex:1}.main{min-width:0;min-height:0;display:flex;flex-direction:column;gap:9px}.scene-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}.scene-heading h2{font-size:19px}.badge{font-size:13px;border:1px solid var(--line);border-radius:30px;padding:4px 10px;color:var(--muted);white-space:nowrap}.visuals{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:205px;flex:1}.panel{min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;box-shadow:0 4px 18px #45230806}.panel-head{min-height:42px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 11px;border-bottom:1px solid var(--line);flex:none}.panel-head span{font-size:14px;color:var(--muted)}.panel-head button{min-height:29px;padding:3px 7px;font-size:13px}.zoom-tools{display:flex;gap:4px}.zoom-tools button:first-child,.zoom-tools button:last-child{width:28px;padding:0;font-size:19px}.canvas-wrap{position:relative;flex:1;min-height:0}canvas{width:100%;height:100%;display:block;touch-action:none}.canvas-hint{padding:4px 10px 7px;font-size:12px;color:var(--muted);flex:none;min-height:27px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}.legend i{display:inline-block;width:18px;height:3px;margin:0 5px 3px 0;background:currentColor}.legend .dash{background:none;border-top:2px dashed currentColor;height:0}.legend .blue{color:var(--blue)}.legend .orange{color:var(--accent-ink)}.legend .green{color:var(--green)}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;flex:none}.metric{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--metric-color,var(--accent));border-radius:8px;padding:8px 12px 7px;min-width:0;overflow:hidden}.metric-label{font-size:16px;color:var(--muted)}.metric-value{font-size:30px;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}.metric-value small{font-size:15px;font-weight:400;letter-spacing:0}.signed-track{height:8px;margin-top:6px;position:relative;border-radius:3px;background:var(--paper);overflow:hidden}.signed-track:after{content:'';position:absolute;height:100%;width:1px;left:50%;background:var(--muted)}.signed-fill{height:100%;background:var(--metric-color,var(--accent));position:absolute;left:50%;width:0;border-radius:2px}.balance{font:19px/1.3 Georgia,'Times New Roman',serif;text-align:center;color:var(--muted);flex:none}.balance strong{color:var(--ink);font-weight:400}.transport{display:flex;align-items:center;gap:7px;flex:none}.transport input[type=range]{flex:1;min-width:40px;margin:0;height:27px}.transport button{min-height:35px;padding:5px 10px;font-size:14px}.transport output{font-size:14px;white-space:nowrap;min-width:42px;text-align:right}.message{font-size:17px;line-height:1.35;min-height:46px;padding:8px 11px;border-left:3px solid var(--accent);background:var(--soft);flex:none;border-radius:0 7px 7px 0}.aside{overflow-y:auto;overscroll-behavior:contain;min-height:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);scrollbar-width:thin}.section{padding:14px 15px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:10px}.field{margin:10px 0 12px}.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px}.field-head label{font-size:15px}.number-wrap{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}input[type=number]{width:82px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:5px 6px;text-align:right;font-variant-numeric:tabular-nums}input[type=range]{width:100%;height:23px;margin:5px 0;accent-color:var(--accent);cursor:pointer}select{width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font-size:15px}.row{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.row button{font-size:13px;min-height:33px;padding:5px 8px;flex:1}.note{font-size:13px;line-height:1.5;color:var(--muted);margin-top:8px}.checks{display:flex;flex-direction:column;gap:9px;margin-top:10px}.checks label{display:flex;gap:8px;align-items:flex-start;font-size:14px}.checks input{accent-color:var(--accent);width:17px;height:17px;flex:none}.formula{font:18px/1.6 Georgia,'Times New Roman',serif;margin:7px 0;overflow-wrap:anywhere}.formula sub{font-size:.7em}.detail-grid{display:grid;grid-template-columns:1fr auto;gap:5px;font-size:14px}.detail-grid output{font-variant-numeric:tabular-nums}.drawer-close,.settings-open{display:none}a{color:var(--accent-ink)}.link-other{font-size:14px}.formula-content[hidden]{display:none}.configs{display:flex;gap:4px;flex-wrap:wrap;max-height:230px;overflow-y:auto;margin-top:10px}.configs button{min-height:29px;font:13px/1.2 monospace;letter-spacing:.05em;padding:5px;background:var(--paper)}.mini-tag{font-size:12px;color:var(--muted)}.footer{flex:none;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);gap:8px}dialog{max-width:780px;width:calc(100% - 30px);max-height:88dvh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:25px;font-size:16px;line-height:1.6}dialog::backdrop{background:#10182099}dialog h2{font-size:25px;line-height:1.2;margin-bottom:15px}dialog h3{font-size:18px;margin:18px 0 5px}dialog p,dialog li{margin:9px 0}dialog .close-row{display:flex;justify-content:flex-end;margin-top:17px}.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:100;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;max-width:calc(100% - 28px);box-shadow:0 4px 20px #0002}.toast:empty{display:none}.projection .aside,.projection .footer,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px}.projection .metric-label{font-size:21px}.projection .metric-value{font-size:39px}.projection .metric-value small{font-size:20px}.projection .message{font-size:21px;min-height:48px}.projection .balance{font-size:23px}.projection .scene-heading h2{font-size:22px}.projection .canvas-hint{font-size:15px}.projection .panel-head span{font-size:17px}.projection .panel-head button{font-size:16px;min-height:33px}.projection .tabs button{font-size:20px}.projection .transport button,.projection .transport output{font-size:17px}.projection .settings-open{display:none}
+@media(max-width:1350px){.shell{padding:10px 12px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 284px;gap:10px}h1{font-size:24px}.actions button,.actions a{font-size:13px;padding:7px 9px}.actions{gap:5px}.section{padding:12px}.metrics{gap:7px}.metric-value{font-size:27px}.metric-label{font-size:15px}.metric{padding:7px 10px}.message{font-size:15px;min-height:42px}.panel-head{padding:6px 8px}.panel-head span{font-size:13px}.visuals{gap:8px}.scene-heading h2{font-size:17px}}
+@media(max-width:1050px){.workspace{grid-template-columns:1fr}.settings-open{display:inline-flex}.aside{display:none;position:fixed;right:0;top:0;height:100dvh;width:min(360px,94vw);z-index:20;border-radius:12px 0 0 12px;box-shadow:-20px 0 60px #0004}.aside.open{display:block}.drawer-close{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}.header{gap:9px}.actions{justify-content:flex-end}.footer{display:none}.projection .aside{display:none}}
+@media(max-width:680px){.shell{height:auto;min-height:100dvh;padding:10px;gap:10px}.header{align-items:flex-start}.header>div:first-child{width:100%}.actions{justify-content:flex-start;gap:5px}.actions button,.actions a{font-size:13px;padding:7px 8px}h1{font-size:25px}.tabs{gap:5px}.tabs button{font-size:14px;padding:8px;justify-content:center}.tabs small{display:none}.workspace{flex:none}.main{gap:9px}.scene-heading{align-items:flex-start}.scene-heading h2{font-size:17px}.badge{font-size:11px;max-width:44%;white-space:normal;text-align:right}.visuals{grid-template-columns:1fr;flex:none;min-height:0}.panel{height:300px;flex:none}.metrics{gap:5px}.metric{padding:7px 6px}.metric-label{font-size:12px}.metric-value{font-size:22px}.metric-value small{font-size:10px}.balance{font-size:17px}.message{font-size:15px}.transport{flex-wrap:wrap}.transport input[type=range]{order:5;flex-basis:80%}.transport output{order:6}.projection .panel{height:360px}.projection .metric-label{font-size:13px}.projection .metric-value{font-size:25px}.projection .metric-value small{font-size:11px}.projection .message{font-size:18px}.projection .tabs button{font-size:15px}.projection .balance{font-size:18px}.projection .shell{padding:10px}.projection .scene-heading h2{font-size:18px}}
+@media(min-width:681px) and (max-height:740px){.shell{gap:7px;padding-top:8px}.eyebrow{font-size:11px}.tabs button{padding:6px 12px;min-height:36px}.main{gap:7px}.message{padding:6px 9px;min-height:38px}.canvas-hint{font-size:11px;min-height:22px;padding:3px 8px 4px}.panel-head{min-height:36px}.metric{padding-top:5px;padding-bottom:5px}.metric-value{font-size:27px}.footer{display:none}.projection .metric-value{font-size:37px}.projection .canvas-hint{font-size:14px}.projection .message{font-size:20px;min-height:42px}}
+@media(max-width:680px){.tabs button{min-width:0;white-space:normal}.metric-value{font-size:20px}}
+.zoom-tools #diagram,.zoom-tools #axis-view{width:auto;padding:3px 7px;font-size:13px}.zoom-tools #zoom-out,.zoom-tools #zoom-in{width:28px;padding:0;font-size:19px}.projection .zoom-tools #diagram,.projection .zoom-tools #axis-view{font-size:16px}
+@media(max-width:420px){.metrics{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 8px;padding:8px 10px}.metric-label{font-size:15px}.metric-value{font-size:25px}.signed-track{grid-column:1/-1;margin-top:1px}.projection .metric-label{font-size:15px}.projection .metric-value{font-size:28px}}
+@media print{.aside,.actions,.transport,.footer,.zoom-tools{display:none}.shell{height:auto}.workspace{display:block}.visuals{height:430px}.panel{break-inside:avoid}.message{background:none}}
+</style></head>
+<body><main class="shell">
+<header class="header"><div><div class="eyebrow">TH3 · Second principe · MPSI</div><h1>Bilans d’entropie</h1></div><div class="actions"><button id="formulas" aria-pressed="false">Formules</button><button id="settings-open" class="settings-open">Paramètres</button><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter la scène et les résultats en PNG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" class="square" aria-label="Plein écran">⛶</button></div></header>
+<nav class="tabs" aria-label="Familles de situations"><button data-family="thermique" aria-pressed="true"><small>01</small> Contact thermique</button><button data-family="gaz" aria-pressed="false"><small>02</small> Gaz parfait · Laplace</button><button data-family="phase" aria-pressed="false"><small>03</small> Changement d’état</button></nav>
+<div class="workspace"><section class="main" aria-label="Expérience et bilan">
+<div class="scene-heading"><h2 id="scene-title">Un café oublié</h2><span class="badge" id="status">État final</span></div>
+<div class="visuals"><article class="panel"><div class="panel-head"><span id="scene-label">Le système et son extérieur</span><span id="scene-quantity"></span></div><div class="canvas-wrap"><canvas id="scene" tabindex="0" aria-label="Représentation du système thermodynamique. Les réglages équivalents sont dans le panneau de droite."></canvas></div><p class="canvas-hint" id="scene-hint">La teinte code la température, pas la couleur réelle.</p></article>
+<article class="panel"><div class="panel-head"><span id="graph-label">Températures</span><div class="zoom-tools"><button id="diagram" hidden title="Changer de diagramme">T–S</button><button id="zoom-out" aria-label="Réduire le diagramme">−</button><button id="fit">Cadrer</button><button id="zoom-in" aria-label="Agrandir le diagramme">+</button></div></div><div class="canvas-wrap"><canvas id="graph" tabindex="0" aria-label="Diagramme de l’évolution ; curseur d’avancement disponible sous le bilan."></canvas></div><div class="canvas-hint legend" id="graph-hint"></div></article></div>
+<div class="metrics" aria-label="Bilan d’entropie en joules par kelvin"><div class="metric" id="metric-0"><div class="metric-label">ΔS du système</div><div class="metric-value"></div><div class="signed-track"><div class="signed-fill"></div></div></div><div class="metric" id="metric-1"><div class="metric-label">S échangée</div><div class="metric-value"></div><div class="signed-track"><div class="signed-fill"></div></div></div><div class="metric" id="metric-2"><div class="metric-label">S créée</div><div class="metric-value"></div><div class="signed-track"><div class="signed-fill"></div></div></div></div>
+<p class="balance" id="balance"><strong>ΔS</strong> = S<sub>échangée</sub> + S<sub>créée</sub> &nbsp;·&nbsp; S<sub>créée</sub> ≥ 0</p>
+<div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Lire</button><button id="reset" title="Revenir à l’état initial">↶ Début</button><button id="finish" title="Atteindre l’état final">État final</button><input id="progress" type="range" min="0" max="1" step="0.001" value="1" aria-label="Avancement de la transformation"><output id="progress-value">100 %</output></div>
+<p class="message" id="message" role="status"></p>
+</section><aside class="aside" id="aside" aria-label="Réglages et modèle"><div class="drawer-close"><b>Réglages</b><button id="settings-close">Fermer</button></div>
+<section class="section"><h2>L’expérience</h2><label class="mini-tag" for="scenario">Situation</label><select id="scenario"></select><div id="presets" class="row"></div><div id="system-field" hidden><label class="mini-tag" for="system">Système étudié</label><select id="system"><option value="total">Ensemble isolé A + contact + B</option><option value="a">Eau A + zone de contact</option><option value="b">Bloc B seul</option></select></div><p class="note" id="system-note"></p></section>
+<section class="section" id="controls"><h2>Paramètres physiques</h2><div id="fields"></div></section>
+<section class="section" id="display-controls"><h2>Comparer et observer</h2><div class="checks" id="gas-checks" hidden><label><input id="compare" type="checkbox" checked>Isotherme et isentropique depuis le même état</label><label><input id="tangents" type="checkbox" checked>Tangentes au point initial</label></div><div class="field"><div class="field-head"><label for="speed">Vitesse de lecture</label><output id="speed-value">× 1</output></div><input id="speed" type="range" min="0.25" max="2" step="0.25" value="1"></div><p class="note">L’avancement paramètre une succession d’états. La durée de lecture n’est pas un temps physique calculé.</p></section>
+<section class="section"><h2 id="details-title">Bilan énergétique</h2><div id="energy" class="detail-grid"></div><div class="formula-content" hidden><div id="formula-box"></div></div><p class="note" id="model-note"></p></section>
+</aside></div><footer class="footer"><span>E. Guillaume · TH3 · MPSI</span><span>Grandeurs reçues algébriquement · températures absolues · modèle de cours</span></footer>
+</main>
+<dialog id="about"><h2>Bilans d’entropie · mode d’emploi</h2><p>Choisir une famille, régler les paramètres à droite puis lire ou déplacer l’avancement. « État final » donne le bilan complet. Les barres utilisent une même échelle, centrée sur zéro. Le bouton « Formules » révèle les expressions dans les réglages. Espace : lecture / pause.</p><h3>Contact thermique</h3><p>Café : phase condensée incompressible et indilatable de capacité constante, thermostat idéal à température fixe. La zone de contact est incluse avec le café, conformément à la convention du cours : S échangée = Q / T du thermostat.</p><p>Bloc et eau : deux corps homogènes de capacités constantes, enceinte isolée. Cliquer sur l’eau, le bloc ou l’espace autour pour choisir le système. La résistance de contact est, par convention fixe, incluse avec l’eau A ; le bloc B échange à sa propre température uniforme. Ainsi S créée,B = 0 dans ce modèle et la création au contact est comptée avec A. Les échanges A/B se compensent dans le bilan total. Il ne s’agit pas d’une répartition universelle de la création dans un objet réel.</p><h3>Gaz parfait et diagrammes</h3><p>Système fermé, n et γ constants. Les températures et pressions affichées sont celles d’états d’équilibre. Déplacer le piston règle le volume final ; glisser sur le diagramme de Watt déplace l’avancement d’une transformation réversible. Le zoom concerne le diagramme, sans changer la taille des textes.</p><p>Laplace : évolution isentropique d’un gaz parfait à γ constant ; une adiabatique réversible satisfait ces conditions. Une isotherme et une isentropique issues du même état ne relient pas les mêmes états finaux. La comparaison détente libre / isotherme réversible utilise en revanche les mêmes états initial et final : même ΔS, échanges et création différents.</p><p>Détente libre : enceinte rigide adiabatique, volume supplémentaire initialement vide, Q = W = 0, T finale = T initiale. Pendant le transitoire, aucune pression globale d’équilibre et aucune entropie d’équilibre intermédiaire ne sont calculées. Seuls les points initial et final figurent dans les diagrammes ; les particules sont une illustration du remplissage, pas un solveur moléculaire. La pression finale n’est pas la pression extérieure pendant la détente.</p><p>Le cycle reprend les trois étapes de TH3 : compression adiabatique réversible, détente isotherme réversible, refroidissement isochore monotherme. Cette dernière étape suppose le gaz intérieurement homogène. La zone de contact avec la source est comprise dans le bilan ; l’étape est irréversible. Une aire ∫T dS ne représente la chaleur reçue que sur un chemin réversible.</p><h3>Thé glacé</h3><p>Eau et glace assimilées au même corps pur, à pression ambiante constante, enceinte adiabatique, capacités du récipient et variations d’énergie mécanique négligées. Le premier principe donne ΔH = 0. Les glaçons sont comptés par unités initiales de 8 g : quatre pour 32 g, quinze pour 120 g, avec un fragment si la masse n’est pas un multiple de 8 g. Leur taille diminue avec la masse solide restante. Chaque fraction est supposée homogène ; la chaleur transférée est le paramètre d’avancement. L’état final est obtenu par conservation de l’enthalpie, en vérifiant les domaines solide, diphasé et liquide. Aucun terme d’entropie de mélange de deux espèces différentes n’est ajouté.</p><p>Données du cours : c eau = 4180 J·kg⁻¹·K⁻¹ ; c glace = 2090 J·kg⁻¹·K⁻¹ ; L fusion = 335 kJ·kg⁻¹ ; T fusion = 273,15 K. Les contributions sont calculées par un chemin d’équilibre fictif. Ce chemin de calcul n’est pas présenté comme le déroulement réel de l’expérience.</p><h3>Affichage et autonomie</h3><p>La teinte code la température selon une règle commune. Les dessins ne donnent ni les dimensions réelles ni un temps physique. Projection masque les réglages et agrandit les textes ; le bouton ⛶ agit séparément sur le plein écran. L’export PNG inclut les deux vues et le bilan. Tout fonctionne localement, sans bibliothèque distante.</p><p>Références : cours TH3 d’E. Guillaume ; inspiration d’interaction : PhET « Propriétés des gaz » et « Diffusion ». Interface et modèles propres à cet atelier.</p><div class="close-row"><button data-close>Fermer l’aide</button></div></dialog><div id="toast" class="toast" role="status"></div>
+<script>/* TH3 — Modèles de bilan. SI ; chaleurs et travaux reçus algébriquement. */
+'use strict';
+const TH3Physique = (() => {
+  const R=8.31446261815324, kB=1.380649e-23, NA=6.02214076e23;
+  const Tm=273.15, cw=4180, ci=2090, L=335000;
+  const clip=(x,a,b)=>Math.max(a,Math.min(b,x));
+  function gaz(p,u=1) {
+    u=clip(u,0,1);
+    const {n,T0,V0,gamma,mode}=p, Cv=n*R/(gamma-1);
+    let V=V0, T=T0, Q=0, W=0, Se=0, Sc=0, etape='', equilibre=true;
+    if(mode==='cycle') {
+      const r=p.r, TB=T0*Math.pow(r,1-gamma), a=3*u;
+      if(a<=1) {
+        V=V0*Math.pow(r,a); T=T0*Math.pow(V/V0,1-gamma);
+        W=Cv*(T-T0); etape='A → B · compression adiabatique réversible';
+      } else if(a<=2) {
+        T=TB; V=V0*r*Math.pow(1/r,a-1);
+        Q=n*R*TB*Math.log(V/(V0*r));
+        W=Cv*(TB-T0)-Q; Se=n*R*Math.log(V/(V0*r));
+        etape='B → C · détente isotherme réversible';
+      } else {
+        V=V0; T=TB+(T0-TB)*(a-2);
+        const Qbc=n*R*TB*Math.log(1/r), Qca=Cv*(T-TB);
+        Q=Qbc+Qca; W=Cv*(TB-T0)-Qbc;
+        Se=n*R*Math.log(1/r)+Qca/T0;
+        etape='C → A · refroidissement isochore monotherme';
+      }
+    } else if(mode==='adiabatique') {
+      V=V0*Math.pow(p.r,u); T=T0*Math.pow(V/V0,1-gamma);
+      W=Cv*(T-T0); etape='Adiabatique réversible';
+    } else if(mode==='isotherme') {
+      V=V0*Math.pow(p.r,u); Q=n*R*T0*Math.log(V/V0);
+      W=-Q; Se=Q/T0; etape='Isotherme réversible';
+    } else if(mode==='libre') {
+      V=u===0?V0:V0*p.r; equilibre=u===0||u===1;
+      etape='Détente libre · Joule–Gay-Lussac';
+    }
+    const dU=Cv*(T-T0), ds=Cv*Math.log(T/T0)+n*R*Math.log(V/V0);
+    Sc=ds-Se;
+    if(Math.abs(Sc)<1e-10)Sc=0;
+    return {T,V,P:n*R*T/V,Q,W,dU,ds:equilibre?ds:null,Se:equilibre?Se:null,Sc:equilibre?Sc:null,equilibre,etape,Cv};
+  }
+  function cafe(p,u=1) {
+    u=clip(u,0,1);
+    const T=p.Ti+(p.Tb-p.Ti)*u, Q=p.C*(T-p.Ti);
+    const ds=p.C*Math.log(T/p.Ti), Se=Q/p.Tb;
+    return {T,Q,W:0,dU:Q,ds,Se,Sc:ds-Se,exterieur:-Se};
+  }
+  function contact(p,u=1,systeme='total') {
+    u=clip(u,0,1);
+    const Tf=(p.Ca*p.Ta+p.Cb*p.Tb)/(p.Ca+p.Cb);
+    const Q=p.Ca*(Tf-p.Ta)*u, Ta=p.Ta+Q/p.Ca, Tb=p.Tb-Q/p.Cb;
+    const sa=p.Ca*Math.log(Ta/p.Ta), sb=p.Cb*Math.log(Tb/p.Tb), sc=sa+sb;
+    // Convention fixe : la résistance thermique est incluse dans A (eau).
+    // B est homogène, sa frontière est à T_B ; Se_B = ΔS_B, Sc_B = 0.
+    let ds=sa+sb, Se=0, Sc=sc, q=0;
+    if(systeme==='a'){ds=sa;Se=-sb;Sc=sc;q=Q;}
+    if(systeme==='b'){ds=sb;Se=sb;Sc=0;q=-Q;}
+    return {Ta,Tb,Tf,Q:q,transfert:Q,W:0,dU:q,ds,Se,Sc,sa,sb};
+  }
+  function eauDepuisH(m,H) {
+    if(H<0){const T=Tm+H/(m*ci);return {T,x:0,S:m*ci*Math.log(T/Tm),H};}
+    if(H<=m*L)return {T:Tm,x:H/(m*L),S:H/Tm,H};
+    const T=Tm+(H-m*L)/(m*cw);
+    return {T,x:1,S:m*(L/Tm+cw*Math.log(T/Tm)),H};
+  }
+  function glace(p,u=1) {
+    u=clip(u,0,1);
+    const Hi=p.mi*ci*(p.Ti-Tm), Hw=p.mw*(L+cw*(p.Tw-Tm));
+    const total=eauDepuisH(p.mi+p.mw,Hi+Hw);
+    let qf;
+    if(total.x===1)qf=p.mi*(L+cw*(total.T-Tm))-Hi;
+    else if(total.x===0)qf=Hw-p.mw*ci*(total.T-Tm);
+    else qf=Math.max(p.mw*cw*(p.Tw-Tm),p.mi*ci*(Tm-p.Ti));
+    const q=qf*u, a=eauDepuisH(p.mi,Hi+q), b=eauDepuisH(p.mw,Hw-q);
+    const si=eauDepuisH(p.mi,Hi).S, sw=eauDepuisH(p.mw,Hw).S;
+    const ds=a.S+b.S-si-sw;
+    return {a,b,Tf:total.T,xf:total.x,liquide:p.mi*a.x+p.mw*b.x,solide:p.mi*(1-a.x)+p.mw*(1-b.x),q,qf,ds,Se:0,Sc:ds,Q:0,W:0,dH:0,si:a.S-si,sw:b.S-sw};
+  }
+  function logBinom(n,k) {
+    k=Math.min(k,n-k);let v=0;
+    for(let j=1;j<=k;j++)v+=Math.log((n-k+j)/j);
+    return v;
+  }
+  function binomiale(n) {
+    // Récurrence depuis le mode : pas de sous-flux pour N ≤ 1000.
+    const a=new Array(n+1).fill(0), m=Math.floor(n/2);a[m]=1;
+    for(let k=m;k>0;k--)a[k-1]=a[k]*k/(n-k+1);
+    for(let k=m;k<n;k++)a[k+1]=a[k]*(n-k)/(k+1);
+    const s=a.reduce((x,y)=>x+y,0);return a.map(x=>x/s);
+  }
+  function configurations(n,k) {
+    if(n>10)return [];
+    const out=[];
+    for(let i=0;i<2**n;i++) {
+      const bits=Array.from({length:n},(_,j)=>(i>>j)&1);
+      if(bits.reduce((a,b)=>a+b,0)===k)out.push(bits);
+    }
+    return out;
+  }
+  function binomEntier(n,k) {k=Math.min(k,n-k);let v=1n;for(let j=1;j<=k;j++)v=v*BigInt(n-k+j)/BigInt(j);return v;}
+  function fractionMoyenneGauche(t,sigma=.28) {
+    // Points indépendants, x(0) uniforme sur [0,1/2], vx gaussienne centrée.
+    // Réflexions sur [0,1] : décomposition en cosinus de la densité initiale.
+    if(t<=0)return 1;
+    if(sigma*t<.028)return 1-sigma*t*Math.sqrt(2/Math.PI);
+    let sum=0;for(let j=1;j<=127;j+=2)sum+=Math.exp(-.5*(sigma*Math.PI*j*t)**2)/(j*j);
+    return .5+4/(Math.PI*Math.PI)*sum;
+  }
+  return {R,kB,NA,Tm,cw,ci,L,clip,gaz,cafe,contact,glace,eauDepuisH,logBinom,binomiale,configurations,binomEntier,fractionMoyenneGauche};
+})();
+globalThis.TH3Physique=TH3Physique;
+</script><script>'use strict';
+const TH3UI=(()=>{
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const fmt=(v,d=1)=>Number.isFinite(v)?(Math.abs(v)<1e-9?0:v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+  const sci=(v,d=2)=>{if(!Number.isFinite(v))return '—';if(v===0)return '0';if(Math.abs(v)>=.01&&Math.abs(v)<1e5)return fmt(v,d);const e=Math.floor(Math.log10(Math.abs(v)));return fmt(v/10**e,d)+' × 10'+sup(e);};
+  const sup=n=>String(n).split('').map(c=>({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).join('');
+  const clamp=TH3Physique.clip;
+  let redraw=()=>{},exportName='TH3',toastTimer;
+  const theme=()=>{const c=getComputedStyle(document.documentElement),o={};for(const key of ['paper','surface','ink','muted','line','accent','accent-ink','soft','blue','red','green','violet','grid','glass'])o[key]=c.getPropertyValue('--'+key).trim();return o;};
+  function canvas(id) {
+    const el=$(id),r=el.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+    const w=Math.max(1,r.width),h=Math.max(1,r.height);
+    if(el.width!==Math.round(w*dpr)||el.height!==Math.round(h*dpr)){el.width=Math.round(w*dpr);el.height=Math.round(h*dpr);}
+    const ctx=el.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+    return {el,ctx,w,h,c:theme(),fs:document.body.classList.contains('projection')?(w<420?19:23):(w<380?16:18)};
+  }
+  function text(ctx,str,x,y,color,size=18,align='left',weight='400') {ctx.fillStyle=color;ctx.font=`${weight} ${size}px Arial,Helvetica,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(str,x,y);}
+  function wrap(ctx,str,x,y,maxWidth,color,size=16,lineHeight=size*1.4,align='left') {
+    ctx.font=`${size}px Arial,Helvetica,sans-serif`;let line='',i=0;
+    for(const word of str.split(' ')){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){text(ctx,line,x,y+i*lineHeight,color,size,align);i++;line=word;}else line=test;}
+    if(line)text(ctx,line,x,y+i*lineHeight,color,size,align);return (i+1)*lineHeight;
+  }
+  function line(ctx,x1,y1,x2,y2,color,width=2,dash=[]) {ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+  function arrow(ctx,x1,y1,x2,y2,color,width=3) {line(ctx,x1,y1,x2,y2,color,width);const a=Math.atan2(y2-y1,x2-x1),s=9;ctx.beginPath();ctx.fillStyle=color;ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+  function box(ctx,x,y,w,h,fill,stroke,r=8) {ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+  function dot(ctx,x,y,r,color,stroke) {ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+  function axes(s,{xmin=0,xmax=1,ymin=0,ymax=1,xlabel='',ylabel='',xticks=4,yticks=4,xvalues=null,xformat=v=>fmt(v,1),yformat=v=>fmt(v,1)}={}) {
+    const {ctx,w,h,c,fs}=s, l=Math.max(55,Math.min(83,w*.18)),rr=22,t=35,b=56;
+    const x=v=>l+(v-xmin)/(xmax-xmin)*(w-l-rr),y=v=>h-b-(v-ymin)/(ymax-ymin)*(h-t-b);
+    for(const v of xvalues||Array.from({length:xticks+1},(_,i)=>xmin+(xmax-xmin)*i/xticks)){if(v<xmin||v>xmax)continue;line(ctx,x(v),t,x(v),h-b,c.grid,1);text(ctx,xformat(v),x(v),h-b+19,c.muted,fs-4,'center');}
+    for(let i=0;i<=yticks;i++){let v=ymin+(ymax-ymin)*i/yticks;line(ctx,l,y(v),w-rr,y(v),c.grid,1);text(ctx,yformat(v),l-9,y(v),c.muted,fs-4,'right');}
+    line(ctx,l,t,l,h-b,c.muted,1.5);line(ctx,l,h-b,w-rr,h-b,c.muted,1.5);
+    text(ctx,xlabel,(l+w-rr)/2,h-13,c.ink,fs-2,'center');text(ctx,ylabel,l,15,c.ink,fs-2);
+    return {x,y,left:l,right:w-rr,top:t,bottom:h-b,xmin,xmax,ymin,ymax};
+  }
+  function curve(ctx,a,points,color,width=3,dash=[]) {
+    ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.clip();
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);let first=true;
+    for(const p of points){if(!p||!Number.isFinite(p[0]+p[1])){first=true;continue;}const px=a.x(p[0]),py=a.y(p[1]);if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);}
+    ctx.stroke();ctx.restore();
+  }
+  function field(id,label,value,min,max,step,unit='') {
+    const display=Number(Number(value).toFixed(['gamma','ratio'].includes(id)?6:3));
+    return `<div class="field"><div class="field-head"><label for="${id}">${label}</label><span class="number-wrap"><input id="${id}-number" aria-label="${label}" type="number" min="${min}" max="${max}" step="any" value="${display}"><span>${unit}</span></span></div><input id="${id}" aria-label="${label}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;
+  }
+  function bindField(id,cb,deferred=false) {for(const suffix of ['','-number'])$('#'+id+suffix)?.addEventListener(suffix||deferred?'change':'input',e=>{let v=e.target.valueAsNumber;if(!Number.isFinite(v))return;v=clamp(v,+e.target.min,+e.target.max);$('#'+id).value=v;$('#'+id+'-number').value=v;cb(v);});if(deferred)$('#'+id)?.addEventListener('input',e=>$('#'+id+'-number').value=e.target.value);}
+  function metrics(values,labels,colors,unit='J·K⁻¹') {
+    const scale=Math.max(...values.filter(Number.isFinite).map(Math.abs),1e-12);
+    values.forEach((v,i)=>{const el=$('#metric-'+i);el.style.setProperty('--metric-color',colors[i]);el.querySelector('.metric-label').textContent=labels[i];el.querySelector('.metric-value').innerHTML=(v===null?'—':fmt(v,2))+` <small>${unit}</small>`;const bar=el.querySelector('.signed-fill');bar.style.left=(v<0?50-49*Math.abs(v)/scale:50)+'%';bar.style.width=(Number.isFinite(v)?49*Math.abs(v)/scale:0)+'%';});
+  }
+  function toast(str) {$('#toast').textContent=str;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').textContent='',4000);}
+  async function exportImage() {
+    const cvs=$$('canvas').filter(e=>e.offsetWidth>0),c=theme(),out=document.createElement('canvas');
+    const W=1800,H=1100;out.width=W;out.height=H;const ctx=out.getContext('2d');ctx.fillStyle=c.paper;ctx.fillRect(0,0,W,H);
+    text(ctx,'TH3 · MPSI · E. Guillaume',45,35,c['accent-ink'],20);text(ctx,$('h1').textContent,45,82,c.ink,36);
+    text(ctx,$('#scene-title').textContent,45,127,c.muted,24);
+    for(let i=0;i<Math.min(2,cvs.length);i++) {
+      const el=cvs[i],px=45+i*870,py=175,pw=840,ph=550;
+      box(ctx,px,py,pw,ph,c.surface,c.line,10);
+      const rat=Math.min((pw-24)/el.width,(ph-24)/el.height),dw=el.width*rat,dh=el.height*rat;
+      ctx.drawImage(el,px+(pw-dw)/2,py+(ph-dh)/2,dw,dh);
+      const title=el.closest('.panel').querySelector('.panel-head>span')?.textContent||'';text(ctx,title,px+15,py-20,c.ink,22);
+    }
+    function exportText(el){const copy=el.cloneNode(true);copy.querySelectorAll('sup').forEach(e=>e.replaceWith('^('+e.textContent+')'));copy.querySelectorAll('sub').forEach(e=>e.replaceWith('_'+e.textContent));return copy.textContent;}
+    $$('.metric').forEach((el,i)=>{const x=50+i*580;text(ctx,exportText(el.querySelector('.metric-label')),x,785,c.muted,23);text(ctx,exportText(el.querySelector('.metric-value')),x,830,c.ink,33);});
+    wrap(ctx,exportText($('#balance')),45,900,W-90,c.muted,25,34);
+    wrap(ctx,$('#message').textContent,45,962,W-90,c.ink,25,34);
+    const blob=await new Promise(r=>out.toBlob(r,'image/png'));if(!blob){toast('La création de l’image a échoué.');return;}
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=exportName+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Image PNG exportée.');
+  }
+  function init({draw,name}) {
+    redraw=draw;exportName=name;
+    $('#theme').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('#theme').textContent=dark?'Clair':'Sombre';$('#theme').setAttribute('aria-pressed',dark);redraw();});
+    $('#projection').addEventListener('click',()=>{const p=document.body.classList.toggle('projection');$('#projection').textContent=p?'Réglages':'Projection';$('#projection').setAttribute('aria-pressed',p);$('#aside').classList.remove('open');requestAnimationFrame(redraw);});
+    $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran dans cette fenêtre.');}});
+    document.addEventListener('fullscreenchange',()=>$('#fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran'));
+    $('#help').addEventListener('click',()=>$('#about').showModal());
+    $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+    $('#export').addEventListener('click',exportImage);
+    $('#settings-open').addEventListener('click',()=>$('#aside').classList.toggle('open'));
+    $('#settings-close').addEventListener('click',()=>$('#aside').classList.remove('open'));
+    $('#formulas')?.addEventListener('click',()=>{const show=$('#formulas').getAttribute('aria-pressed')!=='true';$('#formulas').setAttribute('aria-pressed',show);$$('.formula-content').forEach(e=>e.hidden=!show);if(show&&innerWidth<=1050&&!document.body.classList.contains('projection'))$('#aside').classList.add('open');redraw();});
+    const observer=new ResizeObserver(()=>requestAnimationFrame(redraw));observer.observe($('.visuals'));$$('.canvas-wrap').forEach(e=>observer.observe(e));
+    window.addEventListener('resize',()=>requestAnimationFrame(redraw));
+    document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|SELECT|BUTTON|TEXTAREA/.test(e.target.tagName)&&!$('dialog[open]')){e.preventDefault();$('#play').click();}if(e.key==='Escape')$('#aside').classList.remove('open');});
+  }
+  return {$,$$,fmt,sci,sup,clamp,theme,canvas,text,wrap,line,arrow,box,dot,axes,curve,field,bindField,metrics,toast,init};
+})();
+</script><script>'use strict';
+(()=>{
+const U=TH3UI,M=TH3Physique,{$,$$,fmt,clamp}=U;
+const state={family:'thermique',scenario:'cafe',system:'total',u:1,playing:false,speed:1,zoom:1,diagram:'pv',compare:true,tangents:true,phase:0};
+const params={cafe:{C:418,Ti:343.15,Tb:293.15},contact:{Ca:418,Cb:225,Ta:293.15,Tb:373.15},glace:{mw:.5,mi:.032,Tw:293.15,Ti:255.15},gaz:{n:1,T0:300,V0:.024,gamma:1.4,r:2,mode:'adiabatique'}};
+const names={cafe:'Un café oublié',contact:'Un bloc chaud dans l’eau',adiabatique:'Compression ou détente adiabatique réversible',isotherme:'Compression ou détente isotherme réversible',libre:'Détente de Joule–Gay-Lussac',cycle:'Le cycle à trois étapes du cours',glace:'Préparer un thé glacé'};
+let current,graphAxes,piston,sceneHits=[],lastTime=0;
+// Placement établi une seule fois : aucun changement de lignes/colonnes quand le piston bouge.
+const gasColumns=6,gasRows=Math.ceil(62/gasColumns);
+const gasParticles=Array.from({length:62},(_,id)=>{
+ const phaseX=id*2.39996323,phaseY=id*1.83179301;
+ return {id,phaseX,phaseY,x0:(id%gasColumns+.5+.20*Math.sin(phaseX))/gasColumns,y0:(Math.floor(id/gasColumns)+.5+.20*Math.sin(phaseY))/gasRows};
+});
+function result(u=state.u){if(state.family==='gaz')return M.gaz(params.gaz,u);if(state.family==='phase')return M.glace(params.glace,u);return state.scenario==='contact'?M.contact(params.contact,u,state.system):M.cafe(params.cafe,u);}
+function setPlaying(v){state.playing=v;$('#play').textContent=v?'Ⅱ Pause':'▶ Lire';$('#play').setAttribute('aria-pressed',v);}
+function restart(){setPlaying(false);state.u=0;state.phase=0;draw();}
+function changeFamily(f){state.family=f;state.zoom=1;state.diagram='pv';state.system='total';setPlaying(false);state.u=0;if(f==='thermique')state.scenario='cafe';else if(f==='phase')state.scenario='glace';else state.scenario=params.gaz.mode;controls();draw();}
+function fields(){
+ let html='';const add=(...args)=>html+=U.field(...args);
+ if(state.family==='gaz'){
+  const p=params.gaz;add('n','Quantité de matière',p.n,.1,5,.1,'mol');add('T0','Température initiale',p.T0,120,600,1,'K');add('V0','Volume initial',p.V0*1000,5,50,.1,'L');add('gamma','Coefficient γ',p.gamma,1.1,1.67,.01,'');add('ratio','Vf / Vi'+(p.mode==='cycle'?' (A → B)':''),p.r,p.mode==='libre'?1:p.mode==='cycle'?.25:.3,p.mode==='cycle'?.8:4,.001,'');
+ }else if(state.family==='phase'){
+  const p=params.glace;add('mw','Masse d’eau',p.mw*1000,100,1000,10,'g');add('mi','Masse de glace',p.mi*1000,8,500,1,'g');add('Tw','Température de l’eau',p.Tw-M.Tm,0,80,.5,'°C');add('Ti','Température de la glace',p.Ti-M.Tm,-30,0,.5,'°C');
+ }else if(state.scenario==='cafe'){
+  const p=params.cafe;add('C','Capacité thermique',p.C,100,1500,1,'J/K');add('Ti','Température initiale',p.Ti-M.Tm,0,100,.5,'°C');add('Tb','Température du thermostat',p.Tb-M.Tm,0,100,.5,'°C');
+ }else{
+  const p=params.contact;add('Ca','Capacité de l’eau A',p.Ca,100,2000,1,'J/K');add('Cb','Capacité du bloc B',p.Cb,50,1500,1,'J/K');add('Ta','Température initiale de A',p.Ta-M.Tm,0,100,.5,'°C');add('Tb','Température initiale de B',p.Tb-M.Tm,0,200,.5,'°C');
+ }
+ $('#fields').innerHTML=html;
+ const target=state.family==='gaz'?params.gaz:state.family==='phase'?params.glace:params[state.scenario];
+ $$('#fields input[type=range]').forEach(el=>U.bindField(el.id,v=>{let key=el.id;if(key==='ratio')key='r';if(el.id==='V0')v/=1000;if(state.family==='phase'&&(key==='mw'||key==='mi'))v/=1000;if(state.family!=='gaz'&&['Ti','Tb','Ta','Tw'].includes(key))v+=M.Tm;target[key]=v;setPlaying(false);draw();}));
+}
+function controls(){
+ $$('[data-family]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.family===state.family));
+ const choices=state.family==='gaz'?['adiabatique','isotherme','libre','cycle']:state.family==='phase'?['glace']:['cafe','contact'];
+ $('#scenario').innerHTML=choices.map(k=>`<option value="${k}">${names[k]}</option>`).join('');$('#scenario').value=state.scenario;
+ $('#system-field').hidden=state.scenario!=='contact';$('#system').value=state.system;
+ $('#gas-checks').hidden=state.family!=='gaz';$('#diagram').hidden=state.family!=='gaz';
+ const presets=state.family==='gaz'?(state.scenario==='cycle'?[['cours','Valeurs du cours']]:[['detente','Détente ×2'],['compression','Compression ÷2']]):state.family==='phase'?[['the','4 glaçons'],['partiel','Fusion partielle']]:state.scenario==='cafe'?[['cafe','Café 70 → 20 °C'],['chauffage','Réchauffer']]:[['bloc','Bloc chaud'],['egal','Même température']];
+ $('#presets').innerHTML=presets.map(([id,t])=>`<button data-preset="${id}">${t}</button>`).join('');
+ $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
+ fields();
+}
+function preset(id){
+ setPlaying(false);state.u=1;
+ if(id==='cafe')Object.assign(params.cafe,{C:418,Ti:343.15,Tb:293.15});
+ if(id==='chauffage')Object.assign(params.cafe,{C:418,Ti:293.15,Tb:343.15});
+ if(id==='bloc')Object.assign(params.contact,{Ca:418,Cb:225,Ta:293.15,Tb:373.15});
+ if(id==='egal')params.contact.Tb=params.contact.Ta;
+ if(id==='the')Object.assign(params.glace,{mw:.5,mi:.032,Tw:293.15,Ti:255.15});
+ if(id==='partiel')Object.assign(params.glace,{mw:.532,mi:.120,Tw:M.glace({mw:.5,mi:.032,Tw:293.15,Ti:255.15}).Tf,Ti:255.15});
+ if(id==='cours')Object.assign(params.gaz,{mode:'cycle',n:2,T0:144.4,V0:2*M.R*144.4/1e5,gamma:5/3,r:Math.pow(144.4/278.8,1.5)});
+ if(id==='detente')params.gaz.r=2;
+ if(id==='compression'){if(state.scenario==='libre'){U.toast('Une détente libre dans le vide augmente le volume accessible.');return;}params.gaz.r=.5;}
+ fields();draw();
+}
+function fillDetails(d){
+ const c=U.theme(),isGas=state.family==='gaz',p=isGas?params.gaz:null;
+ $('#scene-title').textContent=names[state.scenario];
+ $('#status').textContent=state.u===0?'État initial':state.u===1?'État final':(isGas&&!d.equilibre?'Transitoire hors équilibre':fmt(state.u*100,0)+' % de l’avancement');
+ $('#progress').value=state.u;$('#progress-value').textContent=fmt(state.u*100,0)+' %';
+ U.metrics([d.ds,d.Se,d.Sc],['ΔS du système','S échangée','S créée'],[c['accent-ink'],c.blue,c.green]);
+ let energy=[],formula='',note='',sys='',msg='';
+ if(isGas){
+  energy=[['Q reçue',d.Q],['W reçu',d.W],['ΔU',d.dU]];
+  const fin=M.gaz(p,1),dsiso=p.n*M.R*Math.log(p.r);
+  formula='<p class="formula">ΔS = C<sub>V</sub> ln(Tf/Ti) + nR ln(Vf/Vi)</p><p class="formula">C<sub>V</sub> = nR / (γ − 1)</p>';
+  if(p.mode==='adiabatique')formula+='<p class="formula">PV<sup>γ</sup> = cste<br>TV<sup>γ−1</sup> = cste<br>T<sup>γ</sup>P<sup>1−γ</sup> = cste</p><p class="note">Gaz parfait fermé · γ constant · isentropie. Ici : adiabatique réversible.</p>';
+  if(p.mode==='isotherme')formula+='<p class="formula">Q = nRT ln(Vf/Vi)<br>W = −Q<br>S<sub>échangée</sub> = Q/T ; S<sub>créée</sub> = 0</p>';
+  if(p.mode==='libre')formula+='<p class="formula">Q = W = ΔU = 0<br>Tf = Ti<br>ΔS = S<sub>créée</sub> = nR ln(Vf/Vi)</p>';
+  if(p.mode==='cycle')formula+='<p class="formula">ΔS<sub>cycle</sub> = 0<br>S<sub>créée,cycle</sub> = −S<sub>échangée,cycle</sub> &gt; 0</p>';
+  note='États d’équilibre · gaz parfait fermé · capacités constantes. Travail reçu : W = −∫Pext dV.';
+  sys=p.mode==='libre'?'Gaz dans une enceinte rigide adiabatique ; le volume ajouté est initialement vide.':'Système : le gaz et les zones de contact éventuelles. Les thermostats restent à l’extérieur.';
+  if(p.mode==='adiabatique')msg='Q = 0 et S créée = 0 : l’évolution est isentropique. '+(p.r<1?'La compression élève la température.':'La détente abaisse la température.');
+  if(p.mode==='isotherme')msg='La température reste constante. '+(p.r<1?'Le gaz cède de la chaleur et de l’entropie au thermostat.':'Le gaz reçoit de la chaleur et de l’entropie du thermostat.');
+  if(p.mode==='libre')msg=d.equilibre?'Mêmes états qu’une détente isotherme réversible : ΔS = '+fmt(dsiso,2)+' J/K. Ici, cette entropie est créée ; sur le chemin réversible, elle serait échangée.':'Hors équilibre : aucun chemin P(V) ni bilan d’entropie intermédiaire ne sont inventés. Le bilan complet apparaît à l’état final.';
+  if(p.mode==='cycle')msg=state.u===1?'Le gaz retrouve son état initial : ΔS cycle = 0, mais S créée = '+fmt(fin.Sc,2)+' J/K > 0.':d.etape+'. Les trois bilans affichés sont cumulés depuis A.';
+  $('#scene-hint').textContent=p.mode==='libre'?'62 points conservés · bilan entre états d’équilibre.':p.mode==='cycle'?'62 points conservés · suivre les étapes avec l’avancement.':'62 points conservés · glisser le piston pour régler le volume final.';
+ }else if(state.family==='phase'){
+  const p=params.glace;energy=[['Chaleur interne transférée',d.q],['ΔH de l’ensemble',0]];
+  formula='<p class="formula">ΔH<sub>ensemble</sub> = 0<br>ΔS<sub>chauffage</sub> = mc ln(Tf/Ti)<br>ΔS<sub>fusion</sub> = m<sub>fondue</sub>L<sub>f</sub>/T<sub>fus</sub></p><p class="formula">ΔS = ΔS<sub>eau</sub> + ΔS<sub>glace initiale</sub><br>S<sub>échangée</sub> = 0</p>';
+  energy.push(['ΔS eau initiale',d.sw,'J/K'],['ΔS glace initiale',d.si,'J/K']);
+  sys='Système : eau + glace, enceinte adiabatique à pression ambiante constante.';
+  note='La conservation de l’enthalpie détermine d’abord le domaine de l’état final. Chemins fictifs utilisés uniquement pour calculer ΔS.';
+  msg=state.u===1?(d.solide<1e-7?'Fusion totale. L’eau finale est à '+fmt(d.Tf-M.Tm,2)+' °C.':'Équilibre diphasé à 0 °C : il reste '+fmt(d.solide*1000,1)+' g de glace.'):'Le transfert réchauffe la glace puis la fait fondre ; si l’eau atteint 0 °C avant, une partie peut se solidifier.';
+  $('#scene-hint').textContent='Glaçons de 8 g au départ ; un fragment si nécessaire. Leur taille suit la masse restante.';
+ }else if(state.scenario==='cafe'){
+  energy=[['Q reçue par le café',d.Q],['ΔU du café',d.dU],['ΔS du thermostat',d.exterieur,'J/K']];
+  formula='<p class="formula">ΔS = C ln(T/Ti)<br>Q = C(T − Ti)<br>S<sub>échangée</sub> = Q/T<sub>th</sub><br>S<sub>créée</sub> = ΔS − Q/T<sub>th</sub></p>';
+  sys='Système : café + zone de contact. Le thermostat est à l’extérieur.';
+  note='Phase condensée idéale de capacité constante ; thermostat à température fixe. La résistance thermique est comptée avec le café.';
+  msg=Math.abs(params.cafe.Ti-params.cafe.Tb)<1e-9?'À températures égales, aucun échange ni aucune création d’entropie.':state.u===0?'Le café et l’air ambiant ont des températures différentes : le transfert thermique va du plus chaud vers le plus froid.':d.ds<0?'Le café perd de l’entropie, mais en cède davantage au thermostat : l’entropie créée reste positive.':'Le café reçoit de l’entropie du thermostat ; le contact à température différente en crée également.';
+  $('#scene-hint').textContent='La teinte code la température, pas la couleur réelle.';
+ }else{
+  energy=[['Q reçue par le système',d.Q],['ΔS de l’eau A',d.sa,'J/K'],['ΔS du bloc B',d.sb,'J/K']];
+  formula='<p class="formula">Tf = (C<sub>A</sub>Ti<sub>A</sub> + C<sub>B</sub>Ti<sub>B</sub>) / (C<sub>A</sub> + C<sub>B</sub>)<br>ΔS = C<sub>A</sub> ln(Tf/Ti<sub>A</sub>) + C<sub>B</sub> ln(Tf/Ti<sub>B</sub>)</p><p class="note">Ensemble : S échangée = 0. La zone de contact est incluse avec A. Pour A : S échangée = −ΔS<sub>B</sub>. Pour B : S échangée = ΔS<sub>B</sub>, S créée = 0.</p>';
+  sys='Frontière '+(state.system==='total'?'de l’ensemble isolé.':state.system==='a'?'de A avec la zone de contact.':'du bloc B, homogène, sans la zone de contact.');
+  note='Convention fixe : toute la résistance thermique est dans le contact inclus avec A. Sa création n’est comptée qu’une fois.';
+  msg=state.system==='total'?'Les échanges entre A et B sont internes. Leur somme s’annule ; la création au contact augmente l’entropie de l’ensemble.':state.system==='a'?'A comprend la zone de contact : l’entropie reçue et la création au contact contribuent à sa variation.':'Le bloc perd de l’entropie lorsqu’il refroidit. Dans ce modèle homogène, la création est située dans le contact, inclus avec A.';
+  $('#scene-hint').textContent='Cliquer sur l’eau, le bloc ou autour pour changer de système.';
+ }
+ $('#system-note').textContent=sys;$('#model-note').textContent=note;$('#formula-box').innerHTML=formula;
+ $('#energy').innerHTML=energy.map(([label,val,unit='J'])=>`<span>${label}</span><output>${fmt(val,2)} ${unit}</output>`).join('');
+ $('#message').textContent=msg;
+}
+function tempColor(T){const t=clamp((T-253)/150,0,1);return `hsl(${210-190*t} 65% ${document.documentElement.dataset.theme==='dark'?35:75}%)`;}
+function cafeScene(s){
+ const {ctx,w,h,c,fs}=s,d=current;
+ const environment={x:12,y:12,w:w-24,h:h-24};
+ ctx.globalAlpha=.18;U.box(ctx,environment.x,environment.y,environment.w,environment.h,tempColor(params.cafe.Tb),null,10);ctx.globalAlpha=1;
+ U.box(ctx,environment.x,environment.y,environment.w,environment.h,null,c.line,10);
+ U.text(ctx,'Air ambiant · thermostat',26,34,c.ink,fs-2);
+ U.text(ctx,fmt(params.cafe.Tb-M.Tm,1)+' °C',w-27,34,c.ink,fs,'right','600');
+ const bx=w*.32,by=h*.30,bw=w*.30,bh=h*.43,cx=bx+bw/2,handle=Math.min(19,bh*.20);
+ // La tasse et sa zone de contact sont dans l’environnement thermostaté.
+ U.box(ctx,bx,by,bw,bh,c.surface,null,4);
+ ctx.globalAlpha=.72;ctx.fillStyle=tempColor(d.T);ctx.fillRect(bx+3,by+bh*.11,bw-6,bh*.87);ctx.globalAlpha=1;
+ U.line(ctx,bx,by,bx,by+bh,c.muted,3);U.line(ctx,bx,by+bh,bx+bw,by+bh,c.muted,3);U.line(ctx,bx+bw,by+bh,bx+bw,by,c.muted,3);
+ ctx.beginPath();ctx.arc(bx+bw+7,by+bh*.53,handle,-Math.PI/2,Math.PI/2);ctx.strokeStyle=c.muted;ctx.lineWidth=3;ctx.stroke();
+ U.text(ctx,'Café',cx,by+bh*.28,c.ink,fs,'center');U.text(ctx,fmt(d.T-M.Tm,1)+' °C',cx,by+bh*.65,c.ink,fs+3,'center','600');
+ ctx.setLineDash([5,4]);U.box(ctx,bx-12,by-12,bw+handle+33,bh+24,null,c['accent-ink'],8);ctx.setLineDash([]);
+ const yf=by+bh*.20,delta=d.T-params.cafe.Tb;
+ if(Math.abs(delta)>.01){
+  const flows=[[bx-2,yf,bx-52,yf],[bx+bw+9,yf,bx+bw+64,yf]];
+  for(const [x1,y1,x2,y2] of flows)if(delta>0)U.arrow(ctx,x1,y1,x2,y2,c['accent-ink']);else U.arrow(ctx,x2,y2,x1,y1,c['accent-ink']);
+ }
+ U.text(ctx,'Σ : café + contact',w/2,h-28,c['accent-ink'],fs-2,'center');
+}
+function iceCubes(s,bounds){
+ const {ctx,w,c}=s,p=params.glace,d=current,unit=.008;
+ if(d.solide<=1e-9)return 0;
+ const count=Math.max(1,Math.ceil(p.mi/unit-1e-9));
+ let cols=1,best=0;for(let n=1;n<=count;n++){const score=Math.min(bounds.w/n,bounds.h/Math.ceil(count/n));if(score>best+1e-6){best=score;cols=n;}}
+ const rows=Math.ceil(count/cols);
+ const cellW=bounds.w/cols,cellH=bounds.h/rows,base=Math.min(w*.10,cellW*.69,cellH*.69);
+ const scale=Math.cbrt(d.solide/p.mi);
+ for(let i=0;i<count;i++){
+  const initialMass=Math.min(unit,Math.max(0,p.mi-i*unit)),side=base*scale*Math.cbrt(initialMass/unit);
+  const x=bounds.x+(i%cols+.5)*cellW,y=bounds.y+(Math.floor(i/cols)+.5)*cellH;
+  ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(i*2.4)*.09);
+  ctx.lineWidth=Math.min(2,side*.075);ctx.beginPath();ctx.roundRect(-side/2,-side/2,side,side,Math.min(4,side*.12));ctx.fillStyle=c.glass;ctx.fill();ctx.strokeStyle=c.blue;ctx.stroke();
+  if(side>14)U.line(ctx,-side*.27,-side*.26,side*.18,-side*.26,c.blue,1);
+  ctx.restore();
+ }
+ return count;
+}
+function scene(){
+ const s=U.canvas('#scene'),{ctx,w,h,c,fs}=s;sceneHits=[];piston=null;
+ if(w<20||h<20)return;
+ if(state.family==='gaz')return gasScene(s);
+ const phase=state.family==='phase',contact=state.scenario==='contact',d=current;
+ if(!contact&&!phase)return cafeScene(s);
+ const bx=w*.13,by=h*.25,bw=w*(contact||phase?.74:.36),bh=h*.49;
+ if(contact||phase){ctx.setLineDash([7,5]);U.box(ctx,9,9,w-18,h-18,null,state.system==='total'?c['accent-ink']:c.line);ctx.setLineDash([]);}
+ ctx.fillStyle=tempColor(phase?d.b.T:contact?d.Ta:d.T);ctx.globalAlpha=.6;ctx.fillRect(bx+3,by+bh*.12,bw-6,bh*.86);ctx.globalAlpha=1;
+ U.line(ctx,bx,by,bx,by+bh,c.muted,3);U.line(ctx,bx,by+bh,bx+bw,by+bh,c.muted,3);U.line(ctx,bx+bw,by+bh,bx+bw,by,c.muted,3);
+ if(contact){
+  U.text(ctx,'Eau A',w*.31,by-24,c.ink,fs,'center');U.text(ctx,fmt(d.Ta-M.Tm,1)+' °C',w*.31,by+bh*.52,c.ink,fs+3,'center','600');
+  const x=w*.58,y=by+bh*.21,ww=w*.23,hh=bh*.64;U.box(ctx,x,y,ww,hh,tempColor(d.Tb),state.system==='b'?c['accent-ink']:c.muted,5);
+  U.text(ctx,'Bloc B',x+ww/2,y+hh*.27,c.ink,fs-1,'center');U.text(ctx,fmt(d.Tb-M.Tm,1)+' °C',x+ww/2,y+hh*.66,c.ink,fs,'center','600');
+  if(state.system==='a'){ctx.setLineDash([5,4]);U.box(ctx,bx-5,by-8,bw+10,bh+16,null,c['accent-ink']);U.box(ctx,x-4,y-4,ww+8,hh+8,null,c['accent-ink'],5);ctx.setLineDash([]);U.text(ctx,'B exclu',x+ww/2,by-24,c.muted,fs-3,'center');}
+  const x1=w*.55,x2=w*.44,yf=by+bh*.48;if(d.Tb>d.Ta+.01)U.arrow(ctx,x1,yf,x2,yf,c['accent-ink']);else if(d.Tb<d.Ta-.01)U.arrow(ctx,x2,yf,x1,yf,c['accent-ink']);
+  sceneHits=[{x,y,w:ww,h:hh,system:'b'},{x:bx,y:by,w:bw,h:bh,system:'a'}];
+  U.text(ctx,'Équilibre : '+fmt(d.Tf-M.Tm,1)+' °C',w/2,h-27,c.muted,fs-2,'center');
+ }else{
+  const iceCount=iceCubes(s,{x:w*.46,y:by+bh*.03,w:w*.37,h:bh*.60});
+  U.text(ctx,'Eau',w*.30,by-24,c.ink,fs,'center');U.text(ctx,fmt(d.b.T-M.Tm,1)+' °C',w*.30,by+bh*.55,c.ink,fs+3,'center','600');
+  U.text(ctx,d.solide>1e-7?'Glace · '+iceCount:'Tout liquide',w*.68,by-24,c.ink,fs,'center');
+  if(d.solide>1e-7)U.text(ctx,fmt(d.a.T-M.Tm,1)+' °C',w*.68,by+bh*.76,c.ink,fs,'center');
+  U.text(ctx,fmt(d.solide*1000,1)+' g de glace',w/2,h-27,c['accent-ink'],fs-1,'center');
+ }
+}
+function gasScene(s){
+ const {ctx,w,h,c,fs}=s,p=params.gaz,d=current,maxR=p.mode==='libre'?Math.max(1,p.r):4,x=w*.12,y=h*.28,bw=w*.77,bh=h*.43;
+ const vratio=p.mode==='libre'?(state.u===0?1:p.r):d.V/p.V0,pistonX=x+bw*vratio/maxR;
+ U.box(ctx,x,y,bw,bh,c.glass,c.line,4);
+ const fillWidth=pistonX-x;ctx.fillStyle=tempColor(d.T);ctx.globalAlpha=.27;ctx.fillRect(x+1,y+1,fillWidth-2,bh-2);ctx.globalAlpha=1;
+ if(p.mode==='libre'){
+  if(state.u===0)U.line(ctx,x+bw/p.r,y,x+bw/p.r,y+bh,c['accent-ink'],5);
+  else U.line(ctx,x+bw/p.r,y,x+bw/p.r,y+bh,c.muted,1,[4,5]);
+ }else{
+  U.box(ctx,pistonX-5,y-6,10,bh+12,c.muted,c.ink,3);U.line(ctx,pistonX+5,y+bh*.5,Math.min(w-12,pistonX+30),y+bh*.5,c.muted,6);
+  if(p.mode!=='cycle')piston={x:pistonX,y:y-10,h:bh+20,left:x,width:bw,maxR};
+ }
+ // Le gaz s’arrête à la face intérieure du piston. Le rayon s’adapte pour que
+ // les points restent distincts à la compression, sans masquer de particules.
+ const innerLeft=x+3,innerRight=pistonX-(p.mode==='libre'?3:7),innerTop=y+3,innerBottom=y+bh-3;
+ const innerW=Math.max(1,innerRight-innerLeft),innerH=innerBottom-innerTop;
+ const initialW=Math.max(1,bw/p.r-6);
+ const cw=innerW/gasColumns,ch=innerH/gasRows;
+ const radius=Math.min(3.5,Math.min(p.mode==='libre'?initialW/gasColumns:cw,ch)*.21);
+ ctx.save();ctx.beginPath();ctx.rect(innerLeft,innerTop,innerW,innerH);ctx.clip();
+ for(const particle of gasParticles){
+  const i=particle.id;
+  let xx=(i%gasColumns+.5+.20*Math.sin(particle.phaseX+state.phase*2.1))*cw;
+  let yy=(Math.floor(i/gasColumns)+.5+.20*Math.sin(particle.phaseY+state.phase*1.7))*ch;
+  if(p.mode==='libre'){
+   xx=particle.x0*initialW;yy=particle.y0*innerH;
+   if(state.u>0){
+   const reflect=z=>1-Math.abs((((z%2)+2)%2)-1);
+   const rx=innerW-2*radius,ry=innerH-2*radius;
+   xx=radius+reflect((xx-radius+Math.sin(particle.phaseX+1)*state.u*5*innerW)/rx)*rx;
+   yy=radius+reflect((yy-radius+Math.sin(particle.phaseY+1)*state.u*4*innerH)/ry)*ry;
+   }
+  }
+  U.dot(ctx,innerLeft+xx,innerTop+yy,radius,c['accent-ink']);
+ }
+ ctx.restore();
+ const eq=d.equilibre;U.text(ctx,eq?'T = '+fmt(d.T,1)+' K':'Gaz hors équilibre',w/2,27,c.ink,fs+2,'center','600');
+ U.text(ctx,eq?'P = '+fmt(d.P/1e5,2)+' bar':'P globale non définie',w/2,55,c.muted,fs-1,'center');
+ U.text(ctx,eq?'V = '+fmt(d.V*1000,2)+' L':'Volume accessible : '+fmt(p.V0*p.r*1000,2)+' L',w/2,y+bh+26,c.ink,fs,'center');
+ U.text(ctx,p.mode==='adiabatique'?'Q = 0 · paroi adiabatique':p.mode==='libre'?'Q = W = 0':p.mode==='isotherme'?'Thermostat à '+fmt(p.T0,1)+' K':d.etape.split(' · ')[0],w/2,h-24,c['accent-ink'],fs-2,'center');
+}
+function thermalGraph(s){
+ const phase=state.family==='phase',contact=state.scenario==='contact',p=phase?params.glace:params[state.scenario],d=current;
+ let vals=[];if(phase)vals=[p.Ti,p.Tw,M.Tm,d.Tf];else if(contact)vals=[p.Ta,p.Tb,d.Tf];else vals=[p.Ti,p.Tb];
+ const lo=Math.min(...vals)-8,hi=Math.max(...vals)+8,mid=(lo+hi)/2,range=(hi-lo)/state.zoom;
+ const a=U.axes(s,{xmin:0,xmax:100,ymin:mid-range/2,ymax:mid+range/2,xlabel:'Avancement (%)',ylabel:'T (K)',xformat:v=>fmt(v,0),yformat:v=>fmt(v,0)});graphAxes=a;
+ const series=[[],[]];for(let i=0;i<=150;i++){const z=result(i/150);series[0].push([i/1.5,phase?z.b.T:contact?z.Ta:z.T]);series[1].push([i/1.5,phase?z.a.T:contact?z.Tb:p.Tb]);}
+ series.forEach((points,i)=>{const color=i===0?s.c.blue:s.c['accent-ink'];U.curve(s.ctx,a,points,color,1.5,[4,4]);U.curve(s.ctx,a,points.filter(t=>t[0]<=state.u*100+.001),color,3);const T=phase?(i===0?d.b.T:d.a.T):contact?(i===0?d.Ta:d.Tb):(i===0?d.T:p.Tb);if(a.y(T)>=a.top&&a.y(T)<=a.bottom)U.dot(s.ctx,a.x(state.u*100),a.y(T),5,color,s.c.surface);});
+ $('#graph-label').textContent='Températures des deux corps';$('#graph-hint').innerHTML=`<span class="blue"><i></i>${phase||contact?'Eau A':'Café'}</span><span class="orange"><i></i>${phase?'Glace initiale':contact?'Bloc B':'Thermostat'}</span>`;
+}
+function gasGraph(s){
+ const p=params.gaz,d=current,P0=p.n*M.R*p.T0/p.V0,mode=p.mode,ts=state.diagram==='ts',r=p.r;
+ let a;const isoDS=p.n*M.R*Math.log(r),Tf=p.T0*Math.pow(r,1-p.gamma);
+ if(ts){
+  const dsmax=mode==='cycle'?p.n*M.R*Math.log(1/r):Math.max(0,isoDS),dsmin=mode==='cycle'?0:Math.min(0,isoDS),smid=(dsmin+dsmax)/2,srange=Math.max(4,(dsmax-dsmin)*1.35)/state.zoom;
+  a=U.axes(s,{xmin:smid-srange/2,xmax:smid+srange/2,ymin:Math.min(p.T0,Tf)*.85,ymax:Math.max(p.T0,Tf)*1.13,xlabel:'S − Si (J/K)',ylabel:'T (K)',yformat:v=>fmt(v,0)});
+ }else{
+  const vmin=Math.min(1,r)*.78,vmax=Math.max(1,r)*1.15,vmid=(vmin+vmax)/2,vspan=(vmax-vmin)/state.zoom;
+  const pmax=P0*Math.max(1,Math.pow(r,-p.gamma),1/r)/1e5*1.18;
+  a=U.axes(s,{xmin:(vmid-vspan/2)*p.V0*1000,xmax:(vmid+vspan/2)*p.V0*1000,ymin:0,ymax:pmax,xlabel:'V (L)',ylabel:'P (bar)',xformat:v=>fmt(v,1),yformat:v=>fmt(v,1)});
+ }
+ graphAxes=a;const point=z=>ts?[z.ds,z.T]:[z.V*1000,z.P/1e5];
+ if(state.compare&&mode!=='cycle'){
+  for(const [m,color,dash] of [['adiabatique',s.c.green,[7,4]],['isotherme',s.c.blue,[3,4]]]){
+   const arr=Array.from({length:151},(_,i)=>point(M.gaz({...p,mode:m},i/150)));
+   U.curve(s.ctx,a,arr,color,1.8,dash);
+  }
+  if(state.tangents&&!ts){const v0=p.V0*1000,y0=P0/1e5,span=(a.xmax-a.xmin)*.12;
+   for(const [slope,col] of [[-y0/v0,s.c.blue],[-p.gamma*y0/v0,s.c.green]])U.curve(s.ctx,a,[[v0-span,y0-slope*span],[v0+span,y0+slope*span]],col,2);
+  }
+ }
+ if(mode!=='libre'){
+  const segments=mode==='cycle'?[[0,1/3,s.c.green],[1/3,2/3,s.c.blue],[2/3,1,s.c['accent-ink']]]:[[0,1,mode==='adiabatique'?s.c.green:s.c.blue]];
+  segments.forEach(([from,to,col])=>{const pts=Array.from({length:101},(_,i)=>{let t=from+(to-from)*i/100;return {t,p:point(M.gaz(p,t))};});U.curve(s.ctx,a,pts.map(t=>t.p),col,1.4,[4,5]);U.curve(s.ctx,a,pts.filter(t=>t.t<=state.u+.00001).map(t=>t.p),col,3.3);const q=pts[51],r=pts[58];if(state.u>=r.t&&a.x(q.p[0])>=a.left&&a.x(q.p[0])<=a.right&&a.y(q.p[1])>=a.top&&a.y(q.p[1])<=a.bottom)U.arrow(s.ctx,a.x(q.p[0]),a.y(q.p[1]),a.x(r.p[0]),a.y(r.p[1]),col,2);});
+ }
+ const initial=point(M.gaz(p,0)),final=point(M.gaz(p,1));
+ function marker(pt,label,col,filled){const xx=a.x(pt[0]),yy=a.y(pt[1]);if(xx<a.left||xx>a.right||yy<a.top||yy>a.bottom)return;U.dot(s.ctx,xx,yy,5,filled?col:s.c.surface,col);let right=xx>a.right-32;U.text(s.ctx,label,xx+(right?-10:10),yy+(yy<a.top+24?20:-14),col,s.fs-2,right?'right':'left');}
+ marker(initial,mode==='cycle'?'A':'I',s.c.ink,false);
+ if(mode==='cycle'){marker(point(M.gaz(p,1/3)),'B',s.c.green,false);marker(point(M.gaz(p,2/3)),'C',s.c.blue,false);}
+ if(mode==='libre'){marker(final,'F',s.c['accent-ink'],state.u===1);}
+ else{if(mode!=='cycle')marker(final,'F',s.c.muted,false);if(d.equilibre)marker(point(d),'',s.c['accent-ink'],true);}
+ $('#graph-label').textContent=ts?'Diagramme entropique':'Diagramme de Watt';$('#diagram').textContent=ts?'P–V':'T–S';
+ $('#graph-hint').innerHTML=mode==='libre'?'<span>● I et F : équilibres · aucun chemin réel tracé</span>':mode==='cycle'?'<span class="green"><i></i>A → B</span><span class="blue"><i></i>B → C</span><span class="orange"><i></i>C → A</span>':'<span class="green"><i class="dash"></i>Isentropique</span><span class="blue"><i class="dash"></i>Isotherme</span>';
+}
+function draw(){current=result();fillDetails(current);scene();const s=U.canvas('#graph');if(s.w>20&&s.h>20){if(state.family==='gaz')gasGraph(s);else thermalGraph(s);}}
+function selectSystem(v){state.system=v;$('#system').value=v;draw();}
+$$('[data-family]').forEach(b=>b.addEventListener('click',()=>changeFamily(b.dataset.family)));
+$('#scenario').addEventListener('change',e=>{state.scenario=e.target.value;state.u=0;state.zoom=1;setPlaying(false);if(state.family==='gaz'){params.gaz.mode=state.scenario;if(state.scenario==='cycle')preset('cours');else if(state.scenario==='libre')params.gaz.r=Math.max(1,params.gaz.r);}controls();draw();});
+$('#system').addEventListener('change',e=>selectSystem(e.target.value));
+$('#play').addEventListener('click',()=>{if(!state.playing&&state.u>=1)state.u=0;setPlaying(!state.playing);draw();});
+$('#reset').addEventListener('click',restart);$('#finish').addEventListener('click',()=>{setPlaying(false);state.u=1;draw();});
+$('#progress').addEventListener('input',e=>{setPlaying(false);state.u=+e.target.value;draw();});
+$('#speed').addEventListener('input',e=>{state.speed=+e.target.value;$('#speed-value').textContent='× '+fmt(state.speed,2);});
+$('#compare').addEventListener('change',e=>{state.compare=e.target.checked;draw();});$('#tangents').addEventListener('change',e=>{state.tangents=e.target.checked;draw();});
+$('#diagram').addEventListener('click',()=>{state.diagram=state.diagram==='pv'?'ts':'pv';state.zoom=1;draw();});
+$('#zoom-in').addEventListener('click',()=>{state.zoom=clamp(state.zoom*1.2,.6,2.5);draw();});$('#zoom-out').addEventListener('click',()=>{state.zoom=clamp(state.zoom/1.2,.6,2.5);draw();});$('#fit').addEventListener('click',()=>{state.zoom=1;draw();});
+let drag=null;
+$('#scene').addEventListener('pointerdown',e=>{const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+ if(piston&&Math.abs(x-piston.x)<35&&y>piston.y&&y<piston.y+piston.h){drag='piston';e.currentTarget.setPointerCapture(e.pointerId);setPlaying(false);}
+ else if(state.scenario==='contact'){const hit=sceneHits.find(a=>x>=a.x&&x<=a.x+a.w&&y>=a.y&&y<=a.y+a.h);selectSystem(hit?.system||'total');}
+});
+$('#scene').addEventListener('pointermove',e=>{if(drag!=='piston'||!piston)return;const r=e.currentTarget.getBoundingClientRect(),ratio=(e.clientX-r.left-piston.left)/piston.width*piston.maxR;params.gaz.r=clamp(ratio,.3,4);state.u=1;$('#ratio').value=params.gaz.r;$('#ratio-number').value=params.gaz.r.toFixed(3);draw();});
+$('#scene').addEventListener('pointerup',()=>drag=null);$('#scene').addEventListener('pointercancel',()=>drag=null);
+function graphDrag(e){const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,a=graphAxes;if(!a)return;let u;
+ if(state.family==='gaz'){if(state.diagram!=='pv'||['cycle','libre'].includes(params.gaz.mode))return;const V=(a.xmin+(x-a.left)/(a.right-a.left)*(a.xmax-a.xmin))/1000;u=Math.log(Math.max(V,1e-6)/params.gaz.V0)/Math.log(params.gaz.r);}
+ else u=(x-a.left)/(a.right-a.left);if(Number.isFinite(u)){state.u=clamp(u,0,1);setPlaying(false);draw();}}
+$('#graph').addEventListener('pointerdown',e=>{drag='graph';e.currentTarget.setPointerCapture(e.pointerId);graphDrag(e);});$('#graph').addEventListener('pointermove',e=>{if(drag==='graph')graphDrag(e);});$('#graph').addEventListener('pointerup',()=>drag=null);$('#graph').addEventListener('pointercancel',()=>drag=null);
+U.init({draw,name:'TH3_Bilans_Entropie'});controls();
+if(location.hash==='#detente'){changeFamily('gaz');state.scenario='libre';params.gaz.mode='libre';params.gaz.r=2;state.u=1;controls();}
+draw();
+function frame(t){const dt=Math.min((t-lastTime)/1000||0,.06);lastTime=t;if(state.playing){state.u=clamp(state.u+dt*state.speed/9,0,1);state.phase+=dt*state.speed;if(state.u===1)setPlaying(false);draw();}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+window.TH3Bilans={state,params,result,draw,preset,changeFamily};
+})();
+</script></body></html>

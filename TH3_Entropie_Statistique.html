@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TH3 : microétats, macroétats, loi binomiale, fluctuations et entropie de Boltzmann. Atelier autonome."><title>TH3 · Interprétation statistique de l’entropie</title><style>:root{color-scheme:light;--paper:#f5f2ed;--surface:#fffefa;--ink:#0f0f0f;--muted:#53595e;--line:#ddd4c9;--accent:#da6c00;--accent-ink:#974500;--soft:#fff0dc;--blue:#226f9d;--red:#8f2227;--green:#28766a;--violet:#77539a;--grid:#e8e1d7;--glass:#e9f4f8}
+:root[data-theme=dark]{color-scheme:dark;--paper:#171b20;--surface:#20262d;--ink:#f7f2e9;--muted:#c0c8d0;--line:#46515b;--accent:#ffad5b;--accent-ink:#ffc082;--soft:#3d3025;--blue:#8eccef;--red:#ff9c9d;--green:#8bd1bb;--violet:#d0b0ef;--grid:#343e47;--glass:#293f4c}
+*{box-sizing:border-box}body{margin:0;border-top:4px solid var(--accent);background:var(--paper);color:var(--ink);font:16px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button,select{cursor:pointer}button,.button-link{min-height:40px;border:1px solid var(--line);border-radius:7px;padding:7px 11px;background:var(--surface);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}button:hover,.button-link:hover{border-color:var(--accent);background:var(--soft)}button.primary,button[aria-pressed=true]{background:var(--soft);border-color:var(--accent);color:var(--accent-ink)}button.primary{font-weight:700}button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}button.square{width:40px;padding:0;font-size:22px}h1,h2,p{margin:0}h1{font-size:27px;font-weight:500;letter-spacing:-.025em;line-height:1.15}h2{font-size:17px;font-weight:600}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:4px}.shell{height:calc(100dvh - 4px);max-width:2200px;margin:auto;padding:12px 18px 10px;display:flex;flex-direction:column;gap:10px}.header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none}.actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.actions button,.actions a{font-size:14px}.tabs{display:flex;gap:7px;flex:none}.tabs button{flex:1;justify-content:flex-start;padding:9px 14px;font-size:17px}.tabs small{opacity:.7;font-size:13px;margin-right:5px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:12px;min-height:0;flex:1}.main{min-width:0;min-height:0;display:flex;flex-direction:column;gap:9px}.scene-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}.scene-heading h2{font-size:19px}.badge{font-size:13px;border:1px solid var(--line);border-radius:30px;padding:4px 10px;color:var(--muted);white-space:nowrap}.visuals{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:205px;flex:1}.panel{min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;box-shadow:0 4px 18px #45230806}.panel-head{min-height:42px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 11px;border-bottom:1px solid var(--line);flex:none}.panel-head span{font-size:14px;color:var(--muted)}.panel-head button{min-height:29px;padding:3px 7px;font-size:13px}.zoom-tools{display:flex;gap:4px}.zoom-tools button:first-child,.zoom-tools button:last-child{width:28px;padding:0;font-size:19px}.canvas-wrap{position:relative;flex:1;min-height:0}canvas{width:100%;height:100%;display:block;touch-action:none}.canvas-hint{padding:4px 10px 7px;font-size:12px;color:var(--muted);flex:none;min-height:27px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}.legend i{display:inline-block;width:18px;height:3px;margin:0 5px 3px 0;background:currentColor}.legend .dash{background:none;border-top:2px dashed currentColor;height:0}.legend .blue{color:var(--blue)}.legend .orange{color:var(--accent-ink)}.legend .green{color:var(--green)}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;flex:none}.metric{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--metric-color,var(--accent));border-radius:8px;padding:8px 12px 7px;min-width:0;overflow:hidden}.metric-label{font-size:16px;color:var(--muted)}.metric-value{font-size:30px;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.025em;white-space:nowrap}.metric-value small{font-size:15px;font-weight:400;letter-spacing:0}.signed-track{height:8px;margin-top:6px;position:relative;border-radius:3px;background:var(--paper);overflow:hidden}.signed-track:after{content:'';position:absolute;height:100%;width:1px;left:50%;background:var(--muted)}.signed-fill{height:100%;background:var(--metric-color,var(--accent));position:absolute;left:50%;width:0;border-radius:2px}.balance{font:19px/1.3 Georgia,'Times New Roman',serif;text-align:center;color:var(--muted);flex:none}.balance strong{color:var(--ink);font-weight:400}.transport{display:flex;align-items:center;gap:7px;flex:none}.transport input[type=range]{flex:1;min-width:40px;margin:0;height:27px}.transport button{min-height:35px;padding:5px 10px;font-size:14px}.transport output{font-size:14px;white-space:nowrap;min-width:42px;text-align:right}.message{font-size:17px;line-height:1.35;min-height:46px;padding:8px 11px;border-left:3px solid var(--accent);background:var(--soft);flex:none;border-radius:0 7px 7px 0}.aside{overflow-y:auto;overscroll-behavior:contain;min-height:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);scrollbar-width:thin}.section{padding:14px 15px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:10px}.field{margin:10px 0 12px}.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px}.field-head label{font-size:15px}.number-wrap{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}input[type=number]{width:82px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:5px 6px;text-align:right;font-variant-numeric:tabular-nums}input[type=range]{width:100%;height:23px;margin:5px 0;accent-color:var(--accent);cursor:pointer}select{width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font-size:15px}.row{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}.row button{font-size:13px;min-height:33px;padding:5px 8px;flex:1}.note{font-size:13px;line-height:1.5;color:var(--muted);margin-top:8px}.checks{display:flex;flex-direction:column;gap:9px;margin-top:10px}.checks label{display:flex;gap:8px;align-items:flex-start;font-size:14px}.checks input{accent-color:var(--accent);width:17px;height:17px;flex:none}.formula{font:18px/1.6 Georgia,'Times New Roman',serif;margin:7px 0;overflow-wrap:anywhere}.formula sub{font-size:.7em}.detail-grid{display:grid;grid-template-columns:1fr auto;gap:5px;font-size:14px}.detail-grid output{font-variant-numeric:tabular-nums}.drawer-close,.settings-open{display:none}a{color:var(--accent-ink)}.link-other{font-size:14px}.formula-content[hidden]{display:none}.configs{display:flex;gap:4px;flex-wrap:wrap;max-height:230px;overflow-y:auto;margin-top:10px}.configs button{min-height:29px;font:13px/1.2 monospace;letter-spacing:.05em;padding:5px;background:var(--paper)}.mini-tag{font-size:12px;color:var(--muted)}.footer{flex:none;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);gap:8px}dialog{max-width:780px;width:calc(100% - 30px);max-height:88dvh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:25px;font-size:16px;line-height:1.6}dialog::backdrop{background:#10182099}dialog h2{font-size:25px;line-height:1.2;margin-bottom:15px}dialog h3{font-size:18px;margin:18px 0 5px}dialog p,dialog li{margin:9px 0}dialog .close-row{display:flex;justify-content:flex-end;margin-top:17px}.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:100;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 18px;max-width:calc(100% - 28px);box-shadow:0 4px 20px #0002}.toast:empty{display:none}.projection .aside,.projection .footer,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px}.projection .metric-label{font-size:21px}.projection .metric-value{font-size:39px}.projection .metric-value small{font-size:20px}.projection .message{font-size:21px;min-height:48px}.projection .balance{font-size:23px}.projection .scene-heading h2{font-size:22px}.projection .canvas-hint{font-size:15px}.projection .panel-head span{font-size:17px}.projection .panel-head button{font-size:16px;min-height:33px}.projection .tabs button{font-size:20px}.projection .transport button,.projection .transport output{font-size:17px}.projection .settings-open{display:none}
+@media(max-width:1350px){.shell{padding:10px 12px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 284px;gap:10px}h1{font-size:24px}.actions button,.actions a{font-size:13px;padding:7px 9px}.actions{gap:5px}.section{padding:12px}.metrics{gap:7px}.metric-value{font-size:27px}.metric-label{font-size:15px}.metric{padding:7px 10px}.message{font-size:15px;min-height:42px}.panel-head{padding:6px 8px}.panel-head span{font-size:13px}.visuals{gap:8px}.scene-heading h2{font-size:17px}}
+@media(max-width:1050px){.workspace{grid-template-columns:1fr}.settings-open{display:inline-flex}.aside{display:none;position:fixed;right:0;top:0;height:100dvh;width:min(360px,94vw);z-index:20;border-radius:12px 0 0 12px;box-shadow:-20px 0 60px #0004}.aside.open{display:block}.drawer-close{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}.header{gap:9px}.actions{justify-content:flex-end}.footer{display:none}.projection .aside{display:none}}
+@media(max-width:680px){.shell{height:auto;min-height:100dvh;padding:10px;gap:10px}.header{align-items:flex-start}.header>div:first-child{width:100%}.actions{justify-content:flex-start;gap:5px}.actions button,.actions a{font-size:13px;padding:7px 8px}h1{font-size:25px}.tabs{gap:5px}.tabs button{font-size:14px;padding:8px;justify-content:center}.tabs small{display:none}.workspace{flex:none}.main{gap:9px}.scene-heading{align-items:flex-start}.scene-heading h2{font-size:17px}.badge{font-size:11px;max-width:44%;white-space:normal;text-align:right}.visuals{grid-template-columns:1fr;flex:none;min-height:0}.panel{height:300px;flex:none}.metrics{gap:5px}.metric{padding:7px 6px}.metric-label{font-size:12px}.metric-value{font-size:22px}.metric-value small{font-size:10px}.balance{font-size:17px}.message{font-size:15px}.transport{flex-wrap:wrap}.transport input[type=range]{order:5;flex-basis:80%}.transport output{order:6}.projection .panel{height:360px}.projection .metric-label{font-size:13px}.projection .metric-value{font-size:25px}.projection .metric-value small{font-size:11px}.projection .message{font-size:18px}.projection .tabs button{font-size:15px}.projection .balance{font-size:18px}.projection .shell{padding:10px}.projection .scene-heading h2{font-size:18px}}
+@media(min-width:681px) and (max-height:740px){.shell{gap:7px;padding-top:8px}.eyebrow{font-size:11px}.tabs button{padding:6px 12px;min-height:36px}.main{gap:7px}.message{padding:6px 9px;min-height:38px}.canvas-hint{font-size:11px;min-height:22px;padding:3px 8px 4px}.panel-head{min-height:36px}.metric{padding-top:5px;padding-bottom:5px}.metric-value{font-size:27px}.footer{display:none}.projection .metric-value{font-size:37px}.projection .canvas-hint{font-size:14px}.projection .message{font-size:20px;min-height:42px}}
+@media(max-width:680px){.tabs button{min-width:0;white-space:normal}.metric-value{font-size:20px}}
+.zoom-tools #diagram,.zoom-tools #axis-view{width:auto;padding:3px 7px;font-size:13px}.zoom-tools #zoom-out,.zoom-tools #zoom-in{width:28px;padding:0;font-size:19px}.projection .zoom-tools #diagram,.projection .zoom-tools #axis-view{font-size:16px}
+@media(max-width:420px){.metrics{grid-template-columns:1fr}.metric{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 8px;padding:8px 10px}.metric-label{font-size:15px}.metric-value{font-size:25px}.signed-track{grid-column:1/-1;margin-top:1px}.projection .metric-label{font-size:15px}.projection .metric-value{font-size:28px}}
+@media print{.aside,.actions,.transport,.footer,.zoom-tools{display:none}.shell{height:auto}.workspace{display:block}.visuals{height:430px}.panel{break-inside:avoid}.message{background:none}}
+</style></head>
+<body><main class="shell">
+<header class="header"><div><div class="eyebrow">TH3 · Microétats et macroétats · MPSI</div><h1>L’entropie à l’échelle des particules</h1></div><div class="actions"><button id="formulas" aria-pressed="false">Formules</button><button id="settings-open" class="settings-open">Paramètres</button><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter la scène et les résultats en PNG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" class="square" aria-label="Plein écran">⛶</button></div></header>
+<nav class="tabs" aria-label="Les trois étapes de l’atelier"><button data-mode="pieces" aria-pressed="true"><small>01</small> Des pièces</button><button data-mode="gaz" aria-pressed="false"><small>02</small> Aux particules</button><button data-mode="grand" aria-pressed="false"><small>03</small> À grand N</button></nav>
+<div class="workspace"><section class="main" aria-label="Expérience statistique">
+<div class="scene-heading"><h2 id="scene-title">Microétat et macroétat</h2><span class="badge" id="status">5 pièces</span></div>
+<div class="visuals"><article class="panel"><div class="panel-head"><span id="scene-label">Une configuration précise</span><button id="bridge">Bilan de détente</button></div><div class="canvas-wrap"><canvas id="scene" tabindex="0" aria-label="Pièces ou particules. Les microétats peuvent aussi être choisis dans les réglages."></canvas></div><p class="canvas-hint" id="scene-hint">Cliquer sur une pièce pour la retourner.</p></article>
+<article class="panel"><div class="panel-head"><span id="graph-label">Probabilités des macroétats</span><div class="zoom-tools"><button id="axis-view" hidden>Zoom centre</button><button id="zoom-out" aria-label="Réduire le diagramme">−</button><button id="fit">Cadrer</button><button id="zoom-in" aria-label="Agrandir le diagramme">+</button></div></div><div class="canvas-wrap"><canvas id="graph" tabindex="0" aria-label="Distribution des macroétats. Le sélecteur de macroétat est disponible dans les réglages."></canvas></div><div class="canvas-hint legend" id="graph-hint"><span class="blue"><i></i>Théorie à l’équilibre</span><span class="orange"><i></i>Fréquences observées</span></div></article></div>
+<div class="metrics" aria-label="Grandeurs statistiques"><div class="metric" id="metric-0"><div class="metric-label"></div><div class="metric-value"></div></div><div class="metric" id="metric-1"><div class="metric-label"></div><div class="metric-value"></div></div><div class="metric" id="metric-2"><div class="metric-label"></div><div class="metric-value"></div></div></div>
+<p class="balance" id="balance"></p>
+<div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Tirages</button><button id="step">Un tirage</button><button id="release" hidden>Retirer la cloison</button><button id="reset">↶ Réinitialiser</button><span class="mini-tag" id="sample-count">0 tirage</span></div>
+<p class="message" id="message" role="status"></p>
+</section><aside class="aside" id="aside" aria-label="Réglages et microétats"><div class="drawer-close"><b>Réglages</b><button id="settings-close">Fermer</button></div>
+<section class="section" id="finite-controls"><h2>Le nombre d’objets</h2><div id="n-field"></div><div class="row"><button data-n="2">2</button><button data-n="5">5</button><button data-n="10">10</button><button data-n="100">100</button><button data-n="1000">1000</button></div><p class="note" id="n-note">Les objets sont repérables. Les deux possibilités sont équiprobables à l’équilibre.</p></section>
+<section class="section" id="large-controls" hidden><h2>Changer d’échelle</h2><div class="field"><div class="field-head"><label for="logN">log₁₀ N</label><output id="logN-value">6</output></div><input id="logN" type="range" min="1" max="24" step="0.1" value="6"></div><div class="row"><button data-large="10">10</button><button data-large="1000">10³</button><button data-large="1000000">10⁶</button><button data-large="mole">1 mole</button></div><p class="note">Le nuage anime jusqu’à 32 000 points représentatifs. Les valeurs statistiques et la courbe d’équilibre sont calculées pour l’effectif N choisi.</p></section>
+<section class="section" id="macro-controls"><h2>Choisir un macroétat</h2><div id="k-field"></div><div class="checks" id="follow-field" hidden><label><input id="follow" type="checkbox" checked>Suivre le macroétat actuel du gaz</label></div><p class="note" id="selection-note"></p><div class="row"><button id="all-left">Tout à gauche / pile</button><button id="center">Près de N/2</button></div><div id="configurations" class="configs" aria-label="Microétats compatibles"></div><p class="note" id="configuration-count"></p></section>
+<section class="section"><h2>Lecture et affichage</h2><div class="field"><div class="field-head"><label for="speed">Vitesse</label><output id="speed-value">× 1</output></div><input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"></div><p class="note" id="sampling-note"></p></section>
+<section class="section formula-content" hidden><h2>Le modèle statistique</h2><div id="formula-box"></div></section>
+</aside></div><footer class="footer"><span>E. Guillaume · TH3 · MPSI</span><span>Équiprobabilité à l’équilibre · fluctuations conservées · modèles explicités</span></footer>
+</main>
+<dialog id="about"><h2>Des microétats à l’entropie</h2>
+<p>Les trois vues relient le pile ou face du cours à la répartition gauche / droite d’un gaz. Les paramètres restent à droite ; les gestes sur les dessins disposent de commandes équivalentes. Espace : lecture / pause.</p>
+<h3>Pièces et comptage</h3>
+<p>Un microétat précise l’état individuel de chaque pièce repérable. Le macroétat retient seulement le nombre k de piles. Pour N objets indépendants à deux possibilités équiprobables, Ω(k) = C(N,k), P(k) = Ω(k)/2ᴺ. Les tirages sont pseudo-aléatoires indépendants ; les manipulations manuelles ne sont pas ajoutées à l’histogramme des tirages.</p>
+<p>Pour N ≤ 10, toutes les configurations compatibles avec le macroétat sélectionné sont accessibles dans la liste. Cliquer sur une colonne choisit un exemple de ce macroétat. Pour N &gt; 10, le comptage est calculé sans énumérer les configurations. Au-delà de 160 pièces, seules 160 sont dessinées ; le comptage et les tirages portent sur l’effectif entier.</p>
+<h3>Particules</h3>
+<p>Modèle de points indépendants dans un rectangle 2D, réflexions élastiques sur les parois, vitesses initiales gaussiennes. Il n’y a ni interaction entre particules ni calcul de pression ou de température thermodynamique : cette vue sert uniquement à étudier les occupations gauche / droite. Les rayons dessinés sont visuels, sans volume exclu. Tous les points (jusqu’à 1000) sont simulés et comptés ; au plus 250 sont dessinés.</p>
+<p>Avant l’ouverture, tous les points sont dans la moitié gauche. Retirer la cloison ne leur impose aucune direction. Les points suivent leurs trajectoires ; les fluctuations de N gauche restent visibles. La référence binomiale est celle d’une observation d’équilibre de N positions indépendantes uniformément distribuées. Elle ne décrit pas le transitoire initial.</p>
+<p>L’histogramme temporel est relevé après un délai τ = 8, tous les Δτ = 0,4, pour écarter le début du transitoire. Ces observations restent corrélées ; leur fréquence ne doit pas être interprétée comme celle de tirages indépendants, ni comme la preuve d’une equilibration exacte à τ = 8. τ est un temps réduit de ce modèle, sans unité SI revendiquée. Les collisions entre particules et la thermalisation d’un gaz réel ne sont pas modélisées.</p>
+<p>Cliquer sur l’histogramme ou choisir k sélectionne un macroétat à étudier, sans déplacer les particules. La valeur actuelle N gauche est affichée dans la scène. Le choix « Tout à gauche » prépare physiquement l’état initial seulement après Réinitialiser ; il ne reconcentre jamais spontanément le gaz.</p>
+<h3>Entropies à distinguer</h3>
+<p>S<sub>B</sub>(k)/k<sub>B</sub> = ln C(N,k) désigne ici la contribution du comptage gauche / droite pour un macroétat fixé ; positions détaillées et vitesses ont été éliminées de cette description. Ce n’est pas l’entropie thermodynamique absolue du gaz. Une baisse temporaire de ce comptage dans un petit système fluctuant n’est pas supprimée.</p>
+<p>Pour la détente d’un gaz parfait dans le vide du volume V au volume 2V, le nombre total d’états de position accessibles est multiplié par 2ᴺ : ΔS = Nk<sub>B</sub> ln 2 = nR ln 2. Ce rapport compte tous les états accessibles, pas seulement le macroétat exact k = N/2. Les deux expressions ne sont pas identifiées.</p>
+<h3>À grand N</h3>
+<p>Lire retire la cloison et anime la détente ; Pause, Un pas, Réinitialiser et la vitesse restent disponibles. Changer N prépare un nouvel état initial. Le dessin passe de toutes les particules pour N ≤ 4000 à un échantillon de 20 000 points pour un million, puis jusqu’à 32 000 points pour les effectifs macroscopiques. Les mêmes points suivent des trajectoires avec réflexions élastiques.</p>
+<p>Au-delà de 4000 particules, les fluctuations de l’échantillon dessiné ne sont pas utilisées comme celles du gaz entier. La fraction moyenne à gauche est calculée séparément pour le modèle de points indépendants, initialement uniformes dans la moitié gauche, avec vitesses gaussiennes et réflexions aux parois. Le trait orange du diagramme suit cette moyenne ; jusqu’à N = 4000, il suit la fraction effectivement comptée. La courbe bleue et les trois valeurs statistiques sont des références d’équilibre calculées pour N. La variation d’entropie affichée est celle de la détente complète.</p>
+<p>La moyenne est N/2 et l’écart-type de N gauche est √N/2. L’écart-type de la fraction N gauche / N vaut 1/(2√N) : les fluctuations absolues augmentent, mais leur importance relative diminue. La représentation centrée utilise z = (N gauche − N/2)/(√N/2). Pour N &gt; 1000, elle montre l’approximation normale au voisinage de l’équilibre ; cette approximation n’est pas utilisée pour les queues extrêmes.</p>
+<p>À l’équilibre, P(toutes à gauche) = 2⁻ᴺ exactement dans le modèle indépendant. Cette probabilité à un instant ne donne pas un temps de retour : l’atelier n’en déduit aucun délai.</p>
+<p>Constantes : k<sub>B</sub> = 1,380649 × 10⁻²³ J/K et N<sub>A</sub> = 6,02214076 × 10²³ mol⁻¹. Source pédagogique : cours TH3 d’E. Guillaume. Inspiration d’interaction : PhET « Diffusion ». Interface et modèle indépendants, sans chargement distant.</p><div class="close-row"><button data-close>Fermer l’aide</button></div></dialog>
+<dialog id="bridge-dialog"><h2>La même détente, deux descriptions</h2>
+<p>Un gaz parfait est initialement confiné dans la moitié d’une enceinte rigide et adiabatique. On retire la cloison : le volume accessible double.</p><p class="formula">Q = W = 0 &nbsp; ⇒ &nbsp; ΔU = 0 &nbsp; ⇒ &nbsp; Tf = Ti</p>
+<p>Le nombre total d’états de position accessibles est multiplié par 2ᴺ, à énergie inchangée :</p><p class="formula">ΔS = k<sub>B</sub> ln(2ᴺ) = Nk<sub>B</sub> ln 2 = nR ln 2.</p><p id="bridge-value"></p>
+<p>Il s’agit du rapport de tous les états accessibles après et avant la levée de contrainte. Le coefficient C(N, N/2) ne compte qu’une répartition exacte et ne lui est pas substitué.</p>
+<p>Dans le bilan macroscopique, S échangée = 0 et S créée = ΔS. Une détente isotherme réversible entre les mêmes états donnerait la même ΔS, entièrement échangée.</p><div class="close-row"><button data-close>Fermer</button></div></dialog><div id="toast" class="toast" role="status"></div>
+<script>/* TH3 — Modèles de bilan. SI ; chaleurs et travaux reçus algébriquement. */
+'use strict';
+const TH3Physique = (() => {
+  const R=8.31446261815324, kB=1.380649e-23, NA=6.02214076e23;
+  const Tm=273.15, cw=4180, ci=2090, L=335000;
+  const clip=(x,a,b)=>Math.max(a,Math.min(b,x));
+  function gaz(p,u=1) {
+    u=clip(u,0,1);
+    const {n,T0,V0,gamma,mode}=p, Cv=n*R/(gamma-1);
+    let V=V0, T=T0, Q=0, W=0, Se=0, Sc=0, etape='', equilibre=true;
+    if(mode==='cycle') {
+      const r=p.r, TB=T0*Math.pow(r,1-gamma), a=3*u;
+      if(a<=1) {
+        V=V0*Math.pow(r,a); T=T0*Math.pow(V/V0,1-gamma);
+        W=Cv*(T-T0); etape='A → B · compression adiabatique réversible';
+      } else if(a<=2) {
+        T=TB; V=V0*r*Math.pow(1/r,a-1);
+        Q=n*R*TB*Math.log(V/(V0*r));
+        W=Cv*(TB-T0)-Q; Se=n*R*Math.log(V/(V0*r));
+        etape='B → C · détente isotherme réversible';
+      } else {
+        V=V0; T=TB+(T0-TB)*(a-2);
+        const Qbc=n*R*TB*Math.log(1/r), Qca=Cv*(T-TB);
+        Q=Qbc+Qca; W=Cv*(TB-T0)-Qbc;
+        Se=n*R*Math.log(1/r)+Qca/T0;
+        etape='C → A · refroidissement isochore monotherme';
+      }
+    } else if(mode==='adiabatique') {
+      V=V0*Math.pow(p.r,u); T=T0*Math.pow(V/V0,1-gamma);
+      W=Cv*(T-T0); etape='Adiabatique réversible';
+    } else if(mode==='isotherme') {
+      V=V0*Math.pow(p.r,u); Q=n*R*T0*Math.log(V/V0);
+      W=-Q; Se=Q/T0; etape='Isotherme réversible';
+    } else if(mode==='libre') {
+      V=u===0?V0:V0*p.r; equilibre=u===0||u===1;
+      etape='Détente libre · Joule–Gay-Lussac';
+    }
+    const dU=Cv*(T-T0), ds=Cv*Math.log(T/T0)+n*R*Math.log(V/V0);
+    Sc=ds-Se;
+    if(Math.abs(Sc)<1e-10)Sc=0;
+    return {T,V,P:n*R*T/V,Q,W,dU,ds:equilibre?ds:null,Se:equilibre?Se:null,Sc:equilibre?Sc:null,equilibre,etape,Cv};
+  }
+  function cafe(p,u=1) {
+    u=clip(u,0,1);
+    const T=p.Ti+(p.Tb-p.Ti)*u, Q=p.C*(T-p.Ti);
+    const ds=p.C*Math.log(T/p.Ti), Se=Q/p.Tb;
+    return {T,Q,W:0,dU:Q,ds,Se,Sc:ds-Se,exterieur:-Se};
+  }
+  function contact(p,u=1,systeme='total') {
+    u=clip(u,0,1);
+    const Tf=(p.Ca*p.Ta+p.Cb*p.Tb)/(p.Ca+p.Cb);
+    const Q=p.Ca*(Tf-p.Ta)*u, Ta=p.Ta+Q/p.Ca, Tb=p.Tb-Q/p.Cb;
+    const sa=p.Ca*Math.log(Ta/p.Ta), sb=p.Cb*Math.log(Tb/p.Tb), sc=sa+sb;
+    // Convention fixe : la résistance thermique est incluse dans A (eau).
+    // B est homogène, sa frontière est à T_B ; Se_B = ΔS_B, Sc_B = 0.
+    let ds=sa+sb, Se=0, Sc=sc, q=0;
+    if(systeme==='a'){ds=sa;Se=-sb;Sc=sc;q=Q;}
+    if(systeme==='b'){ds=sb;Se=sb;Sc=0;q=-Q;}
+    return {Ta,Tb,Tf,Q:q,transfert:Q,W:0,dU:q,ds,Se,Sc,sa,sb};
+  }
+  function eauDepuisH(m,H) {
+    if(H<0){const T=Tm+H/(m*ci);return {T,x:0,S:m*ci*Math.log(T/Tm),H};}
+    if(H<=m*L)return {T:Tm,x:H/(m*L),S:H/Tm,H};
+    const T=Tm+(H-m*L)/(m*cw);
+    return {T,x:1,S:m*(L/Tm+cw*Math.log(T/Tm)),H};
+  }
+  function glace(p,u=1) {
+    u=clip(u,0,1);
+    const Hi=p.mi*ci*(p.Ti-Tm), Hw=p.mw*(L+cw*(p.Tw-Tm));
+    const total=eauDepuisH(p.mi+p.mw,Hi+Hw);
+    let qf;
+    if(total.x===1)qf=p.mi*(L+cw*(total.T-Tm))-Hi;
+    else if(total.x===0)qf=Hw-p.mw*ci*(total.T-Tm);
+    else qf=Math.max(p.mw*cw*(p.Tw-Tm),p.mi*ci*(Tm-p.Ti));
+    const q=qf*u, a=eauDepuisH(p.mi,Hi+q), b=eauDepuisH(p.mw,Hw-q);
+    const si=eauDepuisH(p.mi,Hi).S, sw=eauDepuisH(p.mw,Hw).S;
+    const ds=a.S+b.S-si-sw;
+    return {a,b,Tf:total.T,xf:total.x,liquide:p.mi*a.x+p.mw*b.x,solide:p.mi*(1-a.x)+p.mw*(1-b.x),q,qf,ds,Se:0,Sc:ds,Q:0,W:0,dH:0,si:a.S-si,sw:b.S-sw};
+  }
+  function logBinom(n,k) {
+    k=Math.min(k,n-k);let v=0;
+    for(let j=1;j<=k;j++)v+=Math.log((n-k+j)/j);
+    return v;
+  }
+  function binomiale(n) {
+    // Récurrence depuis le mode : pas de sous-flux pour N ≤ 1000.
+    const a=new Array(n+1).fill(0), m=Math.floor(n/2);a[m]=1;
+    for(let k=m;k>0;k--)a[k-1]=a[k]*k/(n-k+1);
+    for(let k=m;k<n;k++)a[k+1]=a[k]*(n-k)/(k+1);
+    const s=a.reduce((x,y)=>x+y,0);return a.map(x=>x/s);
+  }
+  function configurations(n,k) {
+    if(n>10)return [];
+    const out=[];
+    for(let i=0;i<2**n;i++) {
+      const bits=Array.from({length:n},(_,j)=>(i>>j)&1);
+      if(bits.reduce((a,b)=>a+b,0)===k)out.push(bits);
+    }
+    return out;
+  }
+  function binomEntier(n,k) {k=Math.min(k,n-k);let v=1n;for(let j=1;j<=k;j++)v=v*BigInt(n-k+j)/BigInt(j);return v;}
+  function fractionMoyenneGauche(t,sigma=.28) {
+    // Points indépendants, x(0) uniforme sur [0,1/2], vx gaussienne centrée.
+    // Réflexions sur [0,1] : décomposition en cosinus de la densité initiale.
+    if(t<=0)return 1;
+    if(sigma*t<.028)return 1-sigma*t*Math.sqrt(2/Math.PI);
+    let sum=0;for(let j=1;j<=127;j+=2)sum+=Math.exp(-.5*(sigma*Math.PI*j*t)**2)/(j*j);
+    return .5+4/(Math.PI*Math.PI)*sum;
+  }
+  return {R,kB,NA,Tm,cw,ci,L,clip,gaz,cafe,contact,glace,eauDepuisH,logBinom,binomiale,configurations,binomEntier,fractionMoyenneGauche};
+})();
+globalThis.TH3Physique=TH3Physique;
+</script><script>'use strict';
+const TH3UI=(()=>{
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const fmt=(v,d=1)=>Number.isFinite(v)?(Math.abs(v)<1e-9?0:v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+  const sci=(v,d=2)=>{if(!Number.isFinite(v))return '—';if(v===0)return '0';if(Math.abs(v)>=.01&&Math.abs(v)<1e5)return fmt(v,d);const e=Math.floor(Math.log10(Math.abs(v)));return fmt(v/10**e,d)+' × 10'+sup(e);};
+  const sup=n=>String(n).split('').map(c=>({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).join('');
+  const clamp=TH3Physique.clip;
+  let redraw=()=>{},exportName='TH3',toastTimer;
+  const theme=()=>{const c=getComputedStyle(document.documentElement),o={};for(const key of ['paper','surface','ink','muted','line','accent','accent-ink','soft','blue','red','green','violet','grid','glass'])o[key]=c.getPropertyValue('--'+key).trim();return o;};
+  function canvas(id) {
+    const el=$(id),r=el.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+    const w=Math.max(1,r.width),h=Math.max(1,r.height);
+    if(el.width!==Math.round(w*dpr)||el.height!==Math.round(h*dpr)){el.width=Math.round(w*dpr);el.height=Math.round(h*dpr);}
+    const ctx=el.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+    return {el,ctx,w,h,c:theme(),fs:document.body.classList.contains('projection')?(w<420?19:23):(w<380?16:18)};
+  }
+  function text(ctx,str,x,y,color,size=18,align='left',weight='400') {ctx.fillStyle=color;ctx.font=`${weight} ${size}px Arial,Helvetica,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(str,x,y);}
+  function wrap(ctx,str,x,y,maxWidth,color,size=16,lineHeight=size*1.4,align='left') {
+    ctx.font=`${size}px Arial,Helvetica,sans-serif`;let line='',i=0;
+    for(const word of str.split(' ')){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){text(ctx,line,x,y+i*lineHeight,color,size,align);i++;line=word;}else line=test;}
+    if(line)text(ctx,line,x,y+i*lineHeight,color,size,align);return (i+1)*lineHeight;
+  }
+  function line(ctx,x1,y1,x2,y2,color,width=2,dash=[]) {ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+  function arrow(ctx,x1,y1,x2,y2,color,width=3) {line(ctx,x1,y1,x2,y2,color,width);const a=Math.atan2(y2-y1,x2-x1),s=9;ctx.beginPath();ctx.fillStyle=color;ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+  function box(ctx,x,y,w,h,fill,stroke,r=8) {ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+  function dot(ctx,x,y,r,color,stroke) {ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
+  function axes(s,{xmin=0,xmax=1,ymin=0,ymax=1,xlabel='',ylabel='',xticks=4,yticks=4,xvalues=null,xformat=v=>fmt(v,1),yformat=v=>fmt(v,1)}={}) {
+    const {ctx,w,h,c,fs}=s, l=Math.max(55,Math.min(83,w*.18)),rr=22,t=35,b=56;
+    const x=v=>l+(v-xmin)/(xmax-xmin)*(w-l-rr),y=v=>h-b-(v-ymin)/(ymax-ymin)*(h-t-b);
+    for(const v of xvalues||Array.from({length:xticks+1},(_,i)=>xmin+(xmax-xmin)*i/xticks)){if(v<xmin||v>xmax)continue;line(ctx,x(v),t,x(v),h-b,c.grid,1);text(ctx,xformat(v),x(v),h-b+19,c.muted,fs-4,'center');}
+    for(let i=0;i<=yticks;i++){let v=ymin+(ymax-ymin)*i/yticks;line(ctx,l,y(v),w-rr,y(v),c.grid,1);text(ctx,yformat(v),l-9,y(v),c.muted,fs-4,'right');}
+    line(ctx,l,t,l,h-b,c.muted,1.5);line(ctx,l,h-b,w-rr,h-b,c.muted,1.5);
+    text(ctx,xlabel,(l+w-rr)/2,h-13,c.ink,fs-2,'center');text(ctx,ylabel,l,15,c.ink,fs-2);
+    return {x,y,left:l,right:w-rr,top:t,bottom:h-b,xmin,xmax,ymin,ymax};
+  }
+  function curve(ctx,a,points,color,width=3,dash=[]) {
+    ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.clip();
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);let first=true;
+    for(const p of points){if(!p||!Number.isFinite(p[0]+p[1])){first=true;continue;}const px=a.x(p[0]),py=a.y(p[1]);if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);}
+    ctx.stroke();ctx.restore();
+  }
+  function field(id,label,value,min,max,step,unit='') {
+    const display=Number(Number(value).toFixed(['gamma','ratio'].includes(id)?6:3));
+    return `<div class="field"><div class="field-head"><label for="${id}">${label}</label><span class="number-wrap"><input id="${id}-number" aria-label="${label}" type="number" min="${min}" max="${max}" step="any" value="${display}"><span>${unit}</span></span></div><input id="${id}" aria-label="${label}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;
+  }
+  function bindField(id,cb,deferred=false) {for(const suffix of ['','-number'])$('#'+id+suffix)?.addEventListener(suffix||deferred?'change':'input',e=>{let v=e.target.valueAsNumber;if(!Number.isFinite(v))return;v=clamp(v,+e.target.min,+e.target.max);$('#'+id).value=v;$('#'+id+'-number').value=v;cb(v);});if(deferred)$('#'+id)?.addEventListener('input',e=>$('#'+id+'-number').value=e.target.value);}
+  function metrics(values,labels,colors,unit='J·K⁻¹') {
+    const scale=Math.max(...values.filter(Number.isFinite).map(Math.abs),1e-12);
+    values.forEach((v,i)=>{const el=$('#metric-'+i);el.style.setProperty('--metric-color',colors[i]);el.querySelector('.metric-label').textContent=labels[i];el.querySelector('.metric-value').innerHTML=(v===null?'—':fmt(v,2))+` <small>${unit}</small>`;const bar=el.querySelector('.signed-fill');bar.style.left=(v<0?50-49*Math.abs(v)/scale:50)+'%';bar.style.width=(Number.isFinite(v)?49*Math.abs(v)/scale:0)+'%';});
+  }
+  function toast(str) {$('#toast').textContent=str;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').textContent='',4000);}
+  async function exportImage() {
+    const cvs=$$('canvas').filter(e=>e.offsetWidth>0),c=theme(),out=document.createElement('canvas');
+    const W=1800,H=1100;out.width=W;out.height=H;const ctx=out.getContext('2d');ctx.fillStyle=c.paper;ctx.fillRect(0,0,W,H);
+    text(ctx,'TH3 · MPSI · E. Guillaume',45,35,c['accent-ink'],20);text(ctx,$('h1').textContent,45,82,c.ink,36);
+    text(ctx,$('#scene-title').textContent,45,127,c.muted,24);
+    for(let i=0;i<Math.min(2,cvs.length);i++) {
+      const el=cvs[i],px=45+i*870,py=175,pw=840,ph=550;
+      box(ctx,px,py,pw,ph,c.surface,c.line,10);
+      const rat=Math.min((pw-24)/el.width,(ph-24)/el.height),dw=el.width*rat,dh=el.height*rat;
+      ctx.drawImage(el,px+(pw-dw)/2,py+(ph-dh)/2,dw,dh);
+      const title=el.closest('.panel').querySelector('.panel-head>span')?.textContent||'';text(ctx,title,px+15,py-20,c.ink,22);
+    }
+    function exportText(el){const copy=el.cloneNode(true);copy.querySelectorAll('sup').forEach(e=>e.replaceWith('^('+e.textContent+')'));copy.querySelectorAll('sub').forEach(e=>e.replaceWith('_'+e.textContent));return copy.textContent;}
+    $$('.metric').forEach((el,i)=>{const x=50+i*580;text(ctx,exportText(el.querySelector('.metric-label')),x,785,c.muted,23);text(ctx,exportText(el.querySelector('.metric-value')),x,830,c.ink,33);});
+    wrap(ctx,exportText($('#balance')),45,900,W-90,c.muted,25,34);
+    wrap(ctx,$('#message').textContent,45,962,W-90,c.ink,25,34);
+    const blob=await new Promise(r=>out.toBlob(r,'image/png'));if(!blob){toast('La création de l’image a échoué.');return;}
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=exportName+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Image PNG exportée.');
+  }
+  function init({draw,name}) {
+    redraw=draw;exportName=name;
+    $('#theme').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('#theme').textContent=dark?'Clair':'Sombre';$('#theme').setAttribute('aria-pressed',dark);redraw();});
+    $('#projection').addEventListener('click',()=>{const p=document.body.classList.toggle('projection');$('#projection').textContent=p?'Réglages':'Projection';$('#projection').setAttribute('aria-pressed',p);$('#aside').classList.remove('open');requestAnimationFrame(redraw);});
+    $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran dans cette fenêtre.');}});
+    document.addEventListener('fullscreenchange',()=>$('#fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran'));
+    $('#help').addEventListener('click',()=>$('#about').showModal());
+    $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+    $('#export').addEventListener('click',exportImage);
+    $('#settings-open').addEventListener('click',()=>$('#aside').classList.toggle('open'));
+    $('#settings-close').addEventListener('click',()=>$('#aside').classList.remove('open'));
+    $('#formulas')?.addEventListener('click',()=>{const show=$('#formulas').getAttribute('aria-pressed')!=='true';$('#formulas').setAttribute('aria-pressed',show);$$('.formula-content').forEach(e=>e.hidden=!show);if(show&&innerWidth<=1050&&!document.body.classList.contains('projection'))$('#aside').classList.add('open');redraw();});
+    const observer=new ResizeObserver(()=>requestAnimationFrame(redraw));observer.observe($('.visuals'));$$('.canvas-wrap').forEach(e=>observer.observe(e));
+    window.addEventListener('resize',()=>requestAnimationFrame(redraw));
+    document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|SELECT|BUTTON|TEXTAREA/.test(e.target.tagName)&&!$('dialog[open]')){e.preventDefault();$('#play').click();}if(e.key==='Escape')$('#aside').classList.remove('open');});
+  }
+  return {$,$$,fmt,sci,sup,clamp,theme,canvas,text,wrap,line,arrow,box,dot,axes,curve,field,bindField,metrics,toast,init};
+})();
+</script><script>'use strict';
+(()=>{
+const U=TH3UI,M=TH3Physique,{$,$$,fmt,sci,clamp}=U;
+const state={mode:'pieces',n:5,k:5,bits:[],playing:false,speed:1,zoom:1,largeView:'relative',follow:true,trials:0,hist:[],time:0,released:false,macroN:1e6,particles:[],trace:[],macroTime:0,macroReleased:false,macroPoints:null,macroMean:1,macroLeft:0};
+let rng=1,lastTime=0,acc=0,sampleAcc=0,traceAcc=0,binom=[],coinHits=[],graphA=null,groups=[],configKey='';
+function random(){rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;return (rng>>>0)/4294967296;}
+function normal(){return Math.sqrt(-2*Math.log(Math.max(1e-12,random())))*Math.cos(2*Math.PI*random());}
+function setPlaying(v){state.playing=v;$('#play').setAttribute('aria-pressed',v);$('#play').textContent=v?'Ⅱ Pause':state.mode==='pieces'?'▶ Tirages':'▶ Lire';}
+function reset(){
+ if(state.mode==='grand'){resetLarge();controls();draw();return;}
+ setPlaying(false);rng=(0x531e739^state.n)||1;state.bits=new Array(state.n).fill(1);state.k=state.n;state.follow=true;state.trials=0;state.hist=new Array(state.n+1).fill(0);state.time=0;state.released=false;state.trace=[];acc=0;sampleAcc=0;traceAcc=0;
+ state.particles=Array.from({length:state.n},()=>({x:random()*.5,y:random(),vx:normal()*.28,vy:normal()*.28}));binom=M.binomiale(state.n);configKey='';controls();draw();
+}
+function setN(n){state.n=clamp(Math.round(n),2,1000);state.zoom=1;reset();}
+function setMode(m){state.mode=m;state.zoom=1;setPlaying(false);reset();}
+function largePointCount(N){return Math.min(Math.round(N),32000,Math.round(4000+Math.max(0,(Math.log10(N)-Math.log10(4000))/(6-Math.log10(4000)))*16000));}
+function resetLarge(){
+ setPlaying(false);state.macroTime=0;state.macroReleased=false;state.macroMean=1;
+ const count=largePointCount(state.macroN),a={count,x0:new Float64Array(count),y0:new Float64Array(count),vx:new Float64Array(count),vy:new Float64Array(count),x:new Float64Array(count),y:new Float64Array(count)};
+ let seed=0x631a492;
+ const rand=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return (seed>>>0)/4294967296;};
+ for(let i=0;i<count;i++){
+  a.x0[i]=rand()*.5;a.y0[i]=rand();
+  const radius=Math.sqrt(-2*Math.log(Math.max(1e-12,rand()))),angle=2*Math.PI*rand();
+  a.vx[i]=.28*radius*Math.cos(angle);a.vy[i]=.28*radius*Math.sin(angle);
+  a.x[i]=a.x0[i];a.y[i]=a.y0[i];
+ }
+ state.macroPoints=a;state.macroLeft=count;
+}
+function setMacroN(N){state.macroN=Math.max(2,Math.round(N));state.zoom=1;resetLarge();controls();draw();}
+function stepLarge(dt){
+ if(!state.macroReleased)return;state.macroTime+=dt;state.macroMean=M.fractionMoyenneGauche(state.macroTime);
+ const a=state.macroPoints;let left=0;
+ for(let i=0;i<a.count;i++){a.x[i]=reflect(a.x0[i]+a.vx[i]*state.macroTime,1);a.y[i]=reflect(a.y0[i]+a.vy[i]*state.macroTime,1);if(a.x[i]<.5)left++;}
+ state.macroLeft=left;
+}
+function release(){
+ if(state.mode==='grand')state.macroReleased=true;else state.released=true;
+ $('#release').textContent='Cloison retirée';$('#release').disabled=true;
+}
+function controls(){
+ $$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===state.mode));
+ const big=state.mode==='grand';$('#finite-controls').hidden=big;$('#large-controls').hidden=!big;$('#macro-controls').hidden=big;
+ $('#play').hidden=false;$('#step').hidden=false;$('#reset').hidden=false;$('#release').hidden=state.mode==='pieces';$('#axis-view').hidden=!big;
+ const released=big?state.macroReleased:state.released;
+ $('#step').textContent=state.mode==='pieces'?'Un tirage':'Un pas';$('#release').textContent=released?'Cloison retirée':'Retirer la cloison';$('#release').disabled=released;
+ if(!$('#n')){$('#n-field').innerHTML=U.field('n','Nombre N',state.n,2,1000,1,'');U.bindField('n',setN,true);}else{$('#n').value=state.n;$('#n-number').value=state.n;}
+ if(!$('#k')){$('#k-field').innerHTML=U.field('k',state.mode==='pieces'?'Nombre de piles':'Nombre à gauche',state.k,0,state.n,1,'');U.bindField('k',k=>chooseK(Math.round(k)));}
+ else{for(const id of ['#k','#k-number']){$(id).max=state.n;$(id).value=state.k;}$('#k-field label').textContent=state.mode==='pieces'?'Nombre de piles':'Nombre à gauche';}
+ $('#selection-note').textContent=state.mode==='pieces'?'Choisir une colonne affiche un exemple de microétat compatible.':'La sélection étudie une répartition ; elle ne déplace pas les particules.';
+ $('#follow-field').hidden=state.mode!=='gaz';$('#follow').checked=state.follow;
+ $('#sampling-note').textContent=state.mode==='pieces'?'Tirages indépendants équiprobables ; les gestes manuels ne sont pas comptés.':state.mode==='gaz'?'Temps réduit τ. Histogramme temporel après τ = 8 ; observations corrélées.':'Lire retire la cloison et lance la détente. Le temps réduit règle le mouvement ; le diagramme donne la référence d’équilibre pour N. Changer N prépare une nouvelle expérience.';
+ $('#speed').disabled=false;$('#speed-value').textContent='× '+fmt(state.speed,2);
+ $('#logN').value=Math.log10(state.macroN);$('#logN-value').textContent=fmt(Math.log10(state.macroN),2);
+ updateConfigs();
+}
+function chooseK(k){
+ setPlaying(false);state.k=clamp(k,0,state.n);if(state.mode==='gaz'){state.follow=false;$('#follow').checked=false;}
+ if(state.mode==='pieces')state.bits=Array.from({length:state.n},(_,i)=>i<state.k?1:0);
+ $('#k').value=state.k;$('#k-number').value=state.k;draw();
+}
+function updateConfigs(){
+ const key=[state.mode,state.n,state.k].join('/');if(configKey===key)return;configKey=key;
+ const list=$('#configurations');list.innerHTML='';
+ if(state.mode!=='pieces'){list.hidden=true;$('#configuration-count').textContent='Les points sont repérables pour le comptage gauche / droite.';return;}
+ list.hidden=false;
+ if(state.n<=10){const configs=M.configurations(state.n,state.k);for(const bits of configs){const b=document.createElement('button');b.textContent=bits.map(t=>t?'P':'F').join('');b.title='Afficher ce microétat';b.addEventListener('click',()=>{setPlaying(false);state.bits=[...bits];draw();});list.appendChild(b);}$('#configuration-count').textContent=configs.length+' microétat'+(configs.length>1?'s':'')+' compatible'+(configs.length>1?'s':'')+' · liste complète.';}
+ else $('#configuration-count').textContent='Comptage calculé ; l’énumération complète est limitée à N ≤ 10.';
+}
+function drawOne(){state.bits=Array.from({length:state.n},()=>random()<.5?1:0);state.k=state.bits.reduce((a,b)=>a+b,0);state.hist[state.k]++;state.trials++;$('#k').value=state.k;$('#k-number').value=state.k;}
+function ng(){return state.particles.reduce((n,p)=>n+(p.x<.5?1:0),0);}
+function reflect(value,max){const z=((value%(2*max))+2*max)%(2*max);return z<=max?z:2*max-z;}
+function stepGas(dt){
+ if(!state.released)return;state.time+=dt;
+ for(const p of state.particles){let x=p.x+p.vx*dt,y=p.y+p.vy*dt;
+  if(x<0||x>1){p.vx=-p.vx;x=reflect(x,1);}if(y<0||y>1){p.vy=-p.vy;y=reflect(y,1);}p.x=x;p.y=y;
+ }
+ const k=ng();if(state.follow){state.k=k;$('#k').value=k;$('#k-number').value=k;}traceAcc+=dt;if(traceAcc>=.1){state.trace.push([state.time,k]);if(state.trace.length>400)state.trace.shift();traceAcc=0;}
+ if(state.time>=8){sampleAcc+=dt;if(sampleAcc>=.4){state.hist[k]++;state.trials++;sampleAcc-=.4;}}
+}
+function metric(i,label,value,unit=''){const el=$('#metric-'+i);el.querySelector('.metric-label').innerHTML=label;const v=el.querySelector('.metric-value');v.innerHTML=value+(unit?` <small>${unit}</small>`:'');v.style.fontSize=value.replace(/<[^>]+>/g,'').length>17?'clamp(17px,1.6vw,29px)':'';}
+function numbers(){
+ const big=state.mode==='grand',N=big?state.macroN:state.n;
+ if(big){
+  const sigma=1/(2*Math.sqrt(N)),e=-N*Math.LOG10E*Math.LN2;
+  metric(0,'Fluctuation relative à l’équilibre',sci(sigma,2));metric(1,'P(toutes à gauche)','10<sup>−'+sci(-e,2)+'</sup>');metric(2,'ΔS finale pour V → 2V',sci(N*M.kB*Math.LN2,2),'J/K');
+  $('#balance').innerHTML='σ(N<sub>g</sub>/N) = 1/(2√N) &nbsp;·&nbsp; P(N<sub>g</sub> = N) = 2<sup>−N</sup>';
+  $('#message').textContent=!state.macroReleased?'Le gaz est confiné à gauche. « Lire » retire la cloison et lance la détente.':state.macroTime<8?'Le gaz se répartit dans tout le volume. La courbe est la référence d’équilibre ; le trait orange suit '+(N<=4000?'la fraction actuelle à gauche.':'la fraction moyenne calculée à gauche.'):'À l’équilibre, les fluctuations relatives diminuent comme 1/√N. Les valeurs du bilan sont calculées pour N, indépendamment du nombre de points affichés.';
+  $('#scene-title').textContent='La détente à grand effectif';$('#status').textContent='N = '+sci(N,2);$('#sample-count').textContent='τ = '+fmt(state.macroTime,1)+' · '+fmt(state.macroPoints.count,0)+' points';
+  $('#release').textContent=state.macroReleased?'Cloison retirée':'Retirer la cloison';$('#release').disabled=state.macroReleased;
+  $('#formula-box').innerHTML='<p class="formula">⟨N<sub>g</sub>⟩ = N/2<br>σ(N<sub>g</sub>) = √N/2<br>σ(N<sub>g</sub>/N) = 1/(2√N)</p><p class="formula">z = (N<sub>g</sub> − N/2)/(√N/2)</p><p class="note">Loi binomiale pour N ≤ 1000 ; approximation normale près du centre au-delà. P(toutes à gauche) est calculée exactement par 2⁻ᴺ, jamais par l’approximation normale.</p>';
+ }else{
+  const logO=M.logBinom(state.n,state.k),omega=Math.exp(logO),prob=Math.exp(logO-state.n*Math.LN2),symbol=state.mode==='pieces'?'piles':'à gauche';
+  metric(0,state.mode==='gaz'&&state.follow?'Macroétat actuel':'Macroétat sélectionné',fmt(state.k,0)+' / '+fmt(state.n,0));metric(1,'Microétats compatibles Ω',state.n<=50?M.binomEntier(state.n,state.k).toLocaleString('fr-FR'):sci(omega,2));metric(2,'S<sub>B</sub> / k<sub>B</sub> = ln Ω',fmt(logO,2));
+  $('#balance').innerHTML='Ω = C(N, k) &nbsp;·&nbsp; P(k) = Ω / 2<sup>N</sup> = <strong>'+sci(prob,3)+'</strong>';
+  $('#status').textContent=state.mode==='pieces'?state.n+' pièces':state.released?'τ = '+fmt(state.time,1):'Cloison en place';
+  $('#scene-title').textContent=state.mode==='pieces'?'Un microétat précis, plusieurs configurations possibles':'Du confinement à la répartition gauche / droite';
+  $('#sample-count').textContent=fmt(state.trials,0)+(state.mode==='pieces'?' tirage'+(state.trials>1?'s':''):' relevé'+(state.trials>1?'s':''));
+  $('#message').textContent=state.mode==='pieces'?'Les microétats équiprobables ne donnent pas des macroétats équiprobables : les répartitions proches de N/2 ont davantage de configurations.':!state.released?'Toutes les particules sont à gauche. Retirer la cloison lève une contrainte, sans leur imposer un mouvement vers la droite.':'N gauche fluctue. La courbe binomiale décrit l’équilibre ; la sélection d’un macroétat ne force jamais le gaz à l’atteindre.';
+  $('#formula-box').innerHTML='<p class="formula">Ω(k) = N! / [k!(N − k)!]<br>P(k) = Ω(k) / 2<sup>N</sup><br>S<sub>B</sub>(k) / k<sub>B</sub> = ln Ω(k)</p><p class="note">Entropie du comptage gauche / droite d’un macroétat fixé, pas entropie absolue du gaz. Le macroétat sélectionné a '+state.k+' objets '+symbol+'.</p>';
+  updateConfigs();
+ }
+ $('#bridge-value').textContent='Pour N = '+sci(N,2)+' : ΔS = '+sci(N*M.kB*Math.LN2,4)+' J/K (n = '+sci(N/M.NA,3)+' mol).';
+}
+function piecesScene(s){
+ const {ctx,w,h,c,fs}=s,nshow=Math.min(state.n,160),cols=nshow<=5?nshow:nshow===10?5:Math.ceil(Math.sqrt(nshow*w/Math.max(80,h-95))),rows=Math.ceil(nshow/cols),space=Math.min((w-30)/cols,(h-100)/rows,78),rad=Math.min(26,space*.37),x0=(w-cols*space)/2+space/2,y0=58+(h-100-rows*space)/2+space/2;
+ coinHits=[];U.text(ctx,'Microétat : chaque pièce est repérable',w/2,24,c.muted,fs-2,'center');
+ for(let i=0;i<nshow;i++){const x=x0+(i%cols)*space,y=y0+Math.floor(i/cols)*space,bit=state.bits[i];U.dot(ctx,x,y,rad,bit?c.soft:c.glass,bit?c['accent-ink']:c.blue);U.text(ctx,bit?'P':'F',x,y,bit?c['accent-ink']:c.blue,Math.min(fs+5,rad*1.2),'center','600');if(nshow<=10)U.text(ctx,String(i+1),x,y+rad+13,c.muted,12,'center');coinHits.push({x,y,r:rad,i});}
+ U.text(ctx,state.k+' piles · '+(state.n-state.k)+' faces',w/2,h-25,c.ink,fs+1,'center','600');
+ $('#scene-label').textContent='Une configuration précise';$('#scene-hint').textContent=state.n>160?'160 pièces affichées / '+state.n+' tirées et comptées.':'Cliquer sur une pièce pour la retourner ; le geste n’est pas un tirage.';
+}
+function gasScene(s){
+ const {ctx,w,h,c,fs}=s,x=w*.09,y=52,bw=w*.82,bh=Math.max(65,h*.36),actual=ng();
+ U.box(ctx,x,y,bw,bh,c.glass,c.muted,5);U.line(ctx,x+bw/2,y,x+bw/2,y+bh,state.released?c.line:c['accent-ink'],state.released?1:4,state.released?[4,5]:[]);
+ const nshow=Math.min(250,state.n);for(let i=0;i<nshow;i++){const p=state.particles[i];U.dot(ctx,x+bw*p.x,y+bh*p.y,Math.max(2,Math.min(5,18/Math.sqrt(state.n/5))),p.x<.5?c['accent-ink']:c.blue);}
+ U.text(ctx,'Ng = '+actual+' / '+state.n,w/2,23,c.ink,fs+2,'center','600');
+ U.text(ctx,'Gauche',x+bw*.25,y+bh+19,c['accent-ink'],fs-2,'center');U.text(ctx,'Droite',x+bw*.75,y+bh+19,c.blue,fs-2,'center');
+ const top=y+bh+48,bottom=h-27,left=45,right=w-22;
+ if(bottom-top>20){
+  U.text(ctx,'Ng(t)',left-3,top-12,c.muted,fs-5);const yy=k=>bottom-k/state.n*(bottom-top),tmin=Math.max(0,state.time-15),tmax=Math.max(15,state.time);
+  U.line(ctx,left,yy(state.n/2),right,yy(state.n/2),c.muted,1,[4,4]);U.text(ctx,'N/2',right,yy(state.n/2)-10,c.muted,fs-5,'right');
+  U.line(ctx,left,top,left,bottom,c.line,1);U.line(ctx,left,bottom,right,bottom,c.line,1);
+  const a={left,right,top,bottom,x:t=>left+(t-tmin)/(tmax-tmin)*(right-left),y:yy};U.curve(ctx,a,state.trace.filter(p=>p[0]>=tmin),c['accent-ink'],2);
+  U.text(ctx,'τ',right,h-10,c.muted,fs-4,'right');
+ }
+ $('#scene-label').textContent='Des points indépendants en mouvement';$('#scene-hint').textContent=(state.n>250?'250 / '+state.n+' points affichés ; tous comptés. ':'')+'Vitesses libres · réflexions élastiques · temps réduit τ.';
+}
+function largeScene(s){
+ const {ctx,w,h,c,fs}=s,N=state.macroN,a=state.macroPoints,x=w*.07,y=56,bw=w*.86,bh=Math.max(82,h-148);
+ const count=a.count,r=Math.max(.55,Math.min(count<=100?6:2.5,Math.sqrt(bw*bh/count)*.28));
+ U.text(ctx,'N = '+sci(N,2),w/2,25,c.ink,fs+3,'center','600');U.box(ctx,x,y,bw,bh,c.glass,c.muted,5);
+ U.line(ctx,x+bw/2,y,x+bw/2,y+bh,state.macroReleased?c.line:c['accent-ink'],state.macroReleased?1:4,state.macroReleased?[4,5]:[]);
+ // Les mêmes points suivent leurs trajectoires réfléchies ; seules leurs positions évoluent.
+ for(const left of [true,false]){
+  ctx.beginPath();ctx.fillStyle=left?c['accent-ink']:c.blue;
+  for(let i=0;i<count;i++)if((a.x[i]<.5)===left){
+   const xx=state.macroReleased?x+r+a.x[i]*(bw-2*r):x+r+a.x[i]*(bw-4*r),yy=y+r+a.y[i]*(bh-2*r);
+   ctx.moveTo(xx+r,yy);ctx.arc(xx,yy,r,0,Math.PI*2);
+  }
+  ctx.fill();
+ }
+ const fraction=N<=4000?state.macroLeft/count:state.macroMean;
+ U.text(ctx,(N<=4000?'À gauche : ':'Moyenne à gauche : ')+fmt(100*fraction,1)+' %',w/2,y+bh+25,c.ink,fs,'center','600');
+ U.text(ctx,'σ(Ng/N) = '+sci(1/(2*Math.sqrt(N)),2),w/2,h-25,c.muted,fs-1,'center');
+ $('#scene-label').textContent='Un gaz en mouvement';$('#scene-hint').textContent=fmt(count,0)+(count===N?' particules dessinées et comptées.':' points représentatifs · calculs statistiques pour N.');
+}
+function largeMarker(s,a,centered=false){
+ const fraction=state.macroN<=4000?state.macroLeft/state.macroPoints.count:state.macroMean;
+ const value=centered?(fraction-.5)*2*Math.sqrt(state.macroN):fraction;
+ if(value>=a.xmin&&value<=a.xmax){U.line(s.ctx,a.x(value),a.top+6,a.x(value),a.bottom,s.c['accent-ink'],2,[4,3]);U.dot(s.ctx,a.x(value),a.bottom-5,4,s.c['accent-ink']);}
+ else{const right=value>a.xmax,xx=right?a.right:a.left;U.arrow(s.ctx,xx+(right?-28:28),a.top+33,xx+(right?-4:4),a.top+33,s.c['accent-ink'],2);U.text(s.ctx,'Transitoire hors champ',right?a.right-5:a.left+5,a.top+13,s.c['accent-ink'],s.fs-5,right?'right':'left');}
+}
+function finiteGraph(s){
+ const {ctx,c,fs}=s,n=state.n,groupSize=Math.ceil((n+1)/61),nb=Math.ceil((n+1)/groupSize);groups=[];
+ for(let b=0;b<nb;b++){let lo=b*groupSize,hi=Math.min(n,(b+1)*groupSize-1),pr=0,fr=0;for(let k=lo;k<=hi;k++){pr+=binom[k];fr+=state.hist[k]/Math.max(1,state.trials);}groups.push({lo,hi,x:(lo+hi)/(2*n),p:pr,f:fr});}
+ const max=Math.max(...groups.map(g=>Math.max(g.p,g.f)),.1),half=.58/state.zoom;
+ const a=U.axes(s,{xmin:.5-half,xmax:.5+half,ymin:0,ymax:max*1.18,xlabel:state.mode==='pieces'?'Fraction de piles k/N':'Fraction à gauche Ng/N',ylabel:nb===n+1?'Probabilité':'Prob. par classe',xvalues:state.zoom<=1?[0,.25,.5,.75,1]:null,xticks:4,yticks:3,xformat:v=>v<0||v>1?'':fmt(v,2),yformat:v=>fmt(v,2)});graphA=a;
+ ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.clip();
+ for(const g of groups){const dx=(a.x((g.hi-g.lo+1)/n)-a.x(0))*.82,bx=a.x(g.x)-dx/2,by=a.y(g.p);ctx.fillStyle=c.blue;ctx.globalAlpha=.35;ctx.fillRect(bx,by,Math.max(3,dx),a.bottom-by);ctx.globalAlpha=1;
+  if(state.trials){ctx.fillStyle=c['accent-ink'];ctx.globalAlpha=.75;ctx.fillRect(bx+dx*.22,a.y(g.f),Math.max(2,dx*.56),a.bottom-a.y(g.f));ctx.globalAlpha=1;}
+  if(state.k>=g.lo&&state.k<=g.hi){ctx.strokeStyle=c.red;ctx.lineWidth=2.5;ctx.strokeRect(bx-1,by-2,Math.max(4,dx+2),a.bottom-by+2);}
+ }
+ ctx.restore();
+ $('#graph-label').textContent='Distribution des macroétats';
+ $('#graph-hint').innerHTML='<span class="blue"><i></i>Théorie à l’équilibre</span><span class="orange"><i></i>'+(state.mode==='pieces'?'Tirages':'Relevés temporels')+'</span>';
+}
+function largeGraph(s){
+ const N=state.macroN,{ctx,c}=s,relative=state.largeView==='relative';
+ $('#axis-view').textContent=relative?'Zoom centre':'Vue relative';
+ if(relative){
+  const half=.58/state.zoom,a=U.axes(s,{xmin:.5-half,xmax:.5+half,ymin:0,ymax:1.15,xlabel:'Fraction à gauche Ng/N',ylabel:'Profil / maximum',xvalues:state.zoom<=1?[0,.25,.5,.75,1]:null,xformat:v=>v<0||v>1?'':fmt(v,2),yformat:v=>fmt(v,1)});graphA=a;
+  if(N<=1000){const n=Math.round(N),ps=M.binomiale(n),max=Math.max(...ps),dx=(a.x(1/n)-a.x(0))*.85;ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.clip();for(let k=0;k<=n;k++){ctx.fillStyle=c.blue;ctx.globalAlpha=.6;ctx.fillRect(a.x(k/n)-dx/2,a.y(ps[k]/max),Math.max(1,dx),a.bottom-a.y(ps[k]/max));}ctx.restore();}
+  else{const arr=Array.from({length:241},(_,i)=>{const z=-4+8*i/240;return[.5+z/(2*Math.sqrt(N)),Math.exp(-z*z/2)];});U.curve(ctx,a,arr,c.blue,3.3);}
+  largeMarker(s,a);$('#graph-label').textContent='Répartition à l’équilibre';$('#graph-hint').innerHTML='<span class="blue"><i></i>Équilibre · maximum ramené à 1</span><span class="orange"><i class="dash"></i>'+(N<=4000?'Fraction actuelle':'Fraction moyenne')+'</span>';return;
+ }
+ const a=U.axes(s,{xmin:-4/state.zoom,xmax:4/state.zoom,ymin:0,ymax:.46,xlabel:'Écart centré z (en écarts-types)',ylabel:'Densité',xticks:4,yticks:3,yformat:v=>fmt(v,2)});graphA=a;
+ if(N<=1000){const n=Math.round(N),pr=M.binomiale(n),sd=Math.sqrt(n)/2,dx=(a.x(1/sd)-a.x(0))*.85;
+  ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.clip();for(let k=0;k<=n;k++){const z=(k-n/2)/sd;ctx.fillStyle=c.blue;ctx.globalAlpha=.5;ctx.fillRect(a.x(z)-dx/2,a.y(pr[k]*sd),dx,a.bottom-a.y(pr[k]*sd));}ctx.restore();
+ }else{
+  const arr=Array.from({length:241},(_,i)=>{const z=-4+8*i/240;return[z,Math.exp(-z*z/2)/Math.sqrt(2*Math.PI)];});U.curve(ctx,a,arr,c.blue,3.3);
+ }
+ U.line(ctx,a.x(0),a.top,a.x(0),a.bottom,c['accent-ink'],1.5,[5,4]);
+ largeMarker(s,a,true);$('#graph-label').textContent='Zoom autour de la répartition moyenne';$('#graph-hint').innerHTML=N<=1000?'<span class="blue"><i></i>Loi binomiale · échelle centrée</span>':'<span class="blue"><i></i>Approximation normale près de l’équilibre</span>';
+}
+function draw(){numbers();const a=U.canvas('#scene'),b=U.canvas('#graph');if(a.w>20&&a.h>20){if(state.mode==='pieces')piecesScene(a);else if(state.mode==='gaz')gasScene(a);else largeScene(a);}if(b.w>20&&b.h>20){if(state.mode==='grand')largeGraph(b);else finiteGraph(b);}}
+$$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+$$('[data-n]').forEach(b=>b.addEventListener('click',()=>setN(+b.dataset.n)));
+$$('[data-large]').forEach(b=>b.addEventListener('click',()=>setMacroN(b.dataset.large==='mole'?M.NA:+b.dataset.large)));
+$('#logN').addEventListener('input',e=>setMacroN(10**(+e.target.value)));
+$('#all-left').addEventListener('click',()=>chooseK(state.n));$('#center').addEventListener('click',()=>chooseK(Math.floor(state.n/2)));
+$('#play').addEventListener('click',()=>{if(state.mode==='gaz'&&!state.released||state.mode==='grand'&&!state.macroReleased)release();setPlaying(!state.playing);draw();});
+$('#step').addEventListener('click',()=>{setPlaying(false);if(state.mode==='pieces')drawOne();else{release();if(state.mode==='grand')stepLarge(.2);else stepGas(.2);}draw();});
+$('#release').addEventListener('click',()=>{release();setPlaying(true);draw();});
+$('#reset').addEventListener('click',reset);$('#speed').addEventListener('input',e=>{state.speed=+e.target.value;$('#speed-value').textContent='× '+fmt(state.speed,2);});
+$('#zoom-in').addEventListener('click',()=>{state.zoom=clamp(state.zoom*1.3,.6,state.mode==='grand'?4:30);draw();});$('#zoom-out').addEventListener('click',()=>{state.zoom=clamp(state.zoom/1.3,.6,30);draw();});$('#fit').addEventListener('click',()=>{state.zoom=1;draw();});
+$('#bridge').addEventListener('click',()=>$('#bridge-dialog').showModal());
+$('#follow').addEventListener('change',e=>{state.follow=e.target.checked;if(state.follow){state.k=ng();$('#k').value=state.k;$('#k-number').value=state.k;}draw();});
+$('#axis-view').addEventListener('click',()=>{state.largeView=state.largeView==='relative'?'center':'relative';state.zoom=1;draw();});
+$('#scene').addEventListener('pointerdown',e=>{if(state.mode!=='pieces')return;const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,hit=coinHits.find(p=>Math.hypot(p.x-x,p.y-y)<=p.r);if(hit){setPlaying(false);state.bits[hit.i]=1-state.bits[hit.i];state.k=state.bits.reduce((a,b)=>a+b,0);$('#k').value=state.k;$('#k-number').value=state.k;draw();}});
+$('#graph').addEventListener('pointerdown',e=>{if(state.mode==='grand'||!graphA)return;const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,a=graphA,v=a.xmin+(x-a.left)/(a.right-a.left)*(a.xmax-a.xmin);chooseK(clamp(Math.round(v*state.n),0,state.n));});
+U.init({draw,name:'TH3_Entropie_Statistique'});reset();
+let largeRenderAcc=0;
+function frame(t){const dt=Math.min((t-lastTime)/1000||0,.06);lastTime=t;if(state.playing){if(state.mode==='pieces'){acc+=dt*state.speed;if(acc>=.24){acc-=.24;drawOne();draw();}}else if(state.mode==='gaz'){stepGas(dt*state.speed);draw();}else{stepLarge(dt*state.speed);largeRenderAcc+=dt;if(largeRenderAcc>=1/30){largeRenderAcc=0;draw();}}}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+window.TH3Stat={state,setN,setMode,setMacroN,draw,reset,drawOne,stepGas,stepLarge,largePointCount,ng,chooseK};
+})();
+</script></body></html>

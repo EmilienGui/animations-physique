@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>OS6 — Filtrage linéaire</title><style>:root{--accent:#672c8b;--accent-soft:#f0e8f5;--bg:#f3f2f6;--paper:#fff;--ink:#0f0f0f;--muted:#53595e;--line:#d8d4df;--grid:#e9e6ee;--input:#17689c;--output:#8f2227;--compare:#976100;--green:#18745d;color-scheme:light;font-family:Arial,Helvetica,sans-serif}
+:root[data-theme=dark]{--accent:#d0a6ed;--accent-soft:#35243f;--bg:#14131b;--paper:#201e29;--ink:#f4f0f7;--muted:#c0b9c9;--line:#4d455b;--grid:#373140;--input:#72c5f5;--output:#ff9ba4;--compare:#efc569;--green:#79d5b5;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);height:100dvh;display:flex;flex-direction:column;font-size:15px}button,input,select{font:inherit;color:inherit}button,select,input[type=number]{border:1px solid var(--line);background:var(--paper);border-radius:6px;min-height:36px;padding:6px 9px}button{cursor:pointer}button:hover{border-color:var(--accent);background:var(--accent-soft)}button[aria-pressed=true]{background:var(--accent);color:var(--paper);border-color:var(--accent)}button:focus-visible,canvas:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}button:disabled{opacity:.45;cursor:default}select{max-width:100%}header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 9px;background:var(--paper);flex-shrink:0;flex-wrap:wrap}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--accent)}h1{font-size:25px;line-height:1.1;font-weight:600;margin:4px 0 0}.global-actions{display:flex;gap:6px;flex-wrap:wrap}.global-actions button{min-height:40px;white-space:nowrap;font-size:15px;padding:7px 11px}.global-actions .square{width:40px;min-width:40px;padding:0;font-size:23px}.navigation{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 18px;border-bottom:1px solid var(--line);flex-shrink:0}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tabs button{min-height:34px}.navigation>span{font-size:12px;color:var(--muted)}main{display:grid;grid-template-columns:268px minmax(0,1fr);gap:12px;padding:12px 14px;flex:1;min-height:0}aside{overflow-y:auto;min-height:0;padding:4px 13px 20px 2px;scrollbar-width:thin}label{display:block;color:var(--muted);font-size:13px;margin:0 0 5px}.section-label{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.05em}aside select{width:100%}aside section{border-top:1px solid var(--line);padding-top:13px;margin-top:16px}h2{font-size:16px;margin:0 0 11px;font-weight:600}.control{margin-top:11px}.control input[type=number]{width:100%}input[type=range]{width:100%;accent-color:var(--accent);margin:5px 0 0;min-height:22px;cursor:pointer}.number-unit{display:flex;align-items:center;gap:8px}.number-unit input{min-width:0}.number-unit span{font-size:13px;color:var(--muted)}.paired{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.paired input{width:100%;min-width:0}.check{display:flex;align-items:flex-start;gap:7px;font-size:14px;line-height:1.45;margin:10px 0;color:var(--ink)}input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px;margin:1px 0 0;flex-shrink:0}.small{font-size:12px;line-height:1.5;color:var(--muted)}.credit{font-size:11px;line-height:1.5;color:var(--muted);margin-top:22px}
+.workspace{display:grid;grid-template-columns:minmax(300px,2fr) minmax(0,3fr);grid-template-rows:auto minmax(330px,1.3fr) minmax(180px,1fr) auto;grid-template-areas:"tools tools" "system bode" "time spectrum" "insight insight";min-height:0;min-width:0;gap:8px}
+main{grid-template-columns:minmax(0,1fr) 268px}
+aside{grid-column:2;grid-row:1;padding:4px 2px 20px 13px;border-left:1px solid var(--line)}
+.workspace{grid-column:1;grid-row:1}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;min-width:0;min-height:0;overflow:hidden}
+.circuit-card{grid-area:system;display:flex;flex-direction:column}
+.circuit-wrap{flex:1;min-height:90px;min-width:0;position:relative}
+.circuit-wrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.model-info{padding:9px 12px;display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:0;border-top:1px solid var(--line);flex-shrink:0}
+.formula{font:21px/1.25 Georgia,'Times New Roman',serif;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fraction{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1}
+.fraction .numerator{border-bottom:1px solid;padding:1px 7px 4px}.fraction .denominator{padding:4px 7px 1px}
+.readings{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:6px;padding:8px 10px;border-top:1px solid var(--line);flex-shrink:0}
+.readings>div{padding:2px 6px;border-left:3px solid var(--line);min-width:0}.readings>div:first-child{border-color:var(--accent)}
+.readings span{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.readings strong{font-size:23px;font-weight:500;white-space:nowrap}.readings .band-reading{grid-column:1/-1}.band-reading strong{font-size:17px}
+.view-bar{grid-area:tools;display:flex;justify-content:space-between;gap:8px}.views,.zoom,.local-controls{display:flex;align-items:center;gap:5px}.view-bar button{padding:4px 10px;min-height:30px;font-size:13px}
+.graphs{display:contents}.bode-card{grid-area:bode;display:flex;flex-direction:column}.time-card{grid-area:time;display:flex;flex-direction:column}.spectrum-card{grid-area:spectrum;display:flex;flex-direction:column}
+.card-title{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px 7px;padding:9px 12px 3px;flex-shrink:0}.card-title h2{font-size:15px;margin:0}.card-title>span{font-size:10px;color:var(--muted)}
+.plot{flex:1;min-height:0;min-width:0;position:relative}.plot canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}#gain,#phase,#spectrum{cursor:crosshair}
+.caption{font-size:11px;line-height:1.3;padding:2px 12px 7px;color:var(--muted);min-height:20px}
+.local-controls button,.local-controls select{font-size:11px;min-height:25px;padding:3px 6px}.local-controls label{margin:0;font-size:11px}.local-controls select{max-width:125px}
+footer{grid-area:insight;font-size:13px;line-height:1.4;color:var(--accent);min-height:30px;padding:3px 2px}
+sub,sup{font-size:.65em;line-height:0}
+.workspace[data-view=bode]{grid-template-areas:"tools tools" "system bode" "system bode" "insight insight"}
+.workspace[data-view=time]{grid-template-areas:"tools tools" "system time" "system time" "insight insight"}
+.workspace[data-view=spectrum]{grid-template-areas:"tools tools" "system spectrum" "system spectrum" "insight insight"}
+.graphs[data-view=bode] .time-card,.graphs[data-view=bode] .spectrum-card,.graphs[data-view=time] .bode-card,.graphs[data-view=time] .spectrum-card,.graphs[data-view=spectrum] .bode-card,.graphs[data-view=spectrum] .time-card{display:none}
+.projection main{grid-template-columns:minmax(0,1fr);padding-top:9px}.projection aside{display:none}.projection .readings strong{font-size:34px}.projection .band-reading strong{font-size:22px}.projection .readings span{font-size:14px}.projection .card-title h2{font-size:20px}.projection .caption{font-size:14px}.projection footer{font-size:16px}.projection .model-info .small{font-size:14px}.projection .formula{font-size:24px}.projection #regime{display:none}
+dialog{max-width:800px;width:calc(100% - 28px);max-height:88dvh;padding:25px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.6}dialog::backdrop{background:#1118}dialog h2{font-size:25px}dialog h3{font-size:18px;color:var(--accent)}dialog a{color:var(--accent)}.close{float:right}#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--paper);border:1px solid var(--accent);border-radius:8px;padding:12px 18px;box-shadow:0 5px 30px #0002;z-index:10}[hidden]{display:none!important}
+
+@media(min-width:1600px){main{grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding:16px 20px}body{font-size:17px}h1{font-size:29px}aside label{font-size:15px}aside .check{font-size:16px}.formula{font-size:28px}.small{font-size:15px}.model-info{padding:15px 18px;gap:9px}.card-title h2{font-size:20px}.card-title>span{font-size:12px}.caption{font-size:14px}.local-controls button,.local-controls select,.local-controls label{font-size:14px}.readings{padding:12px 16px;gap:10px}.readings strong{font-size:32px}.readings span{font-size:14px}.band-reading strong{font-size:23px}footer{font-size:16px}.projection .readings strong{font-size:40px}.projection .band-reading strong{font-size:28px}.projection .formula{font-size:30px}}
+@media(max-width:1050px) and (min-width:801px){.navigation>span{display:none}main{grid-template-columns:minmax(0,1fr) 230px}.workspace{grid-template-columns:minmax(250px,1fr) minmax(0,1.2fr)}.formula{font-size:18px}.card-title>span{display:none}.readings strong{font-size:19px}.band-reading strong{font-size:15px}.card-title h2{font-size:14px}.local-controls{flex-wrap:wrap}}
+@media(max-width:800px){body{height:auto;min-height:100dvh}header{padding:12px}.global-actions{gap:6px}.global-actions button{font-size:14px;padding:7px 9px}.navigation{padding:7px 12px}.tabs button{font-size:12px;padding:6px}.tabs{gap:5px}.navigation>span{display:none}main{display:flex;flex-direction:column;padding:10px;gap:12px}aside{max-height:330px;padding:8px;border:1px solid var(--line);border-radius:10px}aside section{margin-top:12px}.workspace{display:flex;flex-direction:column;gap:9px}.view-bar{order:0;flex-wrap:wrap}.circuit-card{order:1;min-height:330px;flex-shrink:0}.circuit-wrap{min-height:140px}.model-info{min-height:100px}.readings strong{font-size:24px}.band-reading strong{font-size:18px}.bode-card{order:2;height:450px;flex-shrink:0}.time-card{order:3;height:280px;flex-shrink:0}.spectrum-card{order:4;height:280px;flex-shrink:0}footer{order:5;font-size:14px}.graphs[data-view=bode] .bode-card{height:560px}.graphs[data-view=time] .time-card,.graphs[data-view=spectrum] .spectrum-card{height:460px}.card-title h2{font-size:16px}.card-title>span{display:none}.caption{font-size:12px}.projection .readings strong{font-size:28px}.projection .band-reading strong{font-size:20px}.projection .circuit-wrap{min-height:160px}.formula{font-size:21px}}
+@media(max-height:760px) and (min-width:801px){header{padding-top:8px;padding-bottom:7px}h1{font-size:23px}.navigation{padding-top:5px;padding-bottom:5px}main{padding-top:8px;padding-bottom:8px}.workspace{grid-template-rows:auto minmax(330px,1.3fr) minmax(180px,1fr) auto;gap:6px}.model-info{padding:7px 10px;gap:3px}.model-info .small{line-height:1.3}#model-note{display:none}.formula{font-size:19px}.readings{padding:6px 8px;gap:3px}.readings strong{font-size:22px}.band-reading strong{font-size:16px}footer{min-height:28px;font-size:12px}.projection .model-info .small{font-size:12px}.projection .formula{font-size:22px}.projection .readings strong{font-size:30px}.projection .band-reading strong{font-size:21px}.projection .readings span{font-size:12px}.projection .card-title h2{font-size:18px}.projection .caption{font-size:12px}.projection footer{font-size:14px}}
+</style></head>
+<body>
+<header>
+ <div class="identity"><span class="eyebrow">MPSI · ONDES ET SIGNAUX · OS6</span><h1>Filtrage linéaire</h1></div>
+ <nav class="global-actions" aria-label="Commandes générales"><button id="reset">Réinitialiser</button><button id="reveal" hidden>Révéler la sortie</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter les vues et les paramètres en image PNG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" class="square" aria-label="Plein écran" title="Plein écran">⛶</button></nav>
+</header>
+<div class="navigation"><nav class="tabs" aria-label="Parcours"><button data-mode="explore" aria-pressed="true">1 · Explorer</button><button data-mode="signals" aria-pressed="false">2 · Transformer un signal</button><button data-mode="cascade" aria-pressed="false">3 · Associer deux étages</button></nav><span id="regime">Régime établi · modèle linéaire idéal</span></div>
+<main>
+ <aside aria-label="Réglages">
+  <label for="preset" class="section-label">Situations du cours</label>
+  <select id="preset"><option value="free">Réglage libre</option><option value="sin">RC : explorer la coupure</option><option value="clean">100 Hz utiles + parasite à 10 kHz</option><option value="square">Créneau 1 kHz · coupure 5 kHz</option><option value="mean">Moyenner un signal décalé</option><option value="integrate">Intégrer un créneau centré</option><option value="derive">Dériver un triangle</option><option value="select5">Sélectionner l’harmonique 5</option><option value="resonance">Résonance du passe-bas RLC</option><option value="high2">Passe-haut RLC · ordre 2</option><option value="notch">Rejeter le fondamental</option><option value="cascade">Cascade : l’effet de charge</option></select>
+  <section><h2>Le filtre</h2><div id="single-controls"><label for="filter">Famille</label><select id="filter"><option value="pb1">Passe-bas · ordre 1</option><option value="ph1">Passe-haut · ordre 1</option><option value="pb2">Passe-bas · ordre 2</option><option value="ph2">Passe-haut · ordre 2</option><option value="bp2">Passe-bande · ordre 2</option><option value="cb2">Coupe-bande · ordre 2</option></select></div>
+   <div class="control"><label for="f0" id="f0-label">Fréquence de coupure f<sub>c</sub></label><div class="number-unit"><input id="f0" type="number" min="1" max="100000" step="any" value="1000"><span>Hz</span></div><input id="f0-range" aria-label="Fréquence caractéristique, échelle logarithmique" type="range" min="0" max="5" step="0.005" value="3"></div>
+   <div class="control" id="q-control"><label for="Q">Facteur de qualité Q</label><input id="Q" type="number" min="0.1" max="20" step="0.1" value="1"><input id="q-range" aria-label="Facteur de qualité, échelle logarithmique" type="range" min="-1" max="1.30103" step="any" value="0"></div>
+   <div id="cascade-controls" hidden><label class="check"><input type="checkbox" id="buffer">Insérer le suiveur idéal</label><div class="control"><label for="k">Rapport d’impédances k</label><input id="k" type="number" min="0.1" max="100" step="any" value="1"><input id="k-range" aria-label="Rapport d’impédances logarithmique" type="range" min="-1" max="2" step="0.01" value="0"></div><p class="small">R₂ = kR₁ ; C₂ = C₁/k.<br>Les deux étages gardent la même coupure à vide.</p></div>
+  </section>
+  <section><h2>Le signal d’entrée</h2><label for="signal">Forme</label><select id="signal"><option value="sin">Sinusoïde</option><option value="sum">Signal utile + parasite sinusoïdal</option><option value="square">Créneau symétrique</option><option value="triangle">Triangle symétrique</option></select>
+   <div class="control"><label for="frequency">Fréquence <span id="frequency-symbol">f</span></label><div class="number-unit"><input id="frequency" type="number" min="1" max="100000" value="1000" step="any"><span>Hz</span></div><input id="frequency-range" type="range" min="0" max="5" step="0.005" value="3" aria-label="Fréquence du signal, échelle logarithmique"></div>
+   <div class="paired"><div><label for="amplitude">Amplitude (V)</label><input id="amplitude" type="number" min="0.01" max="10" step="0.1" value="1"></div><div><label for="dc">Moyenne E₀ (V)</label><input id="dc" type="number" min="-10" max="10" step="0.1" value="0"></div></div>
+   <div id="sum-controls" hidden class="paired"><div><label for="ratio">f parasite / f utile</label><input id="ratio" type="number" min="1.01" max="200" step="any" value="100"></div><div><label for="parasite">A parasite / A utile</label><input id="parasite" type="number" min="0" max="5" step="0.1" value="0.4"></div></div>
+   <div id="harmonic-controls" hidden><label for="N">Rang maximal de Fourier</label><select id="N"><option value="31">31</option><option value="101" selected>101</option><option value="201">201</option></select></div>
+  </section>
+  <section><h2>Lire et comparer</h2><label class="check"><input type="checkbox" id="asymptotes">Asymptotes du Bode</label><label class="check"><input type="checkbox" id="phase-compare">Comparer sans le déphasage</label><label class="check" id="approx-control"><input type="checkbox" id="approx">Approximation temporelle</label><label class="check"><input type="checkbox" id="isolate">Isoler la composante sélectionnée</label><label class="check"><input type="checkbox" id="exercise">Prévoir puis révéler la sortie</label></section>
+  <p class="credit">Conçu pour le cours OS6 d’E. Guillaume.<br>Inspiration : Filtrage fréquentiel, T. Roy, Phyzik.Store.</p>
+ </aside>
+ <div class="workspace">
+  <section class="circuit-card card"><div class="circuit-wrap"><canvas id="circuit" role="img" aria-label="Schéma du filtre et tensions d’entrée et de sortie"></canvas></div><div class="model-info"><div id="model-name" class="section-label"></div><div id="formula" class="formula"></div><div id="component-values" class="small"></div><div id="model-note" class="small"></div></div>  <section class="readings" aria-label="Lecture de la composante sélectionnée"><div><span id="probe-label">Fréquence observée</span><strong id="probe-value"></strong></div><div><span>Gain |H|</span><strong id="gain-value"></strong></div><div><span>Déphasage φ</span><strong id="phase-value"></strong></div><div class="band-reading"><span id="band-label">Coupure(s) à −3 dB</span><strong id="band-value"></strong></div></section></section>
+
+  <div class="view-bar"><div class="views" aria-label="Agrandir une vue"><button data-view="all" aria-pressed="true">Ensemble</button><button data-view="bode" aria-pressed="false">Bode</button><button data-view="time" aria-pressed="false">Signaux</button><button data-view="spectrum" aria-pressed="false">Spectre</button></div><div class="zoom"><button id="zoom-in" title="Zoomer les axes des fréquences">+</button><button id="zoom-out" title="Dézoomer les axes des fréquences">−</button><button id="frame">Cadrer</button></div></div>
+  <div class="graphs" data-view="all">
+   <section class="card bode-card"><div class="card-title"><h2>Réponse fréquentielle</h2><span>Glisser : fréquence · Maj + glisser : f₀</span></div><div class="plot"><canvas id="gain" tabindex="0" role="img" aria-label="Bode en gain. Flèches gauche et droite pour déplacer la fréquence observée."></canvas></div><div class="plot"><canvas id="phase" tabindex="0" role="img" aria-label="Bode en phase. Flèches gauche et droite pour déplacer la fréquence observée."></canvas></div><div id="bode-caption" class="caption"></div></section>
+   <section class="card time-card"><div class="card-title"><h2>Signaux temporels</h2><div class="local-controls"><button id="magnify" title="Agrandir visuellement une sortie faible ; le facteur est indiqué sur le graphe" aria-pressed="false">s × 1</button><button id="play" aria-pressed="false">Lire</button><select id="speed" aria-label="Vitesse de lecture"><option value="0.3">× 0,3</option><option value="1" selected>× 1</option><option value="2">× 2</option></select><button id="time-in" title="Réduire la durée affichée">+</button><button id="time-out" title="Augmenter la durée affichée">−</button></div></div><div class="plot"><canvas id="time" role="img" aria-label="Signaux d’entrée et de sortie en régime établi"></canvas></div><div id="time-caption" class="caption"></div></section>
+   <section class="card spectrum-card"><div class="card-title"><h2>Spectres en amplitude</h2><div class="local-controls"><label for="selected">Composante</label><select id="selected" aria-label="Composante à observer"></select></div></div><div class="plot"><canvas id="spectrum" tabindex="0" role="img" aria-label="Spectres d’entrée et de sortie. Cliquer sur une raie pour l’isoler."></canvas></div><div id="spectrum-caption" class="caption"></div></section>
+  </div>
+  <footer id="insight" aria-live="polite"></footer>
+ </div>
+</main>
+<dialog id="about"><button id="close-help" class="close">Fermer</button><h2>Du circuit au signal</h2><p>Choisissez une situation du cours, puis un filtre et un signal. Les six familles sont calculées en régime établi : aucun transitoire de mise sous tension n’est représenté.</p><h3>Manipuler et lire</h3><p>Glissez sur le Bode pour déplacer la fréquence observée. Avec une sinusoïde, sa fréquence suit ce déplacement. Avec un signal composé, le curseur sélectionne la raie la plus proche. <b>Maj + glisser</b> règle la fréquence caractéristique du filtre. Les flèches gauche/droite fonctionnent sur les Bode. Cliquez sur une raie du spectre, ou choisissez une composante dans la liste, pour suivre son amplitude et sa phase. La moyenne est placée dans une zone distincte, hors de l’axe logarithmique.</p><p><b>+ / − et Cadrer</b> règlent la plage fréquentielle commune au Bode et au spectre ; les boutons voisins du temps règlent sa durée. <b>s × 1</b> active un agrandissement visuel des sorties faibles : le facteur est indiqué dans le graphe et la légende, sans modifier les calculs ni les spectres. La lecture anime un curseur, à 0,4 période fondamentale par seconde d’écran à × 1. Il ne s’agit pas du défilement à vitesse physique.</p><h3>Conventions et limites</h3><p>e(t) = E₀ + Σ Eₙ cos(2πfₙt + φₑ,ₙ). Chaque coefficient complexe est multiplié par H(j2πfₙ). Une phase est indéfinie pour une amplitude nulle. Un gain supérieur à 1 aux bornes d’un dipôle réactif ne signifie pas que le circuit passif fournit une amplification de puissance.</p><p>RC : f₀ = f꜀ = 1/(2πRC). RLC : f₀ = 1/(2π√LC), Q = √(L/C)/R. La coupure à −3 dB est relative au <b>maximum du gain</b> : en présence d’une résonance marquée, une bande autour du pic peut apparaître. Les asymptotes sont les limites BF/HF, parfois éloignées de la courbe pour Q petit ou grand. Le coupe-bande a deux bandes passantes, séparées par une bande de rejet.</p><p>Les séries de Fourier sont tronquées au rang indiqué : le créneau reconstruit présente l’effet de Gibbs près des discontinuités. Les courbes temporelles emploient la même somme finie en entrée et en sortie. Le parasite proposé est une sinusoïde déterministe, pas un bruit aléatoire. Si son rapport de fréquences est irrationnel, la somme n’est pas périodique ; la superposition reste valable.</p><p>La comparaison « sans déphasage » conserve les gains mais supprime volontairement les déphasages du filtre sur les composantes alternatives. L’approximation temporelle compare le calcul exact à l’intégration ou la dérivation asymptotique ; ses conditions et son coefficient sont indiqués sous le graphe. Pour le passe-bas, l’intégration porte sur e − E₀ et la moyenne est conservée.</p><h3>Cascade</h3><p>Générateur idéal, sortie finale ouverte, R₁ = R, C₁ = C, R₂ = kR et C₂ = C/k. Sans suiveur : H = jx / [1 − x² + j(2 + 1/k)x]. Avec un suiveur idéal en régime linéaire : H = jx / [1 − x² + 2jx], x = f/f₀. La courbe en pointillés représente toujours le produit des fonctions de transfert à vide. Les impédances et le courant d’entrée du second étage expliquent l’écart ; un grand k le réduit.</p><p>Composants idéaux, C = 100 nF pour déterminer les autres valeurs affichées ; valeurs choisies pour le modèle, sans restriction aux séries commerciales. ALI idéal : aucune saturation, bande passante finie ni limitation de courant simulée.</p><p>Raccourcis : <b>Espace</b> lire/pause ; <b>P</b> projection ; <b>C</b> cadrer. Le mode Projection masque les réglages ; le plein écran est une commande distincte. « Image » exporte les vues dans le thème courant.</p><p class="small">Source pédagogique : cours OS6 d’E. Guillaume. Inspiration fonctionnelle : « Filtrage fréquentiel », T. Roy, <a href="https://phyzik.store/animations/filtrage.html" target="_blank" rel="noopener">Phyzik.Store</a>. Réalisation indépendante, sans bibliothèque ni ressource distante.</p></dialog>
+<div id="toast" role="status" hidden></div>
+<script>'use strict';
+// Régime établi, convention exp(+jωt). Fréquences en Hz, tensions en V.
+globalThis.OS6Model = (() => {
+ const PI=Math.PI, TAU=2*PI;
+ const add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+ const mul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+ const scale=(a,k)=>[a[0]*k,a[1]*k];
+ const div=(a,b)=>{const d=b[0]**2+b[1]**2;return [(a[0]*b[0]+a[1]*b[1])/d,(a[1]*b[0]-a[0]*b[1])/d];};
+ const abs=a=>Math.hypot(...a), phase=a=>a[0]===0&&a[1]===0?null:Math.atan2(a[1],a[0]);
+ const types={pb1:'Passe-bas · ordre 1',ph1:'Passe-haut · ordre 1',pb2:'Passe-bas · ordre 2',ph2:'Passe-haut · ordre 2',bp2:'Passe-bande · ordre 2',cb2:'Coupe-bande · ordre 2'};
+ function response(type,f,f0,Q=1,buffer=false,k=1){
+  if(!(f>=0&&Number.isFinite(f)&&f0>0&&Number.isFinite(f0)&&Q>0&&Number.isFinite(Q)&&k>0&&Number.isFinite(k)))throw new RangeError('Fréquences et paramètres invalides');
+  const x=f/f0, D=[1-x*x,x/Q];
+  if(type==='pb1')return div([1,0],[1,x]);
+  if(type==='ph1')return div([0,x],[1,x]);
+  if(type==='pb2')return div([1,0],D);
+  if(type==='ph2')return div([-x*x,0],D);
+  if(type==='bp2')return div([0,x/Q],D);
+  if(type==='cb2')return div([1-x*x,0],D);
+  // R1=R, C1=C, R2=kR, C2=C/k : même f0 pour les deux étages.
+  // Charge du PH sur le PB : coefficient d'amortissement 2+1/k.
+  if(type==='cascade')return div([0,x],[1-x*x,(buffer?2:2+1/k)*x]);
+  throw new RangeError('Filtre inconnu');
+ }
+ function characteristic(type,f0,Q=1,buffer=false,k=1){
+  let cuts=[],peakF=null,peak=1;
+  if(type.endsWith('1'))cuts=[f0];
+  if(type==='pb2'||type==='ph2'){
+   if(Q>Math.SQRT1_2){const z=Math.sqrt(1-1/(2*Q*Q));peakF=type==='pb2'?f0*z:f0/z;peak=abs(response(type,peakF,f0,Q));}
+   // Seuil relatif au maximum global, pas systématiquement -3 dB absolus.
+   const a=1/(Q*Q)-2, g=peak*peak/2;
+   if(type==='pb2'){
+    const disc=Math.sqrt(a*a-4*(1-1/g));
+    for(const y of [(-a-disc)/2,(-a+disc)/2])if(y>1e-12)cuts.push(f0*Math.sqrt(y));
+   }else{
+    const A=1-g,B=-g*a,C=-g,disc=Math.sqrt(B*B-4*A*C);
+    if(Math.abs(A)<1e-12){const y=-C/B;if(y>0)cuts.push(f0*Math.sqrt(y));}
+    else for(const y of [(-B-disc)/(2*A),(-B+disc)/(2*A)])if(y>1e-12)cuts.push(f0*Math.sqrt(y));
+   }
+  }
+  if(['bp2','cb2','cascade'].includes(type)){
+   const q=type==='cascade'?1/(buffer?2:2+1/k):Q;
+   const a=1/q,s=Math.hypot(a,2);
+   cuts=[f0*2/(s+a),f0*(s+a)/2];
+   if(type!=='cb2'){peakF=f0;peak=type==='cascade'?q:1;}
+  }
+  cuts.sort((a,b)=>a-b);
+  return {cuts,peak,peakF,threshold:peak/Math.SQRT2,bandwidth:cuts.length===2?cuts[1]-cuts[0]:null};
+ }
+ // Coefficients complexes de cosinus : e(t)=E0+Re Σ c_n exp(j2πf_n t).
+ function components(p){
+  const out=[{n:0,f:0,c:[p.dc,0]}], A=p.amplitude;
+  if(p.signal==='sin')out.push({n:1,f:p.f,c:[A,0]});
+  if(p.signal==='sum'){
+   out.push({n:1,f:p.f,c:[A*Math.cos(1),A*Math.sin(1)]});
+   out.push({n:2,f:p.f*p.ratio,c:[A*p.parasite,0]});
+  }
+  if(p.signal==='square')for(let n=1;n<=p.N;n+=2)out.push({n,f:p.f*n,c:[0,-4*A/(PI*n)]});
+  if(p.signal==='triangle')for(let n=1;n<=p.N;n+=2)out.push({n,f:p.f*n,c:[0,-8*A*((n%4===1)?1:-1)/(PI*PI*n*n)]});
+  return out;
+ }
+ function transformed(p,ignorePhase=false,idealCascade=false){
+  return components(p).map(c=>{let h=response(idealCascade?'cascade':p.type,c.f,p.f0,p.Q,idealCascade||p.buffer,p.k);
+   if(ignorePhase&&c.f>0)h=[abs(h),0];return {...c,c:mul(c.c,h)};});
+ }
+ function value(cs,t){let sum=0;for(const c of cs)sum+=c.c[0]*Math.cos(TAU*c.f*t)-c.c[1]*Math.sin(TAU*c.f*t);return sum;}
+ function approximation(p){
+  let kind=null,gain=1;
+  if(p.type==='pb1'){kind='integral';gain=TAU*p.f0;}
+  if(p.type==='ph1'){kind='derivative';gain=1/(TAU*p.f0);}
+  if(p.type==='bp2'){kind=p.f<p.f0?'derivative':'integral';gain=kind==='derivative'?1/(p.Q*TAU*p.f0):TAU*p.f0/p.Q;}
+  if(!kind)return null;
+  const cs=components(p).map(c=>({...c,c:c.f===0?(p.type==='pb1'?[p.dc,0]:[0,0]):mul(c.c,kind==='integral'?[0,-gain/(TAU*c.f)]:[0,gain*TAU*c.f])}));
+  return {kind,cs,gain};
+ }
+ function asymptote(type,f,f0,Q=1,buffer=false,k=1){
+  const x=f/f0;
+  if(type==='pb1')return x<1?0:-20*Math.log10(x);
+  if(type==='ph1')return x<1?20*Math.log10(x):0;
+  if(type==='pb2')return x<1?0:-40*Math.log10(x);
+  if(type==='ph2')return x<1?40*Math.log10(x):0;
+  if(type==='bp2')return -20*Math.log10(Q)+(x<1?20:-20)*Math.log10(x);
+  if(type==='cascade')return (x<1?20:-20)*Math.log10(x);
+  return 0; // Deux limites horizontales du coupe-bande, hors du rejet.
+ }
+ function circuitValues(p){const C=100e-9,w=TAU*p.f0,L=1/(w*w*C);return {C,L,R:p.type.endsWith('1')||p.type==='cascade'?1/(w*C):Math.sqrt(L/C)/p.Q};}
+ return Object.freeze({types,add,mul,scale,div,abs,phase,response,characteristic,components,transformed,value,approximation,asymptote,circuitValues});
+})();
+</script><script>'use strict';
+(() => {
+ const M=OS6Model,$=id=>document.getElementById(id),TAU=2*Math.PI;
+ const defaults={mode:'explore',type:'pb1',f0:1000,Q:1,f:1000,amplitude:1,dc:0,signal:'sin',ratio:100,parasite:.4,N:101,buffer:false,k:1,probe:1000,selected:1,isolate:false,phaseCompare:false,approx:false,asymptotes:false,exercise:false,revealed:false,view:'all',range:[0,5],periods:3,playing:false,speed:1,cursor:0,magnify:false};
+ let s={...defaults,range:[...defaults.range]},data={},geometry={},frame=0,last=0,exporting=false;
+ const canvases=['circuit','gain','phase','time','spectrum'];
+ const fmt=(x,d=3)=>{if(x===null||!Number.isFinite(x))return '—';if(x===0)return '0';return Number(x.toPrecision(d)).toLocaleString('fr-FR',{maximumSignificantDigits:d});};
+ const hz=x=>x>=1e6?fmt(x/1e6)+' MHz':x>=1e3?fmt(x/1e3)+' kHz':fmt(x)+' Hz';
+ const unit=(v,u)=>{for(const [n,k] of [['M',1e6],['k',1e3],['',1],['m',1e-3],['µ',1e-6],['n',1e-9],['p',1e-12]])if(Math.abs(v)>=k*.999)return fmt(v/k)+' '+n+u;return fmt(v)+' '+u;};
+ const rad=x=>x===null?'indéfini':fmt(x*180/Math.PI,3)+'°';
+ const hiddenOutput=()=>s.exercise&&!s.revealed;
+ const cvar=n=>getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim();
+ function colors(){return Object.fromEntries(['accent','paper','ink','muted','line','grid','input','output','compare','green'].map(n=>[n,cvar(n)]));}
+ function frange(){const list=M.components(s).filter(c=>c.f>0&&M.abs(c.c)>0),fmax=Math.max(s.f0*100,...list.map(c=>c.f*1.5)),fmin=Math.min(s.f0/100,s.f/3);return [Math.floor(Math.log10(fmin)),Math.ceil(Math.log10(fmax))];}
+ function frameAll(){s.range=frange();s.periods=3;update();}
+ function actualType(){return s.mode==='cascade'?'cascade':s.type;}
+ function params(){return {...s,type:actualType()};}
+ const response=(f,ideal=false)=>M.response(actualType(),f,s.f0,s.Q,ideal||s.buffer,s.k);
+ function sampleCurve(cs,count,duration){
+  // Récurrence des oscillateurs : calcul fluide même avec 201 harmoniques.
+  const out=new Float64Array(count+1),step=duration/count;
+  for(const component of cs){const angle=TAU*component.f*step,co=Math.cos(angle),si=Math.sin(angle);let re=component.c[0],im=component.c[1];
+   for(let i=0;i<=count;i++){if(i&&i%1024===0){const a=angle*i;re=component.c[0]*Math.cos(a)-component.c[1]*Math.sin(a);im=component.c[0]*Math.sin(a)+component.c[1]*Math.cos(a);}out[i]+=re;const next=re*co-im*si;im=re*si+im*co;re=next;}}
+  return out;
+ }
+ function compute(){
+  const p=params(),all=M.components(p),trans=M.transformed(p),noPhase=M.transformed(p,true),ideal=s.mode==='cascade'?M.transformed(p,false,true):[];
+  const filter=cs=>s.isolate?cs.filter(c=>c.n===s.selected):cs;
+  const input=filter(all),output=filter(trans),wrong=filter(noPhase),product=filter(ideal);
+  const appr=M.approximation(p),acs=appr?filter(appr.cs):[];
+  const maxFrequency=Math.max(...input.map(c=>c.f),s.f),duration=s.periods/s.f;
+  // >= 14 échantillons par plus courte période, limites conservatrices.
+  const count=Math.min(18000,Math.max(1800,Math.ceil(duration*maxFrequency*14)));
+  const curves=[input,output];if(s.phaseCompare)curves.push(wrong);if(s.mode==='cascade')curves.push(product);if(s.approx&&appr)curves.push(acs);
+  const samples=curves.map(cs=>sampleCurve(cs,count,duration));
+  const maxOf=a=>a.reduce((m,x)=>Math.max(m,Math.abs(x)),.000000001);
+  const factor=s.magnify&&!hiddenOutput()?Math.max(1,10**Math.floor(Math.log10(maxOf(samples[0])/maxOf(samples[1])))):1;
+  let ymax=.01;for(let j=0;j<samples.length;j++){if(j>0&&hiddenOutput())continue;for(const y of samples[j])ymax=Math.max(ymax,Math.abs(y)*(j>0?factor:1));}
+  data={p,all,trans,input,output,wrong,product,appr,acs,duration,count,samples,factor,ymax:ymax*1.12,char:M.characteristic(actualType(),s.f0,s.Q,s.buffer,s.k)};
+ }
+ function sync(){
+  $('filter').value=s.type;$('signal').value=s.signal;
+  for(const [id,k] of [['f0','f0'],['Q','Q'],['frequency','f'],['amplitude','amplitude'],['dc','dc'],['ratio','ratio'],['parasite','parasite'],['N','N'],['k','k'],['speed','speed']])$(id).value=Number(s[k].toPrecision(7));
+  for(const [id,k] of [['f0-range','f0'],['q-range','Q'],['frequency-range','f'],['k-range','k']])$(id).value=Math.log10(s[k]);
+  for(const [id,k] of [['buffer','buffer'],['asymptotes','asymptotes'],['phase-compare','phaseCompare'],['approx','approx'],['isolate','isolate'],['exercise','exercise']])$(id).checked=s[k];
+  $('single-controls').hidden=s.mode==='cascade';$('cascade-controls').hidden=s.mode!=='cascade';$('q-control').hidden=s.mode==='cascade'||s.type.endsWith('1');
+  $('f0-label').innerHTML=s.mode==='cascade'||!s.type.endsWith('1')?'Fréquence propre f<sub>0</sub>':'Fréquence de coupure f<sub>c</sub>';
+  $('sum-controls').hidden=s.signal!=='sum';$('harmonic-controls').hidden=!['square','triangle'].includes(s.signal);
+  $('frequency-symbol').textContent=s.signal==='sum'?'utile':'fondamentale';
+  $('approx-control').hidden=s.mode==='cascade'||!['pb1','ph1','bp2'].includes(s.type);
+  $('reveal').hidden=!s.exercise;$('reveal').textContent=s.revealed?'Masquer la sortie':'Révéler la sortie';
+  $('play').textContent=s.playing?'Pause':'Lire';$('play').setAttribute('aria-pressed',s.playing);
+  for(const el of document.querySelectorAll('[data-mode]'))el.setAttribute('aria-pressed',el.dataset.mode===s.mode);
+  for(const el of document.querySelectorAll('[data-view]'))if(el.tagName==='BUTTON')el.setAttribute('aria-pressed',el.dataset.view===s.view);
+  document.querySelector('.graphs').dataset.view=s.view;document.querySelector('.workspace').dataset.view=s.view;
+  const cs=M.components(params()).filter(c=>c.n===0||M.abs(c.c)>0);
+  if(!cs.some(c=>c.n===s.selected))s.selected=cs.find(c=>c.n>0)?.n||0;
+  $('selected').innerHTML=cs.map(c=>`<option value="${c.n}">${c.n===0?'Moyenne E₀':s.signal==='sum'?(c.n===1?'Signal utile':'Parasite'):'n = '+c.n}</option>`).join('');$('selected').value=s.selected;
+ }
+ function modelText(){
+  const type=actualType(),D='1 − x² + jx/Q';
+  const nums={pb1:'1',ph1:'jx',pb2:'1',ph2:'−x²',bp2:'jx/Q',cb2:'1 − x²',cascade:'jx'};
+  const den=type==='cascade'?`1 − x² + ${fmt(s.buffer?2:2+1/s.k)}jx`:type.endsWith('1')?'1 + jx':D;
+  $('model-name').textContent=type==='cascade'?'RC passe-bas → RC passe-haut':M.types[type];
+  $('formula').innerHTML=`<span>H = </span><span class="fraction"><span class="numerator">${nums[type]}</span><span class="denominator">${den}</span></span><span class="small">x = f/f<sub>0</sub>${type.endsWith('1')?' ; f₀ = f꜀':''}</span>`;
+  const v=M.circuitValues(params());
+  $('component-values').textContent=type==='cascade'?`R₁ = ${unit(v.R,'Ω')} ; C₁ = ${unit(v.C,'F')} ; R₂ = ${unit(s.k*v.R,'Ω')} ; C₂ = ${unit(v.C/s.k,'F')}`:`R = ${unit(v.R,'Ω')} ; ${type.endsWith('1')?'':`L = ${unit(v.L,'H')} ; `}C = ${unit(v.C,'F')}`;
+  $('model-note').textContent=type==='cascade'?(s.buffer?'Suiveur idéal : étages découplés. Pointillés : H₁ à vide × H₂ à vide.':'Sans suiveur : le second étage charge le premier. Pointillés : produit à vide.'):'Générateur idéal · sortie ouverte · C = 100 nF';
+ }
+ function reading(){
+  const h=response(s.probe),g=M.abs(h),ph=M.phase(h),ch=data.char;
+  $('probe-label').textContent=s.probe===0?'Composante continue':'Fréquence observée';$('probe-value').textContent=hz(s.probe);
+  $('gain-value').textContent=hiddenOutput()?'À prévoir':fmt(g);$('phase-value').textContent=hiddenOutput()?'À prévoir':rad(ph);
+  $('band-label').textContent=s.type==='cb2'&&s.mode!=='cascade'?'Bande de rejet à −3 dB':'Coupure(s) à −3 dB du maximum';
+  $('band-value').textContent=hiddenOutput()?'À prévoir':ch.cuts.map(x=>hz(x)).join(' · ')||'—';
+  const pp=s.probe>0?Math.log10(s.probe/s.f0):0;
+  let insight='';
+  if(s.mode==='cascade'){
+   const x=s.probe/s.f0,ze=M.abs([s.k,-s.k/(x||1e-300)]),zs=1/Math.hypot(1,x),ratio=ze/zs;
+   insight=s.buffer?'Suiveur idéal : impédance d’entrée infinie, impédance de sortie nulle ; H = H₁H₂ à vide. À f₀, le gain vaut 0,5.':`Sans suiveur : H ≠ H₁H₂ à vide. À f₀, gain ${fmt(1/(2+1/s.k))} contre 0,5 à vide. |Zₑ,₂| / |Zₛ,₁| ${s.probe===0?'→ ∞':'= '+fmt(ratio)} à la fréquence observée.`;
+  }else if(s.type==='cb2')insight=`La composante à f₀ = ${hz(s.f0)} est rejetée (H = 0) ; les autres fréquences peuvent subsister. Q plus grand → rejet plus étroit.`;
+  else if(s.type==='bp2')insight=`Sélectivité : Δf = f₀/Q = ${hz(s.f0/s.Q)}. Augmenter Q resserre la bande ; une raie dominante ne garantit pas une sinusoïde parfaitement pure.`;
+  else if(s.type==='pb2'||s.type==='ph2')insight=s.Q>Math.SQRT1_2?`Résonance en tension : fᵣ = ${hz(ch.peakF)}, Gmax = ${fmt(ch.peak)}. f₀ = ${hz(s.f0)} ; coupures définies relativement au pic.`:`Q ≤ 1/√2 : pas de pic de résonance. La fréquence propre f₀ n’est généralement pas la coupure à −3 dB.`;
+  else if(s.signal==='sum')insight=`Chercher une coupure entre ${hz(s.f)} et ${hz(s.f*s.ratio)} : le filtrage atténue aussi le signal utile et le déphase.`;
+  else if(s.type==='pb1'&&pp>1&&s.dc!==0)insight='Moyenneur : la moyenne est conservée ; vérifier que l’ondulation résiduelle est acceptable.';
+  else if(s.type==='pb1'&&s.f/s.f0>10)insight='Intégrateur en haute fréquence : s − E₀ ≈ 2πf꜀ ∫(e − E₀)dt. L’amplitude de sortie est fortement réduite.';
+  else if(s.type==='ph1'&&s.f/s.f0<.1)insight='Dérivateur en basse fréquence : s ≈ (1/2πf꜀) de/dt. Les composantes hautes du signal peuvent sortir de ce régime.';
+  else insight='Une composante traverse le filtre sans changer de fréquence : son amplitude et sa phase sont modifiées. Cliquer sur une raie pour la suivre.';
+  $('insight').textContent=hiddenOutput()?'Prévoir le gain, le déphasage et l’allure de la sortie, puis utiliser « Révéler la sortie » dans les réglages.':insight;
+  $('bode-caption').textContent=hiddenOutput()?'Filtre connu ; sortie et lectures masquées.':s.type==='cb2'&&s.mode!=='cascade'?'Rejet entre les deux coupures ; bandes passantes de part et d’autre.':`Seuil −3 dB relatif au maximum : ${fmt(20*Math.log10(ch.threshold))} dB.${s.asymptotes?' Tirets : limites BF/HF.':''}`;
+  $('magnify').textContent=`s × ${fmt(data.factor)}`;$('magnify').setAttribute('aria-pressed',s.magnify);
+  const legends=['e : bleu',hiddenOutput()?'sortie masquée':`s${data.factor>1?' × '+fmt(data.factor):''} : rouge`];
+  if(s.mode==='cascade'&&!hiddenOutput())legends.push('à vide : vert, tirets');
+  if(s.phaseCompare&&!hiddenOutput())legends.push('sans φ : ocre, tirets');
+  if(s.approx&&data.appr&&!hiddenOutput())legends.push(data.appr.kind==='integral'?`approx. : ${fmt(data.appr.gain)} s⁻¹ ∫(e − E₀)dt${s.type==='pb1'?' + E₀':''} ; fₙ ≫ f₀`:`approx. : ${fmt(data.appr.gain)} s × de/dt ; fₙ ≪ f₀`);
+  $('time-caption').textContent=legends.join(' · ');
+  $('spectrum-caption').textContent=`e : bleu, plein · s : rouge, tirets${['square','triangle'].includes(s.signal)?` · Fourier : n ≤ ${s.N}`:''}${s.isolate?' · composante isolée':''}.`;
+ }
+ function setup(canvas){
+  const r=canvas.getBoundingClientRect();if(r.width<1||r.height<1)return null;
+  const dpr=exporting?3:Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(r.width*dpr)||canvas.height!==Math.round(r.height*dpr)){canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);}
+  const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w:r.width,h:r.height};
+ }
+ function text(ctx,str,x,y,size=14,color=null,align='left'){ctx.fillStyle=color||colors().ink;ctx.font=`${size}px Arial,Helvetica,sans-serif`;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(str,x,y);}
+ function line(ctx,pts,color,width=1.6,dash=[]){ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);}
+ function plotBase(id,ymin,ymax,{log=true,spectrum=false,time=false}={}){
+  const z=setup($(id));if(!z)return null;const {ctx,w,h}=z,C=colors();ctx.fillStyle=C.paper;ctx.fillRect(0,0,w,h);
+  const projection=document.body.classList.contains('projection'),large=w>650,fs=projection?22:large?17:w<380?12:14;
+  const pad={l:spectrum?92:52,r:18,t:24,b:26},x0=pad.l,y0=pad.t,pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  if(ph<12||pw<50)return null;
+  const xf=f=>x0+(Math.log10(f)-s.range[0])/(s.range[1]-s.range[0])*pw;
+  const tx=t=>x0+t/data.duration*pw,yf=y=>y0+(ymax-y)/(ymax-ymin)*ph;
+  ctx.save();ctx.beginPath();ctx.rect(x0,y0,pw,ph);ctx.clip();
+  if(log){for(let exp=Math.ceil(s.range[0]);exp<=s.range[1];exp++){line(ctx,[[xf(10**exp),y0],[xf(10**exp),y0+ph]],C.grid,1);if(s.range[1]-s.range[0]<6)for(const m of [2,5])line(ctx,[[xf(m*10**exp),y0],[xf(m*10**exp),y0+ph]],C.grid,.5);}}
+  const ticks=ph<100?2:4;
+  const yTicks=id==='gain'?Array.from({length:Math.ceil((ymax-ymin)/20)+1},(_,i)=>20*Math.ceil(ymin/20)+20*i).filter(y=>y<=ymax):id==='phase'&&ph>=fs*4.5?[-180,-90,0,90,180]:Array.from({length:ticks+1},(_,i)=>ymin+i*(ymax-ymin)/ticks);
+  for(const y of yTicks)line(ctx,[[x0,yf(y)],[x0+pw,yf(y)]],C.grid,1);
+  if(ymin<0&&ymax>0)line(ctx,[[x0,yf(0)],[x0+pw,yf(0)]],C.line,1);
+  ctx.restore();
+  for(const y of yTicks)text(ctx,fmt(y,2),x0-7,yf(y)+4,fs-2,C.muted,'right');
+  const axisY=h-7;
+  const tickText=(label,x)=>{ctx.font=`${fs-2}px Arial`;const half=ctx.measureText(label).width/2;text(ctx,label,Math.max(half+3,Math.min(w-half-3,x)),axisY,fs-2,C.muted,'center');};
+  if(log){const step=(s.range[1]-s.range[0])>5?2:1;for(let exp=Math.ceil(s.range[0]/step)*step;exp<=s.range[1];exp+=step){const f=10**exp;tickText(f>=1e6?fmt(f/1e6,2)+'M':f>=1000?fmt(f/1000,2)+'k':fmt(f,2),xf(f));}}
+  else for(let i=0;i<=4;i++){const t=data.duration*i/4;line(ctx,[[tx(t),y0],[tx(t),y0+ph]],C.grid,.7);tickText(fmt(t*1000,3),tx(t));}
+  text(ctx,log?'f (Hz)':'t (ms)',w-5,20,fs-2,C.muted,'right');
+  const g={...z,C,fs,x0,y0,pw,ph,xf,tx,yf,ymin,ymax};geometry[id]=g;return g;
+ }
+ function clip(g,fn){g.ctx.save();g.ctx.beginPath();g.ctx.rect(g.x0,g.y0,g.pw,g.ph);g.ctx.clip();fn();g.ctx.restore();}
+ function curve(g,fn,color,dash=[],width=2.3){
+  const {ctx,xf,yf}=g;ctx.beginPath();let open=false;
+  const frequencies=Array.from({length:801},(_,i)=>10**(s.range[0]+(s.range[1]-s.range[0])*i/800));
+  // Ajouter exactement f0 et les coupures, même pour un rejet très étroit.
+  frequencies.push(s.f0,...data.char.cuts);frequencies.sort((a,b)=>a-b);
+  for(const f of frequencies){const y=fn(f);if(!Number.isFinite(y)){open=false;continue;}const yy=yf(Math.max(g.ymin-1000,Math.min(g.ymax+1000,y)));if(!open){ctx.moveTo(xf(f),yy);open=true;}else ctx.lineTo(xf(f),yy);}
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);
+ }
+ function drawBode(){
+  const ch=data.char,peakDB=20*Math.log10(ch.peak),ymax=Math.max(5,Math.ceil((peakDB+4)/10)*10),ymin=-65;
+  const g=plotBase('gain',ymin,ymax),p=plotBase('phase',-180,180);if(!g||!p)return;
+  const muted=hiddenOutput();
+  for(const [z,id] of [[g,'gain'],[p,'phase']]){
+   const {ctx,C,xf,yf,y0,ph}=z;text(ctx,id==='gain'?'G (dB)':'φ (°)',z.x0,18,z.fs,C.ink);
+   clip(z,()=>{
+    if(!muted){
+     if(id==='gain'){
+      if(actualType()==='cb2'){
+       if(ch.cuts.length===2){ctx.fillStyle=C.accent+'12';ctx.fillRect(xf(ch.cuts[0]),y0,xf(ch.cuts[1])-xf(ch.cuts[0]),ph);}
+      }else{ctx.fillStyle=C.accent+'0c';if(ch.cuts.length===1){const isHigh=actualType().startsWith('ph');ctx.fillRect(isHigh?xf(ch.cuts[0]):z.x0,y0,isHigh?z.x0+z.pw-xf(ch.cuts[0]):xf(ch.cuts[0])-z.x0,ph);}else if(ch.cuts.length===2)ctx.fillRect(xf(ch.cuts[0]),y0,xf(ch.cuts[1])-xf(ch.cuts[0]),ph);}
+      line(ctx,[[z.x0,yf(20*Math.log10(ch.threshold))],[z.x0+z.pw,yf(20*Math.log10(ch.threshold))]],C.muted,1,[3,5]);
+     }
+     for(const cut of ch.cuts)line(ctx,[[xf(cut),y0],[xf(cut),y0+ph]],C.muted,1,[3,5]);
+    }
+    if(s.asymptotes&&id==='gain')curve(z,f=>M.asymptote(actualType(),f,s.f0,s.Q,s.buffer,s.k),C.muted,[6,5],1.5);
+    if(s.mode==='cascade')curve(z,f=>{const h=response(f,true);return id==='gain'?20*Math.log10(M.abs(h)):M.phase(h)*180/Math.PI;},C.green,[6,5],2);
+    curve(z,f=>{const h=response(f);if(id==='gain')return Math.max(ymin-20,20*Math.log10(M.abs(h)));const ph=M.phase(h);return ph===null?NaN:ph*180/Math.PI;},C.accent,[],2.7);
+    // f0 : repère physique, distinct du curseur mobile.
+    line(ctx,[[xf(s.f0),y0],[xf(s.f0),y0+ph]],C.accent,1,[1,5]);
+    if(s.probe>0){line(ctx,[[xf(s.probe),y0],[xf(s.probe),y0+ph]],C.output,1.5,[4,3]);const h=response(s.probe),y=id==='gain'?Math.max(ymin,20*Math.log10(M.abs(h))):M.phase(h)===null?NaN:M.phase(h)*180/Math.PI;
+     if(Number.isFinite(y)&&!muted){ctx.beginPath();ctx.arc(xf(s.probe),yf(y),5,0,TAU);ctx.fillStyle=C.output;ctx.fill();}}
+   });
+   const at0=xf(s.f0);if(at0>z.x0+10&&at0<z.x0+z.pw-20)text(ctx,actualType().endsWith('1')?'f꜀':'f₀',at0+6,y0+15,z.fs-1,C.accent);
+   if(id==='gain'&&s.mode==='cascade')text(ctx,'— réel   ╌ produit à vide',z.x0+8,y0+ph-8,z.fs-2,C.green);
+  }
+ }
+ function drawTime(){
+  const g=plotBase('time',-data.ymax,data.ymax,{log:false,time:true});if(!g)return;const {ctx,C,tx,yf,fs}=g;
+  text(ctx,'u (V)',g.x0,18,fs,C.ink);
+  const series=(a,color,dash=[],factor=1)=>{const pts=[];for(let i=0;i<=data.count;i++)pts.push([tx(data.duration*i/data.count),yf(a[i]*factor)]);line(ctx,pts,color,2.1,dash);};
+  clip(g,()=>{
+   series(data.samples[0],C.input);let j=2;
+   if(!hiddenOutput())series(data.samples[1],C.output,[],data.factor);
+   if(s.phaseCompare){if(!hiddenOutput())series(data.samples[j],C.compare,[7,4],data.factor);j++;}
+   if(s.mode==='cascade'){if(!hiddenOutput())series(data.samples[j],C.green,[7,4],data.factor);j++;}
+   if(s.approx&&data.appr&&!hiddenOutput())series(data.samples[j],C.compare,[2,5],data.factor);
+   const t=s.cursor*data.duration;line(ctx,[[tx(t),g.y0],[tx(t),g.y0+g.ph]],C.muted,1,[3,4]);
+   for(const [cs,color,factor] of [[data.input,C.input,1],...hiddenOutput()?[]:[[data.output,C.output,data.factor]]]){ctx.beginPath();ctx.arc(tx(t),yf(M.value(cs,t)*factor),4,0,TAU);ctx.fillStyle=color;ctx.fill();}
+  });
+  text(ctx,'e',g.x0+8,g.y0+16,fs,C.input);if(!hiddenOutput())text(ctx,data.factor>1?'s × '+fmt(data.factor):'s',g.x0+35,g.y0+16,fs,C.output);
+ }
+ function drawSpectrum(){
+  const amplitudes=[...data.all,...hiddenOutput()?[]:data.trans].map(c=>M.abs(c.c)),ymax=Math.max(.05,...amplitudes)*1.2,g=plotBase('spectrum',0,ymax,{spectrum:true});if(!g)return;
+  const {ctx,C,xf,yf,y0,ph,fs}=g;text(ctx,'A (V)',g.x0,18,fs,C.ink);
+  const stem=(x,a,col,width,dash=[])=>{line(ctx,[[x,yf(0)],[x,yf(a)]],col,width,dash);if(a>.000001){ctx.beginPath();ctx.arc(x,yf(a),3,0,TAU);ctx.fillStyle=col;ctx.fill();}};
+  // La composante continue occupe une zone séparée de l'axe logarithmique.
+  const dc=data.all[0],out0=data.trans[0];
+  line(ctx,[[51,y0],[51,y0+ph]],C.line,.8,[3,4]);
+  stem(20,M.abs(dc.c),C.input,3);if(!hiddenOutput())stem(31,M.abs(out0.c),C.output,3,[5,2]);
+  text(ctx,'0 Hz',26,g.h-7,fs-2,C.muted,'center');
+  if(s.selected===0){ctx.strokeStyle=C.accent;ctx.lineWidth=2;ctx.strokeRect(9,y0+2,33,ph-3);}
+  clip(g,()=>{
+   if(s.probe>0)line(ctx,[[xf(s.probe),y0],[xf(s.probe),y0+ph]],C.accent,1,[3,4]);
+   data.all.forEach((c,i)=>{if(c.f===0)return;const x=xf(c.f),isSelected=c.n===s.selected,a=M.abs(c.c),b=M.abs(data.trans[i].c);
+    ctx.globalAlpha=s.isolate&&!isSelected?.24:1;stem(x-2.5,a,C.input,isSelected?3:1.7);if(!hiddenOutput())stem(x+2.5,b,C.output,isSelected?3:1.7,[5,2]);
+    ctx.globalAlpha=1;
+    if(isSelected&&a>0){ctx.beginPath();ctx.arc(x-2.5,yf(a),6,0,TAU);ctx.strokeStyle=C.accent;ctx.lineWidth=2;ctx.stroke();}
+    if(isSelected&&a>0){const label=s.signal==='sum'?(c.n===1?'utile':'parasite'):'n='+c.n;text(ctx,label,x,yf(Math.max(a,b))-8,fs-3,C.muted,'center');}
+   });
+  });
+  if(dc.c[0]<0||out0.c[0]<0)text(ctx,'E₀ < 0',4,y0+14,fs-4,C.muted);
+ }
+ function drawCircuit(){
+  const g=setup($('circuit'));if(!g)return;const {ctx,w,h}=g,C=colors();ctx.fillStyle=C.paper;ctx.fillRect(0,0,w,h);
+  const projection=document.body.classList.contains('projection'),fs=projection?21:w>650?20:w<400?14:16;
+  const y=h*.38,ground=h*.84,left=38,right=w-42,span=right-left;
+  const wire=pts=>line(ctx,pts,C.ink,1.7),label=(t,x,yy=y-12)=>text(ctx,t,x,yy,fs,C.ink,'center');
+  function component(kind,x1,yy1,x2,yy2,name,vertical=false){
+   const dx=x2-x1,dy=yy2-yy1,len=Math.hypot(dx,dy),angle=Math.atan2(dy,dx),half=Math.min(vertical?14:23,len*.28),a=len/2-half,b=len/2+half;
+   ctx.save();ctx.translate(x1,yy1);ctx.rotate(angle);line(ctx,[[0,0],[a,0]],C.ink,1.7);line(ctx,[[b,0],[len,0]],C.ink,1.7);
+   if(kind==='R'){ctx.strokeStyle=C.ink;ctx.lineWidth=1.7;ctx.strokeRect(a,-5,b-a,10);}
+   if(kind==='C'){const mid=len/2;line(ctx,[[a,0],[mid-4,0]],C.ink,1.7);line(ctx,[[mid+4,0],[b,0]],C.ink,1.7);line(ctx,[[mid-4,-10],[mid-4,10]],C.ink,1.7);line(ctx,[[mid+4,-10],[mid+4,10]],C.ink,1.7);}
+   if(kind==='L'){const points=[[a,0]],loops=4;for(let i=0;i<=80;i++){const t=i/80;points.push([a+(b-a)*t,-9*Math.sin(t*loops*Math.PI)]);}line(ctx,points,C.ink,1.7);}
+   ctx.restore();if(vertical)text(ctx,name,x1+13,(yy1+yy2)/2+5,fs,C.ink);else label(name,(x1+x2)/2,yy1-14);
+  }
+  function voltage(x,name,color){line(ctx,[[x,ground-3],[x,y+5]],color,2);line(ctx,[[x-4,y+12],[x,y+5],[x+4,y+12]],color,2);text(ctx,name,x-4,(y+ground)/2+4,fs+2,color,'right');}
+  const type=actualType();
+  wire([[left,ground],[right,ground]]);
+  if(type==='cascade'){
+   const a=left+span*.25,b=left+span*.73,v=left+span*.48;
+   component('R',left,y,a,y,'R₁');component('C',a,y,a,ground,'C₁',true);
+   if(s.buffer){wire([[a,y],[v-15,y]]);line(ctx,[[v-15,y-18],[v-15,y+18],[v+16,y],[v-15,y-18]],C.accent,1.8);text(ctx,'1',v-4,y+5,fs-1,C.accent);wire([[v+16,y],[v+25,y]]);component('C',v+25,y,b,y,'C₂');}
+   else component('C',a,y,b,y,'C₂');
+   component('R',b,y,b,ground,'R₂',true);wire([[b,y],[right,y]]);
+   label(s.buffer?'suiveur idéal':'iₑ,₂ ≠ 0',v,s.buffer?h*.16:h*.19);
+  }else{
+   const branch=left+span*.76;
+   if(type==='pb1'||type==='ph1')component(type==='pb1'?'R':'C',left,y,branch,y,type==='pb1'?'R':'C');
+   else{const mid=left+span*.38;const pairs={pb2:['L','R'],ph2:['R','C'],bp2:['C','L'],cb2:['R',null]};
+    const [a,b]=pairs[type];if(b){component(a,left,y,mid,y,a);component(b,mid,y,branch,y,b);}else component(a,left,y,branch,y,a);
+   }
+   if(type==='cb2'){
+    const middle=y+(ground-y)*.5;component('L',branch,y,branch,middle,'L',true);component('C',branch,middle,branch,ground,'C',true);
+   }else{const shunt={pb1:'C',ph1:'R',pb2:'C',ph2:'L',bp2:'R'}[type];component(shunt,branch,y,branch,ground,shunt,true);}
+   wire([[branch,y],[right,y]]);
+  }
+  for(const x of [left,right])for(const yy of [y,ground]){ctx.beginPath();ctx.arc(x,yy,2.8,0,TAU);ctx.fillStyle=C.ink;ctx.fill();}
+  voltage(left-15,'e',C.input);voltage(right+25,'s',C.output);
+ }
+ function draw(){modelText();reading();drawCircuit();drawBode();drawTime();drawSpectrum();}
+ function update({recompute=true}={}){sync();if(recompute)compute();cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);}
+ function free(){ $('preset').value='free';s.revealed=false; }
+ function setPreset(id){
+  if(id==='free')return;
+  const presets={
+   sin:{mode:'explore',type:'pb1',f:1000,f0:1000,signal:'sin'},
+   clean:{mode:'signals',type:'pb1',signal:'sum',f:100,f0:1000,amplitude:2,parasite:.4,ratio:100},
+   square:{mode:'signals',type:'pb1',signal:'square',f:1000,f0:5000},
+   mean:{mode:'signals',type:'pb1',signal:'square',f:1000,f0:10,dc:2},
+   integrate:{mode:'signals',type:'pb1',signal:'square',f:1000,f0:30,approx:true},
+   derive:{mode:'signals',type:'ph1',signal:'triangle',f:100,f0:10000,approx:true},
+   select5:{mode:'signals',type:'bp2',signal:'square',f:1000,f0:5000,Q:12,selected:5},
+   resonance:{mode:'explore',type:'pb2',signal:'sin',f:1000,f0:1000,Q:5},
+   high2:{mode:'explore',type:'ph2',signal:'sin',f:1000,f0:1000,Q:Math.SQRT1_2},
+   notch:{mode:'signals',type:'cb2',signal:'square',f:1000,f0:1000,Q:5},
+   cascade:{mode:'cascade',type:'pb1',signal:'sin',f:1000,f0:1000,k:1}
+  };
+  s={...defaults,...presets[id],range:[0,5],probe:presets[id].selected===5?5000:presets[id].f};s.range=frange();sync();compute();draw();$('preset').value=id;document.querySelector('aside').scrollTop=0;
+ }
+ function numeric(id,key,min,max,logId=null){
+  function change(value){if(!Number.isFinite(value)||value<min||value>max){$(id).value=fmt(s[key],7).replace(/\s/g,'').replace(',','.');toast(`Valeur attendue entre ${fmt(min)} et ${fmt(max)}.`);return;}
+   s[key]=value;free();if(key==='f'&&s.signal==='sin'){s.probe=value;s.selected=1;}else if(key==='f'||key==='ratio'){const c=M.components(params()).find(c=>c.n===s.selected);s.probe=c?.f||0;}update();}
+  $(id).addEventListener('change',()=>change(Number($(id).value)));
+  if(logId)$(logId).addEventListener('input',()=>change(Math.min(max,Math.max(min,10**Number($(logId).value)))));
+ }
+ numeric('f0','f0',1,1e5,'f0-range');numeric('Q','Q',.1,20,'q-range');numeric('frequency','f',1,1e5,'frequency-range');numeric('amplitude','amplitude',.01,10);numeric('dc','dc',-10,10);numeric('ratio','ratio',1.01,200);numeric('parasite','parasite',0,5);numeric('k','k',.1,100,'k-range');
+ $('filter').addEventListener('change',()=>{s.type=$('filter').value;s.approx=false;free();update();});
+ $('signal').addEventListener('change',()=>{s.signal=$('signal').value;s.selected=1;s.isolate=false;s.probe=s.f;if(s.signal!=='sin'&&s.mode==='explore')s.mode='signals';free();s.range=frange();update();});
+ $('N').addEventListener('change',()=>{s.N=Number($('N').value);free();update();});
+ for(const [id,key] of [['buffer','buffer'],['asymptotes','asymptotes'],['phase-compare','phaseCompare'],['approx','approx'],['isolate','isolate'],['exercise','exercise']])$(id).addEventListener('change',()=>{s[key]=$(id).checked;s.revealed=false;update();});
+ $('reveal').addEventListener('click',()=>{s.revealed=!s.revealed;update();});
+ $('preset').addEventListener('change',()=>setPreset($('preset').value));
+ $('selected').addEventListener('change',()=>{s.selected=Number($('selected').value);s.probe=M.components(params()).find(c=>c.n===s.selected)?.f||0;update();});
+ for(const el of document.querySelectorAll('[data-mode]'))el.addEventListener('click',()=>{
+  s.mode=el.dataset.mode;s.approx=false;s.isolate=false;s.revealed=false;
+  if(s.mode==='explore'){s.signal='sin';s.probe=s.f;s.selected=1;}
+  if(s.mode==='signals'&&s.signal==='sin')s.signal='square';free();s.range=frange();update();
+ });
+ for(const el of document.querySelectorAll('button[data-view]'))el.addEventListener('click',()=>{s.view=el.dataset.view;update({recompute:false});});
+ function zoom(factor){const mid=(s.range[0]+s.range[1])/2,half=Math.max(.35,Math.min(6,(s.range[1]-s.range[0])*factor/2));s.range=[mid-half,mid+half];update({recompute:false});}
+ $('zoom-in').addEventListener('click',()=>zoom(.75));$('zoom-out').addEventListener('click',()=>zoom(1/.75));$('frame').addEventListener('click',frameAll);
+ $('time-in').addEventListener('click',()=>{s.periods=Math.max(.25,s.periods/1.5);update();});$('time-out').addEventListener('click',()=>{s.periods=Math.min(6,s.periods*1.5);update();});
+ $('magnify').addEventListener('click',()=>{s.magnify=!s.magnify;update();});
+ $('play').addEventListener('click',()=>{s.playing=!s.playing;sync();});$('speed').addEventListener('change',()=>s.speed=Number($('speed').value));
+ $('reset').addEventListener('click',()=>{const id=$('preset').value;if(id==='free')setPreset('sin');else setPreset(id);});
+ function probe(f,shift=false){
+  if(shift){s.f0=Math.min(1e5,Math.max(1,f));free();update();return;}
+  s.probe=f;
+  if(s.signal==='sin'){s.f=Math.max(1,Math.min(1e5,f));s.probe=s.f;s.selected=1;update();}
+  else{const cs=M.components(params()).filter(c=>c.f>0&&M.abs(c.c)>0);const chosen=cs.reduce((a,b)=>Math.abs(Math.log(b.f/f))<Math.abs(Math.log(a.f/f))?b:a);s.selected=chosen.n;s.probe=chosen.f;update({recompute:s.isolate});}
+ }
+ for(const id of ['gain','phase']){
+  const canvas=$(id);let drag=false;
+  const move=e=>{const g=geometry[id];if(!g)return;const x=e.clientX-canvas.getBoundingClientRect().left;const fraction=Math.min(1,Math.max(0,(x-g.x0)/g.pw));probe(10**(s.range[0]+fraction*(s.range[1]-s.range[0])),e.shiftKey);};
+  canvas.addEventListener('pointerdown',e=>{drag=true;canvas.setPointerCapture(e.pointerId);move(e);});canvas.addEventListener('pointermove',e=>{if(drag)move(e);});canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+  canvas.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();probe(Math.max(1e-3,s.probe||s.f)*10**((e.key==='ArrowLeft'?-1:1)*.025),e.shiftKey);}});
+ }
+ $('spectrum').addEventListener('pointerdown',e=>{
+  const g=geometry.spectrum;if(!g)return;const x=e.clientX-$('spectrum').getBoundingClientRect().left;
+  if(x<48){s.selected=0;s.probe=0;}else{const f=10**(s.range[0]+(x-g.x0)/g.pw*(s.range[1]-s.range[0]));const cs=data.all.filter(c=>c.f>0);const c=cs.reduce((a,b)=>Math.abs(Math.log(b.f/f))<Math.abs(Math.log(a.f/f))?b:a);s.selected=c.n;s.probe=c.f;}update();
+ });
+ function theme(){const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';update({recompute:false});}
+ $('theme').addEventListener('click',theme);
+ $('projection').addEventListener('click',()=>{const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',p);update({recompute:false});});
+ $('help').addEventListener('click',()=>$('about').showModal());$('close-help').addEventListener('click',()=>$('about').close());$('about').addEventListener('click',e=>{if(e.target===$('about')&&e.offsetX<0)$('about').close();});
+ $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran ici.');}});
+ document.addEventListener('fullscreenchange',()=>{const label=document.fullscreenElement?'Quitter le plein écran':'Plein écran';$('fullscreen').setAttribute('aria-label',label);$('fullscreen').title=label;update({recompute:false});});
+ document.addEventListener('keydown',e=>{if(e.target.matches('input,select,button')||$('about').open)return;if(e.code==='Space'){e.preventDefault();$('play').click();}if(e.key.toLowerCase()==='p')$('projection').click();if(e.key.toLowerCase()==='c')frameAll();});
+ let toastTimer;function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
+ function wrapText(ctx,str,x,y,maxWidth,lineHeight,size,color){ctx.font=`${size}px Arial`;let lineText='';for(const word of str.split(' ')){const test=lineText+word+' ';if(ctx.measureText(test).width>maxWidth&&lineText){text(ctx,lineText,x,y,size,color);y+=lineHeight;lineText=word+' ';}else lineText=test;}if(lineText)text(ctx,lineText,x,y,size,color);return y+lineHeight;}
+ $('export').addEventListener('click',async()=>{
+  if(exporting)return;exporting=true;
+  // Tout exporter même si une seule vue est agrandie à l'écran.
+  const oldView=s.view;s.view='all';sync();await new Promise(r=>requestAnimationFrame(r));draw();
+  try{
+   const out=document.createElement('canvas');out.width=2400;out.height=1720;const ctx=out.getContext('2d'),C=colors();ctx.fillStyle=C.paper;ctx.fillRect(0,0,out.width,out.height);
+   text(ctx,'OS6 · Filtrage linéaire',50,58,38,C.accent);text(ctx,$('model-name').textContent,50,99,25,C.ink);
+   const signalNames={sin:'sinusoïde',sum:'signal utile + parasite',square:'créneau',triangle:'triangle'};
+   text(ctx,`f₀ = ${hz(s.f0)} · Q = ${fmt(s.Q)} · f = ${hz(s.f)} · E₀ = ${fmt(s.dc)} V · amplitude = ${fmt(s.amplitude)} V · ${signalNames[s.signal]}`,50,140,24,C.muted);
+   text(ctx,'Schéma et fonction de transfert',50,205,27,C.accent);
+   ctx.drawImage($('circuit'),50,230,770,770*$('circuit').clientHeight/$('circuit').clientWidth);
+   text(ctx,'H =',70,650,36,C.ink);const numerator=$('formula').querySelector('.numerator').textContent,denominator=$('formula').querySelector('.denominator').textContent;
+   ctx.font='36px Georgia';const fractionWidth=Math.max(ctx.measureText(numerator).width,ctx.measureText(denominator).width)+40,center=165+fractionWidth/2;
+   text(ctx,numerator,center,624,36,C.ink,'center');line(ctx,[[165,638],[165+fractionWidth,638]],C.ink,1.4);text(ctx,denominator,center,680,36,C.ink,'center');text(ctx,'x = f/f₀',165+fractionWidth+35,650,27,C.muted);
+   wrapText(ctx,$('component-values').textContent,70,755,730,32,25,C.muted);
+   wrapText(ctx,$('model-note').textContent,70,840,730,32,25,C.muted);
+   text(ctx,`À ${$('probe-value').textContent} : |H| = ${$('gain-value').textContent} ; φ = ${$('phase-value').textContent}`,70,945,27,C.ink);
+   const target=(id,x,y,w,h)=>ctx.drawImage($(id),x,y,w,h);
+   target('gain',900,180,1460,365);target('phase',900,585,1460,365);target('time',35,1020,1120,430);target('spectrum',1195,1020,1170,430);
+   wrapText(ctx,$('time-caption').textContent,50,1480,2280,31,23,C.ink);
+   wrapText(ctx,$('spectrum-caption').textContent,50,1555,2280,29,22,C.muted);
+   wrapText(ctx,$('insight').textContent,50,1620,2280,30,24,C.accent);
+   const blob=await new Promise(r=>out.toBlob(r,'image/png'));if(!blob)throw new Error('Export indisponible');const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download='OS6_Filtrage_'+actualType()+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);toast('Image PNG exportée.');
+  }catch(e){toast('Export impossible : '+e.message);}finally{s.view=oldView;exporting=false;update({recompute:false});}
+ });
+ new ResizeObserver(()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);}).observe(document.querySelector('.workspace'));
+ function animate(now){const dt=last?Math.min(.1,(now-last)/1000):0;last=now;if(s.playing){s.cursor=(s.cursor+dt*.4*s.speed/s.periods)%1;drawTime();}requestAnimationFrame(animate);}
+ // Point d'entrée de vérification local, sans dépendance au réseau.
+ window.OS6App={snapshot:()=>({state:JSON.parse(JSON.stringify(s)),characteristics:data.char,components:data.all,outputs:data.trans,timeSamples:Array.from({length:13},(_,j)=>{const i=Math.round(j*data.count/12);return {t:data.duration*i/data.count,input:data.samples[0][i],output:data.samples[1][i]};})}),model:M};
+ setPreset('sin');requestAnimationFrame(animate);
+})();
+</script>
+</body></html>
