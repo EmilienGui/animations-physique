@@ -1,0 +1,1419 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo et régression linéaire sur les mesures saisies, avec écart normalisé.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Calculs et incertitudes · PH2 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* PH2 · Calculs et incertitudes : champs de saisie dans la colonne des réglages */
+.ph-slot{margin:.15em 0}
+.ph-f{display:flex;align-items:center;gap:.4em;font-size:.88em;margin:.25em 0}
+.ph-f label{flex:1;min-width:0}
+.ph-f input,.ph-f select,.ph-ta,.ph-var input,.ph-var select{border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);color:var(--ink);font:inherit;font-size:.95em}
+.ph-f input{width:6.4em;text-align:right;font-variant-numeric:tabular-nums}
+.ph-f input.nom{width:5em;text-align:left}
+.ph-f.long{flex-direction:column;align-items:stretch;gap:.15em}
+.ph-f.long input{width:100%;box-sizing:border-box;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace}
+.ph-ta{width:100%;min-height:6.5em;resize:vertical;font-size:.85em;font-family:ui-monospace,Menlo,Consolas,monospace;box-sizing:border-box}
+.ph-var{border:1px solid var(--rule);border-radius:.45em;padding:.3em .5em;margin:.35em 0;background:var(--card)}
+.ph-var .l{display:flex;gap:.35em;align-items:center;font-size:.88em;margin:.18em 0}
+.ph-var input{width:6em;text-align:right;font-variant-numeric:tabular-nums}
+.ph-var input.nom{width:4.2em;text-align:left}
+.ph-var select{max-width:7.2em}
+.ph-var .sp{flex:1}
+.ph-x{border:0;background:none;color:var(--ink2);cursor:pointer;font-size:1.15em;line-height:1;padding:0 .2em}
+.ph-x:hover{color:var(--q-F)}
+.ph-err{color:var(--q-F);font-size:.82em;margin:.2em 0}
+.ph-err:empty{display:none}
+.ph-calc{font-size:.86em;line-height:1.75;color:var(--ink)}
+.ph-calc .lien{color:var(--ink2);font-style:italic;margin:0 .3em}
+.ph-calc .res{font-weight:650;color:var(--c-ink)}
+.ph-calc .ok{color:var(--q-v)}
+.ph-calc .ko{color:var(--q-F)}
+.ph-calc .gr{color:var(--ink2);font-size:.92em}
+.ph-calc table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.ph-calc td{padding:.05em .3em .05em 0}
+.ph-calc td:last-child{text-align:right}
+
+/* ---- atelier : tableaux de saisie, résultats ---- */
+.ph-pane{display:flex;flex-direction:column;gap:.55em}
+.ph-pane[hidden]{display:none}
+.ph-sub{font-size:.85em;font-weight:600;color:var(--ink2,inherit);margin-top:.3em}
+.ph-bar{display:flex;gap:.4em;justify-content:flex-end}
+.ph-2{display:grid;grid-template-columns:1fr 1fr;gap:.4em .6em}
+.ph-c{display:flex;gap:.5em;align-items:flex-start;font-size:.92em;cursor:pointer}
+.ph-c input{margin-top:.25em}
+.ph-ref{display:flex;flex-direction:column;gap:.45em;padding-top:.4em;border-top:1px solid var(--rule,#8884)}
+.ph-seg{display:flex;flex-wrap:wrap;gap:.3em}
+.ph-seg button{flex:1 1 auto;padding:.35em .6em;border:1px solid var(--rule,#8886);border-radius:.4em;background:transparent;color:inherit;font:inherit;font-size:.88em;cursor:pointer}
+.ph-seg button[aria-pressed=true]{background:var(--c-ink,#58a6ff);color:#fff;border-color:transparent}
+.ph-grid{max-height:16em;overflow:auto}
+.ph-grid table{border-collapse:collapse;width:100%}
+.ph-grid th{font-size:.78em;font-weight:600;text-align:center;padding:.15em .2em;position:sticky;top:0;background:var(--card)}
+.ph-grid td{padding:.1em .15em}
+.ph-grid td.n{width:1.6em;text-align:right;font-size:.78em;opacity:.6}
+.ph-grid input,.ph-grid select{width:100%;min-width:3.4em;box-sizing:border-box;padding:.28em .35em;border:1px solid var(--rule,#8886);border-radius:.3em;background:transparent;color:inherit;font:inherit;font-size:.92em;text-align:right}
+.ph-grid input.nom{text-align:left;min-width:2.6em}
+.ph-vt{max-height:none}
+.ph-x{border:0;background:transparent;color:inherit;opacity:.55;cursor:pointer;font-size:1.1em;padding:0 .3em}
+.ph-x:hover{opacity:1}
+.res-l{display:flex;align-items:center;gap:.6em;flex-wrap:wrap}
+.res-k{font-size:.8em;opacity:.7;min-width:5.5em}
+.res-v{font-size:1.45em;font-weight:600;flex:1 1 auto}
+.res-n{font-size:.88em;margin-top:.25em}
+.res-n.gr{opacity:.7}.res-n.ok{color:#3fb950}.res-n.ko{color:#f85149}
+.ak-panel[data-id=ab3]:not([hidden]){animation:phCoulisse .3s ease-out}
+@keyframes phCoulisse{from{opacity:0;transform:translateX(2.5em)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.ak-panel[data-id=ab3]:not([hidden]){animation:none}}
+.ph-f.formule label{flex:0 0 auto}.ph-f.formule input{flex:1;min-width:0;font-family:monospace;text-align:left}
+.ph-f:not(.long):not(.formule){display:grid;grid-template-columns:11.5em minmax(5em,9em);justify-content:start;column-gap:.6em}
+.ph-f:not(.long):not(.formule) input,.ph-f:not(.long):not(.formule) select{min-width:0;text-align:left}
+.ph-f.long{flex-direction:column;align-items:stretch}
+.ph-axes{display:flex;flex-direction:column;gap:.5em}
+.ph-row{display:grid;grid-template-columns:5.6em 5em 4.6em 5em;justify-content:start;column-gap:.6em;align-items:center;font-size:.88em}
+.ph-row input{min-width:0;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);color:var(--ink);font:inherit;font-size:.95em;text-align:left}
+.ph-row label:nth-of-type(2){padding-left:.9em}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,head:pe.querySelector('.ak-phead')};
+    if(pc.zoom){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer">−</button><button class="mini" data-z="0" title="Cadrer">Cadrer</button><button class="mini" data-z="+" title="Zoomer">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0'){P.zoom=1;P.panX=0;P.panY=0}else P.zoom=Math.max(.4,Math.min(5,P.zoom*(v==='+'?1.25:.8)));A.render()};pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.min}" max="${it.max}" step="${it.step??1}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const show=v=>{R.value=v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{N.value=(+R.value).toFixed(dec);A._change(it,+R.value)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- glisser dans un panneau ---------- */
+  A.drag=(id,h)=>{const P=A.panels[id], N=P.node; let on=false;
+    const pos=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    N.addEventListener('pointerdown',e=>{const[x,y]=pos(e);if(h.hit&&!h.hit(x,y,e))return;on=true;N.setPointerCapture(e.pointerId);e.preventDefault();if(h.start)h.start(x,y,e);A.render()});
+    N.addEventListener('pointermove',e=>{const[x,y]=pos(e);if(on){h.move(x,y,e);A.render()}else if(h.hit&&e.pointerType==='mouse')N.style.cursor=h.hit(x,y,e)?'grab':''});
+    const end=e=>{if(!on)return;on=false;if(h.end)h.end(e);A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+  };
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+'use strict';
+/* =====================================================================
+   PH2 · Outils statistiques (sans dépendance, testés par Verifier_Modele.mjs)
+   Incertitude-type : type A (s/√N), type B (Δ/√3), composition, propagation (somme,
+   produit, formule quelconque par Monte-Carlo), écart normalisé, régression linéaire.
+   ===================================================================== */
+const PH2=(function(){
+const P={};
+const SQ3=Math.sqrt(3);
+
+/* ---------- tirages (générateur à graine : mêmes tirages tant que la graine est la même) ---------- */
+P.rng=function(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
+P.gauss=function(r){let u=0;while(u===0)u=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*r())};
+
+/* ---------- statistiques d'une série ---------- */
+P.mean=v=>{let s=0;for(let i=0;i<v.length;i++)s+=v[i];return v.length?s/v.length:NaN};
+P.sd=(v,m)=>{const n=v.length;if(n<2)return NaN;if(m===undefined)m=P.mean(v);let s=0;for(let i=0;i<n;i++)s+=(v[i]-m)*(v[i]-m);return Math.sqrt(s/(n-1))};
+P.typeA=v=>{const n=v.length,m=P.mean(v),s=P.sd(v,m);return{n,mean:m,s,u:n>1?s/Math.sqrt(n):NaN}};
+P.uniforme=D=>D/SQ3;
+P.notice=(lecture,pct,digits,res)=>pct/100*Math.abs(lecture)+digits*res;
+P.compose=(...u)=>Math.sqrt(u.reduce((s,x)=>s+x*x,0));
+P.ecartNorm=(x1,u1,x2,u2)=>{const d=Math.sqrt(u1*u1+u2*u2);return d>0?Math.abs(x1-x2)/d:(x1===x2?0:Infinity)};
+
+/* arrondi : u par excès à 2 chiffres significatifs, valeur arrondie au même rang */
+P.arrondi=function(x,u){
+  if(!(u>0)||!isFinite(u))return null;
+  let e=Math.floor(Math.log10(u)),q=Math.pow(10,e-1),m=Math.ceil(u/q-1e-9);
+  if(m>=100){m=10;e+=1;q=Math.pow(10,e-1)}
+  return{x:Math.round(x/q)*q,u:m*q,d:Math.max(0,1-e),e};
+};
+
+/* ---------- histogramme à classes « rondes » ---------- */
+function nice(raw){const p=Math.pow(10,Math.floor(Math.log10(raw))),r=raw/p;return(r<1.4?1:r<2.25?2:r<3.5?2.5:r<7?5:10)*p}
+P.classes=n=>Math.max(6,Math.min(60,Math.round(Math.sqrt(n)*1.2)));
+P.hist=function(v,n){
+  n=n===undefined?v.length:n;
+  if(n<1)return null;
+  let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(v[i]<mn)mn=v[i];if(v[i]>mx)mx=v[i]}
+  if(!(mx>mn)){const w=Math.abs(mn)*0.01||1;return{w,lo:mn-w,c:[0,n,0],nb:3,max:n}}
+  const w=nice((mx-mn)/P.classes(n)),lo=Math.floor(mn/w+1e-9)*w,nb=Math.floor((mx-lo)/w+1e-9)+1,c=new Array(nb).fill(0);
+  for(let i=0;i<n;i++){let k=Math.floor((v[i]-lo)/w+1e-9);if(k>=nb)k=nb-1;if(k<0)k=0;c[k]++}
+  return{w,lo,nb,c,max:Math.max(...c)};
+};
+P.compte=function(v,k,lay){const c=new Array(lay.nb).fill(0);for(let i=0;i<k;i++){let j=Math.floor((v[i]-lay.lo)/lay.w+1e-9);if(j>=lay.nb)j=lay.nb-1;if(j<0)j=0;c[j]++}return c};
+P.pdf=(x,m,s)=>Math.exp(-0.5*((x-m)/s)*((x-m)/s))/(s*Math.sqrt(2*Math.PI));
+/** nombre de valeurs dans ±k s autour de la moyenne (k = 1, 2, 3) */
+P.bandes=function(v,n,m,s){const out=[0,0,0];for(let i=0;i<n;i++){const d=Math.abs(v[i]-m);for(let k=0;k<3;k++)if(d<=(k+1)*s)out[k]++}return out};
+P.modeleBandes=[0.682689492,0.954499736,0.997300204];
+
+/* ---------- formule libre ---------- */
+const FONCTIONS={sqrt:'Math.sqrt',exp:'Math.exp',ln:'Math.log',log:'Math.log10',sin:'Math.sin',cos:'Math.cos',tan:'Math.tan',asin:'Math.asin',acos:'Math.acos',atan:'Math.atan',abs:'Math.abs',sinh:'Math.sinh',cosh:'Math.cosh',tanh:'Math.tanh'};
+P.nomValide=s=>/^[A-Za-z_][A-Za-z_0-9]*$/.test(s)&&!(s in FONCTIONS)&&s!=='pi'&&!/^(Math|Function|window|document|this|eval|constructor|prototype|globalThis)$/.test(s);
+P.compiler=function(expr,noms){
+  let s=String(expr).trim().replace(/,/g,'.').replace(/\^/g,'**').replace(/[×·]/g,'*').replace(/[−–]/g,'-').replace(/π/g,'pi').replace(/√/g,'sqrt');
+  if(!s)return{err:'Formule vide.'};
+  if(!/^[0-9A-Za-z_\s+\-*/().]*$/.test(s))return{err:'Caractère non accepté dans la formule.'};
+  let inconnu=null;
+  const js=s.replace(/\d+\.?\d*(?:e[+-]?\d+)?|[A-Za-z_]\w*/gi,t=>{
+    if(/^\d/.test(t))return t;
+    if(FONCTIONS[t])return FONCTIONS[t];
+    if(t==='pi')return 'Math.PI';
+    if(noms.includes(t))return t;
+    inconnu=inconnu||t;return t});
+  if(inconnu)return{err:'Symbole inconnu : '+inconnu+'.'};
+  let fn;
+  try{fn=new Function(...noms,'"use strict";return ('+js+');')}catch(e){return{err:'Formule non valide.'}}
+  return{fn};
+};
+
+/* ---------- propagation ---------- */
+/** u d'une grandeur : kind 'u' (écart-type) ou 'D' (demi-largeur Δ, loi uniforme) */
+P.uEff=v=>v.kind==='D'?v.p/SQ3:v.p;
+/** tirages Monte-Carlo de f(x1, x2, …) : gaussienne (kind u) ou uniforme sur [x − Δ, x + Δ] (kind D) */
+P.mc=function(fn,vars,N,seed){
+  const r=P.rng(seed),ys=new Float64Array(N),args=new Array(vars.length);
+  let ok=0;
+  for(let i=0;i<N;i++){
+    for(let j=0;j<vars.length;j++){const v=vars[j];args[j]=v.p>0?(v.kind==='D'?v.val+v.p*(2*r()-1):v.val+v.p*P.gauss(r)):v.val}
+    const y=fn(...args);if(isFinite(y))ys[ok++]=y;
+  }
+  return ys.subarray(0,ok);
+};
+/** contributions linéarisées (∂f/∂xi · u(xi))² par différence centrée ; u_lin = √Σ */
+P.budget=function(fn,vars){
+  const vals=vars.map(v=>v.val),y0=fn(...vals),c=[];
+  vars.forEach((v,i)=>{
+    const u=P.uEff(v);
+    if(!(u>0)){c.push(0);return}
+    const h=1e-4*u,a=vals.slice(),b=vals.slice();a[i]+=h;b[i]-=h;
+    const d=(fn(...a)-fn(...b))/(2*h);c.push((d*u)*(d*u));
+  });
+  const s=c.reduce((x,y)=>x+y,0);
+  return{y0,c,uLin:Math.sqrt(s)};
+};
+/** somme y = Σ ci xi : contributions (ci u(xi))² */
+P.budgetSomme=(vars)=>{const c=vars.map(v=>{const u=P.uEff(v);return(v.coef*u)*(v.coef*u)});const y0=vars.reduce((s,v)=>s+v.coef*v.val,0);return{y0,c,uLin:Math.sqrt(c.reduce((a,b)=>a+b,0))}};
+/** produit y = k Π xi^αi : contributions (y · αi u(xi)/xi)² */
+P.budgetProduit=(vars,k)=>{
+  const y0=k*vars.reduce((s,v)=>s*Math.pow(v.val,v.coef),1);
+  const c=vars.map(v=>{const u=P.uEff(v);return v.val===0?0:Math.pow(y0*v.coef*u/v.val,2)});
+  return{y0,c,uLin:Math.sqrt(c.reduce((a,b)=>a+b,0))};
+};
+
+/* ---------- régression linéaire y = a x + b ---------- */
+P.fit=function(x,y){
+  const n=x.length,mx=P.mean(x),my=P.mean(y);let sxx=0,sxy=0;
+  for(let i=0;i<n;i++){sxx+=(x[i]-mx)*(x[i]-mx);sxy+=(x[i]-mx)*(y[i]-my)}
+  const a=sxx>0?sxy/sxx:NaN;return{a,b:my-a*mx};
+};
+P.zReg=function(pts,a,b){return pts.map(p=>{const d=Math.sqrt(p.uy*p.uy+a*a*p.ux*p.ux);return d>0?(p.y-a*p.x-b)/d:0})};
+P.mcReg=function(pts,loi,M,seed){
+  const r=P.rng(seed),n=pts.length,A=new Float64Array(M),B=new Float64Array(M),x=new Array(n),y=new Array(n);
+  for(let k=0;k<M;k++){
+    for(let i=0;i<n;i++){const p=pts[i];
+      if(loi==='unif'){x[i]=p.x+SQ3*p.ux*(2*r()-1);y[i]=p.y+SQ3*p.uy*(2*r()-1)}
+      else{x[i]=p.x+p.ux*P.gauss(r);y[i]=p.y+p.uy*P.gauss(r)}}
+    const f=P.fit(x,y);A[k]=f.a;B[k]=f.b;
+  }
+  const ua=P.sd(A),ub=P.sd(B),ma=P.mean(A),mb=P.mean(B);let c=0;for(let k=0;k<M;k++)c+=(A[k]-ma)*(B[k]-mb);
+  return{A,B,ua,ub,corr:c/((M-1)*ua*ub)};
+};
+/** diagnostic des écarts normalisés : points hors de ±2, écarts tous très petits, structure en signe */
+P.diagnostic=function(z){
+  const n=z.length,bad=[];let mx=0,ch=0,prev=0;
+  z.forEach((v,i)=>{if(Math.abs(v)>2)bad.push(i);mx=Math.max(mx,Math.abs(v));const s=Math.sign(v);if(s!==0){if(prev!==0&&s!==prev)ch++;prev=s}});
+  return{bad,max:mx,changes:ch,
+    trop:n>=6&&mx<0.5,
+    motif:n>=7&&ch<=2&&mx>=1.2&&bad.length===0};
+};
+return P;
+})();
+if(typeof module!=='undefined')module.exports=PH2;
+
+// @titre Calculs et incertitudes · PH2 · MPSI
+// @sortie ../PH2_Incertitudes/PH2_Incertitudes.html
+// @inclure PH2_stats.js
+// @style PH2_Incertitudes.css
+// @description Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo et régression linéaire sur les mesures saisies, avec écart normalisé.
+'use strict';
+/* PH2 · Calculs et incertitudes : outil de TP (disposition « atelier »).
+   Modèle : PH2_stats.js. L'élève saisit ses mesures ; écart normalisé Z = |x − x_ref| / √(u² + u_ref²) dans chaque onglet. */
+const M=AnimKit.M, F=AnimKit.fmt, SQ3=Math.sqrt(3), BLEU='#58a6ff';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const sub=(s,i)=>M.v(s,i);
+/* ---------- lecture de nombres : point ou virgule décimale acceptés ---------- */
+function lire(s){
+  if(typeof s==='number')return s;
+  s=String(s).trim().replace(/\s/g,'').replace(/,/g,'.').replace(/[−–]/g,'-').replace(/[×x]10\^?/i,'e');
+  return s===''?NaN:Number(s);
+}
+function lireSerie(t){return Float64Array.from(String(t).split(/[\s;]+/).filter(Boolean).map(lire).filter(isFinite))}
+function lirePoints(t){
+  const pts=[];
+  for(const l of String(t).split(/\r?\n/)){const c=l.trim().split(/[\t; ]+/).filter(Boolean).map(lire);if(c.length===4&&c.every(isFinite))pts.push({x:c[0],ux:Math.abs(c[1]),y:c[2],uy:Math.abs(c[3])})}
+  return pts;
+}
+const nbTexte=x=>!isFinite(x)?'':String(+x.toPrecision(8));
+
+/* ---------- écriture d'un résultat : (valeur ± u) unité, u arrondie par excès à 2 chiffres ---------- */
+function ecrire(x,u,unite,nom){
+  const nm=nom||'x', un=unite?'&nbsp;'+esc(unite):'', neg=s=>s.replace('-','−');
+  const r=PH2.arrondi(x,u);
+  if(!r)return `${nm} = ${F.sig(x,4)}${un}`;
+  const e=Math.floor(Math.log10(Math.abs(r.x)||1)),eu=Math.floor(Math.log10(r.u)),ex=k=>`${String(k).replace('-','−')}`;
+  if(e<-3||e>5){const d=Math.max(0,r.d+e),f=Math.pow(10,e),fu=Math.pow(10,eu);
+    return `${nm} = ${neg((r.x/f).toFixed(d))} × 10<sup>${ex(e)}</sup>${un} , u(${nm}) = ${(r.u/fu).toFixed(1)} × 10<sup>${ex(eu)}</sup>${un}`}
+  return `${nm} = ${neg(r.x.toFixed(r.d))}${un} , u(${nm}) = ${r.u.toFixed(r.d)}${un}`;
+}
+const lienz=(z)=>z<=2?`<span class="ok">compatible</span>`:`<span class="ko">incompatible</span>`;
+/** échelle d'affichage d'un axe : puissance de dix pour éviter les graduations illisibles */
+function echelle(lo,hi){const m=Math.max(Math.abs(lo),Math.abs(hi));if(!(m>0))return 1;const e=Math.floor(Math.log10(m));return(e<-3||e>5)?Math.pow(10,e):1}
+const suffixe=f=>f===1?'':` ×10<tspan font-size="72%" dy="-0.55em">${String(Math.round(Math.log10(f))).replace('-','−')}</tspan><tspan dy="0.4em">​</tspan>`;
+
+/* ---------- dessin d'un histogramme (style des figures PH2) ----------
+   o : lay (classes), counts, n (nombre de valeurs comptées), mode 'eff' | 'dens',
+       xlo, xhi (étendue de l'axe), modele {m,s}, lin {m,s}, ombre, bandes, unif {c,D},
+       ref {x,u}, moy, xlab, ylab, hauteur (effectif ou densité à inclure)                      */
+function histo(a,R,o){
+  const S=a.S,K=a.k,C=a.C,f=echelle(o.xlo,o.xhi);
+  const lay=o.lay,n=o.n||0,mode=o.mode||'eff',w=lay?lay.w:1;
+  const mY=mode==='eff'?(q=>n*w*q):(q=>q*f);
+  const cY=mode==='eff'?(c=>c):(c=>c/(n*w)*f);
+  const pdf=(x,m,s)=>PH2.pdf(x,m,s);
+  let ymax=0;
+  if(o.counts)for(const c of o.counts)ymax=Math.max(ymax,cY(c));
+  const pic=m=>mY(1/(m.s*Math.sqrt(2*Math.PI)));
+  if(o.modele)ymax=Math.max(ymax,pic(o.modele));
+  if(o.lin)ymax=Math.max(ymax,pic(o.lin));
+  if(o.ref&&o.ref.u>0)ymax=Math.max(ymax,pic({s:o.ref.u}));
+  if(o.hauteur)ymax=Math.max(ymax,o.hauteur);
+  const hU=o.unif?(lay&&ymax>0?0.5*ymax:mY(1/(2*o.unif.D))):0;
+  if(o.unif)ymax=Math.max(ymax,hU);
+  if(!(ymax>0))ymax=1;
+  ymax*=o.bandes?1.75:1.14;
+  const pad=0.03*(o.xhi-o.xlo),xmin=(o.xlo-pad)/f,xmax=(o.xhi+pad)/f;
+  const G=S.graph({x:R.x,y:R.y,w:R.w,h:R.h,padB:36*K,xmin,xmax,ymin:0,ymax,
+    xticks:AnimKit.ticks(xmin,xmax,Math.max(3,Math.round(R.w/(78*K)))),
+    xfmt:(v,st)=>F.fix(v,Math.max(0,-Math.floor(Math.log10(st)+1e-9))),
+    xlab:(o.xlab||'')+suffixe(f),ylab:o.ylab||''});
+  const clip='c_'+(o.cid||'x');
+  let s=S.clip(clip,G)+G.svg,X=x=>G.X(x/f),Y=G.Y;
+  const aire=(m,sig,col,op)=>{const x1=Math.max(m-sig*1,0);return S.rect(X(m-sig),G.y0,X(m+sig)-X(m-sig),G.h,{fill:col,fop:op})};
+  if(o.bandes&&o.moyenne!==undefined){const m=o.moyenne,sg=o.sigma;
+    [3,2,1].forEach((k,i)=>{s+=S.rect(X(m-k*sg),G.y0,X(m+k*sg)-X(m-k*sg),G.h,{fill:C.cInk,fop:[.07,.1,.15][i]})});
+    ['±σ','±2σ','±3σ'].forEach((t,i)=>{const yy=Y(ymax*(0.93-0.085*i));
+      s+=S.arrow(X(m),yy,X(m-(i+1)*sg),yy,{w:1.5,c:C.ink})+S.arrow(X(m),yy,X(m+(i+1)*sg),yy,{w:1.5,c:C.ink});
+      s+=S.text(X(m-(i+1)*sg)+4*K,yy-10*K,`${t} : ${['68','95','99.7'][i]} %`,{anchor:'start',size:13,c:C.ink})});
+  }
+  if(o.counts){const hh=cY,bw=(X(lay.lo+lay.w)-X(lay.lo));
+    o.counts.forEach((c,i)=>{if(c<=0)return;const x0=(lay.lo+i*lay.w),x1=x0+lay.w;
+      s+=S.rect(X(x0),Y(hh(c)),Math.max(1,X(x1)-X(x0)),Y(0)-Y(hh(c)),{fill:BLEU,fop:.92,c:bw>6?C.card:undefined,w:.8})})}
+  const courbe=(m,sg,col,dash,w2)=>{const pts=[];const a0=Math.max(xmin*f,m-4.2*sg),b0=Math.min(xmax*f,m+4.2*sg);
+    for(let i=0;i<=160;i++){const x=a0+(b0-a0)*i/160;pts.push([x/f,mY(pdf(x,m,sg))])}
+    return S.curve(pts,G,{c:col,w:w2||2.2,dash})};
+  if(o.ombre&&o.modele){const m=o.modele.m,sg=o.modele.s,pts=[[ (m-sg)/f,0]];
+    for(let i=0;i<=40;i++){const x=m-sg+2*sg*i/40;pts.push([x/f,mY(pdf(x,m,sg))])}pts.push([(m+sg)/f,0]);
+    s+=S.poly(pts.map(([x,y])=>[G.X(x),Y(y)]),{close:true,fill:C.cInk,fop:.3,c:'none',w:0})}
+  if(o.unif){const{c:c0,D}=o.unif,h0=hU;
+    s+=S.poly([[X(c0-D),Y(0)],[X(c0-D),Y(h0)],[X(c0+D),Y(h0)],[X(c0+D),Y(0)]],{c:C.E,w:2.4,dash:'7 4'})}
+  if(o.modele)s+=courbe(o.modele.m,o.modele.s,C.ink,undefined,2.4);
+  if(o.lin)s+=courbe(o.lin.m,o.lin.s,C.E,'7 4',2.4);
+  if(o.ref){if(o.ref.u>0)s+=courbe(o.ref.x,o.ref.u,C.v,undefined,2.4);
+    s+=S.line(X(o.ref.x),G.y0,X(o.ref.x),G.y0+G.h,{c:C.v,w:4.5});
+    s+=S.text(X(o.ref.x)+6*K,G.y0+(o.moyenne!==undefined&&Math.abs(X(o.ref.x)-X(o.moyenne))<70*K?32*K:12*K),S.v('x','réf'),{size:14,c:C.v,weight:600})}
+  if(o.interv){const m=o.interv.m,u=o.interv.u;
+    s+=S.rect(X(m-u),G.y0,X(m+u)-X(m-u),G.h,{fill:C.E,fop:.16});
+    s+=S.text(X(m+u)+5*K,G.y0+G.h*.5,o.interv.label||'u',{size:13.5,c:C.E,weight:600})}
+  if(o.moyenne!==undefined&&o.moy!==false){const m=o.moyenne;
+    s+=S.line(X(m),G.y0,X(m),G.y0+G.h,{c:C.ink,w:1.6,dash:'6 4'});
+    s+=S.text(X(m)+(o.ref&&o.ref.x>m?-6*K:6*K),G.y0+(o.bandes?G.h*.02+12*K:12*K),S.v(o.moyNom||'x̄'),{size:14,c:C.ink,weight:600,anchor:o.ref&&o.ref.x>m?'end':'start'})}
+  return{svg:s,G};
+}
+
+/* ---------- barres du budget d'incertitude : part de chaque grandeur dans u(y)² ---------- */
+let HIT_BUD=[];
+function budget(a,R,vars,c,mute,uy,titre){
+  const S=a.S,K=a.k,C=a.C,n=vars.length,tot=c.reduce((x,y)=>x+y,0);
+  const padL=Math.min(R.w*.28,100*K),padR=64*K,top=38*K,bas=32*K,rh=Math.min(88*K,(R.h-top-bas)/Math.max(1,n));
+  let s=S.text(10*K,16*K,titre,{size:13.5,c:C.ink,weight:600,halo:false,base:'top'});
+  HIT_BUD=[];
+  vars.forEach((v,i)=>{const y0=top+i*rh,sh=tot>0?c[i]/tot:0,L=Math.max(0,R.w-padL-padR),bw=sh*L,cy=y0+rh/2;
+    HIT_BUD.push({y0:R.y+y0,y1:R.y+y0+rh,i});
+    s+=S.rect(R.x+10*K,R.y+y0+3*K,R.w-20*K,rh-6*K,{fill:mute[i]?'none':C.cInk,fop:mute[i]?1:.08,c:mute[i]?C.ink2:'none',w:1,dash:mute[i]?'4 4':undefined,rx:6*K});
+    s+=S.text(R.x+padL-10*K,R.y+cy,S.v(esc(v.nom||'?')),{anchor:'end',size:15,c:C.ink,halo:false});
+    if(mute[i])s+=S.text(R.x+padL+8*K,R.y+cy,'u mise à zéro',{size:13,c:C.ink2,halo:false});
+    else{s+=S.rect(R.x+padL,R.y+cy-14*K,bw,28*K,{fill:C.cInk,fop:.9,rx:3*K});
+      s+=S.text(R.x+padL+bw+8*K,R.y+cy,`${F.fix(sh*100,0)} %`,{size:14,c:C.ink,halo:false,weight:600})}});
+  s+=S.text(10*K,R.h-10*K,'Clic sur une barre : u mise à zéro',{size:12.5,c:C.ink2,halo:false,base:'bottom'});
+  return s;
+}
+
+/* ---------- état : tout ce que saisit l'élève (mémorisé dans le navigateur) ---------- */
+const V=(nom,val,kind,p,coef)=>({nom,val,kind,p,coef});
+const uV=v=>v.kind==='D'?v.p/SQ3:v.p;
+const vEff=(vars,mute)=>vars.map((v,i)=>mute[i]?{...v,p:0}:v);
+const CACHE={};
+function memo(nom,cle,fn){const c=CACHE[nom];if(c&&c.cle===cle)return c.val;const val=fn();CACHE[nom]={cle,val};return val}
+const OHM=[[0.010,1.01],[0.020,1.98],[0.030,3.03],[0.040,3.99],[0.050,5.02],[0.060,5.97]].map(([x,y])=>[x,5e-4,y,0.02].map(nbTexte));
+const defaut=()=>({
+  t0:{nom:'T',unite:'s',rows:['1.52','1.49','1.51','1.50','1.53','1.48','1.51','1.50','1.52','1.49'].map(x=>[x]),B:false,modeB:'D',delta:'0.01',bmin:'1.49',bmax:'1.51',pct:'0.5',dgt:'2',res:'0.01',lec:'',ref:false,xref:'1.50',uref:'0'},
+  t1:{type:'somme',nom:'d',unite:'mm',k:'1',vars:[V('x1',10,'u',.5,-1),V('x2',30,'u',.5,1)],mute:[false,false],ref:false,xref:'21.5',uref:'0'},
+  t2:{formule:'4*pi^2*L/T^2',nom:'g',unite:'m·s⁻²',vars:[V('L',1.000,'u',.002,1),V('T',2.012,'u',.005,1)],mute:[false,false],N:100000,graine:1,lin:false,ref:false,xref:'9.81',uref:'0'},
+  t3:{xnom:'I',xun:'A',ynom:'U',yun:'V',rows:OHM.map(r=>r.slice()),loi:'unif',M:10000,histos:false,zones:true,zoomU:0,ref:false,xref:'100',uref:'0'}
+});
+const VIDE={
+  t0:t=>{t.rows=[];t.lec='';t.bmin='';t.bmax=''},
+  t1:t=>{t.vars=[V('x1',NaN,'u',NaN,1)];t.mute=[false]},
+  t2:t=>{t.formule='';t.vars=[V('x',NaN,'u',NaN,1)];t.mute=[false]},
+  t3:t=>{t.rows=[]}
+};
+let ST=defaut();
+const CLE='PH2_Incertitudes_v1';
+function charger(){try{const j=JSON.parse(localStorage.getItem(CLE));if(!j||j.v!==1)return;
+  for(const k of['t0','t1','t2','t3'])if(j[k])Object.assign(ST[k],j[k]);
+  for(const k of['t1','t2'])ST[k].vars.forEach(v=>{for(const c of['val','p','coef'])if(v[c]===null)v[c]=NaN});
+  while(ST.t1.mute.length<ST.t1.vars.length)ST.t1.mute.push(false);while(ST.t2.mute.length<ST.t2.vars.length)ST.t2.mute.push(false)}catch(e){}}
+function sauver(){try{localStorage.setItem(CLE,JSON.stringify({v:1,t0:ST.t0,t1:ST.t1,t2:ST.t2,t3:ST.t3}))}catch(e){}}
+charger();
+const lignesReg=rows=>{const L=[];rows.forEach((r,i)=>{const c=r.map(v=>String(v??'').trim());if(c.every(v=>v===''))return;const q=c.map(lire),ux=c[1]===''?0:q[1],uy=c[3]===''?0:q[3];L.push(isFinite(q[0])&&isFinite(q[2])&&isFinite(ux)&&isFinite(uy)?{x:q[0],ux:Math.abs(ux),y:q[2],uy:Math.abs(uy),i}:null)});return L};
+const regSans=()=>{const P=lignesReg(ST.t3.rows).filter(Boolean);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
+const colonne=(rows,j)=>Float64Array.from(rows.map(r=>String(r[j]??'').trim()).filter(Boolean).map(lire).filter(isFinite));
+const finis=(...v)=>v.every(isFinite);
+
+/* ---------- petits constructeurs de champs ---------- */
+const h=(tag,attrs,html)=>{const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{}))e.setAttribute(k,v);if(html!==undefined)e.innerHTML=html;return e};
+const change=()=>{sauver();A.refresh();A.render()};
+function fld(label,obj,key,o={}){
+  const d=h('div',{class:'ph-f'+(o.long?' long':'')+(o.cls?' '+o.cls:'')},`<label>${label}</label>`);
+  const i=h('input',{type:'text',value:obj[key]??'',inputmode:o.texte?'text':'decimal',spellcheck:'false',autocomplete:'off',class:o.nom?'nom':''});
+  i.oninput=()=>{obj[key]=i.value;change()};d.append(i);return d;
+}
+function chk(label,obj,key,onchg){
+  const l=h('label',{class:'ph-c'}),i=h('input',{type:'checkbox'});i.checked=!!obj[key];
+  i.onchange=()=>{obj[key]=i.checked;change();if(onchg)onchg()};l.append(i,h('span',{},label));return l;
+}
+function seg(opts,obj,key,onchg){
+  const d=h('div',{class:'ph-seg'});
+  opts.forEach(([v,l])=>{const b=h('button',{type:'button','aria-pressed':String(obj[key]===v)},l);
+    b.onclick=()=>{obj[key]=v;[...d.children].forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');change();if(onchg)onchg()};d.append(b)});
+  return d;
+}
+function selNum(label,opts,obj,key){
+  const d=h('div',{class:'ph-f'},`<label>${label}</label>`),s=h('select');
+  opts.forEach(([v,l])=>{const o=h('option',{value:v},l);if(obj[key]===v)o.selected=true;s.append(o)});
+  s.onchange=()=>{obj[key]=+s.value;change()};d.append(s);return d;
+}
+function blocRef(t,libelle){
+  const box=h('div',{class:'ph-ref'}),f=h('div');
+  const rendre=()=>{f.innerHTML='';if(t.ref){f.append(fld(libelle||'Valeur de référence',t,'xref'),fld('Incertitude-type de la référence (0 si exacte)',t,'uref'))}};
+  box.append(chk('Comparer à une valeur de référence (écart normalisé)',t,'ref',rendre),f);rendre();return box;
+}
+/** tableau à remplir : on peut y coller des colonnes depuis un tableur ; une ligne vide est toujours ajoutée en fin */
+function grille(rows,cols,titreLigne,map2){
+  const root=h('div',{class:'ph-grid'}),nc=cols.length,vide=()=>Array(nc).fill('');
+  let tb=null;
+  const ligne=(r,i)=>{
+    const tr=h('tr');tr.append(h('td',{class:'n'},String(i+1)));
+    for(let j=0;j<nc;j++){
+      const inp=h('input',{type:'text',inputmode:'decimal',value:r[j]??'',spellcheck:'false',autocomplete:'off','aria-label':`${titreLigne||'Ligne'} ${i+1}, ${cols[j].replace(/<[^>]+>/g,'')}`});
+      inp.oninput=()=>{r[j]=inp.value;if(r===rows[rows.length-1]&&inp.value.trim()!==''){rows.push(vide());tb.append(ligne(rows[rows.length-1],rows.length-1))}change()};
+      inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const nx=tb.children[i+1];if(nx)nx.children[j+1].firstChild.focus()}};
+      inp.onpaste=e=>{
+        const txt=(e.clipboardData||window.clipboardData).getData('text');if(!txt)return;e.preventDefault();
+        let tok=txt.replace(/\r/g,'').split('\n').filter(l=>l.trim()!=='').map(l=>l.trim().split(/[\t;]+|\s+/).filter(s=>s!==''));
+        if(nc===1)tok=tok.flat().map(s=>[s]);
+        tok.forEach((cells,k)=>{const ri=i+k;while(rows.length<=ri)rows.push(vide());cells.forEach((c,m)=>{const jj=(map2&&cells.length===2&&j===0)?map2[m]:j+m;if(jj<nc)rows[ri][jj]=c})});
+        build();change();
+      };
+      const td=h('td');td.append(inp);tr.append(td);
+    }
+    const td=h('td'),x=h('button',{class:'ph-x',type:'button',title:'Supprimer la ligne','aria-label':'Supprimer la ligne'},'×');
+    x.onclick=()=>{rows.splice(i,1);build();change()};td.append(x);tr.append(td);return tr;
+  };
+  const build=()=>{
+    if(!rows.length||rows[rows.length-1].some(c=>String(c).trim()!==''))rows.push(vide());
+    root.innerHTML='';const t=h('table');t.innerHTML=`<thead><tr><th>#</th>${cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead>`;
+    tb=h('tbody');rows.forEach((r,i)=>tb.append(ligne(r,i)));t.append(tb);root.append(t);
+  };
+  build();root.build=build;return root;
+}
+/** tableau des grandeurs mesurées : nom, valeur, nature de l'incertitude (u ou Δ), incertitude, coefficient */
+function tableVars(t,coefTitre){
+  const root=h('div',{class:'ph-grid ph-vt'});
+  const build=()=>{
+    root.innerHTML='';const tab=h('table');
+    tab.innerHTML=`<thead><tr><th>Nom</th><th>Valeur</th><th title="u : écart-type · Δ : demi-largeur (loi uniforme, u = Δ/√3)">u ou Δ</th><th>Incertitude</th>${coefTitre?`<th>${coefTitre()}</th>`:''}<th></th></tr></thead>`;
+    const tb=h('tbody');
+    t.vars.forEach((v,i)=>{
+      const tr=h('tr'),cell=(node)=>{const td=h('td');td.append(node);tr.append(td)};
+      const inp=(val,fn,cls)=>{const e=h('input',{type:'text',value:val,inputmode:cls==='nom'?'text':'decimal',spellcheck:'false',autocomplete:'off',class:cls||''});e.oninput=()=>{fn(e.value);change()};return e};
+      cell(inp(v.nom,x=>{v.nom=x},'nom'));cell(inp(nbTexte(v.val),x=>{v.val=lire(x)}));
+      const s=h('select',{'aria-label':'Nature de l\'incertitude'});[['u','u'],['D','Δ']].forEach(([val,l])=>{const o=h('option',{value:val},l);if(v.kind===val)o.selected=true;s.append(o)});
+      s.onchange=()=>{v.kind=s.value;change()};cell(s);
+      cell(inp(nbTexte(v.p),x=>{v.p=Math.abs(lire(x))}));
+      if(coefTitre)cell(inp(nbTexte(v.coef),x=>{v.coef=lire(x)}));
+      const td=h('td');if(t.vars.length>1){const x=h('button',{class:'ph-x',type:'button',title:'Supprimer','aria-label':'Supprimer cette grandeur'},'×');x.onclick=()=>{t.vars.splice(i,1);t.mute.splice(i,1);build();change()};td.append(x)}tr.append(td);
+      tb.append(tr);
+    });
+    tab.append(tb);root.append(tab);
+    if(t.vars.length<6){const b=h('button',{class:'mini',type:'button'},'+ Ajouter une grandeur');b.onclick=()=>{t.vars.push(V('x'+(t.vars.length+1),NaN,'u',NaN,1));t.mute.push(false);build();change()};root.append(b)}
+  };
+  build();root.build=build;return root;
+}
+
+/* ---------- résultats : lignes copiables ---------- */
+const plain=s=>s.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&amp;/g,'&');
+const attr=s=>s.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+const ligneRes=(label,html)=>`<div class="res-l"><span class="res-k">${label}</span><span class="res-v">${html}</span><button class="mini" type="button" data-copy="${attr(plain(html))}" title="Copier dans le presse-papiers">Copier</button></div>`;
+const note=(html,cls)=>`<div class="res-n${cls?' '+cls:''}">${html}</div>`;
+function copier(texte){
+  const ok=()=>A.toast('Copié : '+texte);
+  if(navigator.clipboard&&window.isSecureContext!==false)navigator.clipboard.writeText(texte).then(ok,()=>repli());else repli();
+  function repli(){const t=h('textarea',{style:'position:fixed;opacity:0'});t.value=texte;document.body.append(t);t.select();try{document.execCommand('copy');ok()}catch(e){A.toast('Copie impossible : sélectionner le texte à la main')}t.remove()}
+}
+const setZone=(z,html)=>{if(z._h!==html){z.innerHTML=html;z._h=html}};
+function zInfo(t,x,u){
+  if(!t.ref)return null;
+  const xr=lire(t.xref),ur=Math.max(0,lire(t.uref)||0);
+  if(!finis(xr,x)||!(u>=0))return null;
+  const z=PH2.ecartNorm(x,u,xr,ur);return{z,ref:{x:xr,u:ur},ok:z<=2};
+}
+const zLigne=zi=>zi?note(`Écart normalisé ${M.v('Z')} = <b>${F.sig(zi.z,3)}</b> : ${lienz(zi.z)} (${M.v('Z')} ${zi.ok?'≤':'&gt;'} 2)`):'';
+const zCalc=(zi,nom)=>zi?`<br><b>Écart normalisé</b><br>${M.v('Z')} = ${M.frac(`|${nom} − ${sub('x','réf')}|`,M.sqrt(`${M.v('u')}² + ${sub('u','réf')}²`))} = <span class="res">${F.sig(zi.z,3)}</span><span class="lien">donc</span>${lienz(zi.z)}<div class="gr">On compare ${M.v('Z')} à 2 ; le chevauchement visuel de deux distributions n'est pas un critère.</div>`:'';
+const manque=(a,id,txt)=>{a.svg(id,a.S.text(a.panels[id].w/2,a.panels[id].h/2,txt,{anchor:'middle',size:15,c:a.C.ink2,halo:false}))};
+let HIT_BUD_ID='';
+
+/* ---------- application ---------- */
+const PANES={};
+const A=AnimKit.app({
+  code:'PH2',partie:'Anthracite',chapitre:'PH2 Mesures et incertitudes',
+  titre:'Calculs d\'incertitudes',sousTitre:'Incertitude-type, propagation, Monte-Carlo et régression linéaire sur vos mesures',
+  onglets:['Mesure directe','Propagation des incertitudes','Régression linéaire'],
+  atelier:{saisie:'Mes mesures',detail:'Voir le calcul'},
+  temps:false,reglages:[],
+  panneaux:[
+    {id:'h0',onglets:[0],poids:1,ratioTel:.8},
+    {id:'bud1',onglets:[1],poids:.8,ratioTel:.55,si:()=>ST.t1.type!=='formule'},{id:'res1',onglets:[1],poids:1.2,ratioTel:.7,si:()=>ST.t1.type!=='formule'},
+    {id:'res2',onglets:[1],poids:1.4,ratioTel:.8,si:()=>ST.t1.type==='formule'},{id:'bud2',onglets:[1],poids:.7,ratioTel:.5,si:()=>ST.t1.type==='formule'},
+    {id:'reg3',onglets:[2],poids:1.5,ratioTel:.85,si:()=>!(ST.t3.histos&&!regSans())},{id:'z3',onglets:[2],poids:.9,ratioTel:.6,si:()=>!(ST.t3.histos&&!regSans())},
+    {id:'ab3',onglets:[2],poids:1,ratioTel:.8,si:()=>ST.t3.histos&&!regSans()}
+  ],
+  aide:{
+    voit:'<ul><li><b>À gauche</b> : vos mesures (tableaux à remplir ou à coller depuis un tableur) et les paramètres.</li><li><b>À droite</b> : le résultat avec son incertitude-type, prêt à copier, puis le graphique. « Voir le calcul » détaille les formules.</li></ul>',
+    faire:'<ul><li><b>Mesure directe</b> : coller la série ; ajouter si besoin une évaluation de type B (Δ lue ou notice « % + digits »).</li><li><b>Propagation</b>, sous-onglets Somme et Produit : saisir les grandeurs avec leur incertitude ; cliquer une barre du graphique met cette incertitude à zéro.</li><li><b>Propagation, Fonction quelconque</b> : écrire la formule avec les noms des grandeurs (<code>4*pi^2*L/T^2</code> ; <code>sqrt</code>, <code>exp</code>, <code>ln</code>, <code>sin</code>… ; <code>^</code> pour les puissances) : simulation de Monte-Carlo.</li><li><b>Régression</b> : coller les colonnes <i class="m">x</i> et <i class="m">y</i> (<i class="m">u</i>(<i class="m">x</i>) et <i class="m">u</i>(<i class="m">y</i>) facultatives) ; les points se déplacent à la souris.</li><li>Dans chaque onglet : comparaison à une valeur de référence par l\'écart normalisé. Les saisies sont mémorisées dans le navigateur.</li></ul>',
+    modele:'Incertitude-type = écart-type. Type A : <i class="m">u</i>(x̄) = <i class="m">s</i>/√<i class="m">N</i> (<i class="m">s</i> avec <i class="m">N</i> − 1). Type B : loi uniforme sur [<i class="m">x</i> − Δ, <i class="m">x</i> + Δ], <i class="m">u</i> = Δ/√3 ; composition quadratique, qui suppose des contributions indépendantes (une erreur commune à toutes les mesures n\'est pas réduite par la moyenne). Grandeurs non corrélées. Monte-Carlo : tirages gaussiens (<i class="m">u</i>) ou uniformes (Δ) ; graine fixe, donc résultat reproductible. Résultat : <i class="m">u</i> arrondie par excès à 2 chiffres significatifs, valeur au même rang.',
+    cours:'PH2 Mesures et incertitudes : incertitude-type, types A et B, incertitudes composées, algorithme de Monte-Carlo, écart normalisé <i class="m">Z</i> = |<i class="m">x</i> − <i class="m">x</i><sub>réf</sub>| / √(<i class="m">u</i>² + <i class="m">u</i><sub>réf</sub>²), régression linéaire et validation par les écarts normalisés.',
+    touches:'<kbd>1</kbd>–<kbd>3</kbd> onglets (hors saisie)'
+  },
+  init(a){
+    const Z=a.zones;
+    /* barre d'actions d'un onglet : exemple, vider */
+    const barre=(k)=>{const b=h('div',{class:'ph-bar'});
+      const ex=h('button',{class:'mini',type:'button',title:'Remplacer par un exemple'},'Exemple'),vd=h('button',{class:'mini',type:'button',title:'Effacer les saisies de cet onglet'},'Vider');
+      ex.onclick=()=>{const ty=ST.t1.type;ST[k]=defaut()[k];if(k==='t1')ST.t1.type=ty;construire(k);change()};vd.onclick=()=>{VIDE[k](ST[k]);construire(k);change()};
+      b.append(ex,vd);return b};
+    const panes={};
+    const construire=k=>{const p=panes[k];p.innerHTML='';PANES[k]();};
+    a.montrer=()=>{const T=a.tab,f=ST.t1.type==='formule';panes.t0.hidden=T!==0;panes.t1.hidden=!(T===1&&!f);panes.t2.hidden=!(T===1&&f);panes.t3.hidden=T!==2};
+    a.recon=()=>{construire('t1');construire('t2');a.montrer()};
+    /* ----- onglet 1 ----- */
+    PANES.t0=()=>{const t=ST.t0,p=panes.t0;
+      p.append(barre('t0'),fld('Grandeur mesurée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
+      p.append(h('div',{class:'ph-sub'},'Valeurs mesurées (coller une colonne depuis le tableur)'),grille(t.rows,['Valeur'],'Mesure'));
+      const bB=h('div'),rb=()=>{bB.innerHTML='';if(t.B){
+        bB.append(seg([['D','Δ directement'],['B','Bornes min / max'],['N','Notice de l\'appareil']],t,'modeB',rb));
+        if(t.modeB==='D')bB.append(fld('Demi-largeur Δ',t,'delta'));
+        else if(t.modeB==='B')bB.append(fld('Borne inférieure',t,'bmin'),fld('Borne supérieure',t,'bmax'),h('div',{class:'res-n gr'},'L\'intervalle [min ; max] a pour largeur 2Δ.'));
+        else bB.append(fld('Pourcentage de la lecture (%)',t,'pct'),fld('Nombre de digits',t,'dgt'),fld('Valeur d\'un digit',t,'res'));
+        if(t.modeB!=='B')bB.append(fld('Valeur lue (si moins de 2 mesures)',t,'lec'))}};
+      p.append(chk('Ajouter une évaluation de type B (précision de l\'appareil)',t,'B',rb),bB);rb();
+      p.append(blocRef(t));
+    };
+    /* ----- onglet 2 ----- */
+    const sousOnglets=()=>seg([['somme','Somme'],['produit','Produit'],['formule','Fonction quelconque']],ST.t1,'type',()=>a.recon());
+    PANES.t1=()=>{const t=ST.t1,p=panes.t1;
+      const tv=tableVars(t,()=>t.type==='somme'?`Coef. ${M.v('c')}`:`Expos. ${M.v('α')}`);
+      p.append(barre('t1'),sousOnglets(),h('div',{class:'ph-sub'},t.type==='somme'?'y = Σ cᵢ xᵢ (somme, différence)':'y = k Π xᵢ^αᵢ (produit, quotient, puissances)'),
+        fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
+      const kb=h('div');kb.append(fld('Facteur constant k (exact)',t,'k'));kb.hidden=t.type!=='produit';p.append(kb);
+      p.append(h('div',{class:'ph-sub'},'Grandeurs mesurées'),tv,blocRef(t));
+    };
+    /* ----- onglet 3 ----- */
+    PANES.t2=()=>{const t=ST.t2,p=panes.t2;
+      p.append(barre('t2'),sousOnglets(),fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),fld('y =',t,'formule',{cls:'formule',texte:true}));
+      p.append(h('div',{class:'ph-err',id:'ph-e2'}),h('div',{class:'ph-sub'},'Grandeurs mesurées (noms utilisés dans la formule)'),tableVars(t,null));
+      p.append(selNum('Nombre de tirages',[[10000,'10 000'],[100000,'100 000'],[1000000,'1 000 000']],t,'N'));
+      const nb=h('button',{class:'mini',type:'button'},'Nouveaux tirages');nb.onclick=()=>{t.graine++;change()};p.append(nb);
+      p.append(chk('Superposer l\'incertitude linéarisée (dérivées partielles)',t,'lin'),blocRef(t));
+    };
+    /* ----- onglet 4 ----- */
+    PANES.t3=()=>{const t=ST.t3,p=panes.t3;
+      const nx=h('div',{class:'ph-axes'});
+      const dup=(lab,k1,k2)=>{const r=h('div',{class:'ph-row'},`<label>${lab}</label>`);
+        for(const[k,l]of[[k1,null],[k2,'Unité']]){if(l)r.append(h('label',{},l));const i=h('input',{type:'text',value:t[k]??'',spellcheck:'false',autocomplete:'off'});i.oninput=()=>{t[k]=i.value;change()};r.append(i)}return r};
+      nx.append(dup('Abscisse','xnom','xun'),dup('Ordonnée','ynom','yun'));
+      p.append(barre('t3'),nx,h('div',{class:'ph-sub'},'Points : coller depuis le tableur les colonnes x et y (2 colonnes), ou x, u(x), y, u(y). Les incertitudes sont facultatives. Les points se déplacent dans le graphique.'),
+        grille(t.rows,[`${M.v('x')}`,`${M.v('u')}(${M.v('x')})`,`${M.v('y')}`,`${M.v('u')}(${M.v('y')})`],'Point',[0,2]));
+      p.append(h('div',{class:'ph-sub'},'Monte-Carlo sur a et b'),seg([['unif','Tirages uniformes'],['gauss','Tirages gaussiens']],t,'loi'),
+        selNum('Nombre de tirages',[[1000,'1 000'],[10000,'10 000'],[50000,'50 000']],t,'M'),
+        chk('Histogrammes Monte-Carlo de a et b',t,'histos'),chk('Zones de tirage des points (rectangles ou gaussiennes)',t,'zones'),selNum('Agrandissement (affichage)',[[0,'Auto'],[1,'×1'],[10,'×10'],[100,'×100']],t,'zoomU'),blocRef(t,'Valeur de référence de a'));
+    };
+    ['t0','t1','t2','t3'].forEach((k,i)=>{const p=h('div',{class:'ph-pane'});p.hidden=i!==0;panes[k]=p;Z.saisie.append(p);PANES[k]()});
+    a.panes=panes;
+    Z.detail.append(h('div',{class:'ph-calc'}));
+    Z.resultat.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b)copier(b.dataset.copy)});
+    /* clic dans le budget : mettre u à zéro */
+    for(const id of['bud1','bud2'])a.drag(id,{hit:(x,y)=>HIT_BUD.some(r=>y>=r.y0&&y<r.y1),
+      start:(x,y)=>{const r=HIT_BUD.find(r=>y>=r.y0&&y<r.y1);if(!r)return;const m=ST[id==='bud1'?'t1':'t2'].mute;m[r.i]=!m[r.i];sauver()},move:()=>{}});
+    /* déplacement des points de la régression */
+    a.drag('reg3',{hit:(x,y)=>pointProche(x,y)>=0,
+      start:(x,y)=>{ST.drag3=pointProche(x,y);ST.gel3=RG3},
+      move:(x,y)=>{const g=GEL3&&GEL3.G,i=ST.drag3;if(!g||i<0||!IDX3[i]&&IDX3[i]!==0)return;const r=ST.t3.rows[IDX3[i]];r[0]=nbTexte(+(g.xv(x)*GEL3.f).toPrecision(4));r[2]=nbTexte(+(g.yv(y)*GEL3.fy).toPrecision(4))},
+      end:()=>{ST.drag3=-1;ST.gel3=null;sauver();const g=a.zones.saisie.querySelector('.ph-pane:nth-child(4) .ph-grid');if(g&&g.build)g.build()}});
+  },
+  onglet(a){a.montrer()},
+  draw(a){const f=[d0,a2=>ST.t1.type==='formule'?d2(a2):d1(a2),d3][a.tab];f(a)}
+});
+ST.drag3=-1;ST.gel3=null;
+const calcZone=()=>A.zones.detail.firstChild;
+
+/* ===================================================================== */
+/* Onglet 1 : mesure directe                                              */
+function d0(a){
+  const t=ST.t0,P=a.panels.h0,nom=esc(t.nom||'x'),unite=t.unite||'';
+  const data=colonne(t.rows,0),N=data.length,Aa=N>=2?PH2.typeA(data):null;
+  const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&bmax>bmin;
+  const lecture=Aa?Aa.mean:(N===1?data[0]:bornes?(bmin+bmax)/2:lire(t.lec));
+  let Delta=NaN,uB=0;
+  if(t.B){Delta=t.modeB==='D'?Math.abs(lire(t.delta)):t.modeB==='B'?(bornes?(bmax-bmin)/2:NaN):PH2.notice(lecture,Math.abs(lire(t.pct)),Math.abs(lire(t.dgt)),Math.abs(lire(t.res)));uB=PH2.uniforme(Delta)}
+  const uA=Aa?Aa.u:0,x=lecture,okB=t.B&&isFinite(uB)&&isFinite(x);
+  const u=(Aa||okB)&&isFinite(x)?PH2.compose(uA,okB?uB:0):NaN;
+  const zi=zInfo(t,x,isFinite(u)?u:0);
+  /* graphique */
+  if(N>=1){
+    const full=PH2.hist(data,N),sF=Aa?Aa.s:0,mF=PH2.mean(data);
+    const lo=[full.lo,mF-3*(sF||full.w)],hi=[full.lo+full.nb*full.w,mF+3*(sF||full.w)];
+    if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
+    const o={lay:full,counts:PH2.compte(data,N,full),n:N,mode:'eff',xlo:Math.min(...lo),xhi:Math.max(...hi),xlab:`${nom} [${esc(unite)}]`,ylab:'Effectif',cid:'h0'};
+    if(Aa){o.moyenne=Aa.mean;o.moyNom='x̄';if(isFinite(u)&&u>0)o.interv={m:Aa.mean,u,label:`u(x̄)`}}
+    if(zi)o.ref=zi.ref;
+    a.svg('h0',histo(a,{x:0,y:0,w:P.w,h:P.h},o).svg);
+  }else if(okB&&Delta>0){
+    const o={mode:'dens',n:0,xlo:x-1.6*Delta,xhi:x+1.6*Delta,xlab:`${nom} [${esc(unite)}]`,ylab:'Densité de probabilité',unif:{c:x,D:Delta},modele:{m:x,s:uB},moyenne:x,moyNom:'x',cid:'h0'};
+    if(zi){o.xlo=Math.min(o.xlo,zi.ref.x-3*zi.ref.u,zi.ref.x);o.xhi=Math.max(o.xhi,zi.ref.x+3*zi.ref.u,zi.ref.x);o.ref=zi.ref}
+    a.svg('h0',histo(a,{x:0,y:0,w:P.w,h:P.h},o).svg);
+  }else manque(a,'h0','Collez vos mesures dans le tableau pour tracer l\'histogramme.');
+  a.legend(N<1?[okB&&{c:a.C.E,label:'Loi uniforme sur [x − Δ ; x + Δ]',dash:true},okB&&{c:a.C.ink,label:'Loi normale de même u'},zi&&{c:a.C.v,label:'Référence'}]:[{c:BLEU,label:'Mesures (histogramme)'},Aa&&{c:a.C.ink,label:'Moyenne x̄',dash:true},Aa&&{c:a.C.E,label:'u(x̄) composée'},zi&&{c:a.C.v,label:'Référence'}]);
+  /* résultats */
+  let r='';
+  if(isFinite(u)){r+=ligneRes('Résultat',ecrire(x,u,unite,nom));
+    if(okB&&Delta>0)r+=note(`type B : ${M.v('Δ')} = ${F.sig(Delta,3)}${unite?'&nbsp;'+esc(unite):''}, ${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = ${F.sig(uB,3)}${unite?'&nbsp;'+esc(unite):''}`,'gr');
+    r+=note(Aa&&okB?`type A (${M.v('N')} = ${N}) et type B composés`:Aa?`type A, ${M.v('N')} = ${N} mesures`:'type B seul');}
+  else r+=note('Entrez au moins deux mesures, ou une valeur lue avec une évaluation de type B.','gr');
+  r+=zLigne(zi);
+  setZone(a.zones.resultat,r);
+  /* calcul détaillé */
+  const U=`&nbsp;${esc(unite)}`,sg=v=>F.sig(v,3);let c='';
+  if(Aa)c+=`<b>Type A</b> (${M.v('N')} = ${N})<br>${M.v('x̄')} = ${M.frac('1',M.v('N'))} Σ ${sub('x','i')} = ${sg(Aa.mean)}${U}<br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${sub('x','i')} − ${M.v('x̄')})²`,`${M.v('N')} − 1`))} = ${sg(Aa.s)}${U}<br><span class="lien">donc</span>${sub('u','A')} = ${M.frac(M.v('s'),M.sqrt(M.v('N')))} = <span class="res">${sg(Aa.u)}${U}</span><br>`;
+  if(t.B&&isFinite(Delta))c+=`<b>Type B</b><br>${t.modeB==='B'?`Δ = ${M.frac('max − min','2')} = ${M.frac(`${sg(bmax)} − ${sg(bmin)}`,'2')} = ${sg(Delta)}${U}<br>`:t.modeB==='N'?`Δ = ${sg(Math.abs(lire(t.pct)))} % × ${sg(Math.abs(lecture))} + ${sg(lire(t.dgt))} × ${sg(lire(t.res))} = ${sg(Delta)}${U}<br>`:`Δ = ${sg(Delta)}${U}<br>`}<span class="lien">ainsi</span>${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = <span class="res">${sg(uB)}${U}</span><br>`;
+  if(Aa&&okB)c+=`<b>Composition</b><br>${M.v('u')} = ${M.sqrt(`${sub('u','A')}² + ${sub('u','B')}²`)} = <span class="res">${sg(u)}${U}</span><br>`;
+  if(isFinite(u))c+=`<b>Résultat</b><br><span class="res">${ecrire(x,u,unite,nom)}</span><div class="gr">u arrondie par excès à 2 chiffres significatifs.</div>`;
+  c+=zCalc(zi,M.v('x̄'));
+  if(Aa)c+=`<br><b>Dans l'intervalle</b><table>${(b=>[0,1,2].map(i=>`<tr><td>${['±s','±2s','±3s'][i]}</td><td>${b[i]} sur ${N} (${F.fix(100*b[i]/N,0)} %)</td><td class="gr">loi normale : ${['68','95','99.7'][i]} %</td></tr>`).join(''))(PH2.bandes(data,N,Aa.mean,Aa.s))}</table>`;
+  setZone(calcZone(),c);
+}
+
+/* ===================================================================== */
+/* Propagation : somme ou produit                                            */
+function d1(a){
+  const t=ST.t1,vars=t.vars,mute=t.mute;
+  while(mute.length<vars.length)mute.push(false);
+  const ve=vEff(vars,mute),k=lire(t.k),somme=t.type==='somme',nom=esc(t.nom||'y'),unite=t.unite||'';
+  const P1=a.panels.bud1,P2=a.panels.res1;
+  const ok=vars.length&&vars.every(v=>finis(v.val,v.p,v.coef))&&(somme||finis(k)&&vars.every(v=>v.val!==0));
+  if(!ok){manque(a,'bud1','Complétez les valeurs, incertitudes et coefficients.');a.svg('res1','');a.legend([]);
+    setZone(a.zones.resultat,note('Complétez le tableau des grandeurs mesurées.','gr'));setZone(calcZone(),'');return}
+  const B=somme?PH2.budgetSomme(ve):PH2.budgetProduit(ve,k);
+  const y=B.y0,u=B.uLin,zi=zInfo(t,y,u);
+  a.svg('bud1',budget(a,{x:0,y:0,w:P1.w,h:P1.h},vars,B.c,mute,u,'Part de chaque grandeur dans u(y)²'));
+  const lo=[y-3.6*u],hi=[y+3.6*u];if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
+  if(!(u>0)){lo[0]=y-1;hi[0]=y+1}
+  const o={mode:'dens',n:0,xlo:Math.min(...lo),xhi:Math.max(...hi),xlab:`${nom} [${esc(unite)}]`,ylab:'Densité de probabilité',modele:u>0?{m:y,s:u}:null,ombre:u>0,moyenne:y,moyNom:'y',cid:'r1'};
+  if(zi)o.ref=zi.ref;
+  a.svg('res1',u>0?histo(a,{x:0,y:0,w:P2.w,h:P2.h},o).svg:a.S.text(P2.w/2,P2.h/2,'u(y) = 0',{anchor:'middle',size:16,c:a.C.ink2,halo:false}));
+  a.legend([{c:a.C.cInk,label:'Part dans u(y)²'},{c:a.C.ink,label:'Loi normale N(y, u(y))'},zi&&{c:a.C.v,label:'Référence'}]);
+  let r=ligneRes('Résultat',ecrire(y,u,unite,nom))+note(mute.some(Boolean)?'certaines incertitudes sont mises à zéro (clic sur une barre)':'incertitude-type composée',mute.some(Boolean)?'gr':'')+zLigne(zi);
+  setZone(a.zones.resultat,r);
+  const sg=v=>F.sig(v,3),cf=v=>Number.isInteger(v)?String(v).replace('-','−'):F.sig(v,3),U=`&nbsp;${esc(unite)}`;let c='';
+  if(somme){
+    const t1=ve.map(v=>`${cf(v.coef)} × ${sg(v.val)}`).join(' + '),t2=ve.map(v=>`(${cf(v.coef)} × ${sg(uV(v))})²`).join(' + ');
+    c+=`${M.v('y')} = Σ ${sub('c','i')}${sub('x','i')} = ${t1} = ${sg(y)}${U}<br><span class="lien">ainsi</span>${M.v('u')}(${M.v('y')}) = ${M.sqrt(`Σ (${sub('c','i')} ${M.v('u')}(${sub('x','i')}))²`)}<br><span class="lien">soit</span>${M.v('u')}(${M.v('y')}) = ${M.sqrt(t2)} = <span class="res">${sg(u)}${U}</span>`;
+  }else{
+    const t2=ve.map(v=>`(${cf(v.coef)} × ${sg(uV(v))}/${sg(v.val)})²`).join(' + '),rel=y!==0?u/Math.abs(y):NaN;
+    c+=`${M.v('y')} = ${M.v('k')} Π ${sub('x','i')}<sup>${M.v('α','i')}</sup> = ${sg(y)}${U}<br><span class="lien">ainsi</span>${M.frac(`${M.v('u')}(${M.v('y')})`,`|${M.v('y')}|`)} = ${M.sqrt(`Σ (${M.v('α','i')} ${M.frac(`${M.v('u')}(${sub('x','i')})`,sub('x','i'))})²`)}<br><span class="lien">soit</span>${M.frac(`${M.v('u')}(${M.v('y')})`,`|${M.v('y')}|`)} = ${M.sqrt(t2)} = ${sg(rel)}<br><span class="lien">donc</span>${M.v('u')}(${M.v('y')}) = <span class="res">${sg(u)}${U}</span>`;
+  }
+  if(vars.some(v=>v.kind==='D'))c+=`<br><span class="gr">Pour une demi-largeur Δ : ${M.v('u')} = Δ/√3.</span>`;
+  c+=`<br><b>Résultat</b><br><span class="res">${ecrire(y,u,unite,nom)}</span>`+zCalc(zi,M.v('y'));
+  setZone(calcZone(),c);
+}
+
+/* ===================================================================== */
+/* Propagation : fonction quelconque (Monte-Carlo)                            */
+function d2(a){
+  const t=ST.t2,vars=t.vars,mute=t.mute;
+  while(mute.length<vars.length)mute.push(false);
+  const P1=a.panels.res2,P2=a.panels.bud2,nom=esc(t.nom||'y'),unite=t.unite||'';
+  const noms=vars.map(v=>(v.nom||'').trim());
+  let err='';
+  const dup=noms.find((n,i)=>noms.indexOf(n)!==i),mauvais=noms.find(n=>!PH2.nomValide(n));
+  if(mauvais!==undefined)err=`Nom de grandeur non valide : « ${mauvais} » (lettres, chiffres et _ ; ni nom de fonction, ni pi).`;
+  else if(dup!==undefined)err=`Deux grandeurs portent le nom « ${dup} ».`;
+  let cp=err?{err}:PH2.compiler(t.formule,noms);
+  if(!err&&!cp.err&&!vars.every(v=>finis(v.val,v.p)))cp={err:'Complétez les valeurs et les incertitudes.'};
+  if(!cp.err){const y0=cp.fn(...vars.map(v=>v.val));if(!isFinite(y0))cp={err:'La formule ne donne pas un nombre pour ces valeurs.'}}
+  const e2=document.getElementById('ph-e2');if(e2)e2.textContent=cp.err||'';
+  if(cp.err){manque(a,'res2',cp.err);a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('Corrigez la formule ou les grandeurs.','gr'));setZone(calcZone(),'');return}
+  const ve=vEff(vars,mute),N=+t.N;
+  const ys=memo('mc2',JSON.stringify([t.formule,ve,N,t.graine]),()=>{const y=PH2.mc(cp.fn,ve,N,t.graine),n=y.length,m=PH2.mean(y);return{y,n,m,s:n>1?PH2.sd(y,m):NaN,lay:n>0?PH2.hist(y):null}});
+  if(ys.n<2){manque(a,'res2','Aucune valeur simulée exploitable.');a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('La formule ne donne pas de valeur exploitable pour ces tirages.','gr'));setZone(calcZone(),'');return}
+  const B=PH2.budget(cp.fn,ve),y0=B.y0,sd=ys.s,zi=zInfo(t,y0,sd);
+  a.svg('bud2',budget(a,{x:0,y:0,w:P2.w,h:P2.h},vars,B.c,mute,B.uLin,'Part dans u(y)² (linéarisée)'));
+  const lo=[ys.lay.lo,ys.m-3.8*sd],hi=[ys.lay.lo+ys.lay.nb*ys.lay.w,ys.m+3.8*sd];
+  if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
+  const xlo=Math.min(...lo),xhi=Math.max(...hi);
+  const o={lay:ys.lay,counts:PH2.compte(ys.y,ys.n,ys.lay),n:ys.n,mode:'dens',xlo,xhi,xlab:`${nom} [${esc(unite)}]`,ylab:'Effectif normalisé',cid:'r2',
+    hauteur:sd>0?(1/(sd*Math.sqrt(2*Math.PI)))*echelle(xlo,xhi)*0.9:0,moyenne:y0,moyNom:'y',interv:{m:y0,u:sd,label:'u(y)'}};
+  if(t.lin&&B.uLin>0)o.lin={m:B.y0,s:B.uLin};
+  if(zi)o.ref=zi.ref;
+  a.svg('res2',histo(a,{x:0,y:0,w:P1.w,h:P1.h},o).svg);
+  a.legend([{c:BLEU,label:`Valeurs simulées de ${nom}`},{c:a.C.ink,label:'y calculée',dash:true},{c:a.C.E,label:'u(y) (Monte-Carlo)'},t.lin&&{c:a.C.E,label:'Linéarisation',dash:true},zi&&{c:a.C.v,label:'Référence'}]);
+  const sp=v=>v.toLocaleString('fr-FR').replace(/[  ]/g,' ');
+  let r=ligneRes('Résultat',ecrire(y0,sd,unite,nom))+note(`Monte-Carlo, ${sp(ys.n)} tirages : u(y) = écart-type des valeurs simulées`);
+  if(t.lin&&B.uLin>0)r+=note(`Linéarisation : u(y) = ${F.sig(B.uLin,2)}${unite?'&nbsp;'+esc(unite):''} (écart ${F.fix(100*(B.uLin-sd)/sd,1)} % avec Monte-Carlo)`,'gr');
+  r+=zLigne(zi);setZone(a.zones.resultat,r);
+  const sg=v=>F.sig(v,3),U=`&nbsp;${esc(unite)}`;
+  let c=`${M.v('y')} = ${esc(t.formule)}<br>${M.v('y')}(valeurs mesurées) = ${sg(y0)}${U}<br><b>Monte-Carlo</b> (${sp(ys.n)} tirages)<br>${M.v('ȳ')} = ${sg(ys.m)}${U}<br>${M.v('u')}(${M.v('y')}) = ${M.v('s')} = <span class="res">${sg(sd)}${U}</span><br><b>Résultat</b><br><span class="res">${ecrire(y0,sd,unite,nom)}</span>`;
+  c+=`<br><b>Linéarisation</b><br>${M.v('u')}(${M.v('y')}) ≃ ${M.sqrt(`Σ (${M.frac('∂'+M.v('f'),'∂'+sub('x','i'))} ${M.v('u')}(${sub('x','i')}))²`)} = ${sg(B.uLin)}${U}`;
+  c+=zCalc(zi,M.v('y'));
+  setZone(calcZone(),c);
+}
+
+/* ===================================================================== */
+/* Onglet 3 : régression linéaire                                         */
+let GEL3=null,RG3=null,IDX3=[];
+function pointProche(x,y){
+  if(!GEL3)return -1;const g=GEL3.G;let best=-1,d0=18*A.k;
+  GEL3.pts.forEach((p,i)=>{const d=Math.hypot(g.X(p.x/GEL3.f)-x,g.Y(p.y/GEL3.fy)-y);if(d<d0){d0=d;best=i}});
+  return best;
+}
+function d3(a){
+  const t=ST.t3,S=a.S,C=a.C,K=a.k;
+  const P1=a.panels.reg3,P2=a.panels.z3,P3=a.panels.ab3;
+  const pts=[],idx=[];let partiel=0;
+  lignesReg(t.rows).forEach(q=>{if(q){pts.push({x:q.x,ux:q.ux,y:q.y,uy:q.uy});idx.push(q.i)}else partiel++});
+  IDX3=idx;
+  const n=pts.length;
+  if(n<2){manque(a,'reg3','Entrez au moins deux points : x et y (u(x) et u(y) facultatives).');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;
+    setZone(a.zones.resultat,note(partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:'Entrez vos points : x et y, avec u(x) et u(y) si vous les connaissez.','gr'));setZone(calcZone(),'');return}
+  const X=pts.map(q=>q.x),Y=pts.map(q=>q.y),fit=PH2.fit(X,Y),z0=PH2.zReg(pts,fit.a,fit.b);
+  const sans=pts.every(q=>q.ux===0&&q.uy===0);
+  let sres=NaN,ua0=NaN,ub0=NaN;
+  if(sans&&n>=3){const mx=PH2.mean(X);let sxx=0,ss=0;X.forEach(v=>{sxx+=(v-mx)*(v-mx)});X.forEach((v,i)=>{const e=Y[i]-fit.a*v-fit.b;ss+=e*e});sres=Math.sqrt(ss/(n-2));ua0=sres/Math.sqrt(sxx);ub0=sres*Math.sqrt(1/n+mx*mx/sxx)}
+  const z=sans?Y.map((v,i)=>sres>0?(v-fit.a*X[i]-fit.b)/sres:0):z0,dg=sans?{bad:[],trop:false,motif:false}:PH2.diagnostic(z);
+  const nx=esc(t.xnom||'x'),ny=esc(t.ynom||'y'),ux=t.xun||'',uy=t.yun||'';
+  let rg=ST.gel3||null;
+  if(!rg){
+    const ext=(arr,errs)=>{let lo=Infinity,hi=-Infinity;arr.forEach((v,i)=>{lo=Math.min(lo,v-errs[i]);hi=Math.max(hi,v+errs[i])});const sp=(hi-lo)||Math.abs(hi)||1;lo-=.12*sp;hi+=.12*sp;if(lo>0&&lo<.6*hi)lo=0;if(hi<0&&hi>.6*lo)hi=0;return[lo,hi]};
+    const kz=t.zones&&!sans?(t.loi==='unif'?SQ3:2):1,[x0,x1]=ext(X,pts.map(q=>q.ux*kz)),[y0,y1]=ext(Y,pts.map(q=>q.uy*kz));
+    rg={x0,x1,y0:Math.min(y0,fit.a*x0+fit.b,fit.a*x1+fit.b),y1:Math.max(y1,fit.a*x0+fit.b,fit.a*x1+fit.b)};
+  }
+  RG3=rg;const f=echelle(rg.x0,rg.x1),fy=echelle(rg.y0,rg.y1);
+  const G=S.graph({x:0,y:0,w:P1.w,h:P1.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:rg.y0/fy,ymax:rg.y1/fy,xlab:`${nx} [${esc(ux)}]`+suffixe(f),ylab:`${ny} [${esc(uy)}]`+suffixe(fy)});
+  GEL3={G,f,fy,pts};
+  const pxy=pts.map(q=>Math.max(Math.abs(G.X((q.x+q.ux)/f)-G.X(q.x/f)),Math.abs(G.Y((q.y+q.uy)/fy)-G.Y(q.y/fy)))).sort((p,r)=>p-r),med=pxy[n>>1];
+  let kzm=+t.zoomU||0;if(!kzm){kzm=1;for(const c of[2,5,10,20,50,100,200,500,1000]){if(!(med>0)||med*kzm>=9)break;kzm=c}}
+  let s=S.clip('creg',G)+G.svg+`<g clip-path="url(#creg)">`+S.line(G.X(rg.x0/f),G.Y((fit.a*rg.x0+fit.b)/fy),G.X(rg.x1/f),G.Y((fit.a*rg.x1+fit.b)/fy),{c:C.ink,w:2})+'</g>';
+  if(t.zones&&!sans){
+    s+=`<g clip-path="url(#creg)">`;
+    pts.forEach(q=>{const cx=G.X(q.x/f),cy=G.Y(q.y/fy),px=Math.abs(G.X((q.x+q.ux*kzm)/f)-cx),py=Math.abs(G.Y((q.y+q.uy*kzm)/fy)-cy);
+      if(t.loi==='unif'){const w=Math.max(1,2*SQ3*px),hh=Math.max(1,2*SQ3*py);s+=`<rect x="${cx-w/2}" y="${cy-hh/2}" width="${w}" height="${hh}" fill="${C.cInk}" fill-opacity=".22" stroke="${C.cInk}" stroke-opacity=".5" stroke-width="1"/>`}
+      else for(const[k,o]of[[2,.12],[1,.22]])s+=`<ellipse cx="${cx}" cy="${cy}" rx="${Math.max(.5,k*px)}" ry="${Math.max(.5,k*py)}" fill="${C.cInk}" fill-opacity="${o}" stroke="${C.cInk}" stroke-opacity="${k===1?.6:.4}" stroke-width="1"/>`});
+    s+='</g>'}
+  pts.forEach((q,i)=>{const bad=!sans&&Math.abs(z[i])>2,col=bad?C.F:BLEU,cx=G.X(q.x/f),cy=G.Y(q.y/fy);
+    s+=S.line(cx,G.Y((q.y-q.uy*kzm)/fy),cx,G.Y((q.y+q.uy*kzm)/fy),{c:col,w:2})+S.line(G.X((q.x-q.ux*kzm)/f),cy,G.X((q.x+q.ux*kzm)/f),cy,{c:col,w:2});
+    s+=S.circle(cx,cy,(ST.drag3===i?8:6)*K,{fill:col,c:C.card,w:1.2,style:'cursor:grab'})});
+  a.svg('reg3',s);
+  const zm=Math.max(3,Math.ceil(Math.max(...z.map(Math.abs))+.4)),Gz=S.graph({x:0,y:0,w:P2.w,h:P2.h,padB:36*K,xmin:.4,xmax:n+.6,ymin:-zm,ymax:zm,xticks:n>12?undefined:pts.map((_,i)=>i+1),yticks:AnimKit.ticks(-zm,zm,Math.min(8,2*zm)),xlab:'Numéro du point',ylab:sans?'Résidu / s':`Écart normalisé ${S.v('z','i')}`});
+  let sz=Gz.svg+S.rect(Gz.x0,Gz.Y(2),Gz.w,Gz.Y(-2)-Gz.Y(2),{fill:C.cInk,fop:.1})+S.line(Gz.x0,Gz.Y(2),Gz.x0+Gz.w,Gz.Y(2),{c:C.ink2,w:1.2,dash:'6 4'})+S.line(Gz.x0,Gz.Y(-2),Gz.x0+Gz.w,Gz.Y(-2),{c:C.ink2,w:1.2,dash:'6 4'});
+  z.forEach((v,i)=>{const bad=!sans&&Math.abs(v)>2,cx=Gz.X(i+1);sz+=S.line(cx,Gz.Y(0),cx,Gz.Y(v),{c:bad?C.F:BLEU,w:1.6})+S.circle(cx,Gz.Y(v),6*K,{fill:bad?C.F:BLEU,c:C.card,w:1.2})});
+  sz+=S.text(Gz.x0+Gz.w-4*K,Gz.Y(2)-9*K,'+2',{anchor:'end',size:13,c:C.ink2,halo:false})+S.text(Gz.x0+Gz.w-4*K,Gz.Y(-2)+9*K,'−2',{anchor:'end',size:13,c:C.ink2,halo:false});
+  a.svg('z3',sz);
+  /* Monte-Carlo sur a et b (toujours calculé) */
+  const M3=ST.drag3>=0?Math.min(t.M,2000):t.M;
+  const mc=sans?{A:[],B:[],ua:ua0,ub:ub0,corr:NaN}:memo('mc3',JSON.stringify([pts,t.loi,M3]),()=>PH2.mcReg(pts,t.loi,M3,1));
+  const zi=zInfo(t,fit.a,mc.ua);
+  if(t.histos&&!sans&&P3){
+    const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B),w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w];
+    if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
+    const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:`${S.v('a')} [${esc(uy)}/${esc(ux)}]`,ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
+    if(zi)oa.ref=zi.ref;
+    const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:hB.lo,xhi:hB.lo+hB.nb*hB.w,xlab:`${S.v('b')} [${esc(uy)}]`,ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
+    a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
+  }
+  a.legend(t.histos&&!sans?[{c:BLEU,label:'Tirages Monte-Carlo'},{c:C.ink,label:'Valeur ajustée',dash:true},zi&&{c:C.v,label:'Référence de a'}]:[{c:BLEU,label:sans?'Point de mesure':'Point (|zᵢ| ≤ 2)',dot:true},t.zones&&!sans&&{c:C.cInk,label:(t.loi==='unif'?'Zone de tirage':'Zone de tirage 1σ, 2σ')+(kzm>1?` (u ×${kzm})`:'')},!sans&&{c:C.F,label:'Point (|zᵢ| > 2)',dot:true},{c:C.ink,label:'Régression'},zi&&{c:C.v,label:'Référence de a'}]);
+  /* résultats */
+  const un=`${uy}${ux?'/'+ux:''}`;
+  let r=ligneRes(`Pente ${M.v('a')}`,ecrire(fit.a,mc.ua,un,M.v('a')))+ligneRes(`Ordonnée ${M.v('b')}`,ecrire(fit.b,mc.ub,uy,M.v('b')));
+  if(sans)r+=note(n>=3?`Sans incertitudes sur les mesures : ${M.v('u')}(${M.v('a')}) et ${M.v('u')}(${M.v('b')}) sont estimées à partir de la dispersion des points (${n} − 2 degrés de liberté). Ajoutez ${M.v('u')}(${M.v('x')}) et ${M.v('u')}(${M.v('y')}) pour valider le modèle avec les écarts normalisés.`:'Il faut au moins 3 points pour estimer u(a) et u(b) à partir de la dispersion.','gr');
+  else if(dg.bad.length)r+=note(`${dg.bad.length===1?`Le point ${dg.bad[0]+1} s'écarte`:`Les points ${dg.bad.map(i=>i+1).join(', ')} s'écartent`} du modèle (|${sub('z','i')}| &gt; 2) : le modèle affine n'est pas validé.`,'ko');
+  else r+=note(`Tous les |${sub('z','i')}| ≤ 2 : le modèle affine est compatible avec les mesures.`,'ok');
+  if(dg.trop)r+=note('Tous les écarts sont très petits (|z| &lt; 0.5) : les incertitudes sont peut-être surestimées.','gr');
+  if(dg.motif)r+=note('Les écarts sont regroupés par signe (structure en U ou en S) : le modèle est peut-être inadapté, même si tous les |z| ≤ 2.','gr');
+  if(partiel)r+=note(`${partiel} ligne(s) incomplète(s) ignorée(s).`,'gr');
+  r+=zLigne(zi);setZone(a.zones.resultat,r);
+  const sg=v=>F.sig(v,3);
+  let c=`${M.v('y')} = ${M.v('a')} ${M.v('x')} + ${M.v('b')} (moindres carrés, ${n} points)<br>${M.v('a')} = ${sg(fit.a)} ${esc(un)} ; ${M.v('b')} = ${sg(fit.b)} ${esc(uy)}<br><b>Monte-Carlo</b> (${mc.A.length} tirages, loi ${t.loi==='unif'?'uniforme':'gaussienne'})<br>${M.v('u')}(${M.v('a')}) = <span class="res">${sg(mc.ua)}</span> ; ${M.v('u')}(${M.v('b')}) = <span class="res">${sg(mc.ub)}</span> ; corrélation ${F.fix(mc.corr,2)}<br><b>Écarts normalisés</b><br>${M.v('z','i')} = ${M.frac(`${sub('y','i')} − ${M.v('a')}${sub('x','i')} − ${M.v('b')}`,M.sqrt(`${M.v('u')}(${sub('y','i')})² + ${M.v('a')}²${M.v('u')}(${sub('x','i')})²`))}`;
+  c+=`<table>${z.map((v,i)=>`<tr><td>Point ${i+1}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${sub('z',i+1)} = ${F.sig(v,3)}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${Math.abs(v)>2?'hors de ±2':'dans ±2'}</td></tr>`).join('')}</table>`;
+  if(sans)c=`${M.v('y')} = ${M.v('a')} ${M.v('x')} + ${M.v('b')} (moindres carrés, ${n} points)<br>${M.v('a')} = ${M.frac(`Σ(${sub('x','i')} − ${M.v('x̄')})(${sub('y','i')} − ${M.v('ȳ')})`,`Σ(${sub('x','i')} − ${M.v('x̄')})²`)} = ${sg(fit.a)} ${esc(un)} ; ${M.v('b')} = ${M.v('ȳ')} − ${M.v('a')} ${M.v('x̄')} = ${sg(fit.b)} ${esc(uy)}`+(isFinite(sres)?`<br><b>Dispersion des points</b><br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${sub('y','i')} − ${M.v('a')}${sub('x','i')} − ${M.v('b')})²`,`${M.v('N')} − 2`))} = ${sg(sres)} ${esc(uy)}<br><span class="lien">donc</span>${M.v('u')}(${M.v('a')}) = ${M.frac(M.v('s'),M.sqrt(`Σ(${sub('x','i')} − ${M.v('x̄')})²`))} = <span class="res">${sg(ua0)} ${esc(un)}</span><br>${M.v('u')}(${M.v('b')}) = ${M.v('s')} ${M.sqrt(`${M.frac('1',M.v('N'))} + ${M.frac(`${M.v('x̄')}²`,`Σ(${sub('x','i')} − ${M.v('x̄')})²`)}`)} = <span class="res">${sg(ub0)} ${esc(uy)}</span>`:'')+zCalc(zi,M.v('a'));
+  else c+=zCalc(zi,M.v('a'));
+  setZone(calcZone(),c);
+}
+
+</script>
+</body>
+</html>
