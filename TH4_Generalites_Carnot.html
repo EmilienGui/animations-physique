@@ -1,44 +1,720 @@
 <!doctype html>
-<html lang="fr" data-theme="light">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Atelier de thermodynamique MPSI TH4, autonome hors connexion, par E. Guillaume."><title>Échanges et cycle de Carnot · TH4 · MPSI</title>
-<style>:root{color-scheme:light;--paper:#f6f3ee;--surface:#fffefa;--ink:#181b20;--muted:#5d6269;--line:#ddd7ce;--grid:#e9e4dc;--accent:#da6c00;--accent-ink:#994600;--soft:#fff0df;--hot:#ba3d31;--cold:#296fba;--work:#497354;--regen:#986c30;--metal:#b3bcc4;--metal-light:#f5f8fa;--metal-dark:#64717e;--shadow:#26384922}
-:root[data-theme=dark]{color-scheme:dark;--paper:#171b21;--surface:#222831;--ink:#f5f2ea;--muted:#c0c6d0;--line:#424b55;--grid:#343d47;--accent:#f6a450;--accent-ink:#ffc17a;--soft:#3c3027;--hot:#ff9a83;--cold:#8dc6ff;--work:#a0d5b1;--regen:#e6bf7e;--metal:#99a9b8;--metal-light:#d3dde5;--metal-dark:#475462;--shadow:#00000045}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;padding:6px 12px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px}button:hover{border-color:var(--accent);background:var(--soft)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}button.primary{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--surface)}button[aria-pressed=true]:not(.primary){border-color:var(--accent);color:var(--accent-ink);background:var(--soft)}button.small{min-height:32px;padding:4px 8px;font-size:13px}button.square{width:40px;padding:0;font-size:22px}button.small.square{width:31px;font-size:20px}select{padding:7px;background:var(--paper);border:1px solid var(--line);border-radius:5px;color:var(--ink);min-width:0}input[type=range]{width:100%;accent-color:var(--accent-ink);cursor:pointer;min-height:22px;margin:8px 0 0}input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent-ink)}input[type=number]{width:81px;padding:5px;text-align:right;font-variant-numeric:tabular-nums;background:var(--paper);border:1px solid var(--line);border-radius:4px;color:var(--ink)}a{color:var(--accent-ink)}[hidden]{display:none!important}.topline{height:4px;background:var(--accent)}.shell{height:calc(100dvh - 4px);min-height:650px;max-width:2200px;margin:auto;padding:12px 18px 8px;display:flex;flex-direction:column;gap:10px}header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex:none}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:650;color:var(--accent-ink);margin-bottom:3px}h1{font-size:29px;letter-spacing:-.025em;font-weight:540;line-height:1.12;margin:0}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{font-size:14px}.tabs{display:flex;gap:5px;flex-wrap:wrap;flex:none}.tabs button{border-color:transparent;background:transparent;font-size:16px;min-height:39px}.tabs button[aria-selected=true]{border-color:var(--line);border-bottom-color:var(--accent);box-shadow:inset 0 -2px var(--accent);background:var(--surface);color:var(--accent-ink)}.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:12px}.visual{display:flex;flex-direction:column;gap:9px;min-width:0;min-height:0}.stagegrid{flex:1;min-height:290px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:10px}.panel{display:flex;flex-direction:column;min-height:0;min-width:0;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}.panel-head{padding:9px 11px 4px;display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:42px;flex:none}.panel-head h2{font-size:15px;font-weight:550;color:var(--muted);line-height:1.15;margin:0}.view-tools{display:flex;align-items:center;gap:3px;flex:none}.view-tools output{font-size:11px;color:var(--muted);min-width:36px;text-align:center}.plot-panel select{font-size:13px;padding:4px;max-width:130px}.canvas-wrap{min-height:180px;position:relative;flex:1;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:pan-y}.scene-note{font-size:12px;color:var(--muted);padding:3px 12px 8px;min-height:27px;line-height:1.3;flex:none}.phasebar{display:flex;gap:5px;flex:none}.phasebar button{flex:1;min-width:0;font-size:13px;min-height:34px;padding:4px 7px;border-top:3px solid var(--phase,var(--line))}.phasebar button.active{background:var(--soft);border-color:var(--phase,var(--accent));color:var(--ink);font-weight:650}.phasebar button span{opacity:.65;margin-right:4px}.transport{display:flex;gap:7px;align-items:center;flex-wrap:wrap;flex:none}.transport button{font-size:14px;min-height:35px}.timeline{flex:1;min-width:130px;display:flex;align-items:center;gap:8px}.timeline input{margin:0}.timeline output{font-size:12px;color:var(--muted);min-width:36px;font-variant-numeric:tabular-nums}.speed,.loop{font-size:12px;display:flex;align-items:center;gap:4px;color:var(--muted)}.speed select{font-size:13px;padding:4px;width:58px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;flex:none}.metric{border-left:1px solid var(--line);padding-left:12px;min-width:0}.metric:first-child{border:0;padding-left:0}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:31px;line-height:1.2;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}.metric-unit{font-size:16px;margin-left:3px}.metric-detail{font-size:12px;color:var(--muted);line-height:1.25;min-height:16px}.principle{padding-top:8px;border-top:1px solid var(--line);display:flex;gap:16px;align-items:center;min-height:50px;flex:none}.equation{font:23px/1.2 Georgia,"Times New Roman",serif;color:var(--accent-ink);flex:none}.principle p{font-size:14px;line-height:1.35;color:var(--muted);margin:0}.controls{min-height:0;overflow:auto;border:1px solid var(--line);border-radius:9px;background:var(--surface);scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:16px 14px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.control-section h3{font-size:11px;font-weight:650;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 12px}.field{margin:0 0 15px}.field:last-child{margin-bottom:0}.field-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:14px}.numeric{display:flex;align-items:center;gap:4px}.unit{font-size:11px;color:var(--muted)}.select-field{display:block;font-size:14px;margin-bottom:12px}.select-field>span{display:block;margin-bottom:6px}.select-field select{width:100%}.check{display:flex;align-items:center;gap:7px;font-size:14px;margin:10px 0}.presets{display:flex;flex-wrap:wrap;gap:6px}.presets button{font-size:13px;min-height:32px;padding:4px 7px}.hint{font-size:13px;color:var(--muted);line-height:1.5;margin:7px 0 0}.switch{display:flex;gap:4px;margin-bottom:12px}.switch button{flex:1;min-width:0;padding:5px;font-size:13px;line-height:1.2}.tag{display:inline-block;background:var(--soft);color:var(--accent-ink);padding:3px 6px;border-radius:4px;font-size:12px}.formula{font:19px/1.55 Georgia,"Times New Roman",serif;margin:8px 0}.frac{display:inline-flex;vertical-align:middle;flex-direction:column;align-items:center;font-size:.9em;margin:0 .15em;line-height:1.15}.frac>span:first-child{border-bottom:1px solid currentColor;padding:0 .12em .1em}.frac>span:last-child{padding:.1em .12em 0}.bilan-off .metrics,.bilan-off .principle{visibility:hidden}footer{flex:none;font-size:11px;color:var(--muted);display:flex;justify-content:space-between}.projection .controls,.projection footer,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:8px 12px}.projection .stagegrid{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)}.projection .metric-label{font-size:20px}.projection .metric-value{font-size:40px}.projection .metric-unit{font-size:21px}.projection .metric-detail{font-size:15px}.projection .equation{font-size:28px}.projection .principle p{font-size:18px}.projection .phasebar button{font-size:16px;min-height:38px}.projection .panel-head h2{font-size:19px}.projection .scene-note{font-size:15px}.projection .transport button{font-size:16px}.projection .plot-panel select{font-size:16px}.projection .principle{min-height:57px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:10px}dialog{width:min(840px,calc(100% - 24px));max-height:87dvh;overflow:auto;padding:24px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px}dialog::backdrop{background:#10182499}dialog h2{margin:0;font-size:27px;font-weight:550}dialog h3{font-size:19px;color:var(--accent-ink);margin:22px 0 7px}dialog p,dialog li{font-size:16px;line-height:1.6;color:var(--muted)}#toast{position:fixed;z-index:20;bottom:15px;left:50%;transform:translateX(-50%);max-width:90vw;padding:10px 15px;border-radius:7px;background:var(--ink);color:var(--surface);font-size:14px}#toast:empty{display:none}sub,sup{font-size:.72em;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.4em}
-@media(max-width:1250px){.workspace{grid-template-columns:minmax(0,1fr) 258px}.shell{padding:9px 12px 7px;gap:8px}h1{font-size:26px}.panel-head{padding:7px 8px 3px;flex-wrap:wrap}.panel-head h2{font-size:14px}.machine-panel .panel-head h2{flex:1}.view-tools{margin-left:auto}.metric-value{font-size:28px}.metric-label{font-size:13px}.principle{gap:12px}.equation{font-size:21px}.principle p{font-size:13px}.control-section{padding:13px 11px}.actions button{padding:6px 9px}footer{display:none}.scene-note{font-size:11px}}
-@media(max-width:950px){.workspace{grid-template-columns:minmax(0,1fr)}.controls{display:none;position:fixed;right:10px;top:145px;bottom:12px;width:min(310px,calc(100% - 22px));z-index:10;box-shadow:0 12px 50px #0004}.controls.open{display:block}.shell{min-height:750px}.stagegrid{min-height:350px}.actions #projection{border-color:var(--accent)}.metrics{gap:7px}.metric{padding-left:8px}}
-@media(max-width:620px){.shell{height:auto;min-height:100dvh;padding:10px;gap:10px}h1{font-size:25px}.actions{gap:5px}.actions button{font-size:13px;padding:5px 8px;min-height:38px}.actions .square{width:34px}.tabs button{font-size:14px;min-height:36px;padding:5px 9px}.workspace{flex:none}.stagegrid,.projection .stagegrid{display:flex;flex-direction:column;flex:none;min-height:0}.machine-panel{height:440px;flex:none}.plot-panel{height:365px;flex:none}.panel-head{flex-wrap:nowrap;min-height:43px}.panel-head h2{font-size:14px}.phasebar{flex-wrap:wrap}.phasebar button{flex-basis:calc(50% - 4px);font-size:13px}.timeline{order:5;flex-basis:100%}.metrics{grid-template-columns:1fr 1fr;gap:12px}.metric:nth-child(3){border-left:0;padding-left:0}.metric-value{font-size:30px}.metric-label{font-size:14px}.metric-detail{font-size:12px}.principle{display:block}.equation{font-size:24px;margin-bottom:8px}.principle p{font-size:14px}.projection .machine-panel{height:490px}.projection .plot-panel{height:430px}.projection .metric-value{font-size:35px}.projection .metric-label{font-size:17px}.projection .metric-detail{font-size:13px}.projection .principle p{font-size:17px}.projection .phasebar button{font-size:14px}.projection .scene-note{font-size:12px}.projection .panel-head h2{font-size:16px}.controls{top:150px}.loop{margin-left:auto}}
-@media(min-width:951px) and (max-height:780px){.shell{min-height:650px;gap:7px}.metrics{gap:8px}.metric-value{font-size:29px}.metric-detail{font-size:11px}.principle{min-height:45px}.projection .metric-value{font-size:36px}.projection .metric-label{font-size:18px}.projection .metric-detail{font-size:13px}.projection .phasebar button{min-height:34px}.projection .principle{min-height:48px}.projection .principle p{font-size:16px}.projection .equation{font-size:25px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
-@media(min-width:951px) and (min-height:650px){body{overflow:hidden}}
-@media(max-width:420px){.metric-unit{display:block;margin-left:0;font-size:15px}.projection .metric-unit{font-size:16px}.equation{max-width:100%;font-size:21px}.projection .equation{font-size:23px}}
-@media print{.controls,.actions,.transport,.view-tools,footer{display:none}.shell{height:auto}.workspace{display:block}.stagegrid{height:520px}.panel{break-inside:avoid}}
-.plot-panel .panel-head{flex-wrap:wrap;column-gap:8px;row-gap:5px}.plot-panel .panel-head h2{flex:1;min-width:100px}.plot-view-tools{margin-left:auto}.plot-panel canvas{touch-action:none}.plot-view-tools button:disabled{opacity:.4;cursor:default}.projection .plot-view-tools output{font-size:13px}
-</style></head>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Machines dithermes : bilans d&#x27;énergie et d&#x27;entropie, cycle de Carnot dans les deux sens, cogénération.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Échanges et cycle de Carnot · TH4 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
 <body>
-<div class="topline"></div>
-<main class="shell">
- <header><div class="heading"><div class="eyebrow">MPSI · TH4 · Machines thermiques</div><h1>Échanges et cycle de Carnot</h1></div>
- <div class="actions"><button id="bilan" aria-pressed="true" title="Masquer les résultats pour faire une prévision">Bilans</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Enregistrer les schémas et le bilan en image PNG">Image</button><button id="projection">Projection</button><button id="fullscreen" class="square" aria-label="Plein écran" title="Plein écran">⛶</button></div></header>
- <nav id="tabs" class="tabs" role="tablist" aria-label="Situations"></nav>
- <div class="workspace" id="experiment" role="tabpanel">
-  <section class="visual">
-   <div class="stagegrid">
-    <section class="panel machine-panel"><div class="panel-head"><h2 id="sceneTitle"></h2><div class="view-tools"><button id="zoomOut" class="small square" aria-label="Réduire le schéma">−</button><output id="zoomValue">100 %</output><button id="zoomIn" class="small square" aria-label="Agrandir le schéma">+</button><button id="fit" class="small">Cadrer</button></div></div><div class="canvas-wrap"><canvas id="scene" role="img" aria-label="Schéma animé de la machine thermique"></canvas></div><div id="sceneNote" class="scene-note"></div></section>
-    <section class="panel plot-panel"><div class="panel-head"><h2 id="plotTitle"></h2><select id="plotMode" aria-label="Diagramme affiché"></select><div class="view-tools plot-view-tools" id="plotTools" role="group" aria-label="Cadrage du cycle"><button id="plotZoomOut" class="small square" aria-label="Dézoomer le cycle" title="Dézoomer le cycle">−</button><output id="plotZoomValue" aria-label="Zoom du cycle">100 %</output><button id="plotZoomIn" class="small square" aria-label="Zoomer le cycle" title="Zoomer le cycle">+</button><button id="plotFit" class="small" title="Recentrer et afficher le cycle entier">Cadrer</button></div></div><div class="canvas-wrap"><canvas id="plot" role="img" aria-label="Diagramme thermodynamique synchronisé" title="Molette : zoom. Glisser le fond : déplacer le cadrage. Maj + glisser : déplacer partout. Glisser le cycle : lire un état."></canvas></div><div id="plotNote" class="scene-note"></div></section>
-   </div>
-   <div class="phasebar" id="phases" role="group" aria-label="Étapes du fonctionnement"></div>
-   <div class="transport"><button id="play" class="primary" aria-pressed="false">Démarrer</button><button id="reset">Recommencer</button><label class="timeline"><span class="sr-only">Avancement dans le cycle</span><input id="progress" type="range" min="0" max="1000" value="0"><output id="progressValue">0 %</output></label><label class="speed">Lecture<select id="speed" aria-label="Vitesse de lecture"><option value="0.25">× ¼</option><option value="0.5">× ½</option><option value="1" selected>× 1</option><option value="2">× 2</option></select></label><label class="loop"><input id="loop" type="checkbox" checked>Boucle</label></div>
-   <div id="metrics" class="metrics" aria-label="Bilan énergétique"></div>
-   <div class="principle"><div id="equation" class="equation"></div><p id="explanation"></p></div>
-  </section>
-  <aside class="controls" id="controls" aria-label="Réglages et hypothèses"></aside>
- </div>
- <footer><span>E. Guillaume · MPSI · TH4 · Hors connexion</span><span>Espace : lecture/pause · ← / → : étapes · R : recommencer</span></footer>
-</main>
-<dialog id="helpDialog"><div class="dialog-head"><h2 id="helpTitle">Utiliser l’atelier</h2><button id="closeHelp" class="small" aria-label="Fermer l’aide">Fermer</button></div><div id="helpContent"></div><h3>Commandes et conventions</h3><p>Les échanges sont positifs lorsqu’ils sont reçus par le fluide. Les températures des formules de Carnot sont en kelvins. La couleur du fluide repère sa température selon une même échelle ; elle ne représente pas sa couleur réelle.</p><p>Le diagramme possède ses propres boutons −, + et Cadrer, indépendants du schéma de la machine. La molette zoome autour du pointeur. Glisser le fond déplace le cadrage ; Maj + glisser permet de le déplacer même près d’une courbe. Glisser directement le cycle permet de lire un état. Cadrer rétablit le cycle entier après un déplacement ou un zoom. Les axes et leurs graduations s’adaptent ; la pression reste logarithmique dans le diagramme des frigoristes.</p><p>La vitesse de lecture et le curseur parcourent une représentation pédagogique : ils ne règlent pas la vitesse physique de la machine. La pause arrête le dessin. Les légendes gardent leur taille lors du zoom. Cadrer rétablit le schéma entier. Projection agrandit les informations et masque les réglages ; le petit bouton ⛶ commande séparément le plein écran. Image exporte les deux vues et le bilan visibles en PNG.</p><p>Espace : lecture/pause ; flèches gauche/droite : étape précédente/suivante ; R : recommencer ; F : plein écran ; Échap : fermer l’aide. Les bilans peuvent être masqués pendant une prévision.</p></dialog>
-<div id="toast" role="status"></div><div id="status" class="sr-only" role="status" aria-live="polite"></div>
-<script></script><script>/* Modèles physiques, indépendants de l'interface et du dessin. SI pour les
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* Modèles physiques, indépendants de l'interface et du dessin. SI pour les
  * gaz ; bar, °C et kJ/kg pour les tables frigorifiques explicitement nommées. */
 'use strict';
 globalThis.TH4Physics=(()=>{
@@ -146,314 +822,320 @@ globalThis.TH4Physics=(()=>{
  })();
  return {R,clamp,mix,curve,slider,segment,cycle,carnot,budget,schmidt,engineMotion,gasTheta,refrigerant};
 })();
-</script><script>/* Dessin vectoriel en pixels d'écran. La géométrie peut changer d'échelle,
- * jamais les tailles de caractères. Aucune image ou police distante. */
-'use strict';
-globalThis.TH4Draw=(()=>{
- const M=TH4Physics,clamp=M.clamp,fmt=(x,d=1)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}).format(Math.abs(x)<1e-8?0:x);
- function parts(s){let mode='',out=[];for(const p of String(s).split(/(<\/?(?:sub|sup)>)/g)){if(p==='<sub>')mode='sub';else if(p==='<sup>')mode='sup';else if(p.startsWith('</'))mode='';else if(p)out.push([p,mode]);}return out;}
- class Stage{
-  constructor(canvas){this.canvas=canvas;this.c=canvas.getContext('2d');this.palette={};this.hits=[];this.tempRange=[240,900];}
-  clear(){const r=this.canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);this.w=Math.max(100,r.width);this.h=Math.max(120,r.height);if(this.canvas.width!==Math.round(this.w*d)||this.canvas.height!==Math.round(this.h*d)){this.canvas.width=Math.round(this.w*d);this.canvas.height=Math.round(this.h*d);}this.c.setTransform(d,0,0,d,0,0);const cs=getComputedStyle(document.documentElement);for(const k of ['paper','surface','ink','muted','line','grid','accent','accent-ink','soft','hot','cold','work','regen','metal','metal-light','metal-dark','shadow'])this.palette[k]=cs.getPropertyValue('--'+k).trim();this.projection=document.body.classList.contains('projection');this.c.fillStyle=this.palette.surface;this.c.fillRect(0,0,this.w,this.h);this.hits=[];}
-  color(k){return this.palette[k]||k;}
-  fontSize(n){return this.projection?Math.max(20,n*1.3):n;}
-  measure(s,size=16,weight=400){const c=this.c;let w=0;for(const [p,m] of parts(s)){c.font=`${weight} ${this.fontSize(size)*(m?.72:1)}px Arial,Helvetica,sans-serif`;w+=c.measureText(p).width;}return w;}
-  text(x,y,s,col='ink',size=16,align='left',bg=false,weight=400){const c=this.c,fs=this.fontSize(size),w=this.measure(s,size,weight);x-=align==='center'?w/2:align==='right'?w:0;c.save();if(bg)this.rect(x-5,y-fs*.67,w+10,fs*1.4,'surface',null,3);c.fillStyle=this.color(col);c.textBaseline='middle';c.textAlign='left';for(const [p,m] of parts(s)){c.font=`${weight} ${fs*(m?.72:1)}px Arial,Helvetica,sans-serif`;c.fillText(p,x,y+(m==='sub'?fs*.25:m==='sup'?-fs*.33:0));x+=c.measureText(p).width;}c.restore();}
-  wrap(x,y,str,width,col='muted',size=14,align='left'){let row='',n=0;for(const word of String(str).split(' ')){const test=row?row+' '+word:word;if(row&&this.measure(test,size)>width){this.text(x,y+n*this.fontSize(size)*1.4,row,col,size,align);row=word;n++;}else row=test;}if(row)this.text(x,y+n*this.fontSize(size)*1.4,row,col,size,align);return (n+1)*this.fontSize(size)*1.4;}
-  line(x1,y1,x2,y2,col='line',width=1.5,dash=[]){const c=this.c;c.save();c.strokeStyle=this.color(col);c.lineWidth=width;c.setLineDash(dash);c.lineCap='round';c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.restore();}
-  rect(x,y,w,h,fill='surface',stroke=null,r=0,width=1.5){const c=this.c;c.save();c.beginPath();r?c.roundRect(x,y,w,h,r):c.rect(x,y,w,h);if(fill){c.fillStyle=this.color(fill);c.fill();}if(stroke){c.strokeStyle=this.color(stroke);c.lineWidth=width;c.stroke();}c.restore();}
-  circle(x,y,r,fill='surface',stroke=null,width=1.5){const c=this.c;c.save();c.beginPath();c.arc(x,y,Math.max(.01,r),0,Math.PI*2);if(fill){c.fillStyle=this.color(fill);c.fill();}if(stroke){c.strokeStyle=this.color(stroke);c.lineWidth=width;c.stroke();}c.restore();}
-  poly(ps,stroke='ink',width=2,fill=null,dash=[]){const c=this.c;c.save();c.beginPath();ps.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));if(fill){c.closePath();c.fillStyle=this.color(fill);c.fill();}if(stroke){c.strokeStyle=this.color(stroke);c.lineWidth=width;c.lineJoin='round';c.lineCap='round';c.setLineDash(dash);c.stroke();}c.restore();}
-  arrow(x1,y1,x2,y2,col='work',width=3,head=10){const a=Math.atan2(y2-y1,x2-x1);this.line(x1,y1,x2,y2,col,width);this.poly([[x2,y2],[x2-head*Math.cos(a)+head*.5*Math.sin(a),y2-head*Math.sin(a)-head*.5*Math.cos(a)],[x2-head*Math.cos(a)-head*.5*Math.sin(a),y2-head*Math.sin(a)+head*.5*Math.cos(a)]],null,0,this.color(col));}
-  gradient(x1,y1,x2,y2,stops){const g=this.c.createLinearGradient(x1,y1,x2,y2);stops.forEach(([x,c])=>g.addColorStop(x,this.color(c)));return g;}
-  metalRect(x,y,w,h,r=3){const c=this.c,g=this.gradient(x,y,x+w,y,[[0,'metal-dark'],[.15,'metal-light'],[.48,'metal'],[.7,'metal-light'],[1,'metal-dark']]);c.save();c.fillStyle=g;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();c.strokeStyle=this.color('metal-dark');c.lineWidth=1.2;c.stroke();c.restore();}
-  temperature(T,alpha=1){const [lo,hi]=this.tempRange,t=clamp((T-lo)/(hi-lo)),dark=document.documentElement.dataset.theme==='dark',blue=dark?[100,179,247]:[51,126,196],neutral=dark?[188,193,198]:[189,196,200],hot=dark?[255,150,105]:[223,87,43],a=t<.5?blue:neutral,b=t<.5?neutral:hot,f=t<.5?t*2:(t-.5)*2;return `rgba(${a.map((v,i)=>Math.round(M.mix(v,b[i],f))).join(',')},${alpha})`;}
-  gasRect(x,y,w,h,T){const c=this.c;c.save();const g=c.createLinearGradient(x,y,x+w,y);g.addColorStop(0,this.temperature(T,.24));g.addColorStop(.5,this.temperature(T,.55));g.addColorStop(1,this.temperature(T,.24));c.fillStyle=g;c.fillRect(x,y,w,Math.max(0,h));c.restore();}
-  hatch(x,y,w,h){const c=this.c;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();for(let i=-h;i<w+h;i+=8)this.line(x+i,y+h,x+i+h,y,'metal-dark',.6);c.restore();}
-  rod(x1,y1,x2,y2,w=9){const a=Math.atan2(y2-y1,x2-x1),nx=-Math.sin(a)*w/2,ny=Math.cos(a)*w/2;this.poly([[x1+nx,y1+ny],[x2+nx,y2+ny],[x2-nx,y2-ny],[x1-nx,y1-ny]],'metal-dark',1,this.color('metal'));this.line(x1+nx*.45,y1+ny*.45,x2+nx*.45,y2+ny*.45,'metal-light',1.7);this.circle(x1,y1,w*.8,'metal','metal-dark');this.circle(x2,y2,w*.8,'metal','metal-dark');this.circle(x1,y1,w*.26,'metal-dark');this.circle(x2,y2,w*.26,'metal-dark');}
-  pipe(points,{temp=300,width=10,flow=0,phase=0,dots=true,selected=false}={}){if(selected)this.poly(points,'accent',width+9,null);this.poly(points,'metal-dark',width+4);this.poly(points,'metal-light',width+1);this.poly(points,typeof temp==='number'?this.temperature(temp):temp,width-3);if(dots){let lens=[0];for(let i=1;i<points.length;i++)lens.push(lens.at(-1)+Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]));const total=lens.at(-1);for(let d=((phase*flow)%28+28)%28;d<total;d+=28){let j=1;while(j<lens.length-1&&lens[j]<d)j++;const a=points[j-1],b=points[j],u=(d-lens[j-1])/(lens[j]-lens[j-1]||1),x=M.mix(a[0],b[0],u),y=M.mix(a[1],b[1],u);this.circle(x,y,Math.max(1.4,width*.12),'#ffffffd9');}}}
-  badge(x,y,s,col='accent-ink',size=14){const w=this.measure(s,size)+18;this.rect(x-w/2,y-this.fontSize(size)*.8,w,this.fontSize(size)*1.65,'surface','line',5);this.text(x,y,s,col,size,'center');}
-  dot(x,y,s,col='ink',dx=0,dy=-20){this.circle(x,y,5,col,'surface',2);this.text(x+dx,y+dy,s,col,16,'center',true,600);}
-  group(bw,bh,zoom=1){const d=Math.min(this.w/bw,this.h/bh)*zoom,x=(this.w-bw*d)/2,y=(this.h-bh*d)/2,S=this;const P=(a,b)=>[x+a*d,y+b*d];return {d,x,y,P,line(a,b,c,e,col,w=1.5,dash=[]){S.line(...P(a,b),...P(c,e),col,Math.max(.8,w*d),dash);},rect(a,b,c,e,f,t,r=0,w=1.5){S.rect(...P(a,b),c*d,e*d,f,t,r*d,w*d);},circle(a,b,r,f,t,w=1.5){S.circle(...P(a,b),r*d,f,t,w*d);},poly(ps,col,w=2,fill=null,dash=[]){S.poly(ps.map(v=>P(...v)),col,w*d,fill,dash);},text(a,b,s,col='ink',size=16,align='left',bg=false,weight=400){S.text(...P(a,b),s,col,size,align,bg,weight);},arrow(a,b,c,e,col,w=3){S.arrow(...P(a,b),...P(c,e),col,w*d,Math.max(7,10*d));},metal(a,b,c,e,r=3){S.metalRect(...P(a,b),c*d,e*d,r*d);},gas(a,b,c,e,T){S.gasRect(...P(a,b),c*d,e*d,T);},hatch(a,b,c,e){S.hatch(...P(a,b),c*d,e*d);},rod(a,b,c,e,w=9){S.rod(...P(a,b),...P(c,e),w*d);},pipe(ps,opt={}){S.pipe(ps.map(v=>P(...v)),{...opt,width:(opt.width||10)*d,phase:(opt.phase||0)*d});},hit(id,a,b,c,e){S.hits.push({id,x:x+a*d,y:y+b*d,w:c*d,h:e*d});}};}
-  plot({xmin=0,xmax=1,ymin=0,ymax=1,xlabel='',ylabel='',xlog=false,ylog=false,xf=null,yf=null}={}){
-   const s=this,fs=this.fontSize(13),view=this.view||{zoom:1,x:0,y:0},zoom=clamp(view.zoom||1,.5,16),vx=view.x||0,vy=view.y||0,L=xlog?Math.log10:x=>x,YF=ylog?Math.log10:x=>x,IX=xlog?x=>10**x:x=>x,IY=ylog?x=>10**x:x=>x;
-   const ax=L(xmin),bx=L(xmax),ay=YF(ymin),by=YF(ymax),xlo=ax+(.5+vx-.5/zoom)*(bx-ax),xhi=ax+(.5+vx+.5/zoom)*(bx-ax),ylo=ay+(.5+vy-.5/zoom)*(by-ay),yhi=ay+(.5+vy+.5/zoom)*(by-ay);
-   const dxmin=IX(xlo),dxmax=IX(xhi),dymin=IY(ylo),dymax=IY(yhi),xt=Array.from({length:5},(_,i)=>IX(M.mix(xlo,xhi,i/4)));let yt;
-   if(ylog){yt=[];for(let e=Math.floor(ylo);e<=Math.ceil(yhi);e++)for(const k of [1,2,5]){const v=k*10**e;if(v>=dymin*(1-1e-10)&&v<=dymax*(1+1e-10))yt.push(v);}if(yt.length<3)yt=Array.from({length:5},(_,i)=>IY(M.mix(ylo,yhi,i/4)));if(yt.length>9)yt=yt.filter((_,i)=>i%Math.ceil(yt.length/9)===0);}
-   else yt=Array.from({length:5},(_,i)=>M.mix(dymin,dymax,i/4));
-   const moved=zoom!==1||vx!==0||vy!==0;
-   function tick(v,span,custom,log=false){if(!moved&&custom)return custom(v);if(v!==0&&(Math.abs(v)>=1e5||Math.abs(v)<1e-4))return v.toExponential(1).replace('e+','e');let digits=Math.max(0,Math.min(6,1-Math.floor(Math.log10(Math.abs(span)/4||1))));if(log&&Math.abs(v)>0&&Math.abs(v)<1)digits=Math.max(digits,Math.min(6,1-Math.floor(Math.log10(Math.abs(v)))));return fmt(v,digits);}
-   const ylabels=yt.map(v=>tick(v,dymax-dymin,yf,ylog)),l=Math.max(52,fs*3.5,...ylabels.map(v=>this.measure(v,12)+12)),r=this.w-25,t=36,b=this.h-47;
-   const X=v=>l+(L(v)-xlo)/(xhi-xlo)*(r-l),Y=v=>b-(YF(v)-ylo)/(yhi-ylo)*(b-t);
-   this.bounds={l,r,t,b,zoom};
-   for(const v of xt){this.line(X(v),t,X(v),b,'grid',.8);this.text(X(v),b+18,tick(v,dxmax-dxmin,xf,xlog),'muted',12,'center');}
-   yt.forEach((v,i)=>{this.line(l,Y(v),r,Y(v),'grid',.8);this.text(l-9,Y(v),ylabels[i],'muted',12,'right');});
-   this.line(l,t,l,b,'muted',1.3);this.line(l,b,r,b,'muted',1.3);this.text(l,t-19,ylabel,'muted',14);this.text(r,this.h-9,xlabel,'muted',14,'right');
-   function clipped(fn){const c=s.c;c.save();c.beginPath();c.rect(l,t,r-l,b-t);c.clip();fn();c.restore();}
-   const contains=(x,y)=>Number.isFinite(X(x))&&Number.isFinite(Y(y))&&X(x)>=l&&X(x)<=r&&Y(y)>=t&&Y(y)<=b;
-   return {X,Y,l,r,t,b,contains,path(ps,col='accent-ink',w=2.5,dash=[]){clipped(()=>s.poly(ps.filter(v=>Number.isFinite(v[0])&&Number.isFinite(v[1])).map(([x,y])=>[X(x),Y(y)]),col,w,null,dash));},fill(ps,col='soft'){clipped(()=>s.poly(ps.map(([x,y])=>[X(x),Y(y)]),null,0,s.color(col)));},point(x,y,label='',col='accent-ink',dx=0,dy=-19){if(!contains(x,y))return;clipped(()=>s.circle(X(x),Y(y),5,col,'surface',2));if(label){const align=dx>0?'left':dx<0?'right':'center',ww=s.measure(label,16,600),shift=align==='center'?ww/2:align==='right'?ww:0;let xx=X(x)+dx,yy=Y(y)+dy;xx=clamp(xx,l+shift+4,r-ww+shift-4);yy=clamp(yy,t+s.fontSize(16)*.7,b-s.fontSize(16)*.7);s.text(xx,yy,label,col,16,align,true,600);}},ring(x,y,col='accent'){if(contains(x,y))clipped(()=>s.circle(X(x),Y(y),9,null,col,2));},arrow(ps,col='accent-ink',reverse=false){if(ps.length<3)return;const i=Math.floor(ps.length*.55),a=ps[reverse?i+1:i-1],bb=ps[reverse?i-1:i+1];clipped(()=>s.arrow(X(a[0]),Y(a[1]),X(bb[0]),Y(bb[1]),col,2,8));},label(x,y,str,col='muted',size=14){if(!contains(x,y))return;const px=X(x),py=Y(y),ww=s.measure(str,size);if(px-ww/2<l+2||px+ww/2>r-2||py-s.fontSize(size)*.7<t||py+s.fontSize(size)*.7>b)return;s.text(px,py,str,col,size,'center',true);}};
-  }
- }
- function cyclePlot(s,cyc,u,mode='pv',{point=null,reverse=false,schmidt=null}={}){
-  const isTS=mode==='ts',cs=cyc.states,pts=cyc.steps.map(step=>Array.from({length:81},(_,j)=>{const z=step.at(j/80);return isTS?[cs[0].S+z.S+cs[cyc.steps.indexOf(step)].S,z.T]:[z.V*1e3,z.P/1e5];}));
-  // Les entropies de chaque branche sont relatives à son état initial.
-  if(isTS)cyc.steps.forEach((step,i)=>{pts[i]=Array.from({length:81},(_,j)=>{const z=step.at(j/80);return [cs[i].S+z.S,z.T];});});
-  const all=pts.flat(),xs=all.map(v=>v[0]),ys=all.map(v=>v[1]),xmin=isTS?Math.min(...xs)-Math.max(...xs)*.12:0,xmax=Math.max(...xs)*1.12,ymin=isTS?Math.min(...ys)*.75:0,ymax=Math.max(...ys)*1.15;
-  const q=s.plot({xmin,xmax,ymin,ymax,xlabel:isTS?'S − S<sub>A</sub> (J·K<sup>−1</sup>)':'V (L)',ylabel:isTS?'T (K)':'P (bar)',xf:v=>fmt(v,isTS?2:2)});
-  q.fill(all);const cols=cyc.kind==='carnot'?['hot','work','cold','work']:cyc.kind==='stirling'?['cold','regen','hot','regen']:['work','hot','work','cold'];
-  pts.forEach((ps,i)=>{q.path(ps,cols[i],2.7);q.arrow(ps,cols[i],reverse);});
-  cs.forEach((z,i)=>{const x=isTS?z.S:z.V*1e3,y=isTS?z.T:z.P/1e5,offsets=isTS?[[-10,18],[-10,-18],[12,-18],[12,18]]:[[12,18],cyc.kind==='diesel'?[-12,-18]:[14,0],[12,-18],[-14,-18]];q.point(x,y,z.name,'ink',...offsets[i]);});
-  const z=point||cyc.sample(u);q.point(isTS?z.S:z.V*1e3,isTS?z.T:z.P/1e5,'','accent-ink');
-  q.ring(isTS?z.S:z.V*1e3,isTS?z.T:z.P/1e5);
-  return q;
- }
- function engine(s,kind,p,u,mode='mechanism',zoom=1){
-  s.tempRange=[270,2500];const cy=TH4Physics.cycle(kind,p),md=TH4Physics.engineMotion(kind,p,u),z=cy.sample(u);let theta=mode==='mechanism'?md.theta:TH4Physics.gasTheta(cy,u),k=TH4Physics.slider(theta),r=55,l=192.5,cx=290,ph=26,clear=2*r/((p.alpha||10)-1),rise=Math.max(0,70-(340-r-l-ph*.5-clear))+28,yc=340+rise,w=138,top=yc-r-l-ph*.5-clear,py=yc+k.y*r-ph*.5,pinY=py+ph*.5,crankX=cx+k.x*r,crankY=yc+k.crankY*r,g=s.group(580,440+rise,zoom),gasT=mode==='mechanism'?md.state.T:z.T;
-  g.rect(cx-w/2-20,top-14,w+40,2*r+clear+ph+30,'paper','line',11);g.metal(cx-w/2-15,top-12,15,2*r+clear+ph+28,2);g.metal(cx+w/2,top-12,15,2*r+clear+ph+28,2);g.hatch(cx-w/2-15,top-12,15,2*r+clear+ph+28);g.hatch(cx+w/2,top-12,15,2*r+clear+ph+28);
-  g.gas(cx-w/2,top,w,py-top,gasT);for(let i=0;i<5;i++){const xx=cx-w/2+13+(i*29)%88,yy=top+5+((i*17+u*43)%(Math.max(6,py-top-12)));g.circle(xx,yy,1.3,s.temperature(gasT,.75));}
-  // Culasse en coupe, conduits et sièges. Les soupapes s'ouvrent vers le cylindre.
-  g.metal(cx-w/2-16,top-23,w+32,23,3);g.rect(cx-w/2+6,top-23,19,23,'surface');g.rect(cx+w/2-25,top-23,19,23,'surface');
-  const valve=(x,open,cold)=>{const lift=open*9,y=top+lift;g.metal(x-3,top-60+lift,6,58,1);g.poly([[x-11,y],[x+11,y],[x+7,y-5],[x-7,y-5]],'metal-dark',1.2,s.color('metal'));let coil=[];for(let i=0;i<=22;i++)coil.push([x+(i===0||i===22?0:(i%2?7:-7)),top-51+lift*.2+i*1.5]);g.poly(coil,'metal-dark',1.8);g.line(x-10,top-52,x+10,top-52,'metal',4);};
-  const inlet=mode==='mechanism'?md.intake:0,outlet=mode==='mechanism'?md.exhaust:0;valve(cx-34,inlet,true);valve(cx+34,outlet,false);
-  g.pipe([[cx-w/2-70,top-11],[cx-34,top-11],[cx-34,top+3]],{width:13,temp:300,flow:inlet>.05?1:0,phase:u*400,dots:inlet>.05});g.pipe([[cx+34,top+3],[cx+34,top-11],[cx+w/2+70,top-11]],{width:13,temp:800,flow:outlet>.05?1:0,phase:u*400,dots:outlet>.05});
-  // Les tiges sont devant les conduits et restent attachées à leurs clapets.
-  valve(cx-34,inlet,true);valve(cx+34,outlet,false);
-  g.metal(cx-8,top-48,16,34,2);g.line(cx,top-14,cx,top+6,'metal-dark',3);
-  if(kind==='diesel'){g.poly([[cx-5,top+4],[cx+5,top+4],[cx+2,top+9],[cx-2,top+9]],'metal-dark',1,s.color('metal'));if(mode==='mechanism'&&md.fire>0){for(let i=-2;i<=2;i++)g.line(cx,top+10,cx+i*7,top+26+Math.abs(i)*2,'regen',1.8);}}
-  else{g.rect(cx-5,top-48,10,17,'surface','metal-dark',2);g.line(cx-3,top+2,cx-3,top+8,'metal-dark',2);g.line(cx+3,top+2,cx+3,top+5,'metal-dark',2);if(mode==='mechanism'&&md.fire>.65)g.poly([[cx-3,top+8],[cx+1,top+4],[cx-1,top+11],[cx+4,top+7]],'accent',2);}
-  if(mode==='mechanism'&&md.fire>0){const flame=[];for(let i=0;i<=20;i++){const a=Math.PI*i/20;flame.push([cx+Math.cos(a)*w*.4,top+9+Math.sin(a)*Math.min(35,py-top-13)*(i%2?.65:1)]);}g.poly([[cx-w*.4,top+9],...flame,[cx+w*.4,top+9]],null,0,s.temperature(2000,md.fire*.6));}
-  // Volant, vilebrequin et bielle : un seul pivot, longueur de bielle constante.
-  g.circle(cx,yc,73,'paper','line',2);g.circle(cx,yc,67,null,'metal',8);for(let i=0;i<5;i++){const a=theta+i*Math.PI*2/5;g.rod(cx+12*Math.cos(a),yc+12*Math.sin(a),cx+59*Math.cos(a),yc+59*Math.sin(a),7);}g.circle(cx,yc,21,'metal','metal-dark');g.rod(cx,yc,crankX,crankY,18);g.rod(crankX,crankY,cx,pinY,11);
-  g.metal(cx-w/2+1,py,w-2,ph,4);for(const d of [4,9,14])g.line(cx-w/2+2,py+d,cx+w/2-2,py+d,'metal-dark',1.3);g.circle(cx,pinY,7,'metal-light','metal-dark',1.3);g.circle(cx,pinY,2.4,'metal-dark');g.circle(cx,yc,8,'metal-light','metal-dark',1.5);g.circle(cx,yc,3,'metal-dark');g.line(cx-80,yc+70,cx+80,yc+70,'line',4);
-  // Légendes hors du mouvement et des volumes utiles.
-  g.text(112,26,'Admission','cold',14,'center',true);g.poly([[130,52],[170,top-38],[cx-34,top-35]],'muted',1);
-  g.text(490,26,'Échappement','hot',14,'center',true);g.poly([[470,52],[425,top-38],[cx+34,top-35]],'muted',1);
-  // Repérage axial au-dessus de la culasse : aucune traversée du conduit
-  // d'échappement, de sa soupape ou de sa légende.
-  g.text(cx,18,kind==='diesel'?'Injecteur':'Bougie','ink',15,'center',true);g.line(cx,38,cx,top-49,'muted',1);
-  g.text(38,195,'Piston','ink',16,'left',true);g.poly([[91,195],[164,195],[cx-w/2,py+12]],'muted',1);
-  g.text(450,276,'Bielle','ink',16,'left',true);g.poly([[445,276],[405,276],[(crankX+cx)/2,(crankY+pinY)/2]],'muted',1);
-  g.text(450,342,'Vilebrequin','ink',15,'left',true);g.line(440,340,cx+24,yc+8,'muted',1);
-  if(mode==='mechanism'){g.text(38,432+rise,`${fmt(u*720,0)}° / 720°`,'muted',15);g.text(543,432+rise,'Deux tours par cycle','muted',14,'right');}
-  else{g.text(38,432+rise,`V = ${fmt(z.V*1e3,3)} L`,'muted',15);g.text(543,432+rise,`T = ${fmt(z.T,0)} K`,'ink',17,'right');const heat=z.step===1?'hot':z.step===3?'cold':null;if(heat){const ycH=top+Math.max(10,(py-top)/2);if(z.step===1)g.arrow(140,ycH,cx-w/2-18,ycH,'hot',6);else g.arrow(cx-w/2-18,ycH,140,ycH,'cold',6);}}
-  return {cyc:cy,motion:md,state:z,crank:{x:g.P(cx,yc)[0],y:g.P(cx,yc)[1],r:73*g.d}};
- }
- function stirling(s,p,u,zoom=1){
-  s.tempRange=[270,650];const z=M.schmidt(p,u),g=s.group(620,385,zoom),r=40,l=140,crankY=293,ph=22,baseTop=293-180-11-80*.06/.23,bore=82,centers=[175,445],states=[z.a,z.b];
-  // Arbre commun vu de face : deux manetons solidaires décalés d'un quart de tour.
-  g.line(120,crankY,500,crankY,'metal-dark',12);g.line(120,crankY-2,500,crankY-2,'metal-light',3);
-  centers.forEach((cx,i)=>{const k=states[i],py=crankY+k.y*r-ph/2,head=baseTop,T=i?z.Tf:z.Tc;
-   g.rect(cx-bore/2-11,head-12,bore+22,143,'paper','line',5);g.gas(cx-bore/2,head,bore,py-head,T);g.metal(cx-bore/2-10,head-10,10,145);g.metal(cx+bore/2,head-10,10,145);g.metal(cx-bore/2-10,head-15,bore+20,15);
-   for(let j=0;j<8;j++){g.line(cx-bore/2-17,head+8+j*12,cx-bore/2-10,head+8+j*12,i?'cold':'hot',3);g.line(cx+bore/2+10,head+8+j*12,cx+bore/2+17,head+8+j*12,i?'cold':'hot',3);}
-   const xk=cx+k.x*r,yk=crankY+k.crankY*r;g.circle(cx,crankY,51,'paper','metal',5);for(let j=0;j<4;j++){const a=z.theta-(i?Math.PI/2:0)+j*Math.PI/2;g.line(cx+10*Math.sin(a),crankY-10*Math.cos(a),cx+43*Math.sin(a),crankY-43*Math.cos(a),'metal',6);}g.rod(cx,crankY,xk,yk,15);g.rod(xk,yk,cx,py+ph*.5,10);g.metal(cx-bore/2+1,py,bore-2,ph);for(const d of [5,10])g.line(cx-bore/2+2,py+d,cx+bore/2-2,py+d,'metal-dark',1.4);g.circle(cx,py+ph/2,5,'metal-light','metal-dark');g.circle(cx,crankY,8,'metal-light','metal-dark');
-  });
-  g.pipe([[175,baseTop],[175,55],[258,55]],{temp:z.Tc,width:13,flow:z.flow,phase:u*500});g.pipe([[362,55],[445,55],[445,baseTop]],{temp:z.Tf,width:13,flow:z.flow,phase:u*500});
-  g.metal(253,32,114,46,4);g.rect(258,38,104,34,'surface','metal-dark',2);for(let i=0;i<16;i++){g.rect(260+i*6,40,4,30,s.temperature(M.mix(z.Tc,z.Tf,i/15),.75));for(let j=0;j<5;j++)g.line(260+i*6,41+j*6,264+i*6,46+j*6,'metal-dark',.6);}
-  const ps=z.flow>0?[[259,55],[361,55]]:[[361,55],[259,55]];g.arrow(...ps[0],...ps[1],'regen',2);
-  g.text(175,15,'Chambre chaude','hot',16,'center',true);g.text(445,15,'Chambre froide','cold',16,'center',true);g.text(310,103,'Régénérateur','regen',14,'center',true);
-  g.text(49,163,'T<sub>c</sub>','hot',18,'center');g.text(49,193,`${fmt(z.Tc,0)} K`,'hot',16,'center');g.arrow(64,220,128,220,'hot',5);g.text(571,163,'T<sub>f</sub>','cold',18,'center');g.text(571,193,`${fmt(z.Tf,0)} K`,'cold',16,'center');g.arrow(492,220,555,220,'cold',5);
-  g.text(310,356,'Arbre commun · déphasage de 90°','ink',16,'center',true);
-  return {...z,cranks:centers.map(cx=>({x:g.P(cx,crankY)[0],y:g.P(cx,crankY)[1],r:51*g.d}))};
- }
- function idealCylinder(s,cyc,u,{zoom=1,reverse=false,regen=0}={}){
-  s.tempRange=[240,950];const z=cyc.sample(u),g=s.group(580,425,zoom),vs=cyc.states.map(x=>x.V),f=(z.V-Math.min(...vs))/(Math.max(...vs)-Math.min(...vs)),left=90,top=145,high=105,L=300,px=left+65+f*210;
-  g.text(34,30,cyc.kind==='stirling'?'Stirling · séquence idéale':'Carnot · gaz parfait','accent-ink',18,'left',false,600);
-  const idx=z.forwardStep??z.step,heat=cyc.kind==='carnot'?(idx===0?'hot':idx===2?'cold':null):(idx===0?'cold':idx===2?'hot':idx===1||idx===3?'regen':null);
-  g.rect(left-8,top-9,L+28,high+18,'paper','line',6);g.gas(left,top,px-left,high,z.T);g.metal(left-10,top-10,10,high+20);g.metal(left,top-10,L+20,10);g.metal(left,top+high,L+20,10);g.hatch(left,top-10,L+20,10);g.hatch(left,top+high,L+20,10);
-  g.metal(px,top+1,21,high-2,2);for(const d of [4,9,14])g.line(px+d,top+2,px+d,top+high-2,'metal-dark',1.1);g.metal(px+21,top+high/2-5,490-(px+21),10,2);g.circle(496,top+high/2,9,'metal','metal-dark');
-  const hx=(left+px)/2;
-  g.text(254,105,`T = ${fmt(z.T,0)} K`,'ink',23,'center');g.text(490,285,`V = ${fmt(z.V*1e3,3)} L`,'muted',17,'right');g.text(490,240,'Piston','muted',15,'right');
-  if(heat){const col=heat==='regen'?'regen':heat,receive=cyc.kind==='carnot'?(!reverse?idx===0:idx===2):idx===1||idx===2;
-   if(heat==='regen'){
-    const ext=idx===1?'hot':'cold';g.rect(64,322,452,63,'paper','line',7);g.text(290,339,`Régénérateur ${fmt(regen*100,0)} % · Source ${fmt((1-regen)*100,0)} %`,regen===0?ext:'regen',16,'center');g.rect(80,356,420,12,'paper','line',2);if(regen>0)g.rect(80,356,420*regen,12,'regen',null,2);if(regen<1)g.rect(80+420*regen,356,420*(1-regen),12,ext,null,2);if(receive)g.arrow(hx,316,hx,263,regen===0?ext:'regen',5);else g.arrow(hx,263,hx,316,regen===0?ext:'regen',5);
-   }else{g.rect(82,310,325,72,'soft',col,8);g.text(245,330,heat==='hot'?'Source chaude':'Source froide',col,15,'center');g.text(245,364,`${fmt(heat==='hot'?(cyc.tc??cyc.Tc):(cyc.tf??cyc.Tf),0)} K`,col,20,'center');if(receive)g.arrow(hx,303,hx,263,col,5);else g.arrow(hx,263,hx,303,col,5);}
-  }
-  else{g.rect(82,310,325,72,'paper','line',7);g.text(245,330,'Parois isolées','work',15,'center');g.text(245,364,'Q = 0','work',20,'center');}
-  g.text(34,404,`P = ${fmt(z.P/1e5,2)} bar`,'muted',17);g.text(548,404,reverse?'Parcours récepteur':'Parcours moteur','work',17,'right');
-  return z;
- }
 
- return {Stage,parts,fmt,cyclePlot,engine,stirling,idealCylinder};
+/* TH4 · outils de dessin communs aux trois animations (SVG, kit AnimKit).
+   Dépend de TH4Physics (physique.js) et d'AnimKit. */
+'use strict';
+globalThis.TH4K=(()=>{
+ const M=TH4Physics,clamp=M.clamp;
+ const mixc=(x,y,f)=>x.map((v,i)=>Math.round(v+(y[i]-v)*f));
+ /* échelle froid → chaud commune à tout TH4 : bleu → gris → rouge (indépendante du thème) */
+ function tcol(T,lo=240,hi=950){
+  const t=clamp((T-lo)/(hi-lo),0,1),c0=[47,111,214],c1=[150,150,150],c2=[214,52,52],t1=.35;
+  return 'rgb('+(t<t1?mixc(c0,c1,t/t1):mixc(c1,c2,(t-t1)/(1-t1))).join(',')+')';
+ }
+ /* couleurs des étapes : chaud, froid, travail, régénérateur */
+ const stepCols=(C)=>({hot:C.hot,cold:C.cold,work:C.v,regen:C.E});
+ /** Diagramme d'un cycle (P,V), (T,S) ou (P,h) déjà échantillonné.
+     cyc.sample(u) → {V,P,T,S,step} ; cols[step] → couleur ; renvoie {G, curve:[[px,py,u]]} */
+ function cyclePlot(a,id,cyc,u,mode,o={}){
+  const P=a.panels[id],S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,N=480,ts=mode==='ts',pts=[];
+  const X=d=>ts?d.S:d.V*1e3,Y=d=>ts?d.T:d.P/1e5;
+  for(let i=0;i<=N;i++){const d=o.sampler?o.sampler(i/N):cyc.sample(i/N);pts.push({x:X(d),y:Y(d),u:i/N,step:d.step})}
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),x1=Math.min(...xs),x2=Math.max(...xs),y1=Math.min(...ys),y2=Math.max(...ys);
+  const xmin=ts?x1-(x2-x1)*.12:0,xmax=x2+(x2-x1)*.1,ymin=ts?Math.max(0,y1-(y2-y1)*.12):Math.max(0,y1*.6),ymax=y2+(y2-y1)*.1;
+  const G=S.graph({x:0,y:0,w,h,xmin,xmax,ymin,ymax,xlab:ts?`${S.v('S')} − ${S.v('S','A')} (J·K${S.sup('−1')})`:`${S.v('V')} (L)`,ylab:ts?`${S.v('T')} (K)`:`${S.v('P')} (bar)`,ny:3,
+   xfmt:(v,st)=>a.fmt.fix(v,st<.1?2:st<1?1:0)});
+  let s=S.clip('cp'+id,G)+G.svg;
+  const px=pts.map(p=>[G.X(p.x),G.Y(p.y),p.u,p.step]);
+  if(o.fill)s+=S.path('M'+px.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L')+'Z',{fill:C.cSoft,fop:.55,c:null,w:0});
+  s+=typeof o.under==='function'?o.under(G):(o.under||'');
+  let run=[];const flush=(c)=>{if(run.length>1)s+=S.poly(run,{c,w:3})};let last=-1;
+  for(const p of px){if(p[3]!==last){flush(o.cols[last]);run=run.length?[run[run.length-1]]:[];last=p[3]}run.push([p[0],p[1]])}flush(o.cols[last]);
+  /* flèche au milieu de chaque étape */
+  const by={};for(const p of px)(by[p[3]]=by[p[3]]||[]).push(p);
+  for(const st in by){const q=by[st];if(q.length<4)continue;const m=Math.floor(q.length/2),p0=q[m-1],p1=q[m+1],an=Math.atan2(p1[1]-p0[1],p1[0]-p0[0]),L=8*k,c=o.cols[st];
+   s+=`<path d="M${q[m][0]+L*Math.cos(an)},${q[m][1]+L*Math.sin(an)}L${q[m][0]-L*Math.cos(an-.5)},${q[m][1]-L*Math.sin(an-.5)}L${q[m][0]-L*Math.cos(an+.5)},${q[m][1]-L*Math.sin(an+.5)}Z" fill="${c}"/>`}
+  /* états A à D */
+  if(o.points!==false&&cyc.states)cyc.states.forEach((z,i)=>{const sx=ts?z.S:z.V*1e3,sy=ts?z.T:z.P/1e5,x=G.X(sx),y=G.Y(sy),dx=i===1||i===2?(o.lab?.[i]??1):(o.lab?.[i]??-1);
+    s+=S.circle(x,y,3.5*k,{fill:C.ink})+S.text(x+dx*12*k,y+(i<2?-11:11)*k,'ABCD'[i],{anchor:'middle',size:15,c:C.ink,weight:700})});
+  const d0=o.sampler?o.sampler(u):cyc.sample(u),cx=G.X(X(d0)),cy=G.Y(Y(d0));
+  s+=S.circle(cx,cy,6.5*k,{fill:C.cInk,c:C.paper,w:2});
+  s+=typeof o.over==='function'?o.over(G):(o.over||'');
+  a.svg(id,s);
+  return {G,curve:px,hit:(x,y)=>px.some(p=>Math.hypot(p[0]-x,p[1]-y)<26*k)};
+ }
+ function nearestU(curve,x,y){let b=curve[0],bd=1e18;for(const p of curve){const d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;b=p}}return b[2]}
+ /** attache le glisser « le long du cycle » à un panneau ; getPlot() → dernier tracé ; seek(u) */
+ function cycleDrag(A,id,getPlot,seek,ok=()=>true){
+  A.drag(id,{hit:(x,y)=>{const q=getPlot();return ok()&&q&&q.hit(x,y)},start(x,y){A.play(false);seek(nearestU(getPlot().curve,x,y))},move(x,y){seek(nearestU(getPlot().curve,x,y))}});
+ }
+ /** cylindre vertical à piston : f ∈ [0,1] position du piston (0 = volume minimal), dead = volume mort (px) */
+ function cylinder(a,cx,top,bw,Hs,f,o={}){
+  const S=a.S,C=a.C,k=a.k,dead=o.dead??Hs*.12,wall=4*k,crown=top+dead+f*Hs,ph=Math.max(14*k,Hs*.1),bottom=top+dead+Hs+ph+(o.below??18*k);let s='';
+  s+=S.rect(cx-bw/2,top,bw,crown-top,{fill:o.gas??C.paper,fop:o.gop??.7});
+  s+=S.rect(cx-bw/2-1,crown,bw+2,ph,{fill:C.ink2,c:C.ink,w:1,rx:2*k});
+  s+=S.line(cx,crown+ph,cx,bottom+(o.rod??10*k),{c:C.ink2,w:6});
+  s+=S.path(`M${cx-bw/2},${bottom}V${top}H${cx+bw/2}V${bottom}`,{c:o.wallc??C.ink,w:o.wallw??3.2,dash:o.wdash});
+  return {s,crown,bottom,top};
+ }
+ /** étiquette à halo */
+ const lab=(a,x,y,t,o={})=>a.S.text(x,y,t,{anchor:'middle',size:14,c:a.C.ink2,...o});
+ /** flèche de transfert d'énergie proportionnelle à val (J) : de p1 vers p2 si val>0 (reçue par le fluide), sinon inverse */
+ function energyArrow(a,p1,p2,val,vmax,color,o={}){
+  const S=a.S,k=a.k;if(Math.abs(val)<1e-6*vmax||!vmax)return o.zero?S.line(p1[0],p1[1],p2[0],p2[1],{c:a.C.rule,w:1,dash:`${4*k} ${4*k}`}):'';
+  const L=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]),f=clamp(Math.abs(val)/vmax,0,1),len=L*f,ux=(p2[0]-p1[0])/L,uy=(p2[1]-p1[1])/L;
+  const mid=[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2],s0=val>0?p1:p2,dir=val>0?1:-1;
+  const a0=[mid[0]-dir*ux*len/2,mid[1]-dir*uy*len/2],a1=[mid[0]+dir*ux*len/2,mid[1]+dir*uy*len/2];
+  return S.arrow(a0[0],a0[1],a1[0],a1[1],{c:color,w:o.w??4,head:o.head});
+ }
+ /** schéma d'une machine à écoulement fermée (Joule, Ericsson) : compresseur → chaud → turbine → froid (+ régénérateur) */
+ function loopScene(a,c,u,regen){
+  const P=a.panels.scene,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,ericsson=a.tab===4,f=a.fmt;let s='';
+  const xl=w*.2,xr=w*.66,yt=h*.25,yb=h*.72,ym=(yt+yb)/2,mw=Math.min(w*.13,76*k),mh=Math.min((yb-yt)*.5,112*k),ew=Math.min((xr-xl)*.36,130*k),eh=Math.min(46*k,(yb-yt)*.16);
+  const corner=[[xl,yb],[xl,yt],[xr,yt],[xr,yb],[xl,yb]];
+  const pos=v=>{v=((v%1)+1)%1;const i=Math.min(3,Math.floor(v*4)),g=v*4-i;return[corner[i][0]+(corner[i+1][0]-corner[i][0])*g,corner[i][1]+(corner[i+1][1]-corner[i][1])*g]};
+  const cur=Math.min(3,Math.floor(u*4)),Tcol=T=>tcol(T,240,1500),N=48;
+  /* tuyaux colorés par la température du gaz */
+  for(let i=0;i<4*N;i++){const v0=i/(4*N),v1=(i+1)/(4*N),d=c.sample((v0+v1)/2),p0=pos(v0),p1=pos(v1-1e-6);
+   s+=S.line(p0[0],p0[1],p1[0],p1[1],{c:Tcol(d.T),w:(i/N|0)===cur?10*k:7*k,cap:'butt'})}
+  /* échangeurs sur les isobares : chaud en haut, froid en bas */
+  const xm=(xl+xr)/2,ex=(x,y,col,name,dy)=>S.rect(x-ew/2,y-eh/2,ew,eh,{fill:C.card,c:col,w:cur===(y===yt?1:3)?4:2.4,rx:7*k})+S.text(x,y+5*k,'',{})+S.text(x,y+dy,name,{anchor:'middle',size:13,c:col,weight:600});
+  s+=ex(xm,yt,C.hot,'Échangeur chaud',-eh/2-8*k)+ex(xm,yb,C.cold,'Échangeur froid',eh/2+18*k);
+  /* serpentins */
+  const coil=(y,col)=>{const pts=[],n=7,x0=xm-ew*.35,x1=xm+ew*.35;for(let i=0;i<=n*2;i++)pts.push([x0+(x1-x0)*i/(n*2),y+(i%2?-eh*.28:eh*.28)]);return S.poly(pts,{c:col,w:2.6})};
+  s+=coil(yt,C.hot)+coil(yb,C.cold);
+  /* compresseur (gauche, large en bas) et turbine (droite, large en bas) */
+  const mach=(x,narrowTop,col,sel)=>{const a1=mw*.5,a2=mw*.22,top=narrowTop?a2:a1,bot=narrowTop?a1:a2;
+   return S.poly([[x-top,ym-mh/2],[x+top,ym-mh/2],[x+bot,ym+mh/2],[x-bot,ym+mh/2]],{close:true,fill:C.card,c:col,w:sel?4:2.4})};
+  s+=mach(xl,true,C.v,cur===0)+mach(xr,false,C.v,cur===2);
+  s+=S.text(xl,ym+5*k,'C',{anchor:'middle',size:18,c:C.v,weight:700,halo:false})+S.text(xr,ym+5*k,'T',{anchor:'middle',size:18,c:C.v,weight:700,halo:false});
+  s+=S.text(xl,ym+mh/2+20*k,'Compresseur',{anchor:'middle',size:13,c:C.v,weight:600})+S.text(xr,ym+mh/2+20*k,'Turbine',{anchor:'middle',size:13,c:C.v,weight:600});
+  /* arbre commun */
+  s+=S.line(xl+mw*.5,ym,xr-mw*.5,ym,{c:C.ink2,w:5,dash:`${10*k} ${6*k}`})+S.text(xm,ym-10*k,'Arbre',{anchor:'middle',size:13,c:C.ink2,halo:false});
+  /* régénérateur */
+  if(regen>0){const rw=Math.max(ew*.9,92*k),y0=ym+mh*.16,rh=Math.max(34*k,yb-eh/2-26*k-y0);
+   s+=S.rect(xm-rw/2,y0,rw,rh,{fill:C.E,fop:.2,c:C.E,w:2,rx:6*k})+S.text(xm,y0+rh/2-3*k,'Régénérateur',{anchor:'middle',size:13,c:C.E,weight:600,halo:false})+S.text(xm,y0+rh/2+14*k,`${f.fix(regen*100,0)} %`,{anchor:'middle',size:13,c:C.E,halo:false})
+    +S.arrow(xm-rw*.4,yt+eh/2+10*k,xm-rw*.4,y0-3*k,{c:C.E,w:2.4})+S.arrow(xm+rw*.4,y0+rh+3*k,xm+rw*.4,yb-eh/2-10*k,{c:C.E,w:2.4})}
+  /* échanges des isothermes (Ericsson) */
+  if(ericsson){s+=K_heat(a,xl-mw*.5-6*k,ym,-1,C.cold)+K_heat(a,xr+mw*.5+6*k,ym,1,C.hot)}
+  /* points mobiles */
+  for(let j=0;j<12;j++){const p=pos(u+j/12);s+=S.circle(p[0],p[1],3.2*k,{fill:C.paper,c:C.ink,w:1})}
+  const pm=pos(u);s+=S.circle(pm[0],pm[1],9*k,{c:C.F,w:3,fill:'none'});
+  /* états */
+  const st=c.states,lp=[[xl-24*k,yb+6*k,-1],[xl-24*k,yt-4*k,-1],[xr+24*k,yt-4*k,1],[xr+24*k,yb+6*k,1]];
+  lp.forEach((n,i)=>{s+=S.circle(corner[i===0?0:i===1?1:i===2?2:3][0],corner[i===0?0:i===1?1:i===2?2:3][1],4.5*k,{fill:C.ink})
+   +S.text(n[0],n[1],'ABCD'[i],{anchor:'middle',size:16,c:C.ink,weight:700})+S.text(n[0],n[1]+16*k,`${f.fix(st[i].T-273.15,0)} °C`,{anchor:'middle',size:13,c:C.ink2})});
+  /* flèches Q et W (résultats) */
+  if(a.p.prev){const vm=Math.max(Math.abs(c.Qc),Math.abs(c.Qf),Math.abs(c.W),1e-9);
+   s+=energyArrow(a,[xm,yt-eh/2-58*k],[xm,yt-eh/2-30*k],c.Qc,vm,C.hot,{w:5})+S.text(xm+18*k,yt-eh/2-42*k,`Q_c = ${f.fix(c.Qc,0)} J`,{anchor:'start',size:13,c:C.hot,weight:600})
+    +energyArrow(a,[xm,yb+eh/2+70*k],[xm,yb+eh/2+36*k],c.Qf,vm,C.cold,{w:5})+S.text(xm+18*k,yb+eh/2+56*k,`Q_f = ${f.fix(c.Qf,0)} J`,{anchor:'start',size:13,c:C.cold,weight:600})
+    +energyArrow(a,[xr+mw*.5+90*k,ym],[xr+mw*.5+38*k,ym],c.W,vm,C.v,{w:5})+S.text(xr+mw*.5+90*k,ym-14*k,`W = ${f.fix(c.W,0)} J`,{anchor:'end',size:13,c:C.v,weight:600})}
+  const nm=a.tab===4?['Compression isotherme','Échauffement isobare','Détente isotherme','Refroidissement isobare']:['Compression adiabatique','Échauffement isobare','Détente adiabatique','Refroidissement isobare'];
+  s+=S.text(w/2,h-10*k,`${'ABCD'[cur]} → ${'ABCD'[(cur+1)%4]} · ${nm[cur]}`,{anchor:'middle',size:15,c:C.cInk,weight:700});
+  a.svg('scene',s);
+ }
+ function K_heat(a,x,y,sgn,col){const S=a.S,k=a.k;return S.arrow(x,y+(sgn<0?-1:1)*0,x+sgn*34*k,y,{c:col,w:3})}
+ return {tcol,stepCols,cyclePlot,nearestU,cycleDrag,cylinder,lab,energyArrow,loopScene};
 })();
-</script><script>'use strict';
-globalThis.TH4UI=(()=>{
- const $=id=>document.getElementById(id),M=TH4Physics,D=TH4Draw,fmt=D.fmt,signed=(x,d=1)=>(x>1e-8?'+':'')+fmt(x,d),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const frac=(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`;
- function field(key,label,value,min,max,step,unit=''){return `<div class="field"><div class="field-head"><label for="n-${key}">${label}</label><span class="numeric"><input id="n-${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${value}"><span class="unit">${unit}</span></span></div><input id="r-${key}" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="${esc(label.replace(/<[^>]*>/g,''))}"></div>`;}
- const select=(key,label,value,options)=>`<label class="select-field"><span>${label}</span><select data-key="${key}" id="s-${key}">${options.map(([v,t])=>`<option value="${v}"${String(v)===String(value)?' selected':''}>${t}</option>`).join('')}</select></label>`;
- const check=(key,label,value)=>`<label class="check"><input type="checkbox" data-key="${key}" id="c-${key}"${value?' checked':''}>${label}</label>`;
- const section=(title,html)=>`<section class="control-section"><h3>${title}</h3>${html}</section>`;
- const presets=ps=>`<div class="presets">${ps.map(([id,label])=>`<button data-preset="${id}">${label}</button>`).join('')}</div>`;
- const switches=(key,current,items)=>`<div class="switch">${items.map(([value,label])=>`<button data-choice="${key}" data-value="${value}" aria-pressed="${current===value}">${label}</button>`).join('')}</div>`;
- let timer;function notice(msg){$('toast').textContent=msg;clearTimeout(timer);timer=setTimeout(()=>$('toast').textContent='',4500);}
- function start(app){
-  const scene=new D.Stage($('scene')),plot=new D.Stage($('plot')),saved={},state={tab:app.tabs[0][0],p:{},u:0,playing:false,speed:1,zoom:1,plot:'pv',plotView:{zoom:1,x:0,y:0},selected:-1,dirty:true,drag:null},rt={state,scene,plot};let previous=0,lastInfo='',lastPhase=-1;
-  const announce=msg=>$('status').textContent=msg;
-  function sync(){ $('progress').value=Math.round(state.u*1000);$('progressValue').textContent=fmt(state.u*100,0)+' %';$('play').textContent=state.playing?'Pause':state.u===0?'Démarrer':'Reprendre';$('play').setAttribute('aria-pressed',String(state.playing));}
-  function syncFields(){for(const el of $('controls').querySelectorAll('[data-key]')){const v=state.p[el.dataset.key];if(el.type==='checkbox')el.checked=!!v;else el.value=v;}}
-  function renderControls(){
-   $('controls').innerHTML=app.controls(state,rt);
-   for(const el of $('controls').querySelectorAll('[data-key]'))el.addEventListener(el.type==='range'?'input':'change',()=>{
-    let val=el.type==='checkbox'?el.checked:['range','number'].includes(el.type)?Number(el.value):el.value;
-    if(['range','number'].includes(el.type)){if(el.value===''||!Number.isFinite(val)){syncFields();notice('Saisir une valeur dans le domaine indiqué.');return;}val=M.clamp(val,Number(el.min),Number(el.max));}
-    state.p[el.dataset.key]=val;app.normalize?.(state,el.dataset.key);syncFields();state.dirty=true;if(app.rebuild?.includes(el.dataset.key)){renderControls();phases();}app.changed?.(state,el.dataset.key,rt);
-   });
-   for(const el of $('controls').querySelectorAll('[data-choice]'))el.onclick=()=>{state.p[el.dataset.choice]=el.dataset.value;state.u=0;state.playing=false;state.selected=-1;state.dirty=true;renderControls();phases();updatePlots();sync();};
-   for(const el of $('controls').querySelectorAll('[data-preset]'))el.onclick=()=>{app.preset(el.dataset.preset,state,rt);app.normalize?.(state);state.u=0;state.playing=false;state.dirty=true;renderControls();phases();sync();};
-  }
-  const canNavigatePlot=()=>app.plotNavigation?.(state)!==false;
-  function syncPlotView(){const v=state.plotView;$('plotTools').hidden=!canNavigatePlot();$('plotZoomValue').textContent=fmt(v.zoom*100,0)+' %';$('plotZoomOut').disabled=v.zoom<=.500001;$('plotZoomIn').disabled=v.zoom>=15.99999;}
-  function fitPlot(){state.plotView={zoom:1,x:0,y:0};state.dirty=true;syncPlotView();}
-  function zoomPlot(factor,x=null,y=null){
-   if(!canNavigatePlot())return;
-   const v=state.plotView,next=M.clamp(v.zoom*factor,.5,16),b=plot.bounds;
-   const fx=(x===null||!b)?0.5:M.clamp((x-b.l)/(b.r-b.l)),fy=(y===null||!b)?0.5:M.clamp((b.b-y)/(b.b-b.t));
-   v.x=M.clamp(v.x+(fx-.5)*(1/v.zoom-1/next),-3,3);v.y=M.clamp(v.y+(fy-.5)*(1/v.zoom-1/next),-3,3);v.zoom=next;state.dirty=true;syncPlotView();
-  }
-  function updatePlots(){const modes=app.plotModes(state);if(!modes.some(x=>x[0]===state.plot)){state.plot=modes[0][0];fitPlot();}$('plotMode').innerHTML=modes.map(([id,label])=>`<option value="${id}">${label}</option>`).join('');$('plotMode').value=state.plot;$('plotMode').hidden=modes.length<2;syncPlotView();}
-  function phases(){const ps=app.phases(state);$('phases').innerHTML=ps.map(([name,color],i)=>`<button data-phase="${i}" style="--phase:var(--${color||'accent'})"><span>${i+1}</span>${name}</button>`).join('');for(const b of $('phases').children)b.onclick=()=>choosePhase(+b.dataset.phase);lastPhase=-2;}
-  function choosePhase(i){state.playing=false;if(app.phaseClick)app.phaseClick(i,state,rt);else state.u=(i+.12)/app.phases(state).length;state.dirty=true;sync();}
-  function setTab(id){if(state.p&&Object.keys(state.p).length)saved[state.tab]={...state.p};state.tab=id;state.p={...(saved[id]||app.defaults(id))};state.u=0;state.selected=app.initialSelected??-1;state.playing=false;state.zoom=1;fitPlot();state.dirty=true;lastInfo='';$('zoomValue').textContent='100 %';document.body.dataset.tab=id;
-   for(const el of $('tabs').children){const active=el.dataset.tab===id;el.setAttribute('aria-selected',String(active));el.tabIndex=active?0:-1;if(active)$('experiment').setAttribute('aria-labelledby',el.id);}
-   state.plot=app.plotModes(state)[0][0];updatePlots();renderControls();phases();sync();announce(app.tabs.find(x=>x[0]===id)[1]);
-  }
-  Object.assign(rt,{setTab,configure:()=>{renderControls();phases();updatePlots();state.dirty=true;},seek:u=>{state.u=M.clamp(u);state.dirty=true;sync();},pause:()=>{state.playing=false;sync();},notice,info(metrics,equation,explanation){const key=JSON.stringify([metrics,equation,explanation]);if(key===lastInfo)return;lastInfo=key;$('metrics').innerHTML=metrics.map(m=>`<div class="metric"><div class="metric-label">${m[0]}</div><div class="metric-value"${m[4]?` style="color:var(--${m[4]})"`:''}>${m[1]}<span class="metric-unit">${m[2]||''}</span></div><div class="metric-detail">${m[3]||''}</div></div>`).join('');$('equation').innerHTML=equation;$('explanation').innerHTML=explanation;},titles(a,b,n1='',n2=''){$('sceneTitle').textContent=a;$('plotTitle').textContent=b;$('sceneNote').innerHTML=n1;$('plotNote').innerHTML=n2;}});
-  $('tabs').innerHTML=app.tabs.map(([id,label])=>`<button type="button" role="tab" aria-selected="false" aria-controls="experiment" id="tab-${id}" data-tab="${id}">${label}</button>`).join('');for(const b of $('tabs').children)b.onclick=()=>setTab(b.dataset.tab);
-  $('tabs').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const ids=app.tabs.map(x=>x[0]),i=ids.indexOf(state.tab),k=e.key==='Home'?0:e.key==='End'?ids.length-1:(i+(e.key==='ArrowRight'?1:ids.length-1))%ids.length;setTab(ids[k]);$('tab-'+ids[k]).focus();});
-  $('play').onclick=()=>{state.playing=!state.playing;app.play?.(state,rt);state.dirty=true;sync();};$('reset').onclick=()=>{state.u=0;state.selected=-1;state.playing=false;state.dirty=true;sync();announce('Cycle au début.');};$('progress').oninput=()=>{state.playing=false;state.selected=-1;rt.seek(Number($('progress').value)/1000);};$('speed').onchange=()=>state.speed=Number($('speed').value);
-  $('plotMode').onchange=()=>{state.plot=$('plotMode').value;fitPlot();};
-  $('plotZoomIn').onclick=()=>zoomPlot(1.25);$('plotZoomOut').onclick=()=>zoomPlot(.8);$('plotFit').onclick=()=>{fitPlot();announce('Cycle recentré et entièrement cadré.');};
-  $('theme').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';state.dirty=true;};
-  function projection(){if(innerWidth<=950&&!document.body.classList.contains('projection')){const opened=$('controls').classList.toggle('open');$('projection').textContent=opened?'Fermer':'Réglages';return;}const active=document.body.classList.toggle('projection');$('controls').classList.remove('open');$('projection').textContent=active?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(active));state.zoom=1;$('zoomValue').textContent='100 %';state.dirty=true;}
-  $('projection').onclick=projection;
-  $('fullscreen').onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(e){notice('Le navigateur ne permet pas ce passage en plein écran.');}};
-  document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');state.dirty=true;});
-  $('bilan').onclick=()=>{const off=document.body.classList.toggle('bilan-off');$('bilan').setAttribute('aria-pressed',String(!off));state.dirty=true;};
-  function zoom(d){state.zoom=M.clamp(state.zoom+d,.8,1.4);$('zoomValue').textContent=fmt(state.zoom*100,0)+' %';state.dirty=true;}$('zoomIn').onclick=()=>zoom(.1);$('zoomOut').onclick=()=>zoom(-.1);$('fit').onclick=()=>{state.zoom=1;zoom(0);};
-  $('help').onclick=()=>{rt.pause();$('helpTitle').textContent=app.title;$('helpContent').innerHTML=app.help(state);$('helpDialog').showModal();};$('closeHelp').onclick=()=>$('helpDialog').close();
-  $('export').onclick=()=>{
-   const out=document.createElement('canvas'),c=out.getContext('2d'),vertical=innerWidth<621,gap=16,W=vertical?Math.max(scene.w,plot.w):scene.w+plot.w+gap,H=vertical?scene.h+plot.h+gap:Math.max(scene.h,plot.h),d=2;out.width=Math.ceil(W*d);out.height=Math.ceil((H+225)*d);c.scale(d,d);c.fillStyle=scene.color('surface');c.fillRect(0,0,W,H+225);c.fillStyle=scene.color('ink');c.font='24px Arial';c.fillText('TH4 · '+app.title,16,35);c.drawImage(scene.canvas,0,0,scene.canvas.width,scene.canvas.height,0,58,scene.w,scene.h);c.drawImage(plot.canvas,0,0,plot.canvas.width,plot.canvas.height,vertical?0:scene.w+gap,vertical?scene.h+gap+58:58,plot.w,plot.h);
-   const plain=html=>{const el=document.createElement('div');el.innerHTML=html;return el.textContent;};
-   const drawMath=(html,x,y,size)=>{for(const [str,mode] of D.parts(html.replace(/<\/?span[^>]*>/g,''))){c.font=`${size*(mode?.72:1)}px Arial`;c.fillText(str,x,y+(mode==='sub'?size*.25:mode==='sup'?-size*.35:0));x+=c.measureText(str).width;}};
-   if(!document.body.classList.contains('bilan-off')){const metrics=[...$('metrics').children];metrics.forEach((m,i)=>{const x=16+i*(W-30)/4;c.fillStyle=scene.color('muted');drawMath(m.querySelector('.metric-label').innerHTML,x,H+99,14);c.fillStyle=scene.color('ink');drawMath(m.querySelector('.metric-value').innerHTML,x,H+129,W<600?14:23);});}
-   c.fillStyle=scene.color('muted');c.font='13px Arial';let line='',row=0;const desc=plain($('explanation').innerHTML);for(const word of desc.split(' ')){if(c.measureText(line+' '+word).width>W-32){c.fillText(line,16,H+160+row*18);line=word;row++;}else line+=(line?' ':'')+word;}c.fillText(line,16,H+160+row*18);c.font='11px Arial';c.fillText('E. Guillaume · MPSI · Schémas pédagogiques ; hypothèses et sources dans l’aide.',16,H+210);
-   out.toBlob(blob=>{if(!blob){notice('Export indisponible.');return;}const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=app.id+'_'+state.tab+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);notice('Image PNG enregistrée.');},'image/png');
-  };
-  document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')||$('helpDialog').open||e.target.closest('#tabs')||e.ctrlKey||e.altKey||e.metaKey)return;if(e.key===' '){e.preventDefault();$('play').click();}else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const n=app.phases(state).length,i=app.phaseAt(state),next=(i+(e.key==='ArrowRight'?1:n-1))%n;choosePhase(next);}else if(e.key.toLowerCase()==='r')$('reset').click();else if(e.key.toLowerCase()==='f')$('fullscreen').click();});
-  function pointer(stage,which){
-   const cv=stage.canvas,pos=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
-   const inPlot=(x,y)=>{const b=plot.bounds;return which==='plot'&&canNavigatePlot()&&b&&x>=b.l&&x<=b.r&&y>=b.t&&y<=b.b;};
-   const nearCurve=(x,y)=>rt.curve?.some(p=>Math.hypot(p[0]-x,p[1]-y)<=16);
-   cv.addEventListener('pointerdown',e=>{
-    const [x,y]=pos(e);let used=false;
-    if(which==='scene'&&e.button===0){const hit=stage.hits.find(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h);if(hit){choosePhase(hit.id);used=true;}}
-    if(inPlot(x,y)&&(e.shiftKey||e.button!==0||!nearCurve(x,y))){const b=plot.bounds;state.drag={which,type:'pan',x,y,origin:{...state.plotView},width:b.r-b.l,height:b.b-b.t};used=true;cv.style.cursor='grabbing';cv.setPointerCapture(e.pointerId);}
-    else if(e.button===0&&app.pointer?.(which,x,y,'down',state,rt)){state.drag={which,type:'app'};used=true;cv.setPointerCapture(e.pointerId);state.playing=false;sync();}
-    if(used)e.preventDefault();
-   });
-   cv.addEventListener('pointermove',e=>{
-    const [x,y]=pos(e),d=state.drag;
-    if(d?.which===which){if(d.type==='pan'){state.plotView.x=M.clamp(d.origin.x-(x-d.x)/(d.width*d.origin.zoom),-3,3);state.plotView.y=M.clamp(d.origin.y+(y-d.y)/(d.height*d.origin.zoom),-3,3);}else app.pointer?.(which,x,y,'move',state,rt);state.dirty=true;}
-    else cv.style.cursor=stage.hits.some(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h)?'pointer':inPlot(x,y)?nearCurve(x,y)?'crosshair':'grab':app.cursor?.(which,x,y,state,rt)||'default';
-   });
-   const release=e=>{const d=state.drag;if(d?.which===which){if(d.type==='app')app.pointer?.(which,...pos(e),'up',state,rt);else announce('Cadrage du diagramme déplacé. Cadrer rétablit le cycle entier.');state.drag=null;cv.style.cursor='grab';}};
-   cv.addEventListener('pointerup',release);cv.addEventListener('pointercancel',release);
-   if(which==='plot'){
-    cv.addEventListener('wheel',e=>{const [x,y]=pos(e);if(!inPlot(x,y))return;e.preventDefault();const amount=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?stage.h:1);zoomPlot(Math.exp(-M.clamp(amount,-600,600)*.0015),x,y);},{passive:false});
-    cv.addEventListener('contextmenu',e=>{if(canNavigatePlot())e.preventDefault();});
-   }
-  }
-  function responsiveLabel(){if(innerWidth<=950&&!document.body.classList.contains('projection'))$('projection').textContent=$('controls').classList.contains('open')?'Fermer':'Réglages';else $('projection').textContent=document.body.classList.contains('projection')?'Réglages':'Projection';}
-  pointer(scene,'scene');pointer(plot,'plot');new ResizeObserver(()=>state.dirty=true).observe($('scene').parentElement);new ResizeObserver(()=>state.dirty=true).observe($('plot').parentElement);window.addEventListener('resize',()=>{state.dirty=true;if(innerWidth>950)$('controls').classList.remove('open');responsiveLabel();});
-  function frame(now){const dt=Math.min(.05,(now-previous)/1000||0);previous=now;if(state.playing){state.u+=dt*state.speed/(app.duration?.(state)||20);if(state.u>=1){if($('loop').checked)state.u%=1;else{state.u=1;state.playing=false;}}state.dirty=true;sync();}if(state.dirty){plot.view=state.plotView;plot.bounds=null;scene.clear();plot.clear();app.render(scene,plot,state,rt);const active=app.phaseAt(state);if(active!==lastPhase){for(const b of $('phases').children){const on=+b.dataset.phase===active;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));}lastPhase=active;}state.dirty=false;}requestAnimationFrame(frame);}
-  setTab(state.tab);responsiveLabel();requestAnimationFrame(frame);
-  // Interface de diagnostic locale, sans requête réseau.
-  globalThis.TH4App={state:()=>({...state,p:{...state.p}}),setTab,seek:rt.seek,setParams:p=>{Object.assign(state.p,p);app.normalize?.(state);renderControls();phases();state.dirty=true;},snapshot:()=>app.snapshot?.(state),pause:rt.pause};
-  return rt;
- }
- return {$,fmt,signed,esc,frac,field,select,check,section,presets,switches,start,notice};
-})();
-</script><script>'use strict';
-(()=>{
- const U=TH4UI,M=TH4Physics,D=TH4Draw,F=U.fmt,sg=U.signed,fr=U.frac;
- function model(s){if(s.tab==='cogeneration'){const eta=s.p.relative*(1-(s.p.tf+273.15)/(s.p.tc+273.15));return M.budget({...s.p,qc:100,w:-100*eta});}return M.budget(s.p);}
- function exchangeScene(s,b,u,{zoom=1,cogen=false,rate=0}={}){
-  // Les cadres et leurs ancrages se calculent en pixels d'écran : les textes
-  // ne dépendent plus de la réduction géométrique d'un grand dessin virtuel.
-  s.tempRange=[240,950];const w=s.w,h=s.h,pad=14,magnify=Math.max(.85,Math.min(1.2,zoom)),horizontal=w>=(s.projection?520:430),compact=!horizontal&&h<330,cx=compact?w*.35:w/2,radius=Math.max(39,(s.measure('Fluide',18,600)+24)/2),cardH=Math.max(s.projection?100:84,(s.projection?108:90)*magnify);
-  const title=cogen?'Travail et valorisation de la chaleur':'Échanges sur un cycle complet',titleH=s.wrap(w/2,18,title,w-32,'accent-ink',15,'center');
-  const sourceW=horizontal?Math.max(s.measure('Source chaude',14,600)+24,Math.min(w*.26*magnify,230)):(w-2*pad-18)/2,top=horizontal?Math.max(titleH+32,h*.43-cardH/2):Math.max(46,titleH+24),cy=horizontal?top+cardH/2:Math.max(top+cardH+radius+20,h*.61),workH=s.fontSize(15)+16,workY=h-workH-30;
-  const coldX=pad,hotX=w-pad-sourceW;
-  const source=(x,color,label,T)=>{s.rect(x,top,sourceW,cardH,'paper',color,9,1.6);s.text(x+sourceW/2,top+(s.projection?21:18),label,color,14,'center',false,600);s.text(x+sourceW/2,top+(s.projection?57:47),`${F(T-273.15,0)} °C`,color,22,'center');s.text(x+sourceW/2,top+(s.projection?86:73),`${F(T,0)} K`,'muted',13,'center');};
-  source(coldX,'cold',cogen?'Chauffage':'Source froide',b.Tf);source(hotX,'hot','Source chaude',b.Tc);
-  const r=radius*Math.min(1.12,Math.max(.9,zoom)),actualCy=compact?h-r-29:Math.min(cy,workY-r-16);
-  s.circle(cx,actualCy,r,'soft','accent',1.8);s.text(cx,actualCy-9,'Fluide','ink',18,'center',false,600);s.text(cx,actualCy+17,'ΔU = 0','muted',14,'center');
-  const flow=(val,ps,col,side=1)=>{
-   if(Math.abs(val)<1e-8){s.line(...ps[0],...ps[1],col,1,[5,5]);return;}
-   const p=val>0?ps:[ps[1],ps[0]],dx=p[1][0]-p[0][0],dy=p[1][1]-p[0][1],length=Math.hypot(dx,dy),tx=dx/length,ty=dy/length;
-   s.arrow(...p[0],...p[1],col,Math.max(2,Math.min(10,2+Math.abs(val)/16)),8);
-   // Une voie parallèle sépare les repères mobiles du flux et des libellés.
-   // Son côté reste le même quand le signe de l'échange s'inverse.
-   let nx=-ty,ny=tx;if(ny<-.001||(Math.abs(ny)<.001&&nx>0)){nx=-nx;ny=-ny;}
-   const offset=(s.projection?18:15)*side,arrowLength=Math.min(s.projection?21:17,Math.max(5,length-6)),travel=Math.max(0,length-arrowLength-4),count=Math.max(1,Math.floor(length/70));
-   for(let i=0;i<count;i++){
-    const f=(u*6+.45+i/count)%1,d=2+arrowLength/2+f*travel,x=p[0][0]+tx*d+nx*offset,y=p[0][1]+ty*d+ny*offset;
-    s.c.save();s.c.globalAlpha=Math.min(1,f/.1,(1-f)/.1);
-    s.arrow(x-tx*arrowLength/2,y-ty*arrowLength/2,x+tx*arrowLength/2,y+ty*arrowLength/2,col,s.projection?3:2.5,s.projection?8:7);s.c.restore();
-   }
-  };
-  if(horizontal){flow(b.Qf,[[coldX+sourceW+7,actualCy],[cx-r-7,actualCy]],'cold');flow(b.Qc,[[hotX-7,actualCy],[cx+r+7,actualCy]],'hot');s.text((coldX+sourceW+cx-r)/2,actualCy-24,'Q<sub>f</sub>','cold',17,'center');s.text((hotX+cx+r)/2,actualCy-24,'Q<sub>c</sub>','hot',17,'center');}
-  else{flow(b.Qf,[[coldX+sourceW*.65,top+cardH+7],[cx-r*.65,actualCy-r*.65]],'cold');flow(b.Qc,[[hotX+sourceW*.35,top+cardH+7],[cx+r*.65,actualCy-r*.65]],'hot');s.text(coldX+sourceW/2,top+cardH+20,'Q<sub>f</sub>','cold',17,'center');s.text(hotX+sourceW/2,top+cardH+20,'Q<sub>c</sub>','hot',17,'center');}
-  const workLabel=b.W<0?'Travail fourni':'Travail reçu',workW=s.measure(workLabel,15)+26;
-  const workCx=compact?w-pad-workW/2:cx,workTop=compact?actualCy-workH/2:workY;
-  if(compact){flow(b.W,[[workCx-workW/2-7,actualCy],[cx+r+7,actualCy]],'work',-1);s.text((workCx-workW/2+cx+r)/2,actualCy+25,'W','work',18,'center');}
-  else{flow(b.W,[[cx,workY-7],[cx,actualCy+r+7]],'work');s.text(cx+23,(workY+actualCy+r)/2,'W','work',18);}
-  s.rect(workCx-workW/2,workTop,workW,workH,'paper','work',7);s.text(workCx,workTop+workH/2,workLabel,'work',15,'center');
-  if(cogen&&horizontal){s.text(coldX+sourceW/2,top+cardH+22,'Chaleur valorisée','cold',12,'center');s.text(coldX+sourceW/2,top+cardH+44,`${F(-b.Qf*rate,1)} J`,'cold',16,'center');}
-  s.text(w/2,h-12,cogen?'Chaleur valorisée et travail sont distincts.':'Signe + : énergie reçue par le fluide','muted',12,'center');
- }
- function budgetPlot(s,b){
-  const w=s.w,h=s.h,l=32,r=w-25,cx=(l+r)/2,max=Math.max(100,Math.abs(b.Qc),Math.abs(b.Qf),Math.abs(b.W)),scale=(r-l)*.43/max,dy=Math.min(57,(h-155)/3);
-  s.text(w/2,20,'Énergies reçues par le fluide','ink',17,'center');
-  const vals=[['Q<sub>c</sub>',b.Qc,'hot'],['Q<sub>f</sub>',b.Qf,'cold'],['W',b.W,'work']];vals.forEach(([label,v,col],i)=>{const y=51+i*dy,x=cx+v*scale;s.text(l,y,label,col,18);s.text(r,y,sg(v,1)+' J',col,16,'right');s.rect(Math.min(cx,x),y+12,Math.max(2,Math.abs(x-cx)),14,col,null,3);s.line(cx,y+8,cx,y+30,'muted',1);});
-  s.line(20,h-101,w-20,h-101,'line');s.text(w/2,h-80,'W + Q<sub>c</sub> + Q<sub>f</sub> = 0','ink',17,'center');
-  s.text(w/2,h-51,`S<sub>c</sub> = ${sg(b.Sc,3)} J·K<sup>−1</sup>`,b.allowed?'work':'hot',17,'center');
-  s.rect(20,h-32,w-40,27,b.allowed?'soft':'paper',b.allowed?'work':'hot',6);s.text(w/2,h-18,b.allowed?(Math.abs(b.Sc)<1e-8?'Limite réversible':'Échanges compatibles'):'Impossible : S<sub>c</sub> < 0',b.allowed?'work':'hot',16,'center');
- }
- function cogenPlot(s,b,p){const useful=-b.Qf*p.rate,loss=-b.Qf-useful;let y=54;const x=25,w=s.w-50,dy=Math.min(82,(s.h-141)/3);s.text(s.w/2,20,'Pour 100 J reçus de la source chaude','ink',15,'center');const vals=[[-b.W,'work','Travail'],[useful,'cold','Chaleur valorisée'],[loss,'muted','Chaleur non valorisée']];vals.forEach(([v,c,label])=>{s.text(x,y,label,c,15);s.text(x+w,y,F(v,1)+' J',c,17,'right');s.rect(x,y+15,w,10,'paper','line',3);s.rect(x,y+15,w*v/100,10,c,null,3);y+=dy;});s.line(x,s.h-77,x+w,s.h-77,'line');s.text(x,s.h-52,'Rendement moteur','muted',15);s.text(x+w,s.h-52,F(-b.W,1)+' %','work',21,'right');s.text(x,s.h-19,'Valorisation totale','muted',15);s.text(x+w,s.h-19,F(-b.W+useful,1)+' %','accent-ink',21,'right');}
- const app={id:'TH4_Generalites_Carnot',title:'Échanges et cycle de Carnot',tabs:[['echanges','Échanges et limites'],['carnot','Cycle de Carnot'],['cogeneration','Cogénération']],rebuild:['reverse'],
-  defaults:id=>id==='cogeneration'?{tc:360,tf:90,relative:.7,rate:.8}:id==='carnot'?{tc:327,tf:27,ratio:2,gamma:1.4,reverse:false}:{tc:327,tf:27,qc:100,w:-40,machine:'moteur'},
-  plotModes:s=>s.tab==='carnot'?[['pv','(P,V)'],['ts','(T,S)']]:[['bilan','Bilan']],
-  plotNavigation:s=>s.tab==='carnot',
-  normalize(s,key){if(s.tab==='carnot'||s.tab==='cogeneration'){if(s.p.tc<s.p.tf+10){if(key==='tf')s.p.tc=s.p.tf+10;else s.p.tf=s.p.tc-10;}}else if(s.p.tc<s.p.tf){if(key==='tf')s.p.tc=s.p.tf;else s.p.tf=s.p.tc;}},
-  controls(s){const p=s.p;let html=U.section('Températures des thermostats',U.field('tc','Source chaude T<sub>c</sub>',p.tc,0,650,1,'°C')+U.field('tf','Source froide T<sub>f</sub>',p.tf,0,200,1,'°C'));
-   if(s.tab==='carnot')html+=U.section('Cycle réversible',U.check('reverse','Parcours récepteur',p.reverse)+U.field('ratio','Rapport isotherme V<sub>B</sub>/V<sub>A</sub>',p.ratio,1.2,4,.1)+U.field('gamma','Coefficient γ',p.gamma,1.2,1.67,.01)+`<p class="hint">Deux isothermes et deux adiabatiques réversibles. Déplacer le point sur le diagramme ou utiliser la frise.</p>`)+U.section('À observer',`<p class="hint">Le changement de sens inverse W, Q<sub>c</sub> et Q<sub>f</sub>. Le cycle reste le même.</p><p class="formula">η<sub>C</sub> = 1 − ${fr('T<sub>f</sub>','T<sub>c</sub>')}</p><p class="hint">Avec une conductance thermique finie, la puissance tend vers zéro dans la limite réversible ; le travail par cycle peut rester fini.</p>`);
-   else if(s.tab==='cogeneration')html+=U.section('Valorisation',U.field('relative','Fraction du rendement de Carnot',p.relative,.2,.95,.05)+U.field('rate','Part de chaleur récupérée',p.rate,0,1,.05)+`<p class="hint">La source froide est ici le réseau de chauffage. Les 100 J d’apport sont répartis entre travail, chaleur valorisée et chaleur non valorisée.</p>`);
-   else html+=U.section('Énergies imposées sur un cycle',U.field('qc','Transfert Q<sub>c</sub>',p.qc,-200,200,1,'J')+U.field('w','Travail W',p.w,-200,200,1,'J')+`<p class="hint">Q<sub>f</sub> = −W − Q<sub>c</sub> est calculé pour respecter le premier principe. Le second principe décide si l’ensemble est possible.</p>`)+U.section('Situations à discuter',U.presets([['ideal','Moteur réversible'],['reel','Moteur irréversible'],['cent','100 % en travail'],['mono','Monotherme moteur'],['sans','Froid → chaud sans travail']]))+U.section('Système et entropie',`<p class="hint">Système : fluide sur un cycle. ΔU = ΔS = 0.</p><p class="formula">S<sub>c</sub> = − ${fr('Q<sub>c</sub>','T<sub>c</sub>')} − ${fr('Q<sub>f</sub>','T<sub>f</sub>')} ≥ 0</p>`);
-   return html;
+
+// @titre    Échanges et cycle de Carnot · TH4 · MPSI
+// @sortie   ../TH4_Generalites_Carnot/TH4_Generalites_Carnot.html
+// @inclure  physique.js
+// @inclure  TH4_commun.js
+// @description Machines dithermes : bilans d'énergie et d'entropie, cycle de Carnot dans les deux sens, cogénération.
+'use strict';
+/* =====================================================================
+   TH4 · Échanges et cycle de Carnot
+   Physique : TH4Physics (physique.js, inchangée) : budget(), carnot(). Énergies reçues par le fluide.
+   Onglets : 1 échanges et limites (W et Q_c imposés, Q_f = −W − Q_c) · 2 cycle de Carnot · 3 cogénération.
+   ===================================================================== */
+const M4=TH4Physics, K=TH4K, M=AnimKit.M, DUREE=24, K0=273.15;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+let U=0;
+const sg=(a,v,d=1)=>(v>0.05*10**-d?'+':'')+a.fmt.fix(v,d);
+const NOMS_CARNOT=rev=>rev?['Détente adiabatique','Détente isotherme froide','Compression adiabatique','Compression isotherme chaude']:['Détente isotherme chaude','Détente adiabatique','Compression isotherme froide','Compression adiabatique'];
+
+function modelE(a){return M4.budget({tc:a.p.e_tc,tf:a.p.e_tf,qc:a.p.e_qc,w:a.p.e_w})}
+function modelG(a){const eta=a.p.g_rel*(1-(a.p.g_tf+K0)/(a.p.g_tc+K0));return M4.budget({tc:a.p.g_tc,tf:a.p.g_tf,qc:100,w:-100*eta})}
+function modelC(a){return M4.carnot({tc:a.p.c_tc,tf:a.p.c_tf,ratio:a.p.c_r,gamma:a.p.c_g,reverse:a.p.c_rev})}
+const norm=(a,key,tcId,tfId,gap)=>{const p=a.p;if(p[tcId]<p[tfId]+gap){if(key===tfId)a.set(tcId,p[tfId]+gap,{silent:true});else a.set(tfId,p[tcId]-gap,{silent:true})}};
+
+const A=AnimKit.app({
+  code:'TH4', partie:'OrangeBrule', chapitre:'TH4 Machines thermiques',
+  titre:'Échanges et cycle de Carnot', sousTitre:'Bilans d\'énergie et d\'entropie, Carnot dans les deux sens, cogénération',
+  onglets:['Échanges et limites','Cycle de Carnot','Cogénération'],
+  temps:a=>a.tab===1, pas:DUREE/60, vitesse:1,
+  curseur:{max:()=>1,get:()=>U,set:(a,v)=>{U=v;a.t=v*DUREE}},
+  panneaux:[{id:'scene',poids:1,ratioTel:.95},{id:'graphe',poids:1,ratioTel:.9}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Moteur réversible',action:a=>{a.set('e_tc',327);a.set('e_tf',27);a.set('e_qc',100);a.set('e_w',-100*(1-300.15/600.15))},onglets:[0]},
+      {label:'Moteur irréversible',valeurs:{e_tc:327,e_tf:27,e_qc:100,e_w:-30},onglets:[0]},
+      {label:'100 % en travail',valeurs:{e_tc:327,e_tf:27,e_qc:100,e_w:-100},onglets:[0]},
+      {label:'Monotherme moteur',valeurs:{e_tc:27,e_tf:27,e_qc:100,e_w:-30},onglets:[0]},
+      {label:'Froid → chaud sans travail',valeurs:{e_tc:47,e_tf:7,e_qc:-100,e_w:0},onglets:[0]},
+      {label:'Réfrigérateur',valeurs:{e_tc:20,e_tf:4,e_qc:-120,e_w:40},onglets:[0]},
+      {label:'Pompe à chaleur',valeurs:{e_tc:35,e_tf:4,e_qc:-150,e_w:50},onglets:[0]},
+      {label:'Cycle moteur',valeurs:{c_rev:false},onglets:[1]},{label:'Cycle récepteur',valeurs:{c_rev:true},onglets:[1]},
+      {label:'Centrale de chauffage urbain',valeurs:{g_tc:360,g_tf:90,g_rel:.7,g_rate:.8},onglets:[2]}]},
+    {titre:'Températures des thermostats',items:[
+      {id:'e_tc',label:`Source chaude ${M.v('T','c')}`,min:0,max:650,step:1,value:327,unit:'°C',onglets:[0]},
+      {id:'e_tf',label:`Source froide ${M.v('T','f')}`,min:0,max:200,step:1,value:27,unit:'°C',onglets:[0]},
+      {id:'c_tc',label:`Source chaude ${M.v('T','c')}`,min:20,max:650,step:1,value:327,unit:'°C',onglets:[1]},
+      {id:'c_tf',label:`Source froide ${M.v('T','f')}`,min:0,max:200,step:1,value:27,unit:'°C',onglets:[1]},
+      {id:'g_tc',label:`Combustion ${M.v('T','c')}`,min:60,max:650,step:1,value:360,unit:'°C',onglets:[2]},
+      {id:'g_tf',label:`Réseau de chauffage ${M.v('T','f')}`,min:0,max:200,step:1,value:90,unit:'°C',onglets:[2]}]},
+    {titre:'Énergies imposées sur un cycle',onglets:[0],items:[
+      {id:'e_qc',label:`Transfert ${M.v('Q','c')}`,min:-200,max:200,step:1,value:100,unit:'J'},
+      {id:'e_w',label:`Travail ${M.v('W')}`,min:-200,max:200,step:1,value:-40,unit:'J'},
+      {type:'note',html:()=>`${M.v('Q','f')} = −${M.v('W')} − ${M.v('Q','c')} est calculé pour respecter le premier principe. Le second principe décide ensuite si l'ensemble est possible. Système : le fluide sur un cycle (Δ${M.v('U')} = Δ${M.v('S')} = 0).`}]},
+    {titre:'Cycle réversible',onglets:[1],items:[
+      {id:'c_rev',type:'check',label:'Parcours récepteur (sens inverse)',value:false},
+      {id:'c_r',label:`Rapport isotherme ${M.frac(M.v('V','B'),M.v('V','A'))}`,min:1.2,max:4,step:.1,value:2},
+      {id:'c_g',label:`Coefficient ${M.v('γ')}`,min:1.2,max:1.67,step:.01,value:1.4},
+      {id:'diag',type:'seg',label:'Diagramme',options:[['pv','(P, V)'],['ts','(T, S)']],value:'pv'},
+      {type:'note',html:()=>`Gaz parfait, deux isothermes et deux adiabatiques réversibles. Glisser le point sur le diagramme ou utiliser le curseur temporel. Avec une conductance thermique finie, la puissance tend vers zéro à la limite réversible.`}]},
+    {titre:'Valorisation',onglets:[2],items:[
+      {id:'g_rel',label:'Fraction du rendement de Carnot',min:.2,max:.95,step:.05,value:.7},
+      {id:'g_rate',label:'Part de chaleur récupérée',min:0,max:1,step:.05,value:.8},
+      {type:'note',html:()=>`La source froide est ici le réseau de chauffage. Les 100 J reçus de la source chaude se répartissent entre travail, chaleur valorisée et chaleur non valorisée.`}]},
+    {titre:'Affichage',items:[
+      {id:'prev',type:'check',label:'Afficher les résultats (prévision)',value:false},
+      {id:'err',type:'check',label:'Montrer l\'erreur fréquente : températures en °C',value:false,onglets:[0,1]}]},
+    {titre:'Formules',items:[{type:'note',html:a=>formules(a)}]}
+  ],
+  aide:{
+    voit:'Échanges : le fluide (cercle) échange l\'énergie <i class="m">Q</i><sub>c</sub> avec la source chaude, <i class="m">Q</i><sub>f</sub> avec la source froide et le travail <i class="m">W</i> avec l\'extérieur. Les flèches sont proportionnelles aux énergies, orientées vers le fluide si elles sont positives. Carnot : le gaz du cylindre, ses contacts thermiques et le cycle dans le diagramme choisi.',
+    faire:'<ul><li><b>Échanges</b> : régler <i class="m">Q</i><sub>c</sub> et <i class="m">W</i> (ou déplacer le point dans le plan (<i class="m">Q</i><sub>c</sub>, <i class="m">W</i>)) puis cocher « Afficher les résultats » pour savoir si ce fonctionnement est possible. Les situations impossibles restent affichables pour être discutées.</li><li><b>Carnot</b> : lire le cycle, le parcourir dans les deux sens, glisser le point sur le diagramme.</li><li><b>Cogénération</b> : faire varier la fraction du rendement de Carnot et la part de chaleur récupérée.</li></ul>',
+    modele:'Premier principe sur un cycle : <i class="m">W</i> + <i class="m">Q</i><sub>c</sub> + <i class="m">Q</i><sub>f</sub> = 0. Second principe : <i class="m">S</i><sub>c</sub> = −<i class="m">Q</i><sub>c</sub>/<i class="m">T</i><sub>c</sub> − <i class="m">Q</i><sub>f</sub>/<i class="m">T</i><sub>f</sub> ≥ 0, avec les températures <b>des thermostats</b> (en kelvins), pas celles du fluide. Carnot : gaz parfait à γ constant ; le dispositif à piston est un modèle pédagogique. Un cycle de Stirling avec régénération parfaite et réversible atteint aussi la borne de Carnot.',
+    cours:'TH4 § Machines dithermes (notations <i class="m">Q</i><sub>c</sub>, <i class="m">Q</i><sub>f</sub>, <i class="m">W</i>, inégalité de Clausius), § Cycle de Carnot (<i class="m">A</i> → <i class="m">B</i> isotherme chaude, <i class="m">B</i> → <i class="m">C</i> adiabatique, …), § Cogénération.'
   },
-  phases(s){return s.tab==='carnot'?(s.p.reverse?[['Détente adiabatique','work'],['Détente isotherme froide','cold'],['Compression adiabatique','work'],['Compression isotherme chaude','hot']]:[['Détente isotherme chaude','hot'],['Détente adiabatique','work'],['Compression isotherme froide','cold'],['Compression adiabatique','work']]):s.tab==='cogeneration'?[['Travail','work'],['Chaleur valorisée','cold'],['Bilan global','accent']]:[['Moteur','work'],['Réfrigérateur','cold'],['Pompe à chaleur','hot']];},
-  phaseAt:s=>s.tab==='carnot'?Math.min(3,Math.floor(s.u*4)):s.tab==='cogeneration'?Math.min(2,Math.floor(s.u*3)):Math.max(0,['moteur','frigo','pac'].indexOf(s.p.machine)),
-  phaseClick(i,s,rt){if(s.tab==='carnot')rt.seek((i+.12)/4);else if(s.tab==='echanges'){const pars=i===0?{machine:'moteur',qc:100,w:-40}:i===1?{machine:'frigo',qc:-120,w:40}:{machine:'pac',qc:-120,w:40};Object.assign(s.p,pars);rt.configure();}else rt.seek((i+.1)/3);},
-  preset(id,s){const p=s.p;p.machine='moteur';if(id==='ideal'){p.tc=327;p.tf=27;p.qc=100;p.w=-100*(1-(p.tf+273.15)/(p.tc+273.15));}else if(id==='reel'){Object.assign(p,{tc:327,tf:27,qc:100,w:-30});}else if(id==='cent'){Object.assign(p,{tc:327,tf:27,qc:100,w:-100});}else if(id==='mono'){Object.assign(p,{tc:27,tf:27,qc:100,w:-30});}else if(id==='sans'){Object.assign(p,{tc:47,tf:7,qc:-100,w:0,machine:'frigo'});}},
-  duration:s=>s.tab==='carnot'?24:18,
-  render(scene,plot,s,rt){
-   if(s.tab==='carnot'){
-    const c=M.carnot(s.p),z=D.idealCylinder(scene,c,s.u,{zoom:s.zoom,reverse:s.p.reverse});const q=D.cyclePlot(plot,c,s.u,s.plot,{reverse:s.p.reverse});rt.curve=Array.from({length:501},(_,i)=>{const d=c.sample(i/500);return [q.X(s.plot==='ts'?d.S:d.V*1e3),q.Y(s.plot==='ts'?d.T:d.P/1e5),i/500];});
-    const val=s.p.reverse?c.ep:c.eta*100;rt.titles('Contacts thermiques et piston',s.plot==='ts'?'Diagramme entropique':'Diagramme de Watt','Le piston représente un gaz fermé ; ce dispositif est un modèle pédagogique.',s.plot==='ts'?'Pour ce cycle réversible : Q = ∮ T dS = −W.':'Aire orientée : W = −∮ P dV.');
-    rt.info([['Q<sub>c</sub>',sg(c.Qc,1),'J','Échange avec la source chaude','hot'],['Q<sub>f</sub>',sg(c.Qf,1),'J','Échange avec la source froide','cold'],['W',sg(c.W,1),'J','Travail reçu sur le cycle','work'],[s.p.reverse?'e<sub>PAC</sub>':'η',F(val,s.p.reverse?2:1),s.p.reverse?'':'%','Limite réversible','accent-ink']],s.p.reverse?`e<sub>frigo</sub> = ${F(c.ef,2)} ; e<sub>PAC</sub> = ${F(c.ep,2)}`:`η = 1 − ${fr('T<sub>f</sub>','T<sub>c</sub>')} = ${F(c.eta*100,1)} %`,s.p.reverse?'Le parcours récepteur reçoit du travail pour transférer de l’énergie de la source froide vers la source chaude.':'Le gaz revient à son état initial. Le travail fourni est la différence entre chaleur reçue et chaleur cédée.');
-   }else{
-    const b=model(s),cogen=s.tab==='cogeneration';exchangeScene(scene,b,s.u,{zoom:s.zoom,cogen,rate:s.p.rate});if(cogen)cogenPlot(plot,b,s.p);else budgetPlot(plot,b);
-    rt.titles(cogen?'Un moteur et un usage de la chaleur':'Fluide, thermostats et travail',cogen?'Répartition de l’énergie':'Deux principes, deux contraintes','Épaisseur : énergie échangée. Flèches mobiles : sens du transfert.','Toutes les énergies sont comptées sur un cycle complet.');
-    if(cogen)rt.info([['Travail fourni',F(-b.W,1),'J','Pour 100 J reçus','work'],['Chaleur valorisée',F(-b.Qf*s.p.rate,1),'J','Vers le réseau de chauffage','cold'],['Rendement moteur',F(b.eta*100,1),'%','Travail / chaleur reçue'],['Valorisation totale',F((-b.W-b.Qf*s.p.rate),1),'%','Travail + chaleur utile','accent-ink']],`Q<sub>c</sub> = −W − Q<sub>f</sub>`,'La cogénération valorise la chaleur rejetée à un niveau de température utile. Le rendement moteur reste distinct de la valorisation totale.');
-    else{const recv=s.p.machine!=='moteur',eff=recv?(s.p.machine==='pac'?b.ep:b.ef):b.eta,bound=recv?(s.p.machine==='pac'?b.epMax:b.efMax):b.etaMax;rt.info([['Q<sub>c</sub>',sg(b.Qc,1),'J','Reçu du thermostat chaud','hot'],['Q<sub>f</sub>',sg(b.Qf,1),'J','Reçu du thermostat froid','cold'],['W',sg(b.W,1),'J','Reçu de l’extérieur','work'],[recv?'Efficacité e':'Rendement η',eff===null||eff<0?'—':F(recv?eff:eff*100,recv?2:1),recv?'':'%',bound===null||!Number.isFinite(bound)?'Sources à même température':`Borne de Carnot : ${F(recv?bound:bound*100,recv?2:1)}${recv?'':' %'}`]],'W + Q<sub>c</sub> + Q<sub>f</sub> = 0',b.allowed?'Les échanges respectent les deux principes. Le fluide retrouve son énergie interne et son entropie initiales.':'Le bilan d’énergie est nul, mais ces échanges exigeraient une création d’entropie négative : ils sont impossibles.');}
-   }
-  },
-  pointer(which,x,y,event,s,rt){if(which!=='plot'||s.tab!=='carnot'||!rt.curve)return false;let best=rt.curve.reduce((a,v)=>Math.hypot(v[0]-x,v[1]-y)<Math.hypot(a[0]-x,a[1]-y)?v:a);if(event==='down'&&Math.hypot(best[0]-x,best[1]-y)>45)return false;if(event!=='up')rt.seek(best[2]);return true;},
-  help:s=>`<h3>Trois lectures d’une machine thermique</h3><p>Échanges et limites : les valeurs W et Q<sub>c</sub> sont imposées ; Q<sub>f</sub> est déduit du premier principe. Le second principe est évalué avec les températures des thermostats, et non avec celles du fluide. Les exemples impossibles restent affichables pour être discutés.</p><p>Carnot : gaz parfait à γ constant, deux isothermes réversibles et deux adiabatiques réversibles. Le dispositif à piston représente une réalisation idéale avec contacts thermiques commutables ; sa cinématique n’est pas celle d’un moteur réel. Le sens horaire donne un moteur dans les diagrammes affichés et sous les hypothèses annoncées.</p><p>Le théorème de Carnot ne fixe pas une unique forme de cycle pour le gaz : un Stirling avec régénération parfaite et réversible peut aussi atteindre cette borne. Dans une réalisation avec conductance thermique finie, atteindre la limite réversible exige des échanges infiniment lents.</p><p>Cogénération : le thermostat froid modélise un réseau de chauffage. La performance mécanique choisie est une fraction de la borne de Carnot. Le taux de chaleur récupérée ne modifie pas le travail fourni.</p><h3>Sources</h3><p>Cours TH4 d’E. Guillaume, sections sur les machines dithermes, Carnot et la cogénération. Inspiration visuelle : <a href="https://www.vascak.cz/data/android/physicsatschool/template.php?s=mf_carnot&amp;l=en" target="_blank" rel="noopener">cycle de Carnot, Vladimír Vaščák</a>. Aucun chargement extérieur n’est nécessaire à l’animation.</p>`,
-  snapshot:s=>s.tab==='carnot'?M.carnot(s.p):model(s)
- };
- U.start(app);
-})();
+  init(a){a.set('e_w',-40,{silent:true})},
+  change(a,id){if(id==='e_tc'||id==='e_tf')norm(a,id,'e_tc','e_tf',0);if(id==='c_tc'||id==='c_tf')norm(a,id,'c_tc','c_tf',10);if(id==='g_tc'||id==='g_tf')norm(a,id,'g_tc','g_tf',10)},
+  onglet(a){a.reset()},
+  reset(a){U=0;a.t=0},
+  step(a,dt){a.t=(a.t+dt)%DUREE;U=a.t/DUREE},
+  draw(a){
+    if(a.tab===1)drawCarnot(a);else{const b=a.tab===0?modelE(a):modelG(a);exchangeScene(a,b);if(a.tab===0)planGraph(a,b);else cogenGraph(a,b)}
+    infos(a);
+  }
+});
+
+/* ---------- formules ---------- */
+function formules(a){const v=M.v;
+  if(a.tab===1)return `${v('η','C')} = 1 − ${M.frac(v('T','f'),v('T','c'))}<br>${v('e','frigo')} = ${M.frac(v('T','f'),v('T','c')+' − '+v('T','f'))} ; ${v('e','PAC')} = ${M.frac(v('T','c'),v('T','c')+' − '+v('T','f'))}<br>${v('Q','c')} / ${v('T','c')} + ${v('Q','f')} / ${v('T','f')} = 0`;
+  if(a.tab===2)return `${v('η')} = ${v('x')} × ${v('η','C')} ; valorisation totale = ${v('η')} + ${v('r')}(1 − ${v('η')})`;
+  return `${v('W')} + ${v('Q','c')} + ${v('Q','f')} = 0<br>${v('S','c')} = −${M.frac(v('Q','c'),v('T','c'))} − ${M.frac(v('Q','f'),v('T','f'))} ≥ 0`;
+}
+
+/* ---------- schéma d'échanges ---------- */
+function exchangeScene(a,b){
+  const P=a.panels.scene,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,cogen=a.tab===2;let s='';
+  const horiz=w>=640,cw=Math.min(w*(horiz?.26:.4),170*k),ch=84*k,pad=12*k,fr=Math.max(46*k,Math.min(60*k,w*.1));
+  const cold=horiz?{x:pad,y:h*.4-ch/2}:{x:pad,y:pad+14*k},hot=horiz?{x:w-pad-cw,y:h*.4-ch/2}:{x:w-pad-cw,y:pad+14*k};
+  const fl={x:w/2,y:horiz?h*.4:h*.52};
+  const wc={x:w/2,y:h-70*k};
+  const card=(p,col,name,T)=>S.rect(p.x,p.y,cw,ch,{fill:C.card,c:col,w:2,rx:8*k})+S.text(p.x+cw/2,p.y+16*k,name,{anchor:'middle',size:14,c:col,weight:600,halo:false})+S.text(p.x+cw/2,p.y+44*k,`${a.fmt.fix(T-K0,0)} °C`,{anchor:'middle',size:22,c:col,weight:600,halo:false})+S.text(p.x+cw/2,p.y+68*k,`${a.fmt.fix(T,0)} K`,{anchor:'middle',size:13,halo:false});
+  s+=card(cold,C.cold,cogen?'Réseau de chauffage':'Source froide',b.Tf)+card(hot,C.hot,cogen?'Combustion':'Source chaude',b.Tc);
+  s+=S.circle(fl.x,fl.y,fr,{fill:C.cSoft,c:C.cInk,w:2})+S.text(fl.x,fl.y-8*k,'Fluide',{anchor:'middle',size:18,c:C.ink,weight:600,halo:false})+S.text(fl.x,fl.y+14*k,'ΔU = 0',{anchor:'middle',size:13,halo:false});
+  const vmax=cogen?100:Math.max(200,Math.abs(b.Qf),Math.abs(b.Qc),Math.abs(b.W));
+  const wlab=b.W<=0?'Travail fourni':'Travail reçu',wcw=Math.max(110*k,wlab.length*8.5*k);
+  s+=S.rect(wc.x-wcw/2,wc.y,wcw,34*k,{fill:C.card,c:C.v,w:2,rx:7*k})+S.text(wc.x,wc.y+17*k,wlab,{anchor:'middle',size:15,c:C.v,halo:false});
+  /* flèches : points de départ (source) et d'arrivée (fluide) */
+  const ang=(p,q)=>{const d=Math.hypot(q[0]-p[0],q[1]-p[1]);return[(q[0]-p[0])/d,(q[1]-p[1])/d]};
+  const link=(src,col,val,name,side)=>{const dst=[fl.x,fl.y],u=ang(src,dst),p1=[src[0],src[1]],p2=[dst[0]-u[0]*(fr+8*k),dst[1]-u[1]*(fr+8*k)];
+    let o=K.energyArrow(a,p1,p2,val,vmax,col,{zero:true,w:5*k/ k*1});
+    const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2;
+    return o+S.text(mx+side*24*k,my,`${name} = ${sg(a,val)} J`,{anchor:side>0?'start':'end',size:15,c:col,weight:600})};
+  const cFrom=horiz?[cold.x+cw+8*k,fl.y]:[cold.x+cw*.6,cold.y+ch+8*k],hFrom=horiz?[hot.x-8*k,fl.y]:[hot.x+cw*.4,hot.y+ch+8*k];
+  s+=link(cFrom,C.cold,b.Qf,'Qf',-1)+link(hFrom,C.hot,b.Qc,'Qc',1)+link([wc.x,wc.y-8*k],C.v,b.W,'W',1);
+  if(cogen){s+=S.text(cold.x+cw/2,cold.y+ch+22*k,`Chaleur valorisée : ${a.fmt.fix(-b.Qf*a.p.g_rate,1)} J`,{anchor:'middle',size:14,c:C.cold,weight:600})}
+  /* verdict masqué au départ */
+  if(a.p.prev&&!cogen)s+=S.text(w/2,h-12*k,b.allowed?(Math.abs(b.Sc)<1e-8?'Limite réversible : S créée = 0':'Fonctionnement possible : S créée ≥ 0'):'Impossible : S créée < 0',{anchor:'middle',size:16,c:b.allowed?C.v:C.F,weight:700});
+  else if(!cogen)s+=S.text(w/2,h-12*k,'Signe + : énergie reçue par le fluide',{anchor:'middle',size:13});
+  a.svg('scene',s);
+}
+
+/* ---------- plan (Q_c, W) ---------- */
+let GP=null;
+function planGraph(a,b){
+  const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h;let s='';
+  const G=S.graph({x:0,y:0,w,h,xmin:-200,xmax:200,ymin:-200,ymax:200,xlab:`${S.v('Q','c')} (J)`,ylab:`${S.v('W')} (J)`,xticks:[-200,-100,0,100,200],yticks:[-200,-100,0,100,200]});GP=G;
+  s+=S.clip('plan',G)+G.svg;
+  const eC=1-b.Tf/b.Tc;
+  if(a.p.prev){const yl=q=>-eC*q,pts=[[G.X(-200),G.Y(yl(-200))],[G.X(200),G.Y(yl(200))]];
+    s+=`<g clip-path="url(#plan)">`+S.path(`M${pts[0][0]},${pts[0][1]}L${pts[1][0]},${pts[1][1]}L${G.X(200)},${G.Y(200)}L${G.X(-200)},${G.Y(200)}Z`,{fill:C.v,fop:.13,c:null,w:0})
+     +S.path(`M${pts[0][0]},${pts[0][1]}L${pts[1][0]},${pts[1][1]}L${G.X(200)},${G.Y(-200)}L${G.X(-200)},${G.Y(-200)}Z`,{fill:C.F,fop:.1,c:null,w:0})+`</g>`
+     +S.line(pts[0][0],pts[0][1],pts[1][0],pts[1][1],{c:C.v,w:2.5})
+     +S.text(G.X(120),G.Y(-eC*120)+16*k,'S créée = 0',{anchor:'middle',size:13,c:C.v,weight:600})
+     +S.text(G.X(-195),G.Y(190),'Possible',{size:14,c:C.v,weight:600,halo:false})+S.text(G.X(195),G.Y(-190),'Impossible',{anchor:'end',size:14,c:C.F,weight:600,halo:false})}
+  s+=S.text(G.X(195),G.Y(-12),'moteur',{anchor:'end',size:13,halo:false})+S.text(G.X(-195),G.Y(14),'récepteur',{size:13,halo:false});
+  s+=S.circle(G.X(a.p.e_qc),G.Y(a.p.e_w),8*k,{fill:a.p.prev?(b.allowed?C.v:C.F):C.cInk,c:C.paper,w:2});
+  a.svg('graphe',s);a.legend([]);
+}
+A.drag('graphe',{hit:(x,y)=>A.tab===0&&GP&&Math.hypot(GP.X(A.p.e_qc)-x,GP.Y(A.p.e_w)-y)<26*A.k,
+  move(x,y){A.set('e_qc',Math.round(clamp(GP.xv(x),-200,200)),{silent:true});A.set('e_w',Math.round(clamp(GP.yv(y),-200,200)),{silent:true})}});
+
+/* ---------- cogénération : répartition de 100 J ---------- */
+function cogenGraph(a,b){
+  const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h;let s='';const useful=-b.Qf*a.p.g_rate,loss=-b.Qf-useful;
+  s+=S.text(w/2,22*k,'Pour 100 J reçus de la source chaude',{anchor:'middle',size:16,c:C.ink,weight:600,halo:false});
+  if(a.p.prev){const x=24*k,bw=w-48*k,rows=[['Travail',-b.W,C.v],['Chaleur valorisée',useful,C.cold],['Chaleur non valorisée',loss,C.pred]],dy=Math.min(86*k,(h-150*k)/3);
+    rows.forEach(([l,v,c],i)=>{const y=62*k+i*dy;s+=S.text(x,y,l,{size:15,c,halo:false})+S.text(x+bw,y,`${a.fmt.fix(v,1)} J`,{anchor:'end',size:17,c,weight:600,halo:false})+S.rect(x,y+14*k,bw,12*k,{fill:C.card,c:C.rule,rx:3*k})+S.rect(x,y+14*k,bw*clamp(v/100,0,1),12*k,{fill:c,rx:3*k})});
+    const y=h-62*k;s+=S.line(x,y-14*k,x+bw,y-14*k,{c:C.rule,w:1})+S.text(x,y+4*k,'Rendement moteur',{size:15,halo:false})+S.text(x+bw,y+4*k,`${a.fmt.fix(-b.W,1)} %`,{anchor:'end',size:20,c:C.v,weight:600,halo:false})+S.text(x,y+30*k,'Valorisation totale',{size:15,halo:false})+S.text(x+bw,y+30*k,`${a.fmt.fix(-b.W+useful,1)} %`,{anchor:'end',size:20,c:C.cInk,weight:600,halo:false})}
+  else s+=S.text(w/2,h/2,'Prévoir la répartition, puis afficher les résultats',{anchor:'middle',size:15,halo:false});
+  a.svg('graphe',s);a.legend([]);
+}
+
+/* ---------- Carnot ---------- */
+let plotC=null;
+function drawCarnot(a){
+  const c=modelC(a),d=c.sample(U),rev=!!a.p.c_rev,P=a.panels.scene,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h;let s='';
+  const fi=d.forwardStep??d.step,disp=d.step,cols=[C.hot,C.v,C.cold,C.v];
+  const Vlo=c.states[0].V,Vhi=c.states[2].V,f=clamp((d.V-Vlo)/(Vhi-Vlo),0,1);
+  const bw=Math.min(w*.24,120*k),top=46*k,Hs=Math.max(80*k,h-top-150*k),cx=w/2,dead=Hs*.18;
+  const cyl=K.cylinder(a,cx,top,bw,Hs,f,{dead,gas:K.tcol(d.T,280,700),gop:.55,wallw:3.2});
+  const zy1=top,zy2=top+dead+Hs;
+  const hotOn=fi===0,coldOn=fi===2,adia=fi===1||fi===3,gap=18*k,bl=Math.min(w*.2,100*k);
+  const blk=(x,col,on,name,T)=>S.rect(x,zy1,bl,zy2-zy1,{fill:col,fop:on?.3:.1,c:col,w:on?2.5:1,dash:on?undefined:`${4*k} ${4*k}`,rx:5*k})+S.text(x+bl/2,zy1+(zy2-zy1)/2-10*k,name,{anchor:'middle',size:14,c:col,weight:600,halo:false})+S.text(x+bl/2,zy1+(zy2-zy1)/2+12*k,`${a.fmt.fix(T-K0,0)} °C`,{anchor:'middle',size:14,c:col,halo:false});
+  const xh=cx-bw/2-(hotOn?0:gap)-bl,xc=cx+bw/2+(coldOn?0:gap);
+  s+=blk(xh,C.hot,hotOn,'Source chaude',c.Tc)+blk(xc,C.cold,coldOn,'Source froide',c.Tf);
+  s+=cyl.s;
+  if(adia){for(const sx of[-1,1]){const x=cx+sx*(bw/2+5*k);s+=S.line(x,zy1+4*k,x,zy2-4*k,{c:C.pred,w:7*k,op:.55})}
+    s+=S.text(cx,zy1-14*k,'Parois isolées · Q = 0',{anchor:'middle',size:14,c:C.pred,weight:600})}
+  /* flèches Q (échange de l'étape) et W (travail de l'étape), proportionnelles */
+  const st=c.steps[fi],dir=rev?-1:1,Qs=st.Q*dir,Ws=st.W*dir,Qm=Math.max(Math.abs(c.steps[0].Q),Math.abs(c.steps[2].Q)),Wm=Math.max(...c.steps.map(z=>Math.abs(z.W)));
+  if(hotOn)s+=K.energyArrow(a,[xh+bl+2*k,zy1+(zy2-zy1)*.75],[cx-bw/2-2*k,zy1+(zy2-zy1)*.75],Qs,Qm,C.hot,{w:5});
+  if(coldOn)s+=K.energyArrow(a,[xc-2*k,zy1+(zy2-zy1)*.75],[cx+bw/2+2*k,zy1+(zy2-zy1)*.75],Qs,Qm,C.cold,{w:5});
+  if(hotOn||coldOn)s+=S.text(hotOn?xh+bl+(cx-bw/2-xh-bl)/2:cx+bw/2+(xc-cx-bw/2)/2,zy1+(zy2-zy1)*.75-16*k,`Q = ${sg(a,Qs)} J`,{anchor:'middle',size:14,c:hotOn?C.hot:C.cold,weight:600});
+  s+=K.energyArrow(a,[cx,cyl.bottom+40*k],[cx,cyl.bottom+4*k],Ws,Wm,C.v,{w:5})+S.text(cx+14*k,cyl.bottom+26*k,`W = ${sg(a,Ws)} J`,{size:14,c:C.v,weight:600});
+  s+=S.text(w/2,h-12*k,NOMS_CARNOT(rev)[disp]+' · le piston représente un gaz fermé (modèle)',{anchor:'middle',size:14,c:C.cInk,weight:600});
+  a.svg('scene',s);
+  const plot=K.cyclePlot(a,'graphe',c,U,a.p.diag,{cols,fill:a.p.prev,lab:[-1,1,1,-1]});plotC=plot;
+  const lg=[{c:C.hot,label:'Isotherme chaude'},{c:C.v,label:'Adiabatique'},{c:C.cold,label:'Isotherme froide'}];a.legend(lg);
+  a.clock(`phase ${a.fmt.fix(U*100,0)} %`);
+}
+K.cycleDrag(A,'graphe',()=>plotC,u=>{U=u;A.t=u*DUREE},()=>A.tab===1);
+
+/* ---------- mesures ---------- */
+function infos(a){
+  const v=M.v,f=a.fmt,m=[];
+  if(a.tab===1){const c=modelC(a);
+    if(a.p.prev){const rev=a.p.c_rev;m.push({label:`${v('Q','c')}`,value:sg(a,c.Qc),unit:'J',hint:'Source chaude'},{label:`${v('Q','f')}`,value:sg(a,c.Qf),unit:'J',hint:'Source froide'},{label:`${v('W')}`,value:sg(a,c.W),unit:'J',hint:'Travail reçu sur le cycle'});
+      m.push(rev?{label:`${v('e','frigo')} · ${v('e','PAC')}`,value:`${f.fix(c.ef,2)} · ${f.fix(c.ep,2)}`,hint:'Efficacités de Carnot'}:{label:v('η','C'),value:f.fix(c.eta*100,1),unit:'%',hint:`1 − ${f.fix(c.Tf,0)}/${f.fix(c.Tc,0)}`})}
+    if(a.p.err){const bad=1-a.p.c_tf/a.p.c_tc;m.push({label:'Erreur fréquente (°C)',value:f.fix(bad*100,1),unit:'%',warn:true,hint:`≠ ${f.fix(c.eta*100,1)} % : utiliser les kelvins`})}
+  }else if(a.tab===0){const b=modelE(a);
+    if(a.p.prev){m.push({label:`${v('S','c')}`,value:sg(a,b.Sc,3),unit:'J·K<sup>−1</sup>',warn:!b.allowed,hint:b.allowed?'≥ 0 : possible':'< 0 : impossible'});
+      const recv=b.type==='récepteur';
+      if(b.type==='moteur')m.push({label:v('η'),value:f.fix(b.eta*100,1),unit:'%',hint:`Carnot : ${f.fix(b.etaMax*100,1)} %`});
+      else if(recv)m.push({label:`${v('e','frigo')} · ${v('e','PAC')}`,value:`${f.fix(b.ef,2)} · ${f.fix(b.ep,2)}`,hint:Number.isFinite(b.efMax)?`Carnot : ${f.fix(b.efMax,2)} · ${f.fix(b.epMax,2)}`:'Sources à même température'});
+      else m.push({label:'Type de machine',value:b.type==='dissipateur'?'Dissipateur':'Autre',hint:'Ni moteur ni récepteur ditherme'})}
+    if(a.p.err&&b.type==='moteur'&&b.Tc>0){const bad=1-a.p.e_tf/a.p.e_tc;m.push({label:'Erreur fréquente (°C)',value:isFinite(bad)?f.fix(bad*100,1):'—',unit:'%',warn:true,hint:`≠ ${f.fix(b.etaMax*100,1)} % : utiliser les kelvins`})}
+  }else{const b=modelG(a);if(a.p.prev)m.push({label:'Travail fourni',value:f.fix(-b.W,1),unit:'J',hint:'Pour 100 J reçus'},{label:'Chaleur valorisée',value:f.fix(-b.Qf*a.p.g_rate,1),unit:'J'},{label:'Rendement moteur',value:f.fix(b.eta*100,1),unit:'%',hint:`Carnot : ${f.fix(b.etaMax*100,1)} %`})}
+  a.metrics(m);
+}
+
 </script>
-</body></html>
+</body>
+</html>

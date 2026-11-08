@@ -1,88 +1,724 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Pile Daniell : fonctionnement et décharge. Animation autonome de physique-chimie MPSI, TC6.">
-<title>Pile Daniell · TC6 · MPSI</title>
+<meta name="description" content="Pile Daniell : circulation des charges, pont salin, bilan de matière, décharge au curseur et tension ℰ en fonction de log Q.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Pile Daniell · Fonctionnement et décharge · TC6 · MPSI</title>
 <style>
-:root{color-scheme:light;--paper:#f3f6f3;--surface:#fff;--ink:#0f0f0f;--secondary:#53595e;--line:#cedcd6;--accent:#008060;--soft:#e6f2ed;--zinc:#637988;--copper:#ac5127;--electron:#285ac1;--current:#8f2227;--ion:#007b63;--shadow:0 6px 30px #123e2910}
-:root[data-theme=dark]{color-scheme:dark;--paper:#101d1a;--surface:#172822;--ink:#eff6f2;--secondary:#becfc7;--line:#3d574b;--accent:#76d7b2;--soft:#233e33;--zinc:#b6cbd7;--copper:#f2a071;--electron:#9abcff;--current:#ffa5a8;--ion:#8ce6c7;--shadow:0 6px 30px #0003}
-*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:17px/1.4 Arial,Helvetica,sans-serif;border-top:5px solid var(--accent)}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:39px;padding:7px 12px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px}button:hover{background:var(--soft);border-color:var(--accent)}button[aria-pressed=true],button.primary{background:var(--accent);border-color:var(--accent);color:#fff}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] button.primary{color:#102c20}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--electron);outline-offset:3px}
-.shell{max-width:1920px;height:calc(100dvh - 5px);margin:auto;padding:14px 20px 10px;display:flex;flex-direction:column;gap:11px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:16px;flex:none}.eyebrow{color:var(--accent);text-transform:uppercase;font-size:12px;letter-spacing:.13em;font-weight:bold;margin-bottom:4px}h1{margin:0;font-size:28px;letter-spacing:-.025em;font-weight:500;line-height:1.15}.header-actions{display:flex;gap:6px;flex-wrap:wrap}.header-actions button{font-size:15px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;flex:1;min-height:0}.stage{display:flex;flex-direction:column;min-width:0;min-height:0;gap:9px}.modebar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none}.tabs{display:flex;gap:5px}.tabs button{font-size:17px}.camera{display:flex;gap:4px}.camera button{padding:5px 9px}.scene-box{position:relative;flex:1;min-height:300px;background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow);overflow:hidden}#scene{display:block;width:100%;height:100%;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}#scene .hit{cursor:pointer}#scene .hit:focus{outline:none}#scene .hit:focus-visible .focus-ring{stroke:var(--electron);stroke-width:3px}.legend{display:flex;justify-content:space-between;gap:10px;align-items:center;flex:none;color:var(--secondary);font-size:14px}.legend-left{display:flex;gap:13px;flex-wrap:wrap}.legend span{display:inline-flex;gap:6px;align-items:center}.legend i{width:20px;height:3px;background:var(--color);display:inline-block}.legend button{font-size:14px;min-height:30px;padding:3px 9px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));flex:none}.metric{padding:0 15px;border-left:1px solid var(--line)}.metric:first-child{padding-left:0;border:0}.metric-label{font-size:16px;color:var(--secondary)}.metric-value{font-size:33px;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.metric-detail{font-size:13px;color:var(--secondary)}.timeline{padding:9px 12px;background:var(--soft);border:1px solid var(--line);border-radius:7px;flex:none}.timeline-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px}.transport{display:flex;gap:5px;align-items:center}.transport button{min-height:32px;padding:3px 10px}.timeline input{width:100%;margin:8px 0 0;height:18px}.status{min-height:49px;font-size:17px;flex:none}.status strong{font-weight:500;color:var(--accent)}.status p{margin:2px 0 0;color:var(--secondary);font-size:14px}.presets{display:flex;gap:5px;flex-wrap:wrap;flex:none}.presets button{min-height:31px;padding:4px 8px;font-size:14px;background:transparent}.controls{min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent;border:1px solid var(--line);border-radius:9px;background:var(--surface)}.section{padding:16px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section-title{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:11px 0 4px}.row label{font-size:16px}select{padding:8px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:5px;width:100%;font-size:16px}input[type=number]{width:85px;background:var(--paper);color:var(--ink);padding:5px;border:1px solid var(--line);border-radius:5px;text-align:right;font-size:16px}input[type=range]{accent-color:var(--accent);cursor:pointer}input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}.slider{width:100%;height:20px;margin:3px 0}.hint{font-size:13px;color:var(--secondary);margin:7px 0 0}.switches{display:grid;gap:8px}.switches button{width:100%;text-align:left;font-size:16px}.check{display:flex;align-items:center;gap:8px;margin:9px 0;font-size:16px}.formula{font-family:Georgia,serif;font-size:24px;margin:12px 0 5px}.formula small{font-size:16px}.inventory{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}.inventory th,.inventory td{padding:7px 2px;text-align:right;border-bottom:1px solid var(--line)}.inventory th:first-child,.inventory td:first-child{text-align:left}.inventory th{font-weight:normal;color:var(--secondary);font-size:13px}.potentials{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;font-size:14px}.potentials b{display:block;font-size:19px;font-weight:normal}.footer{font-size:12px;color:var(--secondary);display:flex;justify-content:space-between;flex:none;gap:8px}dialog{width:min(760px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:26px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}dialog::backdrop{background:#071c2299}dialog h2{margin:0 0 15px;font-size:27px;font-weight:500}dialog p,dialog li{font-size:17px;line-height:1.6;color:var(--secondary)}dialog .end{text-align:right}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--accent);color:var(--surface);padding:10px 18px;border-radius:7px;z-index:5}.toast:empty{display:none}[hidden]{display:none!important}
-.projection .controls,.projection .presets,.projection .footer,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:9px}.projection h1{font-size:26px}.projection .metric-value{font-size:41px}.projection .metric-label{font-size:20px}.projection .metric-detail{font-size:15px}.projection .status{font-size:21px;min-height:31px}.projection .status p{display:none}.projection .legend{font-size:17px}.projection .timeline-head{font-size:19px}.projection .scene-box{min-height:300px}
-@media(max-width:1100px){.shell{padding:10px 12px}.workspace{grid-template-columns:minmax(0,1fr) 280px;gap:10px}h1{font-size:24px}.header-actions button{padding:6px 9px}.header-actions .optional{display:none}.section{padding:13px}.metric-value{font-size:29px}.metric-label{font-size:14px}.metric-detail{font-size:12px}}
-@media(max-width:760px){.shell{height:auto;min-height:100dvh;padding:12px}.masthead{align-items:flex-start;flex-wrap:wrap;gap:10px}.eyebrow{font-size:11px}h1{font-size:25px}.header-actions{gap:5px}.workspace{grid-template-columns:1fr;min-height:0}.stage{gap:11px}.scene-box{height:490px;flex:none}.controls{overflow:visible}.metrics .metric{padding:0 8px}.metrics .metric:first-child{padding-left:0}.metric-value{font-size:27px}.metric-label{font-size:14px}.metric-detail{font-size:12px}.modebar{gap:4px}.tabs{gap:4px}.tabs button{font-size:15px;padding:7px 9px}.camera button{font-size:15px;padding:5px 7px}.legend{font-size:12px;align-items:flex-start;gap:4px}.legend-left{gap:7px}.legend button{font-size:12px;white-space:nowrap}.legend i{width:14px}.timeline-head{font-size:14px}.timeline{padding:8px}.transport button{padding:3px 7px;font-size:14px}.footer{display:none}.status{font-size:17px}.projection .shell{height:auto;min-height:100dvh}.projection .scene-box{height:510px}.projection .metric-value{font-size:29px}.projection .metric-label{font-size:15px}.projection .metric-detail{font-size:12px}.projection .legend{font-size:12px}.projection .timeline-head{font-size:14px}.projection .status{font-size:18px}.projection h1{font-size:25px}}
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-.footer{display:none}.presets{margin-top:12px}.modebar>#charges{font-size:14px;padding:5px 9px}.timeline{display:flex;align-items:center;gap:12px;padding:7px 10px}.timeline-head{display:contents}.timeline-head>span{white-space:nowrap}.timeline .transport{order:3}.timeline input{flex:1;min-width:50px;width:auto;margin:0}.status{min-height:26px}.shell{gap:9px}.stage{gap:7px}
-@media(min-width:761px) and (max-height:850px){.eyebrow{display:none}.shell{padding:10px 16px 9px}.masthead h1{font-size:25px}.metrics .metric-label{font-size:14px}.metrics .metric-value{font-size:30px}.metrics .metric-detail{font-size:11px}.status p{display:none}.scene-box{min-height:310px}.projection .metric-value{font-size:36px}.projection .metric-label{font-size:16px}.projection .metric-detail{font-size:12px}.projection .status{font-size:18px}}
-@media(max-width:760px){.modebar{flex-wrap:wrap}.modebar .tabs{width:100%;margin-bottom:3px}.timeline{flex-wrap:wrap}.timeline-head{display:flex;width:100%}.timeline input{flex:auto;width:100%;margin:6px 0 0}.modebar>#charges{font-size:14px}.projection .scene-box{height:510px}}
-@media(max-width:480px){.metrics .metric-value{font-size:24px;white-space:nowrap}.metrics .metric-label{font-size:13px}.metrics .metric-detail{font-size:11px}}
-@media print{.controls,.header-actions,.camera,.presets,.footer,.transport{display:none}.shell{height:auto}.workspace{display:block}.scene-box{height:600px}.timeline{break-inside:avoid}}
-</style>
-<!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
 <body>
-<main class="shell">
- <header class="masthead"><div><div class="eyebrow">TC6 · Transformations chimiques · MPSI</div><h1>Pile Daniell <span style="color:var(--secondary)">/ fonctionnement & décharge</span></h1></div><div class="header-actions"><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export" class="optional">Image SVG</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" class="optional" aria-label="Plein écran">⛶</button></div></header>
- <div class="workspace">
-  <section class="stage" aria-label="Pile Daniell interactive">
-   <div class="modebar"><div class="tabs" role="group" aria-label="Mode pédagogique"><button id="mode-flow" aria-pressed="true">Fonctionnement</button><button id="mode-discharge" aria-pressed="false">Décharge</button></div><button id="charges" aria-pressed="true">Charges : animées</button><div class="camera"><button id="zoom-out" aria-label="Réduire le schéma">−</button><button id="fit">Cadrer</button><button id="zoom-in" aria-label="Agrandir le schéma">+</button></div></div>
-   <div class="scene-box"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Montage de la pile Daniell ; interrupteur et pont salin manipulables"><title>Pile Daniell</title></svg></div>
-   
-   <div class="metrics"><div class="metric"><div class="metric-label" id="emf-label">Tension à vide · ℰ</div><div class="metric-value" id="emf"></div><div class="metric-detail" id="emf-convention">Convention : V<sub>D</sub> − V<sub>G</sub></div></div><div class="metric"><div class="metric-label">Charge débitée · Q</div><div class="metric-value" id="charge"></div><div class="metric-detail" id="charge-ah"></div></div><div class="metric"><div class="metric-label">Capacité idéale · Q<sub>f</sub></div><div class="metric-value" id="capacity"></div><div class="metric-detail" id="capacity-note"></div></div></div>
-   <div class="timeline" id="timeline-panel" hidden><div class="timeline-head"><span id="extent-label">Avancement ξ</span><div class="transport"><button id="start" title="Revenir à l’état initial">↶</button><button id="play" class="primary">Décharger</button><button id="end" title="Aller à l’état final">État final</button></div></div><input id="progress" aria-label="Avancement de la décharge, en pourcentage du parcours" type="range" min="0" max="100" step="0.01" value="0"></div>
-   <div class="status" role="status" aria-live="polite"><strong id="status-title"></strong><p id="status-detail"></p></div>
-
-  </section>
-  <aside class="controls" aria-label="Réglages et bilans">
-   <section class="section"><h2 class="section-title">01 / Le montage</h2><div class="switches"><button id="circuit" aria-pressed="true">Interrupteur : fermé</button><button id="bridge" aria-pressed="true">Pont salin : en place</button><button id="swap">⇄ Permuter les demi-piles</button></div><div class="row"><label for="device">Circuit extérieur</label></div><select id="device"><option value="resistor">Résistance · débit possible</option><option value="voltmeter">Voltmètre idéal · mesure à vide</option></select><p class="hint">Cliquer sur l’interrupteur ou le pont dans le dessin.</p>   <div class="presets" role="group" aria-label="Situations préparées"><button data-preset="standard">Daniell classique</button><button data-preset="zinc">Zinc limitant</button><button data-preset="copper">Cu²⁺ limitant</button><button data-preset="open">Circuit ouvert</button><button data-preset="bridge">Sans pont</button><button id="reset">Réinitialiser</button></div></section>
-   <section class="section"><h2 class="section-title">02 / État initial · 25 °C</h2><div class="row"><label for="cCu">[Cu²⁺]₀ / mol·L⁻¹</label><input id="cCu" type="number" min="0.001" max="1" step="any" value="0.1"></div><input id="cCu-range" class="slider" type="range" min="-3" max="0" step="0.01" value="-1" aria-label="Concentration initiale en ions cuivre II, échelle logarithmique"><div class="row"><label for="vCu">Volume côté Cu / mL</label><input id="vCu" type="number" min="20" max="500" step="10" value="100"></div><input id="vCu-range" class="slider" type="range" min="20" max="500" step="10" value="100" aria-label="Volume initial côté cuivre"><div class="row"><label for="cZn">[Zn²⁺]₀ / mol·L⁻¹</label><input id="cZn" type="number" min="0.001" max="1" step="any" value="0.1"></div><input id="cZn-range" class="slider" type="range" min="-3" max="0" step="0.01" value="-1" aria-label="Concentration initiale en ions zinc II, échelle logarithmique"><div class="row"><label for="vZn">Volume côté Zn / mL</label><input id="vZn" type="number" min="20" max="500" step="10" value="100"></div><input id="vZn-range" class="slider" type="range" min="20" max="500" step="10" value="100" aria-label="Volume initial côté zinc"><div class="row"><label for="mZn">Masse de Zn / g</label><input id="mZn" type="number" min="0.01" max="10" step="0.01" value="1"></div><input id="mZn-range" class="slider" type="range" min="0.01" max="10" step="0.01" value="1" aria-label="Masse initiale de zinc"><p class="hint">Modifier l’état initial remet ξ à zéro. Le volume dessiné suit le volume choisi ; le bleu s’atténue avec [Cu²⁺].</p></section>
-   <section class="section"><h2 class="section-title">03 / Ce que l’on montre</h2><div class="legend"><div class="legend-left"><span><i style="--color:var(--electron)"></i>Électrons e⁻</span><span><i style="--color:var(--current)"></i>Courant i</span><span><i style="--color:var(--ion)"></i>Ions du pont</span></div></div><div class="row"><label for="annotation">Annotations</label></div><select id="annotation"><option value="0">Montage seul</option><option value="1">+ réactions aux électrodes</option><option value="2" selected>+ circulation des charges</option></select><label class="check"><input id="show-concentrations" type="checkbox" checked>Concentrations</label><label class="check"><input id="show-equation" type="checkbox" checked>Équation-bilan</label><div class="row"><label for="speed">Durée de lecture</label></div><select id="speed"><option value="60">Lente · 60 s</option><option value="30" selected>Normale · 30 s</option><option value="10">Rapide · 10 s</option></select><p class="hint">Temps de lecture libre, sans valeur de durée physique. Les charges défilent indépendamment.</p></section>
-   <section class="section"><h2 class="section-title">Bilan de matière</h2><table class="inventory"><thead><tr><th>Espèce</th><th>Initial / mmol</th><th>Actuel / mmol</th></tr></thead><tbody id="inventory"></tbody></table><div class="potentials"><div>E(Zn²⁺/Zn)<b id="potential-zn"></b></div><div>E(Cu²⁺/Cu)<b id="potential-cu"></b></div></div><p class="hint" id="mass-note"></p><div class="formula">Q = 2ℱξ <small>· ℱ = 96 485 C·mol⁻¹</small></div><p class="hint">Cu²⁺ + Zn = Cu + Zn²⁺<br>Volumes constants ; solutions idéales ; métaux purs. Potentiels référencés à l’ESH.</p></section>
-  </aside>
- </div>
- <footer class="footer"><span>TC6 · E. Guillaume · MPSI</span><span>Épaisseurs et charges schématiques · Glisser pour déplacer la vue · Espace : pause</span></footer>
-</main>
-<dialog id="about"><h2>Fonctionnement & décharge</h2><p>En mode <b>Fonctionnement</b>, les charges circulent sans faire progresser le bilan de matière : on observe le mécanisme à composition figée. En mode <b>Décharge</b>, le curseur ou le bouton Décharger fait progresser l’avancement. Les deux modes partagent le même état.</p><p><b>Réaction :</b> Zn(s) + Cu²⁺ = Zn²⁺ + Cu(s). Le zinc est l’anode (−), le cuivre la cathode (+), dans les conditions proposées. Les électrons vont du zinc vers le cuivre dans les conducteurs métalliques ; le courant conventionnel extérieur va en sens inverse. Comme dans le cours, dans le pont NH₄NO₃, les anions migrent vers le compartiment zinc et les cations vers le compartiment cuivre. Les ions spectateurs des solutions ne sont pas tous dessinés ; les solutions restent quasi électroneutres.</p><p><b>Modèle :</b> 25 °C, volumes constants, activités des solutés assimilées à c/c°, métaux purs, potentiel de jonction négligé. E°(Cu²⁺/Cu) = +0,34 V ; E°(Zn²⁺/Zn) = −0,76 V. Nernst utilise RT/2ℱ avec R = 8,314 J·K⁻¹·mol⁻¹, T = 298,15 K. L’arrondi 0,060 V du cours donnerait des résultats légèrement différents.</p><p><b>Tension :</b> ℰ = E<sub>D</sub> − E<sub>G</sub> est la tension à vide associée à la composition instantanée. Elle ne représente pas la tension en charge. Aucun calcul d’intensité, de résistance interne, de surtension ou de cinétique n’est effectué. La résistance du dessin indique seulement une fermeture possible du circuit. Un voltmètre idéal ne prélève aucun courant.</p><p><b>Fin de décharge :</b> l’évolution est bornée par la disparition du zinc solide ou par l’équilibre E(Cu²⁺/Cu) = E(Zn²⁺/Zn). Lorsque Cu²⁺ est limitant au sens du bilan quasi total, le modèle continu donne à l’équilibre une concentration résiduelle formelle extrêmement faible, calculée et non remplacée par zéro. À de tels niveaux, cette concentration ne s’interprète pas comme une population réelle d’ions dans le bécher. Lorsque le zinc disparaît, son potentiel d’électrode et la f.é.m. de Daniell ne sont plus définis dans ce modèle. La capacité Q<sub>f</sub> est idéale : une pile réelle peut s’arrêter plus tôt. Les réactions avec l’eau, réactions parasites, complexations et précipitations ne sont pas représentées.</p><p><b>Représentation :</b> les dimensions des électrodes, le dépôt et la taille des particules ne sont pas à l’échelle. La largeur initiale du zinc encode sa masse par une loi logarithmique schématique ; sa fraction restante réduit ensuite cette largeur. Le dépôt cuivré suit la masse déposée par une échelle en racine carrée amplifiée. Le niveau des solutions encode le volume de façon schématique ; leur teinte bleue encode qualitativement [Cu²⁺], sans loi colorimétrique. Les ions Zn²⁺ sont incolores. Les particules représentent des porteurs de charge, sans comptage moléculaire ni simulation de leur trajectoire réelle. Sans pont, ED − EG reste un écart de potentiels calculé relativement à l’ESH, sans prétendre représenter une mesure entre les deux solutions isolées. Retirer le pont supprime le régime de débit durable ; le bref transitoire de charge des interfaces n’est pas modélisé.</p><p><b>Commandes :</b> cliquer sur l’interrupteur ou le pont ; utiliser +, −, Cadrer, ou la molette pour le zoom ; glisser le fond pour déplacer le montage. Espace met en pause la décharge, ou les charges si la décharge n’est pas en lecture. Projection masque les réglages ; le même bouton les rétablit. Image SVG exporte le dessin, les valeurs et le thème actuels.</p><div class="end"><button id="close-help">Fermer</button></div></dialog>
-<div class="toast" id="toast" role="status"></div>
+<noscript>Cette animation nécessite JavaScript.</noscript>
 <script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
 'use strict';
-// Modèle de matière séparé du dessin. Les résidus à l’équilibre sont calculés
-// directement pour éviter la soustraction de deux quantités presque égales.
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* =====================================================================
+   TC6 · Pile Daniell : modèle de matière (d'origine, inchangé).
+   DaniellModel.solve(p, f) : composition, potentiels de Nernst, tension à vide, charge débitée, pour l'avancement relatif f.
+   ===================================================================== */
+'use strict';
 const DaniellModel=(()=>{
  const F=96485,R=8.314,T=298.15,MZn=65.38,MCu=63.546,E0Zn=-.76,E0Cu=.34;
  const a=R*T/(2*F),lnK=(E0Cu-E0Zn)/a,K=Math.exp(lnK);
@@ -101,238 +737,293 @@ const DaniellModel=(()=>{
  return {F,R,T,MZn,MCu,a,K,lnK,solve};
 })();
 window.DaniellModel=DaniellModel;
-const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
-const initial={cCu:.1,cZn:.1,vCu:100,vZn:100,mZn:1};
-const state={p:{...initial},f:0,mode:'flow',closed:true,bridge:true,swapped:false,device:'resistor',charges:true,annotations:2,concentrations:true,equation:true,duration:30,running:false,zoom:1,panX:0,panY:0};
-let model=DaniellModel.solve(state.p,0),phase=0,lastTime=0,lastRender=0,drag=null,W=1000,H=550,compact=false,tiny=false,stacked=false,colors={},labels=[],animationPaths=[],immersions=[];
-const fmt=(v,d=2)=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(v)<1e-12?0:v);
-const concise=v=>v!==0&&Math.abs(v)<.001?new Intl.NumberFormat('fr-FR',{notation:'scientific',maximumFractionDigits:2}).format(v):fmt(v,3);
-const signed=(v,d=3)=>v===null?'—':(v>1e-10?'+':'')+fmt(v,d)+' V';
-const chargeText=q=>compact&&q>=1000?fmt(q/1000,2)+' kC':fmt(q,1)+' C';
+
+// @titre Pile Daniell · Fonctionnement et décharge · TC6 · MPSI
+// @sortie ../TC6_Pile_Daniell/TC6_Pile_Daniell.html
+// @inclure TC6_Pile_Daniell_physique.js
+// @description Pile Daniell : circulation des charges, pont salin, bilan de matière, décharge au curseur et tension ℰ en fonction de log Q.
+'use strict';
+/* =====================================================================
+   TC6 · Pile Daniell (2 onglets : Fonctionnement, Décharge)
+   Physique : DaniellModel.solve (TC6_Pile_Daniell_physique.js, d'origine, inchangée).
+   Zn(s) + Cu²⁺ → Zn²⁺ + Cu(s) ; ℰ = V_D − V_G = E_D − E_G ; Q = 2ℱξ ; K = exp(ℰ°/a), a = RT/2ℱ.
+   Lot 18 : sur AnimKit ; écriture conventionnelle de la pile (suit la permutation) ; capacité Q_f, potentiels de Nernst
+   et droite ℰ(log Q) masqués au départ ; graphe ℰ en fonction de log Q (axes fixes) ; décharge au curseur (ξ).
+   ===================================================================== */
+const MD=DaniellModel,Mh=AnimKit.M,fm=AnimKit.fmt;
+let u=0;   /* avancement relatif ξ/ξ_max, entre 0 et 1 (variable lue aussi par Verifier_Source.cjs) */
+const st={phase:0,geo:null,get f(){return u},set f(v){u=v}};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const canConduct=()=>state.closed&&state.bridge&&state.device==='resistor'&&!model.terminal;
-const moving=()=>canConduct()&&state.charges;
-function el(tag,attrs={},parent=$('scene')){const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);parent.append(n);return n;}
-function screen(x,y){return [W/2+((x/1000-.5)*(W-32))*state.zoom+state.panX,H/2+((y/550-.5)*(H-30))*state.zoom+state.panY];}
-function path(points,attrs={},parent){return el('path',{d:points.map((p,i)=>(i?'L':'M')+screen(...p).join(',')).join(' '),fill:'none',stroke:colors.secondary,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round',...attrs},parent);}
-function rect(x,y,w,h,attrs={},parent){const [a,b]=screen(x,y),[c,d]=screen(x+w,y+h);return el('rect',{x:a,y:b,width:c-a,height:d-b,rx:4,...attrs},parent);}
-function circle(x,y,r,attrs={},parent){const p=screen(x,y);return el('circle',{cx:p[0],cy:p[1],r,...attrs},parent);}
-function text(x,y,s,color=colors.ink,size=22,attrs={},parent){const p=screen(x,y);const n=el('text',{x:p[0],y:p[1],fill:color,'font-size':tiny?Math.min(18,size):size*(document.body.classList.contains('projection')?1.13:1),'text-anchor':'middle',...attrs},parent);n.textContent=s;labels.push(n);return n;}
-function arrow(x1,y1,x2,y2,color,width=2.5,parent){const a=screen(x1,y1),b=screen(x2,y2),t=Math.atan2(b[1]-a[1],b[0]-a[0]),len=9;el('path',{d:`M${a}L${b}`,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','data-physical':'flèche'},parent);el('path',{d:`M${b}L${b[0]-len*Math.cos(t-.48)},${b[1]-len*Math.sin(t-.48)}L${b[0]-len*Math.cos(t+.48)},${b[1]-len*Math.sin(t+.48)}Z`,fill:color,'data-physical':'pointe de flèche'},parent);}
-function hitGroup(name,label,pressed,handler){const g=el('g',{class:'hit',role:'button',tabindex:'0','data-action':name,'aria-label':label,'aria-pressed':pressed});g.addEventListener('click',handler);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handler();}});return g;}
-function updateColors(){const c=getComputedStyle(document.documentElement);for(const name of ['surface','ink','secondary','line','accent','zinc','copper','electron','current','ion','soft'])colors[name]=c.getPropertyValue('--'+name).trim();}
-function render(){
- const focused=document.activeElement?.getAttribute('data-action');
- model=DaniellModel.solve(state.p,state.f);updateColors();labels=[];animationPaths=[];immersions=[];
- const box=$('scene').getBoundingClientRect();W=Math.max(200,box.width);H=Math.max(250,box.height);tiny=W<620;compact=W<800;stacked=W<950;
- const svg=$('scene');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren();el('title',{},svg).textContent='Pile Daniell : zinc, cuivre et pont salin';rect(-1000,-1000,3000,3000,{fill:colors.surface});
- const xz=state.swapped?850:150,xc=state.swapped?150:850;
- const physical=name=>({'data-physical':name});
- // Les légendes des électrodes occupent une bande au-dessus du circuit.
- // Les fils commencent plus bas et ne traversent aucun texte.
- path([[150,248],[150,120],[290,120]],{stroke:colors.zinc,'stroke-width':4,...physical('fil')});
- path([[350,120],[430,120]],{stroke:colors.zinc,'stroke-width':4,...physical('fil')});
- path([[570,120],[850,120],[850,248]],{stroke:colors.zinc,'stroke-width':4,...physical('fil')});
- rect(430,108,140,24,{fill:colors.soft,stroke:colors.secondary,'stroke-width':2,...physical('récepteur')});
- text(500,80,state.device==='voltmeter'?'V':'R',colors.ink,24);
- const sw=hitGroup('circuit',state.closed?'Ouvrir l’interrupteur':'Fermer l’interrupteur',state.closed,toggleCircuit);
- rect(274,75,93,85,{fill:'transparent',stroke:'transparent',class:'focus-ring'},sw);
- circle(290,120,4,{fill:colors.secondary},sw);circle(350,120,4,{fill:colors.secondary},sw);
- path([[290,120],state.closed?[350,120]:[343,83]],{stroke:colors.ink,'stroke-width':3,...physical('interrupteur')},sw);
- if(state.annotations>=2){
-  const d=state.swapped?-1:1;
-  arrow(d===1?360:440,170,d===1?440:360,170,canConduct()?colors.electron:colors.line);text(290,175,'e⁻',colors.electron,22);
-  arrow(d===1?640:560,170,d===1?560:640,170,canConduct()?colors.current:colors.line);text(710,175,'i',colors.current,22);
- }
- // Les deux branches sont à distance des parois ET des électrodes.
- // Un niveau minimal suffisamment haut rend leur immersion évidente.
- const beakers=[];
- for(const isLeft of [true,false]){
-  const x=isLeft?190:810,left=x-140,isZn=(isLeft!==state.swapped),vol=isZn?state.p.vZn:state.p.vCu,c=isZn?model.czn:model.ccu;
-  const level=340-60*(vol-20)/480;
-  const dark=document.documentElement.dataset.theme==='dark',blue=clamp(Math.log10(1+c/.005)/Math.log10(201),0,1);
-  const fill=isZn?(dark?'#253936':'#edf2f1'):(dark?`rgb(${Math.round(30-12*blue)},${Math.round(56+36*blue)},${Math.round(55+72*blue)})`:`rgb(${Math.round(242-165*blue)},${Math.round(248-65*blue)},${Math.round(248-25*blue)})`);
-  rect(left+3,level,274,418-level,{fill,rx:0,...physical('solution')});
-  path([[left+3,level],[left+277,level]],{stroke:isZn?colors.line:colors.electron,'stroke-width':1,...physical('surface de la solution')});
-  path([[left,268],[left,405],[left+8,420],[left+272,420],[left+280,405],[left+280,268]],{stroke:colors.secondary,'stroke-width':2,...physical('bécher')});
-  beakers.push({x,left,isLeft,isZn,level,c});
- }
- // Le verre du pont est dessiné après les liquides : son extrémité reste
- // visible sous la surface, et ne se confond plus avec la paroi du bécher.
- const bridge=hitGroup('bridge',state.bridge?'Retirer le pont salin':'Remettre le pont salin',state.bridge,toggleBridge);
- rect(270,194,460,221,{fill:'transparent',stroke:'transparent',class:'focus-ring'},bridge);
- const bridgePoints=[[280,395],[280,244],[720,244],[720,395]],tubeWidth=tiny?14:Math.min(22,Math.max(14,(H-30)*.045));
- path(bridgePoints,{stroke:state.bridge?colors.secondary:colors.line,'stroke-width':tubeWidth,opacity:state.bridge?.65:.35,'stroke-dasharray':state.bridge?'none':'5 9',...physical('pont salin')},bridge);
- if(state.bridge)path(bridgePoints,{stroke:colors.soft,'stroke-width':tubeWidth-5},bridge);
- text(500,212,state.bridge?'Pont salin':'Pont retiré',state.bridge?colors.ink:colors.secondary,22,{},bridge);
- if(state.annotations>=2&&state.bridge){const d=state.swapped?-1:1;arrow(480,244,410,244,canConduct()?colors.ion:colors.line,2,bridge);arrow(520,244,590,244,canConduct()?colors.ion:colors.line,2,bridge);text(420,310,d===1?'NO₃⁻':'NH₄⁺',colors.ion,20,{},bridge);text(580,310,d===1?'NH₄⁺':'NO₃⁻',colors.ion,20,{},bridge);}
- for(const {x,left,isLeft,isZn,level,c} of beakers){
-  const xe=isLeft?150:850,bx=isLeft?280:720;
-  const frac=model.metal/model.metal0,znWidth=(22+14*Math.log10(state.p.mZn/.01))*Math.max(0,frac),depWidth=clamp(32*Math.sqrt(model.deposit/.63546),0,120),width=isZn?znWidth:34;
-  if(!isZn||model.hasZinc){
-   rect(xe-width/2,248,width,155,{fill:isZn?colors.zinc:colors.copper,stroke:isZn?colors.zinc:colors.copper,'stroke-width':1,rx:1,...physical('électrode')});
-   if(!isZn&&depWidth>0)rect(xe-width/2-depWidth/2,Math.max(level,310),width+depWidth,402-Math.max(level,310),{fill:colors.copper,opacity:.7,rx:1,...physical('dépôt')});
-  }else path([[xe,248],[xe,420]],{stroke:colors.line,'stroke-dasharray':'4 6',...physical('électrode disparue')});
-  if(model.hasZinc){circle(x-110,28,tiny?12:16,{fill:colors.surface,stroke:isZn?colors.zinc:colors.copper,'stroke-width':2});text(x-110,35,isZn?'−':'+',isZn?colors.zinc:colors.copper,24,{'data-symbol':'true'});}
-  text(x,36,isZn&&!model.hasZinc?(compact?'Zn épuisé':'Zinc épuisé'):(compact?(isZn?'Zn':'Cu'):(isZn?'Zinc · Zn':'Cuivre · Cu')),isZn?colors.zinc:colors.copper,24);
-  if(state.annotations>=1)text(x,78,isZn&&!model.hasZinc?'Phase disparue':(compact?(isZn?'Oxydation':'Réduction'):(isZn?'Anode · oxydation':'Cathode · réduction')),colors.ink,compact?20:21);
-  if(state.annotations>=2){
-   const ix=isLeft?240:760,iy=(level+410)/2;
-   circle(ix,iy,tiny?4:6,{fill:'none',stroke:isZn?colors.zinc:colors.electron,'stroke-width':2,...physical('ion en solution')});
-   if(canConduct()){const start=isZn?xe+(isLeft?34:-34):ix,end=isZn?ix:xe+(isLeft?28:-28);arrow(start,iy+20,end,iy+20,isZn?colors.zinc:colors.electron,2);}
+const INIT=['cCu','cZn','vCu','vZn','mZn'];
+const mdl=a=>MD.solve({cCu:a.p.cCu,cZn:a.p.cZn,vCu:a.p.vCu,vZn:a.p.vZn,mZn:a.p.mZn},st.f);
+const peut=(a,m)=>!!(a.p.closed&&a.p.bridge&&a.p.device==='resistor'&&!m.terminal);
+const peutDecharger=a=>!!(a.p.closed&&a.p.bridge&&a.p.device==='resistor');
+const sgn=(x,d=3)=>x===null||x===undefined?'—':(x>1e-9?'+':'')+fm.fix(x,d);
+const sv=(a,s)=>String(s).replace(/<sup>(.*?)<\/sup>/g,(_,e)=>a.S.sup(e));
+const sub=t=>`<tspan font-size="72%" dy="0.3em">${t}</tspan><tspan dy="-0.3em">​</tspan>`;
+const r0=x=>Math.round(x);
+const LOGK=MD.lnK/Math.LN10,PENTE=MD.a*Math.LN10,E0=MD.a*MD.lnK;   /* log K, V par décade, ℰ° */
+
+/* palette locale : espèces chimiques (couleurs conservées de la version d'origine) */
+const pal=C=>C.dark?{zn:'#b6cbd7',cu:'#f2a071',el:'#9abcff',cur:'#ffa5a8',ion:'#8ce6c7',glass:'#9aa8a2',tube:'#6f857b'}:{zn:'#637988',cu:'#ac5127',el:'#285ac1',cur:'#8f2227',ion:'#007b63',glass:'#53595e',tube:'#8a9690'};
+
+const BASE={cCu:.1,cZn:.1,vCu:100,vZn:100,mZn:1,closed:true,bridge:true,device:'resistor',swapped:false};
+const PS=o=>({...BASE,...o});
+
+/* bilan de matière : tableau mis à jour à chaque image (hors réglages, donc sans rafraîchir le panneau) */
+const BIL={type:'note',html:a=>bilanHTML(a)};
+function bilanHTML(a){
+  const m=mdl(a),q=x=>fm.sig(x*1000,3),td='style="padding:.12em .3em;text-align:right;border-bottom:1px solid var(--rule)"',tl='style="padding:.12em .3em;text-align:left;border-bottom:1px solid var(--rule)"';
+  const rows=[['Zn(s)',m.metal0,m.metal],['Cu<sup>2+</sup>',m.cu0,m.cu],['Zn<sup>2+</sup>',m.zn0,m.zn],['Cu(s) déposé',0,m.xi]];
+  return `<table style="width:100%;border-collapse:collapse;font-size:1.05em;font-variant-numeric:tabular-nums"><tr><th ${tl}>Espèce</th><th ${td}>Initial (mmol)</th><th ${td}>Actuel (mmol)</th></tr>`+
+    rows.map(([s,x,y])=>`<tr><td ${tl}>${s}</td><td ${td}>${q(x)}</td><td ${td}>${q(y)}</td></tr>`).join('')+
+    `</table><div style="margin-top:.35em">Zn restant : ${fm.sig(m.mZn,3)} g · Cu déposé : ${fm.sig(m.deposit,3)} g</div>`;
+}
+/** curseur de l'avancement : visible seulement dans l'onglet Décharge */
+function scrub(on){const d=typeof document!=='undefined'&&document.querySelector?document.querySelector('.ak-scrub'):null;if(d)d.hidden=!on}
+function liveNote(it,html){const e=it._box&&it._box.firstChild;if(e&&e._h!==html){e.innerHTML=html;e._h=html}}
+
+const A=AnimKit.app({
+  code:'TC6',partie:'VertEmeraude',chapitre:'TC6 Oxydoréduction',
+  titre:'Pile Daniell',sousTitre:'Fonctionnement et décharge',
+  fichier:'Pile_Daniell',
+  onglets:['Fonctionnement','Décharge'],
+  temps:true,pas:.6,
+  curseur:{max:()=>1,get:()=>st.f,set:(a,v)=>{if(peutDecharger(a))st.f=clamp(v,0,1);else a.toast('Décharge impossible : interrupteur ouvert, pont retiré ou voltmètre idéal.')}},
+  panneaux:[{id:'scene',poids:2.3,ratioTel:.85},{id:'graphe',titre:'ℰ en fonction de log Q',poids:1,ratioTel:.8,onglets:[1]}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Daniell classique',titre:'Zn / Cu, 0.1 mol·L⁻¹, 100 mL, 1 g de zinc',valeurs:BASE,action:a=>a.setTab(0)},
+      {label:'Zinc limitant',titre:'0.1 g de zinc',valeurs:PS({mZn:.1}),action:a=>a.setTab(1)},
+      {label:'Cu²⁺ limitant',titre:'2 g de zinc, [Cu²⁺]₀ = 0.05 mol·L⁻¹',valeurs:PS({mZn:2,cCu:.05}),action:a=>a.setTab(1)},
+      {label:'Circuit ouvert',valeurs:PS({closed:false}),action:a=>a.setTab(0)},
+      {label:'Sans pont',valeurs:PS({bridge:false}),action:a=>a.setTab(0)}],items:[]},
+    {titre:'Le montage',items:[
+      {id:'closed',type:'check',label:'Interrupteur fermé (cliquer sur le dessin)',value:true},
+      {id:'bridge',type:'check',label:'Pont salin en place (cliquer sur le dessin)',value:true},
+      {id:'swapped',type:'check',label:'Permuter les demi-piles (Zn à droite)',value:false},
+      {id:'device',type:'select',label:'Circuit extérieur',options:[['resistor','Résistance : débit possible'],['voltmeter','Voltmètre idéal : mesure à vide']],value:'resistor'}]},
+    {titre:'État initial · 25 °C',items:[
+      {id:'cCu',label:`[Cu<sup>2+</sup>]<sub>0</sub>`,min:.001,max:1,log:true,step:.001,dec:3,value:.1,unit:'mol·L⁻¹'},
+      {id:'cZn',label:`[Zn<sup>2+</sup>]<sub>0</sub>`,min:.001,max:1,log:true,step:.001,dec:3,value:.1,unit:'mol·L⁻¹'},
+      {id:'vCu',label:'Volume côté Cu',min:20,max:500,step:10,value:100,unit:'mL'},
+      {id:'vZn',label:'Volume côté Zn',min:20,max:500,step:10,value:100,unit:'mL'},
+      {id:'mZn',label:'Masse de zinc',min:.01,max:10,log:true,step:.01,dec:2,value:1,unit:'g'}]},
+    {titre:'Affichages',items:[
+      {id:'ann',type:'select',label:'Annotations',options:[[0,'Montage seul'],[1,'+ réactions aux électrodes'],[2,'+ circulation des charges']],value:2},
+      {id:'conc',type:'check',label:'Concentrations',value:true},
+      {id:'eq',type:'check',label:'Équation de la réaction',value:true},
+      {id:'showNernst',type:'check',label:'Potentiels d\'électrode (loi de Nernst)',value:false},
+      {id:'showFinal',type:'check',label:'Capacité et état final',value:false},
+      {id:'showLaw',type:'check',label:'Droite ℰ = ℰ° − 0.0296 log Q',value:false,onglets:[1]}]},
+    {titre:'Bilan de matière',items:[BIL]}
+  ],
+  aide:{
+    voit:'Une <b>pile Daniell</b> : une lame de zinc plongée dans une solution de Zn<sup>2+</sup>, une lame de cuivre dans une solution de Cu<sup>2+</sup>, reliées par un <b>pont salin</b> (NH<sub>4</sub>NO<sub>3</sub>) et, à l\'extérieur, par une résistance ou un voltmètre. Sous le schéma, la pile est écrite avec la convention du cours : les signes ⊕ et ⊖ sont les polarités physiques, ils suivent la permutation des demi-piles.',
+    faire:'<ul><li><b>Fonctionnement</b> : lecture pour faire circuler les électrons (fil), les ions du pont et les ions de chaque demi-pile, à composition figée. Cliquer sur l\'<b>interrupteur</b> ou sur le <b>pont</b> pour les ouvrir ou les refermer.</li><li><b>Décharge</b> : le curseur (ou la lecture) fait avancer <i class="m">ξ</i> ; le bilan de matière, la charge débitée <i class="m">Q</i> et la tension à vide <i class="m">ℰ</i> évoluent. Le graphe donne <i class="m">ℰ</i> en fonction de log <i class="m">Q</i>.</li><li><b>Permuter</b> les demi-piles : <i class="m">ℰ</i> = <i class="m">V</i><sub>D</sub> − <i class="m">V</i><sub>G</sub> change de signe, pas la tension entre les pôles.</li><li>Les <b>prévisions</b> (potentiels de Nernst, capacité <i class="m">Q</i><sub>f</sub>, droite <i class="m">ℰ</i>(log <i class="m">Q</i>)) sont masquées au départ : les faire prévoir, puis les cocher.</li></ul>',
+    modele:'Solutions idéales (activités égales aux concentrations), 25 °C, volumes constants, pont salin parfait, voltmètre idéal. Équation : Zn + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu, avec <i class="m">E</i>°(Cu<sup>2+</sup>/Cu) = 0.34 V, <i class="m">E</i>°(Zn<sup>2+</sup>/Zn) = −0.76 V, <i class="m">K</i> = exp(<i class="m">ℰ</i>°/<i class="m">a</i>) avec <i class="m">a</i> = <i class="m">RT</i>/2ℱ. La charge débitée vaut <i class="m">Q</i> = 2ℱ<i class="m">ξ</i>. L\'avancement final est limité par le zinc ou par l\'équilibre (résidu de Cu<sup>2+</sup> calculé directement). La tension affichée est la tension à vide à la composition courante ; le régime transitoire et la résistance interne ne sont pas modélisés. Épaisseurs des lames et charges schématiques.',
+    cours:'TC6 : pile électrochimique, anode (oxydation) et cathode (réduction), écriture conventionnelle, convention <i class="m">ℰ</i> = <i class="m">V</i><sub>D</sub> − <i class="m">V</i><sub>G</sub>, formule de Nernst, constante d\'équilibre, capacité d\'une pile <i class="m">Q</i><sub>f</sub> = <i class="m">z</i>ℱ<i class="m">ξ</i><sub>f</sub>.'
+  },
+  change(a,id,v){
+    if(INIT.includes(id)){st.f=0;a.play(false)}
+    else if(id==='closed'||id==='bridge'||id==='device')a.play(false);
+  },
+  init(){scrub(false)},
+  onglet(a,i){a.play(false);scrub(i===1)},
+  reset(a){st.phase=0;if(a.tab===1)st.f=0},
+  peutLire(a){
+    if(a.tab===1&&st.f>=1)st.f=0;
+    const m=mdl(a);
+    if(!peut(a,m)){a.toast(!a.p.closed?'Fermer l\'interrupteur pour faire circuler les charges.':!a.p.bridge?'Remettre le pont salin.':a.p.device!=='resistor'?'Voltmètre idéal : aucun courant. Choisir la résistance.':'Décharge terminée.');return false}
+    return true;
+  },
+  step(a,dt){
+    const m=mdl(a);if(!peut(a,m)){a.play(false);return}
+    st.phase=(st.phase+dt*.12)%1;
+    if(a.tab===1){st.f=Math.min(1,st.f+dt/30);if(st.f>=1)a.play(false)}
+  },
+  draw(a){
+    const m=mdl(a);
+    drawScene(a,m);
+    if(!a.panels.graphe.el.hidden)drawGraphe(a,m);
+    liveNote(BIL,bilanHTML(a));
+    info(a,m);
   }
-  if(state.concentrations)text(x,470,(tiny?'':(isZn?'[Zn²⁺] = ':'[Cu²⁺] = '))+concise(c)+(tiny?' M':' mol·L⁻¹'),colors.secondary,20);
-  else if(state.annotations>=2)text(x,470,isZn?'Zn²⁺ en solution':'Cu²⁺ en solution',isZn?colors.zinc:colors.electron,20);
-  if(state.annotations>=1){
-   if(tiny){text(x,498,isZn?'Zn → Zn²⁺':'Cu²⁺ + 2e⁻',colors.ink,18);text(x,533,isZn?'+ 2e⁻':'→ Cu',colors.ink,18);}
-   else text(x,520,isZn?'Zn → Zn²⁺ + 2e⁻':'Cu²⁺ + 2e⁻ → Cu',colors.ink,stacked?22:24);
+});
+
+/* ---------- géométrie : coordonnées de dessin 1000 × 585 centrées dans le panneau ---------- */
+function geo(P,k,VH){
+  const VW=1000,top=P.w<640?34*k:6*k,s=Math.max(.2,Math.min(P.w/VW,(P.h-top-6*k)/VH));
+  const ox=(P.w-VW*s)/2,oy=Math.max(top,(P.h-VH*s)/2);
+  return{s,ox,oy,X:x=>ox+x*s,Y:y=>oy+y*s,ix:px=>(px-ox)/s,iy:py=>(py-oy)/s};
+}
+function along(pts,t,G){
+  const ps=pts.map(q=>[G.X(q[0]),G.Y(q[1])]),ls=ps.slice(1).map((q,i)=>Math.hypot(q[0]-ps[i][0],q[1]-ps[i][1])),tot=ls.reduce((x,y)=>x+y,0);
+  let d=(((t%1)+1)%1)*tot;
+  for(let i=0;i<ls.length;i++){if(d<=ls[i]){const u=ls[i]?d/ls[i]:0;return[ps[i][0]+u*(ps[i+1][0]-ps[i][0]),ps[i][1]+u*(ps[i+1][1]-ps[i][1])]}d-=ls[i]}
+  return ps[ps.length-1];
+}
+function solFill(C,isZn,c){
+  if(isZn)return C.dark?'#253936':'#edf2f1';
+  const b=clamp(Math.log10(1+c/.005)/Math.log10(201),0,1);
+  return C.dark?`rgb(${r0(30-12*b)},${r0(56+36*b)},${r0(55+72*b)})`:`rgb(${r0(242-165*b)},${r0(248-65*b)},${r0(248-25*b)})`;
+}
+function statut(a,m){
+  const p=a.p;
+  if(m.terminal)return m.zincLimited?'Fin : zinc solide épuisé':'Fin : équilibre atteint, ℰ = 0';
+  if(!p.bridge)return 'Pont retiré : aucun débit durable';
+  if(!p.closed)return 'Circuit ouvert : aucun courant';
+  if(p.device!=='resistor')return 'Voltmètre idéal : mesure à vide, aucun débit';
+  if(a.tab===0)return 'Le zinc s\'oxyde ; les ions cuivre(II) se réduisent';
+  return a.running?'Décharge en cours':'Décharge en pause : curseur ou lecture';
+}
+
+/* ---------- schéma de la pile ---------- */
+function drawScene(a,m){
+  const P=a.panels.scene,S=a.S,C=a.C,k=a.k,p=a.p,pl=pal(C);
+  const tiny=P.w<460,stacked=P.w<640,VH=tiny?695:615,G=geo(P,k,VH),{s,X,Y}=G;
+  st.geo=G;
+  const conduct=peut(a,m),ann=+p.ann,sw=p.swapped;
+  const ln=(pts,c,w,more={})=>S.poly(pts.map(q=>[X(q[0]),Y(q[1])]),{c,w,...more});
+  const rc=(x,y,w,h,more)=>S.rect(X(x),Y(y),w*s,h*s,more);
+  const T=(x,y,str,more={})=>S.text(X(x),Y(y),str,{anchor:'middle',size:15,...more});
+  const dot=(x,y,r,more)=>S.circle(X(x),Y(y),Math.max(r*s,3*k),more);
+  const ar=(x1,y1,x2,y2,c,w=2)=>S.arrow(X(x1),Y(y1),X(x2),Y(y2),{c,w});
+  const zn2='Zn'+S.sup('2+'),cu2='Cu'+S.sup('2+'),el='e'+S.sup('−');
+  const no3='NO'+sub('3')+S.sup('−'),nh4='NH'+sub('4')+S.sup('+');
+  let o='';
+  /* fils, récepteur, interrupteur */
+  o+=ln([[150,248],[150,120],[290,120]],pl.zn,3)+ln([[350,120],[430,120]],pl.zn,3)+ln([[570,120],[850,120],[850,248]],pl.zn,3);
+  if(p.device==='resistor'){o+=rc(430,108,140,24,{fill:C.cSoft,c:C.ink2,w:1.6})+T(500,78,S.v('R'),{size:17,c:C.ink});}
+  else{o+=ln([[430,120],[476,120]],pl.zn,3)+ln([[524,120],[570,120]],pl.zn,3)+S.circle(X(500),Y(120),Math.max(24*s,13*k),{fill:C.card,c:C.ink2,w:1.8})+S.text(X(500),Y(120),'V',{anchor:'middle',size:16,c:C.ink,weight:700,halo:false});}
+  o+=dot(290,120,4,{fill:C.ink2})+dot(350,120,4,{fill:C.ink2})+ln([[290,120],p.closed?[350,120]:[343,83]],C.ink,2.6);
+  /* flèches des charges dans le fil */
+  if(ann>=2){
+    const d=sw?-1:1;
+    o+=ar(d===1?360:440,170,d===1?440:360,170,conduct?pl.el:C.rule)+T(290,178,el,{size:15,c:conduct?pl.el:C.ink2});
+    o+=ar(d===1?640:560,170,d===1?560:640,170,conduct?pl.cur:C.rule)+T(712,178,S.v('i'),{size:16,c:conduct?pl.cur:C.ink2});
   }
-  immersions.push({side:isLeft?'left':'right',level:screen(bx,level)[1],tip:screen(bx,395)[1],bottom:screen(bx,420)[1],x:screen(bx,395)[0],left:screen(left+3,395)[0],right:screen(left+277,395)[0],radius:tubeWidth/2});
- }
- if(state.equation){if(stacked){text(500,370,'Zn + Cu²⁺',colors.accent,tiny?17:20);arrow(500,393,500,416,colors.accent,2);text(500,455,'Zn²⁺ + Cu',colors.accent,tiny?17:20);}else text(500,520,'Zn + Cu²⁺ → Zn²⁺ + Cu',colors.accent,20);}
- if(state.annotations>=2&&canConduct()){
-  const ps=[[xz,248],[xz,120],[430,120],[570,120],[xc,120],[xc,248]];
-  if(state.swapped){ps[2]=[570,120];ps[3]=[430,120];}
-  animationPaths.push({points:ps,color:colors.electron,count:12,r:3.5});
-  for(const isNitrate of [true,false]){const end=isNitrate?xz:xc,bx=end===150?280:720,start=end===150?550:450;animationPaths.push({points:[[start,244],[bx,244],[bx,395]],color:colors.ion,count:3,r:3});}
- }
- el('g',{id:'particles'});drawParticles();
- if(focused)svg.querySelector(`[data-action="${focused}"]`)?.focus({preventScroll:true});
- updateReadouts();
+  /* bécher et solutions */
+  const bks=[];
+  for(const isLeft of [true,false]){
+    const x=isLeft?190:810,left=x-140,isZn=(isLeft!==sw),vol=isZn?p.vZn:p.vCu,c=isZn?m.czn:m.ccu,level=340-60*(vol-20)/480;
+    o+=rc(left+3,level,274,418-level,{fill:solFill(C,isZn,c)});
+    o+=ln([[left+3,level],[left+277,level]],isZn?C.rule:pl.el,1.2);
+    o+=ln([[left,268],[left,405],[left+8,420],[left+272,420],[left+280,405],[left+280,268]],pl.glass,2);
+    bks.push({x,left,isLeft,isZn,level,c});
+  }
+  /* pont salin (dessiné après les liquides) */
+  const tw=Math.max(9,Math.min(20,22*s)),bpts=[[280,395],[280,244],[720,244],[720,395]];
+  o+=S.path('M'+bpts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join('L'),{c:p.bridge?pl.tube:C.rule,w:tw,raw:true,op:p.bridge?.65:.5,dash:p.bridge?undefined:'5 9'});
+  if(p.bridge)o+=S.path('M'+bpts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join('L'),{c:C.cSoft,w:Math.max(4,tw-5),raw:true});
+  o+=T(500,212,p.bridge?'Pont salin':'Pont retiré',{size:15,c:p.bridge?C.ink:C.ink2});
+  if(ann>=2&&p.bridge){
+    const d=sw?-1:1;
+    o+=ar(480,244,410,244,conduct?pl.ion:C.rule)+ar(520,244,590,244,conduct?pl.ion:C.rule);
+    o+=T(420,310,d===1?no3:nh4,{size:14,c:pl.ion})+T(580,310,d===1?nh4:no3,{size:14,c:pl.ion});
+  }
+  /* électrodes, légendes */
+  for(const {x,left,isLeft,isZn,level,c} of bks){
+    const xe=isLeft?150:850,frac=m.metal/m.metal0,znW=(22+14*Math.log10(p.mZn/.01))*Math.max(0,frac),depW=clamp(32*Math.sqrt(m.deposit/.63546),0,120),w=isZn?znW:34;
+    if(!isZn||m.hasZinc){
+      o+=rc(xe-w/2,248,w,155,{fill:isZn?pl.zn:pl.cu,c:isZn?pl.zn:pl.cu,w:1});
+      if(!isZn&&depW>0){const yy=Math.max(level,310);o+=rc(xe-w/2-depW/2,yy,w+depW,402-yy,{fill:pl.cu,op:.7})}
+    }else o+=ln([[xe,248],[xe,420]],C.rule,1.6,{dash:'4 6'});
+    const col=isZn?pl.zn:pl.cu;
+    if(m.hasZinc){const cx=X(x-110),cy=Y(28),r=Math.max(10*k,16*s);o+=S.circle(cx,cy,r,{fill:C.card,c:col,w:2})+S.text(cx,cy,isZn?'−':'+',{anchor:'middle',size:17,c:col,weight:700,halo:false})}
+    o+=T(x,36,isZn&&!m.hasZinc?(tiny?'Zn épuisé':'Zinc épuisé'):(tiny?(isZn?'Zn':'Cu'):(isZn?'Zinc · Zn':'Cuivre · Cu')),{size:16,c:col,weight:700});
+    if(ann>=1)o+=T(x,78,isZn&&!m.hasZinc?'Phase disparue':(tiny?(isZn?'Oxydation':'Réduction'):(isZn?'Anode · oxydation':'Cathode · réduction')),{size:14,c:C.ink});
+    if(ann>=2){
+      const ix=isLeft?240:760,iy=(level+410)/2;
+      o+=dot(ix,iy,6,{c:isZn?pl.zn:pl.el,w:2});
+      if(conduct){const a0=isZn?xe+(isLeft?34:-34):ix,a1=isZn?ix:xe+(isLeft?28:-28);o+=ar(a0,iy+20,a1,iy+20,isZn?pl.zn:pl.el)}
+    }
+    if(p.conc)o+=T(x,470,(tiny?'':(isZn?`[${zn2}] = `:`[${cu2}] = `))+sv(a,fm.sig(c,3))+' mol·L'+S.sup('−1'),{size:14,c:C.ink2});
+    else if(ann>=2)o+=T(x,470,(isZn?zn2:cu2)+' en solution',{size:14,c:isZn?pl.zn:pl.el});
+    if(ann>=1){
+      if(tiny){o+=T(x,522,isZn?'Zn → '+zn2:cu2+' + 2 '+el,{size:14})+T(x,574,isZn?'+ 2 '+el:'→ Cu',{size:14})}
+      else o+=T(x,520,isZn?'Zn → '+zn2+' + 2 '+el:cu2+' + 2 '+el+' → Cu',{size:15});
+    }
+  }
+  if(p.eq){
+    if(stacked){o+=T(500,372,cu2+' + Zn',{size:14,c:C.cInk})+ar(500,392,500,418,C.cInk)+T(500,454,'Cu + '+zn2,{size:14,c:C.cInk})}
+    else o+=T(500,520,cu2+' + Zn → Cu + '+zn2,{size:15,c:C.cInk});
+  }
+  /* écriture conventionnelle (suit la permutation ; les signes sont les polarités physiques) */
+  const pole=m.hasZinc&&m.emf>5e-4;
+  const left=sw?['Cu',cu2,zn2,'Zn']:['Zn',zn2,cu2,'Cu'],pg=sw?['⊕','⊖']:['⊖','⊕'];
+  o+=T(500,tiny?630:562,`${pole?pg[0]+' ':''}${left[0]} | ${left[1]} ‖ ${left[2]} | ${left[3]}${pole?' '+pg[1]:''}`,{size:16,c:C.ink,math:true});
+  /* charges en mouvement */
+  if(ann>=2&&conduct){
+    const xz=sw?850:150,xc=sw?150:850,ps=[[xz,248],[xz,120],[430,120],[570,120],[xc,120],[xc,248]];
+    if(sw){ps[2]=[570,120];ps[3]=[430,120]}
+    for(let i=0;i<12;i++){const q=along(ps,st.phase+i/12,G);o+=S.circle(q[0],q[1],3.6*k,{fill:pl.el})}
+    for(const isNitrate of [true,false]){
+      const end=isNitrate?xz:xc,bx=end===150?280:720,start=end===150?550:450,pts=[[start,244],[bx,244],[bx,395]];
+      for(let i=0;i<3;i++){const q=along(pts,st.phase+i/3,G);o+=S.circle(q[0],q[1],3.2*k,{fill:pl.ion})}
+    }
+  }
+  /* état de la pile */
+  o+=T(500,VH-12,statut(a,m),{size:14,c:C.ink});
+  a.svg('scene',o);
 }
-function pointAlong(points,t){const ps=points.map(p=>screen(...p)),ls=ps.slice(1).map((p,i)=>Math.hypot(p[0]-ps[i][0],p[1]-ps[i][1])),total=ls.reduce((a,b)=>a+b,0);let s=(t%1)*total;for(let i=0;i<ls.length;i++){if(s<=ls[i]){const k=ls[i]?s/ls[i]:0;return [ps[i][0]+k*(ps[i+1][0]-ps[i][0]),ps[i][1]+k*(ps[i+1][1]-ps[i][1])];}s-=ls[i];}return ps.at(-1);}
-function drawParticles(){const g=$('particles');if(!g)return;g.replaceChildren();for(const route of animationPaths)for(let i=0;i<route.count;i++){const p=pointAlong(route.points,phase+i/route.count);el('circle',{cx:p[0],cy:p[1],r:route.r,fill:route.color},g);}}
-function updateReadouts(){
- $('zoom-out').disabled=state.zoom<=1.00001;
- $('emf-label').textContent=state.bridge?'Tension à vide · ℰ':'Écart calculé · ED − EG';$('emf-convention').innerHTML=state.bridge?'Convention : V<sub>D</sub> − V<sub>G</sub>':'Pont absent · valeur théorique';
- $('emf').textContent=signed(model.emf===null?null:(state.swapped?-model.emf:model.emf));$('charge').textContent=chargeText(model.charge);$('charge-ah').textContent=fmt(model.charge/3.6,1)+' mAh';$('capacity').textContent=chargeText(model.capacity);$('capacity-note').textContent=fmt(model.capacity/3.6,1)+' mAh · '+(model.zincLimited?'Zn limitant':'Cu²⁺ limitant (≈)');
- $('potential-zn').textContent=signed(model.eZn);$('potential-cu').textContent=signed(model.eCu);
- $('inventory').innerHTML=[['Zn(s)',model.metal0,model.metal],['Cu²⁺',model.cu0,model.cu],['Zn²⁺',model.zn0,model.zn],['Cu déposé',0,model.xi]].map(([s,a,b])=>`<tr><td>${s}</td><td>${concise(a*1000)}</td><td>${concise(b*1000)}</td></tr>`).join('');
- $('mass-note').textContent='Zn restant : '+fmt(model.mZn,3)+' g · Cu déposé : '+fmt(model.deposit,3)+' g.';
- $('extent-label').textContent='ξ = '+fmt(model.xi*1000,3)+' mmol · '+fmt(state.f*100,1)+' %';$('progress').value=state.f*100;
- $('progress').disabled=!state.closed||!state.bridge||state.device!=='resistor';$('end').disabled=$('progress').disabled||model.terminal;
- $('play').textContent=state.running?'Pause':(model.terminal?'Terminé':'Décharger');$('play').disabled=!canConduct();
- $('charges').textContent=state.charges?'Charges : animées':'Charges : figées';$('charges').setAttribute('aria-pressed',state.charges);
- let title,detail;
- if(model.terminal){if(model.zincLimited){title='Fin : zinc solide épuisé';detail='Q = Qf. Le potentiel Zn²⁺/Zn et la f.é.m. de Daniell ne sont plus définis dans ce modèle.';}else{title='Fin : équilibre idéal atteint · ℰ = 0';detail='Résidu formel de Cu²⁺ : '+concise(model.ccu)+' mol·L⁻¹. Réaction quasi totale ; le zinc reste présent.';}}
- else if(!state.bridge){title='Pont retiré : aucun débit durable';detail='Écart de potentiels calculé pour la composition, sans mesure de tension. Le transitoire n’est pas représenté.';}
- else if(!state.closed){title='Circuit ouvert : aucun courant';detail='La pile conserve une tension à vide ; la décharge est interrompue.';}
- else if(state.device==='voltmeter'){title='Mesure à vide : le voltmètre idéal ne débite pas';detail='La valeur ℰ = ED − EG est mesurée sans faire progresser la réaction.';}
- else if(state.mode==='flow'){title='Le zinc s’oxyde ; les ions cuivre(II) se réduisent';detail='Charges représentées à composition figée. Passer à Décharge pour suivre le bilan de matière.';}
- else{title=state.running?'Décharge en cours':'Décharge en pause · déplacer le curseur ou lancer la lecture';detail='La progression est pilotée par ξ. La tension affichée est la tension à vide à cette composition.';}
- $('status-title').textContent=title;$('status-detail').textContent=detail;
+
+/* ---------- graphe ℰ en fonction de log Q (axes fixes) ---------- */
+function drawGraphe(a,m){
+  const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,p=a.p,sg=p.swapped?-1:1;
+  const x0=-4,x1=Math.ceil(LOGK)+3,y0=p.swapped?-1.4:-.1,y1=p.swapped?.1:1.4;
+  const G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:x0,xmax:x1,ymin:y0,ymax:y1,xlab:`log ${S.v('Q')}`,ylab:`${S.v('ℰ')} (V)`,yticks:AnimKit.ticks(y0,y1,7)});
+  let o=G.svg+S.clip('tc6g',G);
+  const E=lq=>sg*(E0-PENTE*lq);
+  if(p.showLaw){
+    o+=S.curve([[x0,E(x0)],[x1,E(x1)]],G,{c:C.pred,w:1.8,dash:`${6*k} ${4*k}`});
+    o+=S.line(G.X(LOGK),G.y0,G.X(LOGK),G.y0+G.h,{c:C.pred,w:1.2,dash:`${3*k} ${4*k}`,op:.8});
+    o+=S.text(G.X(LOGK)-5*k,G.y0+G.h*(p.swapped?.92:.06),`log ${S.v('K')} = ${fm.sig(LOGK,3)}`,{anchor:'end',size:13,c:C.ink2,base:p.swapped?'bottom':'top'});
+    o+=S.text(G.X(x0)+6*k,G.Y(E(x0))+(p.swapped?18:-14)*k,`pente ${sg>0?'−':'+'}${fm.sig(PENTE*1000,3)} mV par décade`,{anchor:'start',size:13,c:C.ink2});
+  }
+  /* trace parcourue : le point initial jusqu'à l'état courant */
+  const q0=MD.solve({cCu:p.cCu,cZn:p.cZn,vCu:p.vCu,vZn:p.vZn,mZn:p.mZn},0),lq0=Math.log10(q0.czn/q0.ccu);
+  const fe=Math.min(st.f,1-1e-9),qe=MD.solve({cCu:p.cCu,cZn:p.cZn,vCu:p.vCu,vZn:p.vZn,mZn:p.mZn},fe);
+  const lqf=st.f>=1&&!m.zincLimited?LOGK:Math.log10(qe.czn/qe.ccu);
+  if(m.emf!==null||st.f<1){
+    const lq=Math.min(lqf,x1);
+    o+=S.curve([[lq0,E(lq0)],[lq,E(lq)]],G,{c:C.c,w:3.2});
+    o+=S.circle(G.X(lq0),G.Y(E(lq0)),4*k,{fill:C.card,c:C.c,w:1.8});
+    o+=S.circle(G.X(lq),G.Y(E(lq)),5*k,{fill:C.c});
+    const tx=G.X(lq)+(lq>x1-8?-9:9)*k,anc=lq>x1-8?'end':'start';
+    o+=S.text(tx,G.Y(E(lq))+(sg>0?-14:14)*k,`${S.v('ℰ')} = ${sgn(m.emf===null?null:sg*m.emf)} V`,{anchor:anc,size:13,c:C.cInk});
+  }else o+=S.text(G.x0+G.w/2,G.y0+G.h/2,'Zinc épuisé : ℰ n\'est plus défini',{anchor:'middle',size:13,c:C.ink2});
+  a.svg('graphe',o);
 }
-function sync(){
- $('mode-flow').setAttribute('aria-pressed',state.mode==='flow');$('mode-discharge').setAttribute('aria-pressed',state.mode==='discharge');$('timeline-panel').hidden=state.mode!=='discharge';
- $('circuit').textContent='Interrupteur : '+(state.closed?'fermé':'ouvert');$('circuit').setAttribute('aria-pressed',state.closed);$('bridge').textContent='Pont salin : '+(state.bridge?'en place':'retiré');$('bridge').setAttribute('aria-pressed',state.bridge);$('device').value=state.device;
- for(const key of Object.keys(initial)){$(key).value=Number(state.p[key].toPrecision(5));$(key+'-range').value=key.startsWith('c')?Math.log10(state.p[key]):state.p[key];}
- $('annotation').value=state.annotations;$('show-concentrations').checked=state.concentrations;$('show-equation').checked=state.equation;$('speed').value=state.duration;
- render();
+
+/* ---------- mesures, légende, temps ---------- */
+function info(a,m){
+  const p=a.p,sw=p.swapped,C=a.C,pl=pal(C),ev=m.emf===null?null:(sw?-m.emf:m.emf);
+  const arr=[];
+  arr.push(p.bridge?{label:`Tension à vide ${Mh.v('ℰ')}`,value:sgn(ev),unit:'V',hint:`${Mh.v('ℰ')} = ${Mh.v('V','D')} − ${Mh.v('V','G')}`}:
+    {label:`Écart calculé ${Mh.v('E','D')} − ${Mh.v('E','G')}`,value:sgn(ev),unit:'V',hint:'pont absent : valeur théorique'});
+  const q=m.charge;
+  arr.push({label:`Charge débitée ${Mh.v('Q')}`,value:fm.sig(q>=1000?q/1000:q,3),unit:q>=1000?'kC':'C',hint:`${fm.sig(q/3.6,3)} mAh`});
+  if(p.showFinal){const c=m.capacity;arr.push({label:`Capacité ${Mh.v('Q','f')}`,value:fm.sig(c>=1000?c/1000:c,3),unit:c>=1000?'kC':'C',hint:`${fm.sig(c/3.6,3)} mAh · ${m.zincLimited?'Zn limitant':'Cu²⁺ limitant (≈)'}`})}
+  if(p.showNernst){
+    arr.push({label:`${Mh.v('E')}(Zn<sup>2+</sup>/Zn)`,value:sgn(m.eZn),unit:'V'});
+    arr.push({label:`${Mh.v('E')}(Cu<sup>2+</sup>/Cu)`,value:sgn(m.eCu),unit:'V'});
+  }
+  a.metrics(arr);
+  a.legend(p.ann>=2?[{c:pl.el,label:'électrons e<sup>−</sup>'},{c:pl.cur,label:`courant ${Mh.v('i')}`},{c:pl.ion,label:'ions du pont'}]:[]);
+  a.clock(a.tab===1?`${Mh.v('ξ')} = ${fm.sig(m.xi*1000,3)} mmol · ${fm.fix(st.f*100,1)} %`:'');
 }
-function toggleCircuit(){state.closed=!state.closed;state.running=false;sync();}
-function toggleBridge(){state.bridge=!state.bridge;state.running=false;sync();}
-function setMode(mode){state.mode=mode;state.running=false;sync();}
-function setFraction(f){state.f=clamp(Number(f),0,1);state.running=false;render();}
-function play(){if(!canConduct())return;state.running=!state.running;render();}
-function fit(){state.zoom=1;state.panX=state.panY=0;render();}
-function changeInitial(key,value){const input=$(key);if(!Number.isFinite(value)){sync();return;}state.p[key]=clamp(value,Number(input.min),Number(input.max));state.f=0;state.running=false;sync();}
-function preset(name){state.p={...initial};state.f=0;state.running=false;state.closed=state.bridge=true;state.device='resistor';state.swapped=false;
- if(name==='zinc'){state.p.mZn=.1;state.mode='discharge';}
- if(name==='copper'){state.p.mZn=2;state.p.cCu=.05;state.mode='discharge';}
- if(name==='open'){state.closed=false;state.mode='flow';}
- if(name==='bridge'){state.bridge=false;state.mode='flow';}
- if(name==='standard')state.mode='flow';
- state.zoom=1;state.panX=state.panY=0;sync();
-}
-function toggleTheme(){const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',dark);try{localStorage.setItem('tc6-daniell-theme',dark?'dark':'light');}catch{}render();}
-function toast(s){$('toast').textContent=s;setTimeout(()=>{$('toast').textContent='';},2600);}
-function exportSVG(){
- const copy=$('scene').cloneNode(true);copy.removeAttribute('style');copy.setAttribute('xmlns',NS);copy.setAttribute('width',W);copy.setAttribute('height',H+100);copy.setAttribute('viewBox',`0 0 ${W} ${H+100}`);
- for(const n of copy.querySelectorAll('text')){n.setAttribute('font-family','Arial,Helvetica,sans-serif');n.setAttribute('paint-order','stroke');n.setAttribute('stroke',colors.surface);n.setAttribute('stroke-width','4');}
- const bg=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:0,y:0,width:W,height:H+100,fill:colors.surface}))bg.setAttribute(k,v);copy.prepend(bg);
- const add=(x,y,s,size)=>{const n=document.createElementNS(NS,'text');for(const [k,v] of Object.entries({x,y,fill:colors.ink,'font-family':'Arial,Helvetica,sans-serif','font-size':size}))n.setAttribute(k,v);n.textContent=s;copy.append(n);};
- add(18,H+30,'Pile Daniell · TC6 · ℰ = '+$('emf').textContent+' · Q = '+$('charge').textContent,compact?15:20);add(18,H+59,'ξ = '+fmt(model.xi*1000,3)+' mmol · Épaisseurs amplifiées · Tension à vide',compact?12:17);add(18,H+85,'Zn + Cu²⁺ → Zn²⁺ + Cu · 25 °C · Volumes constants · Solutions idéales',compact?11:16);
- const blob=new Blob([new XMLSerializer().serializeToString(copy)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='TC6_Pile_Daniell.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Schéma SVG enregistré');
-}
-$('mode-flow').onclick=()=>setMode('flow');$('mode-discharge').onclick=()=>setMode('discharge');$('circuit').onclick=toggleCircuit;$('bridge').onclick=toggleBridge;$('swap').onclick=()=>{state.swapped=!state.swapped;sync();};$('device').onchange=e=>{state.device=e.target.value;state.running=false;sync();};
-$('charges').onclick=()=>{state.charges=!state.charges;render();};$('play').onclick=play;$('progress').oninput=e=>setFraction(e.target.value/100);$('start').onclick=()=>setFraction(0);$('end').onclick=()=>setFraction(1);
-for(const key of Object.keys(initial)){$(key).onchange=e=>changeInitial(key,Number(e.target.value));$(key+'-range').oninput=e=>changeInitial(key,key.startsWith('c')?10**Number(e.target.value):Number(e.target.value));}
-$('annotation').onchange=e=>{state.annotations=Number(e.target.value);render();};$('show-concentrations').onchange=e=>{state.concentrations=e.target.checked;render();};$('show-equation').onchange=e=>{state.equation=e.target.checked;render();};$('speed').onchange=e=>{state.duration=Number(e.target.value);};
-for(const b of document.querySelectorAll('[data-preset]'))b.onclick=()=>preset(b.dataset.preset);
-$('reset').onclick=()=>{state.charges=true;state.annotations=2;state.concentrations=state.equation=true;state.duration=30;preset('standard');};$('theme').onclick=toggleTheme;$('projection').onclick=()=>{const p=document.body.classList.toggle('projection');$('projection').setAttribute('aria-pressed',p);$('projection').textContent=p?'Réglages':'Projection';fit();};$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Utiliser le plein écran du navigateur');}};$('help').onclick=()=>{$('about').showModal();};$('close-help').onclick=()=>{$('about').close();};$('export').onclick=exportSVG;$('fit').onclick=fit;$('zoom-in').onclick=()=>{state.zoom=clamp(state.zoom*1.15,1,2.4);render();};$('zoom-out').onclick=()=>{state.zoom=clamp(state.zoom/1.15,1,2.4);render();};
-$('scene').addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*(e.deltaY<0?1.08:1/1.08),1,2.4);render();},{passive:false});
-$('scene').addEventListener('pointerdown',e=>{if(e.target.closest('[data-action]'))return;drag={x:e.clientX,y:e.clientY,px:state.panX,py:state.panY};$('scene').setPointerCapture(e.pointerId);});$('scene').addEventListener('pointermove',e=>{if(!drag)return;state.panX=drag.px+e.clientX-drag.x;state.panY=drag.py+e.clientY-drag.y;render();});for(const type of ['pointerup','pointercancel'])$('scene').addEventListener(type,()=>{drag=null;});
-document.addEventListener('keydown',e=>{if(e.code!=='Space'||e.repeat||e.target.closest('input,select,button,[role="button"]')||$('about').open)return;e.preventDefault();if(state.running){state.running=false;render();}else{state.charges=!state.charges;render();}});
-new ResizeObserver(()=>{state.panX=state.panY=0;render();}).observe($('scene'));
-try{if(localStorage.getItem('tc6-daniell-theme')==='dark')toggleTheme();}catch{}
-function frame(t){const dt=lastTime?Math.min((t-lastTime)/1000,.1):0;lastTime=t;if(!$('about').open){if(moving())phase=(phase+dt*.12)%1;if(state.running&&canConduct()){state.f=Math.min(1,state.f+dt/state.duration);if(state.f===1)state.running=false;if(t-lastRender>60||state.f===1){render();lastRender=t;}}else drawParticles();}requestAnimationFrame(frame);}
-sync();requestAnimationFrame(frame);
-// Accès explicite au modèle et à l’état pour les contrôles locaux.
-window.Daniell={state,get model(){return model;},get immersions(){return immersions;},get labels(){return labels.map(n=>{const b=n.getBBox();return{text:n.textContent,symbol:n.hasAttribute('data-symbol'),x:b.x,y:b.y,w:b.width,h:b.height};});},setFraction,setMode,preset,render,canConduct};
+
+/* ---------- interrupteur et pont : cliquables dans le dessin ---------- */
+const zoneInter=(x,y)=>x>=274&&x<=367&&y>=75&&y<=162;
+const zonePont=(x,y)=>(y>=198&&y<=266&&x>=262&&x<=738)||((Math.abs(x-280)<30||Math.abs(x-720)<30)&&y>=244&&y<=402);
+A.drag('scene',{
+  hit:(x,y)=>{const G=st.geo;if(!G)return false;const vx=G.ix(x),vy=G.iy(y);return zoneInter(vx,vy)||zonePont(vx,vy)},
+  start:(x,y)=>{const G=st.geo,vx=G.ix(x),vy=G.iy(y);
+    if(zoneInter(vx,vy))A.set('closed',!A.p.closed);else A.set('bridge',!A.p.bridge)},
+  move:()=>{},end:()=>{}
+});
+
 </script>
-<!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
-})();
-</script>
-<!-- CPGE_MENU_SCRIPT_END -->
 </body>
 </html>

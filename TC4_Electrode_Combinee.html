@@ -1,307 +1,1005 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Animation pédagogique autonome pour le chapitre TC4 de MPSI"><title>Électrode combinée du pH-mètre · TC4 · MPSI</title><style>
-:root{color-scheme:light;--bg:#f2f5f2;--panel:#fff;--ink:#172c28;--muted:#53675f;--line:#c9d7d0;--accent:#008060;--soft:#e6f3eb;--red:#8f2227;--blue:#254b70;--orange:#ac5200;--purple:#7652a0;--grid:#dce5df;--glow:#e0efe6}
-:root[data-theme=dark]{color-scheme:dark;--bg:#101c1a;--panel:#192a26;--ink:#eff6f1;--muted:#b6cec1;--line:#426055;--accent:#73d9ae;--soft:#25453a;--red:#ff9c9f;--blue:#92c5ff;--orange:#ffbf78;--purple:#c7a8ff;--grid:#334b42;--glow:#2b4d3d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif;border-top:5px solid var(--accent)}button,input,select{font:inherit;color:inherit}button,select{cursor:pointer}button{border:1px solid var(--line);border-radius:7px;background:var(--panel);min-height:40px;padding:7px 12px;line-height:1.15}button:hover{border-color:var(--accent);background:var(--soft)}button[aria-pressed=true],button.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:bold}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}a{color:var(--accent)}.shell{height:calc(100dvh - 5px);max-width:2100px;margin:auto;padding:13px 20px 8px;display:flex;flex-direction:column;gap:10px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex:none}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:bold;margin-bottom:4px}h1{font-size:28px;line-height:1.15;margin:0;font-weight:500;letter-spacing:-.025em}h1 small{font-size:18px;color:var(--accent);margin-right:10px}.actions,.tabs,.tools,.row,.presets,.steps{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.actions button{font-size:15px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;flex:1;min-height:0}.main{display:flex;flex-direction:column;min-height:0;min-width:0;gap:9px}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}.scene-card{display:flex;flex-direction:column;flex:1;min-height:280px}.scene-head{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-bottom:1px solid var(--line);flex:none}.tabs button{font-size:16px}.tools button{font-size:16px;padding:6px 10px}.scene-body{position:relative;flex:1;min-height:200px}svg#scene{width:100%;height:100%;position:absolute;inset:0;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:7px 15px 0;font-size:17px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.legend i{display:inline-block;width:25px;height:0;border-top:3px solid var(--c)}.legend i.dashed{border-top-style:dashed}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:9px 14px;flex:none;gap:15px}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:31px;line-height:1.25;font-variant-numeric:tabular-nums;white-space:nowrap}.metric-value small{font-size:17px}.note{border-left:4px solid var(--accent);background:var(--soft);padding:9px 14px;min-height:58px;font-size:17px;display:flex;flex-direction:column;justify-content:center}.note strong{font-size:19px}.note p{margin:2px 0 0;color:var(--muted)}.presets button{font-size:15px;min-height:36px}.presets>span{font-size:13px;color:var(--muted);margin-right:3px}.controls{overflow:auto;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 15px}.control{padding:15px 0;border-bottom:1px solid var(--line)}.control:last-child{border:0}.control h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);margin:0 0 12px}.control p,.hint{font-size:14px;color:var(--muted);margin:8px 0 0}.field{margin:12px 0}.field label{font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:6px}.field label input[type=number]{width:84px;text-align:right;padding:5px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin:10px 0 0}select{width:100%;padding:8px;border:1px solid var(--line);border-radius:5px;background:var(--panel)}.control .row button{font-size:15px;flex:1}.formula{font:23px/1.6 Georgia,serif}.chip{display:inline-block;border:1px solid var(--line);border-radius:5px;padding:3px 7px;font-size:14px;color:var(--accent)}.checks label{display:block;font-size:16px;margin:8px 0}.steps button{font-size:15px;flex:1}.steps{margin-top:8px}.small-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.small-grid label{font-size:14px}.small-grid input{width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}.small-grid input:invalid{border-color:var(--red)}footer{display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:11px;flex:none}dialog{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:25px;max-width:780px;max-height:85vh;overflow:auto;font-size:17px}dialog::backdrop{background:#061b16b3}dialog h2{margin:0 0 12px;color:var(--accent);font-size:24px}dialog h3{font-size:18px}dialog p{margin:10px 0}.close-row{text-align:right;margin-top:18px}.projection .controls{display:none}.projection .workspace{grid-template-columns:1fr}.projection .metric-value{font-size:40px}.projection .metric-label{font-size:17px}.projection .note{font-size:20px}.projection .note strong{font-size:22px}.projection .presets{display:none}.projection h1{font-size:27px}.projection .shell{padding:10px 18px}.projection .tabs button{font-size:18px}.projection .legend{font-size:22px}.projection .steps button{font-size:18px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:9px 18px;border-radius:8px;z-index:10;display:none;font-size:16px}.hidden,[hidden]{display:none!important}
-@media(max-width:1100px){.shell{padding:10px 12px 7px}.workspace{grid-template-columns:minmax(0,1fr) 275px;gap:10px}h1{font-size:24px}.actions button{padding:7px 9px;font-size:14px}.metric-value{font-size:28px}.metrics{gap:8px}.scene-head{flex-wrap:wrap}.tabs button{font-size:15px}.controls{padding:0 12px}}
-@media(max-width:760px){.shell{height:auto;min-height:calc(100dvh - 5px);padding:12px;gap:12px}header{align-items:flex-start;flex-direction:column;gap:10px}h1{font-size:26px}.actions{width:100%;gap:5px}.actions button{flex:1}.workspace{display:flex;flex-direction:column}.scene-card{flex:none;height:540px;min-height:540px}.metrics{padding:10px;gap:8px;grid-template-columns:1fr}.metrics>div{display:flex;justify-content:space-between;align-items:center;gap:8px}.metric-value{font-size:26px}.metric-label{font-size:12px}.note{font-size:16px}.note strong{font-size:18px}.controls{overflow:visible}.control{padding:14px 2px}.scene-head{gap:8px}.tools{margin-left:auto}.tabs{width:100%}.tabs button{flex:1}.legend{font-size:15px}.presets button{flex:1}footer{flex-direction:column;gap:3px}.projection .scene-card{height:580px}.projection .metric-value{font-size:30px}.projection .note{font-size:17px}.projection .metric-label{font-size:13px}.projection .legend{font-size:16px}.projection .steps button{font-size:15px}}
-@media print{.actions,.controls,.presets,footer,.tools{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:650px}.note{break-inside:avoid}}
-</style><!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Électrode combinée de verre : coupe de la sonde, membrane sensible au pH et étalonnage en deux points.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Électrode combinée du pH-mètre · TC4 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
-<body data-export="TC4_Electrode_Combinee"><main class="shell"><header><div><div class="eyebrow">Transformations chimiques · Expérience interactive</div><h1><small>TC4</small>Électrode combinée du pH-mètre</h1></div><div class="actions"><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export">Image SVG</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran">⛶</button></div></header>
-<div class="workspace"><section class="main" aria-label="Expérience"><div class="scene-card card"><div class="scene-head"><nav class="tabs" aria-label="Vues"><button id="view-assembly" aria-pressed="true">Coupe</button><button id="view-membrane" aria-pressed="false">Membrane</button><button id="view-calibration" aria-pressed="false">Étalonnage</button></nav><div class="tools"><button id="play" aria-pressed="false">Animer</button><button id="zoom-out" aria-label="Réduire le dessin">−</button><button id="recenter">Cadrer</button><button id="zoom-in" aria-label="Agrandir le dessin">+</button></div></div><div id="legend" class="legend" hidden></div><div class="scene-body"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Électrode combinée du pH-mètre"></svg></div></div>
-<div class="metrics card"><div><div class="metric-label" id="label1"></div><div class="metric-value" id="value1"></div></div><div><div class="metric-label" id="label2"></div><div class="metric-value" id="value2"></div></div><div><div class="metric-label" id="label3"></div><div class="metric-value" id="value3"></div></div></div><div class="note"><strong id="note-title"></strong><p id="note-detail"></p></div><div class="presets"><span>EXPLORER</span><button id="preset-ideal">Sonde idéale</button><button id="preset-drift">Dérive après étalonnage</button><button id="reset">Réinitialiser</button></div></section><aside class="controls" aria-label="Réglages"><section class="control"><h2>01 / La solution</h2><div class="field"><label for="ph">pH extérieur<input type="number" id="ph-num" aria-label="pH extérieur" min="2" max="12" step="0.1" value="7"></label><input id="ph" aria-label="pH extérieur" type="range" min="2" max="12" step="0.1" value="7"></div><div class="row"><button data-ph="4">Tampon 4</button><button data-ph="7">Tampon 7</button><button data-ph="10">Basique 10</button></div><p>Teinte de repérage ; les solutions ne sont pas réellement colorées.</p></section><section class="control" id="assembly-controls"><h2>02 / Explorer la sonde</h2><select id="stage" aria-label="Étape de la coupe"><option value="1">1 · La membrane sensible</option><option value="2">2 · La chaîne indicatrice</option><option value="3">3 · La référence et sa jonction</option><option value="4" selected>4 · Les deux chaînes et le voltmètre</option></select><div class="checks"><label><input type="checkbox" id="separate"> Deux électrodes séparées</label></div><p>Cliquer sur une légende pour isoler son rôle.</p></section><section class="control" id="cal-controls" hidden><h2>02 / Étalonnage en deux points</h2><div class="row"><button id="record4">Enregistrer pH 4</button><button id="record7">Enregistrer pH 7</button><button id="record10">Enregistrer pH 10</button></div><p id="cal-status" role="status">Aucun point enregistré.</p><div class="row" style="margin-top:10px"><button id="erase-cal">Effacer les points</button></div></section><section class="control"><h2>03 / Le modèle de la sonde</h2><div class="field"><label for="temperature">Température (°C)<input type="number" id="temperature-num" aria-label="Température (°C)" min="5" max="45" step="1" value="25"></label><input id="temperature" aria-label="Température (°C)" type="range" min="5" max="45" step="1" value="25"></div><div class="field"><label for="efficiency">Sensibilité η (%)<input type="number" id="efficiency-num" aria-label="Sensibilité η (%)" min="85" max="100" step="1" value="100"></label><input id="efficiency" aria-label="Sensibilité η (%)" type="range" min="85" max="100" step="1" value="100"></div><div class="field"><label for="offset">Décalage U₇ (mV)<input type="number" id="offset-num" aria-label="Décalage U₇ (mV)" min="-30" max="30" step="1" value="0"></label><input id="offset" aria-label="Décalage U₇ (mV)" type="range" min="-30" max="30" step="1" value="0"></div><p>Après étalonnage, modifier la sensibilité ou le décalage simule une dérive.</p></section><section class="control"><h2>La mesure</h2><div class="formula">U = U₇ + η S(T)(7 − pH)</div><p>η est utilisé sous forme de fraction dans le calcul. La pente idéale vaut environ −59,16 mV/pH à 25 °C.</p></section></aside></div><footer><span>E. Guillaume · MPSI · TC4 — Réactions acido-basiques</span><span>Hors connexion · Espace : animer / pause · R : réinitialiser · F : plein écran</span></footer></main><dialog id="about"><h2>De la solution au pH affiché</h2><p><strong>Coupe.</strong> Deux chaînes électrochimiques sont réunies dans un corps : la chaîne indicatrice contient un contact Ag/AgCl, une solution interne de pH fixe et la membrane de verre ; la référence Ag/AgCl–KCl communique avec l’échantillon par la jonction poreuse. Le pH-mètre mesure U = E<sub>indicatrice</sub> − E<sub>référence</sub>, avec un courant de mesure négligeable.</p><p><strong>Membrane.</strong> Les couches hydratées des deux faces échangent des protons avec leurs solutions adjacentes. Le pH interne étant fixé, le potentiel de membrane dépend du pH extérieur. La conduction à travers le verre est ionique (ions alcalins) : le dessin ne représente pas un flux de H₃O⁺ traversant le verre. Les ions dessinés sont symboliques ; leur nombre et les épaisseurs ne sont pas à l’échelle.</p><p><strong>Modèle électrique.</strong> U = U₇ + η S(T)(7 − pH), avec S(T) = RT ln(10)/F, exprimé ici en mV par unité de pH. η représente la sensibilité relative et U₇ le décalage. Le potentiel de référence et les contributions constantes sont regroupés dans U₇. Le modèle est affine sur la plage choisie ; les erreurs acide/alcaline et les variations de potentiel de jonction sont exclues.</p><p><strong>Étalonner.</strong> Enregistrer les tensions de deux tampons distincts permet de déterminer la pente et l’ordonnée à l’origine. Les tampons 4,00, 7,00 et 10,00 sont des valeurs pédagogiques à la température sélectionnée, pas une table de tampons commerciaux. Les deux derniers tampons distincts enregistrés définissent la droite. Choisir deux tampons qui encadrent le pH attendu. Une modification de température efface les points : l’exercice est isotherme. La température ne modifie ici que la pente de la sonde ; le pH réel des solutions n’est pas calculé en fonction de T.</p><p><strong>Vieillissement et dérive.</strong> Modifier η ou U₇ après étalonnage conserve la droite mémorisée et fait apparaître une erreur de pH. Réétalonner corrige le modèle affine. L’écart simulé reste accessible dans les réglages.</p><p><strong>Animer.</strong> Dans la coupe, les composants apparaissent successivement ; dans le zoom, les échanges aux interfaces sont illustrés ; dans l’étalonnage, le pH extérieur balaie la plage. Le temps est pédagogique et ne décrit aucune cinétique réelle. Les couleurs des solutions servent uniquement au repérage, sans indicateur coloré.</p><p>Références : <a href="https://www.xylem.com/siteassets/brand/si-analytics/resources/technical-brochure/sia_ph-handbook_english.pdf">SI Analytics, pH Handbook</a> ; <a href="https://www.uk.endress.com/_storage/asset/775986/storage/master/file/2773361/download/PU01052CEN.pdf">Endress+Hauser, principe de mesure</a>. Aucun accès réseau n’est nécessaire.</p><div class="close-row"><button id="close-about" class="primary">Revenir à l’expérience</button></div></dialog><div class="toast" id="toast" role="status"></div><script id="model">
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
 'use strict';
-window.ElectrodeModel=Object.freeze({
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* TC4 · Électrode combinée : modèle de la sonde (d'origine, inchangé ; seule la déclaration window.ElectrodeModel devient const).
+   slope(T) en mV par unité de pH ; voltage = U₇ + η S(T) (7 − pH) ; calibrate : droite par deux tampons ; read : pH lu. */
+'use strict';
+const ElectrodeModel=Object.freeze({
  slope(T=25){return Math.log(10)*8.31446261815324*(T+273.15)/96485.33212*1000},
  voltage(pH,T=25,efficiency=100,offset=0){return offset+this.slope(T)*efficiency/100*(7-pH)},
  calibrate(points){if(points.length<2)return null;const[a,b]=points;if(Math.abs(a.pH-b.pH)<1e-9)return null;const m=(b.u-a.u)/(b.pH-a.pH);return {m,b:a.u-m*a.pH}},
  read(u,cal){return cal?(u-cal.b)/cal.m:null}
 });
-</script><script>
-const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
-const F=(n,d=1)=>Number.isFinite(n)?new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(n)<1e-12?0:n):'—';
-const sci=n=>n===0?'0':!Number.isFinite(n)?'∞':n>=.01&&n<1000?F(n,n<1?3:1):n.toExponential(2).replace('.',',').replace('e+',' × 10^').replace('e',' × 10^');
-let dark=false,zoom=1,W=1000,H=500,playing=false,lastTime=0;
-let C={};
-function palette(){const cs=getComputedStyle(document.documentElement);for(const k of ['ink','muted','line','accent','soft','red','blue','orange','purple','grid','panel','glow'])C[k]=cs.getPropertyValue('--'+k).trim()}
-function el(tag,a={},parent=$('scene')){const n=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(a))n.setAttribute(k,v);parent.append(n);return n}
-function line(x1,y1,x2,y2,color=C.line,width=1,extra={}){return el('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,...extra})}
-function rect(x,y,width,height,fill=C.soft,stroke='none',extra={}){return el('rect',{x,y,width:Math.max(0,width),height:Math.max(0,height),fill,stroke,rx:6,...extra})}
-function txt(x,y,t,color=C.ink,size=21,anchor='start',extra={}){const n=el('text',{x,y,fill:color,'font-size':size*(document.body.classList.contains('projection')&&W>=760?1.12:1),'text-anchor':anchor,...extra});n.textContent=t;return n}
-function path(d,stroke=C.ink,width=2,fill='none',extra={}){return el('path',{d,fill,stroke,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...extra})}
-function circle(x,y,r,fill,stroke='none',extra={}){return el('circle',{cx:x,cy:y,r,fill,stroke,...extra})}
-function clearScene(){palette();$('scene').replaceChildren();W=Math.max(280,$('scene').clientWidth);H=Math.max(180,$('scene').clientHeight);$('scene').setAttribute('viewBox',`0 0 ${W} ${H}`)}
-function toggle(el,on){el.setAttribute('aria-pressed',on?'true':'false')}
-function metric(i,label,value){$('label'+i).textContent=label;$('value'+i).innerHTML=value}
-function note(title,detail){$('note-title').textContent=title;$('note-detail').textContent=detail}
-function toast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('toast').style.display='none',2600)}
-function bindRange(id,cb){const a=$(id),b=$(id+'-num');function set(source){let v=+source.value;if(source.value===''||!Number.isFinite(v)){source.value=a.value;return}v=Math.max(+a.min,Math.min(+a.max,v));a.value=b.value=v;cb(v)}a.oninput=()=>set(a);b.onchange=()=>set(b)}
-function setField(id,v){$(id).value=$(id+'-num').value=v}
-$('theme').onclick=()=>{dark=!dark;document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';toggle($('theme'),dark);render()};
-$('projection').onclick=()=>{const p=document.body.classList.toggle('projection');toggle($('projection'),p);$('projection').textContent=p?'Réglages':'Projection';zoom=1;requestAnimationFrame(render)};
-$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{toast('Plein écran indisponible dans ce navigateur.')}};
-$('help').onclick=()=>$('about').showModal();$('close-about').onclick=()=>$('about').close();
-$('zoom-in').onclick=()=>{zoom=Math.min(2.4,zoom*1.2);render()};$('zoom-out').onclick=()=>{zoom=Math.max(1,zoom/1.2);render()};$('recenter').onclick=()=>{zoom=1;render()};
-$('export').onclick=()=>{const copy=$('scene').cloneNode(true);copy.setAttribute('xmlns',NS);copy.setAttribute('width',W);copy.setAttribute('height',H);copy.insertBefore(Object.assign(document.createElementNS(NS,'rect'),{}),copy.firstChild);const bg=copy.firstChild;for(const[k,v]of Object.entries({x:0,y:0,width:W,height:H,fill:C.panel}))bg.setAttribute(k,v);const a=document.createElement('a'),url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)],{type:'image/svg+xml'}));a.href=url;a.download=document.body.dataset.export+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Schéma SVG enregistré.')};
-$('reset').onclick=()=>{zoom=1;reset()};
-$('play').onclick=()=>{playing=!playing;syncPlay()};
-function syncPlay(){$('play').textContent=playing?'Pause':'Animer';toggle($('play'),playing)}
-new ResizeObserver(()=>render()).observe($('scene'));
-function frame(t){const dt=Math.min(.05,(t-lastTime)/1000||0);lastTime=t;if(playing&&!document.hidden&&!$('about').open)tick(dt);requestAnimationFrame(frame)}requestAnimationFrame(frame);
-document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||$('about').open)return;if(e.code==='Space'){e.preventDefault();playing=!playing;syncPlay()}if(e.key.toLowerCase()==='r')$('reset').click();if(e.key.toLowerCase()==='f')$('fullscreen').click()});
 
+// @titre Électrode combinée du pH-mètre · TC4 · MPSI
+// @sortie ../TC4_Electrode_Combinee/TC4_Electrode_Combinee.html
+// @inclure TC4_Electrode_Combinee_physique.js
+// @description Électrode combinée de verre : coupe de la sonde, membrane sensible au pH et étalonnage en deux points.
+'use strict';
+/* =====================================================================
+   TC4 · Électrode combinée (3 onglets : Coupe, Membrane, Étalonnage)
+   Physique : ElectrodeModel (TC4_Electrode_Combinee_physique.js, d'origine, inchangée).
+   U = U₇ + η S(T) (7 − pH), S(T) = RT ln10 / ℱ ; étalonnage affine par deux tampons ; pH lu = (U − b)/m.
+   Lot 18 : sur AnimKit ; dessin de la coupe repris tel quel (géométrie 480 × 700 déjà validée) ;
+   proposition E : l'étalonnage n'est plus effacé quand T change (la droite mémorisée est celle d'une température donnée :
+   l'erreur de mesure à une autre température apparaît) ; réponse réelle de la sonde et pente théorique masquées au départ ;
+   Lecture en étalonnage : le pH part de la valeur placée à la main.
+   ===================================================================== */
+const M=ElectrodeModel,fm=AnimKit.fmt,Mh=AnimKit.M;
+const st={points:[],cal:null,calT:25,phase:0,timer:0,dir:1,hits:[],G:null};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const U=(a,ph=a.p.ph)=>M.voltage(ph,a.p.T,a.p.eff,a.p.off);
+const lu=a=>st.cal?M.read(U(a),st.cal):null;
+const mV=x=>fm.fix(x,1);
 
-let state={view:'assembly',pH:7,T:25,eff:100,offset:0,stage:4,separate:false,points:[],phase:0},cal=null,autoTimer=0;
-const M=ElectrodeModel;
-function U(p=state.pH){return M.voltage(p,state.T,state.eff,state.offset)}
-function sync(){setField('ph',state.pH);setField('temperature',state.T);setField('efficiency',state.eff);setField('offset',state.offset);$('stage').value=state.stage;$('separate').checked=state.separate}
-function setView(view){state.view=view;zoom=1;playing=false;syncPlay();render()}
-for(const v of ['assembly','membrane','calibration'])$('view-'+v).onclick=()=>setView(v);
-bindRange('ph',v=>{state.pH=v;render()});bindRange('temperature',v=>{state.T=v;state.points=[];cal=null;render()});bindRange('efficiency',v=>{state.eff=v;render()});bindRange('offset',v=>{state.offset=v;render()});
-$('stage').onchange=()=>{state.stage=+$('stage').value;render()};$('separate').onchange=()=>{state.separate=$('separate').checked;render()};
-document.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>{state.pH=+b.dataset.ph;setField('ph',state.pH);render()});
-function record(pH){state.pH=pH;setField('ph',pH);state.points=state.points.filter(p=>p.pH!==pH);state.points.push({pH,u:U(pH)});if(state.points.length>2)state.points.shift();cal=M.calibrate(state.points);render()}
-$('record4').onclick=()=>record(4);$('record7').onclick=()=>record(7);$('record10').onclick=()=>record(10);$('erase-cal').onclick=()=>{state.points=[];cal=null;render()};
-$('preset-ideal').onclick=()=>{state.eff=100;state.offset=0;state.T=25;state.points=[];cal=null;sync();render()};
-$('preset-drift').onclick=()=>{state.view='calibration';state.eff=100;state.offset=0;state.T=25;state.points=[{pH:4,u:M.voltage(4)},{pH:7,u:0}];cal=M.calibrate(state.points);state.eff=92;state.offset=15;state.pH=9;sync();render()};
-function reset(){state={view:'assembly',pH:7,T:25,eff:100,offset:0,stage:4,separate:false,points:[],phase:0};cal=null;playing=false;autoTimer=0;syncPlay();sync();render()}
-function clickableText(x,y,t,col,cb,size=21){const n=txt(x,y,t,col,size);n.style.cursor='pointer';n.setAttribute('tabindex','0');n.setAttribute('role','button');n.onclick=cb;n.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();cb()}};return n}
-function assembly(){
- // One coherent section: every physical part, connector and fluid boundary uses
- // the same coordinates.  Only the explanatory text keeps a fixed screen size.
- const narrow=W<650, stage=state.stage, separate=state.separate;
- const frame=narrow?{x:8,y:5,w:W-16,h:H*.72-8}:{x:12,y:8,w:W*.51-16,h:H-20};
- const source={w:480,h:700},fit=Math.min(frame.w/source.w,frame.h/source.h);
- const scale=fit*zoom,origin={x:frame.x+frame.w/2-source.w*scale/2,y:frame.y+frame.h/2-source.h*scale/2};
- const P=(x,y)=>[origin.x+x*scale,origin.y+y*scale];
- const defs=el('defs'),clip=el('clipPath',{id:'section-frame'},defs);
- el('rect',{x:frame.x,y:frame.y,width:frame.w,height:frame.h,rx:8},clip);
- const drawing=el('g',{'clip-path':'url(#section-frame)','data-part':'section-drawing'});
- const geometry=el('g',{transform:`translate(${origin.x} ${origin.y}) scale(${scale})`},drawing);
- const add=(tag,attrs,parent=geometry)=>el(tag,attrs,parent);
- const dpath=(d,stroke,width=3,fill='none',extra={})=>add('path',{d,stroke,'stroke-width':width,fill,'stroke-linejoin':'round','stroke-linecap':'round',...extra});
- const box=(x,y,w,h,fill,stroke='none',extra={})=>add('rect',{x,y,width:w,height:h,fill,stroke,rx:3,...extra});
- const glass=C.muted,bodyFill=C.panel,ic=separate?165:225,rc=separate?330:286;
- const il=ic-40,ir=ic+40,outerL=145,outerR=305,top=190,shoulder=535;
- const internal=`M${il} ${top}H${ir}V${shoulder}C${ir+33} 572 ${ir+13} 615 ${ic} 615C${il-13} 615 ${il-33} 572 ${il} ${shoulder}Z`;
- const membrane=`M${il} ${shoulder}C${il-33} 572 ${il-13} 615 ${ic} 615C${ir+13} 615 ${ir+33} 572 ${ir} ${shoulder}`;
- const beaker={left:55,right:425,top:352,bottom:650,level:382};
- // The sample is drawn first, behind both closed electrode compartments.
- const beakerD=`M55 352V630Q55 650 75 650H405Q425 650 425 630V352`;
- const sampleClip=add('clipPath',{id:'sample-clip'},defs);
- add('path',{d:beakerD+'Z'},sampleClip);
- box(55,382,370,268,C.soft,'none',{'clip-path':'url(#sample-clip)','data-part':'sample-liquid'});
- box(55,382,370,268,state.pH<7?C.red:C.blue,'none',{opacity:.035,'clip-path':'url(#sample-clip)'});
- dpath('M55 382H425',C.accent,2,'none',{opacity:.55});
- dpath(beakerD,glass,3);
- // Reference housing.  The annular floor stops at the internal glass tube.
- let poreX,referenceFluid;
- if(separate){
-  const refD='M307 190H353V538Q353 555 337 555H323Q307 555 307 538Z';
-  dpath(refD,glass,3,bodyFill,{'data-part':'reference-housing'});
-  referenceFluid=dpath('M310 225H350V538Q350 552 337 552H323Q310 552 310 538Z','none',0,C.orange,{'fill-opacity':stage>=3?.16:.025,'data-part':'reference-fluid'});
-  dpath('M310 225H350',C.orange,1.5,'none',{opacity:stage>=3?.6:.12});
-  // A gap in the wall is occupied by the porous junction, flush with the wall.
-  dpath('M353 474V504',bodyFill,6);
-  poreX=353;
- }else{
-  const refD='M145 190H305V535H265V190H185V535H145Z';
-  dpath(refD,glass,3,bodyFill,{'data-part':'reference-housing'});
-  referenceFluid=box(148,225,154,307,C.orange,'none',{'fill-opacity':stage>=3?.16:.025,'data-part':'reference-fluid'});
-  dpath('M148 225H302',C.orange,1.5,'none',{opacity:stage>=3?.6:.12});
-  // The internal body is opaque before its own liquid is added: fluids do not overlap.
-  dpath('M305 474V504',bodyFill,6);
-  poreX=305;
- }
- // The indicator compartment and bulb are one continuous, closed volume.
- dpath(internal,C.blue,3,bodyFill,{'data-part':'indicator-housing'});
- const internalClip=add('clipPath',{id:'internal-solution-clip'},defs);
- add('path',{d:internal},internalClip);
- box(ic-80,225,160,395,C.blue,'none',{'fill-opacity':stage>=2?.14:.035,'clip-path':'url(#internal-solution-clip)','data-part':'internal-fluid'});
- dpath(`M${il+2} 225H${ir-2}`,C.blue,1.5,'none',{opacity:stage>=2?.7:.18});
- // Internal contacts end well above the bulb and the annular floor.
- const wire=(cx,color,revealed,part)=>{
-  const g=add('g',{opacity:revealed?1:.15,'data-part':part});
-  add('path',{d:`M${cx} 184V411`,stroke:glass,'stroke-width':5,fill:'none','stroke-linecap':'round'},g);
-  add('rect',{x:cx-7,y:404,width:14,height:38,rx:3,fill:color,stroke:color,'stroke-width':1.5,'data-part':part+'-contact'},g);
- };
- wire(ic,C.blue,stage>=2,'indicator');wire(rc,C.orange,stage>=3,'reference');
- // The porous ceramic replaces the right wall rather than sitting outside it.
- box(poreX-8,474,8,30,bodyFill,C.orange,{'stroke-width':2,rx:0,'data-part':'porous-junction',opacity:stage>=3?1:.2});
- for(let y=479;y<503;y+=6)dpath(`M${poreX-7} ${y}H${poreX-1}`,C.orange,1.3,'none',{opacity:stage>=3?1:.2});
- dpath(membrane,C.red,5,'none',{'data-part':'sensing-membrane'});
- // Insulating head(s), seated on the tube tops, with two distinct terminals.
- if(separate){box(il-8,174,96,22,C.soft,glass,{'stroke-width':2,rx:5});box(299,174,62,22,C.soft,glass,{'stroke-width':2,rx:5});}
- else box(137,174,176,22,C.soft,glass,{'stroke-width':2,rx:5});
- // Cables, meter, compartment geometry and callout anchors share the transform.
- const meter={x:112,y:20,w:256,h:132};
- const cables=add('g',{opacity:stage>=4?1:.2});
- add('path',{d:`M${ic} 174V165H180V152`,stroke:C.blue,'stroke-width':3,fill:'none','stroke-linejoin':'round'},cables);
- add('path',{d:`M${rc} 174V160H300V152`,stroke:C.orange,'stroke-width':3,fill:'none','stroke-linejoin':'round'},cables);
- box(meter.x,meter.y,meter.w,meter.h,C.glow,C.line,{'stroke-width':2,rx:10,'data-part':'meter'});
- for(const x of [180,300])add('circle',{cx:x,cy:152,r:4,fill:glass});
- const meterCenter=P(meter.x+meter.w/2,0),meterTop=P(0,meter.y)[1],meterH=meter.h*scale;
- const meterLabelSize=narrow?15:18,meterValueSize=narrow?18:21;
- const caption1=txt(meterCenter[0],meterTop+meterH/2-8,'pH-mètre',stage>=4?C.ink:C.muted,meterLabelSize,'middle');drawing.append(caption1);
- const caption2=txt(meterCenter[0],meterTop+meterH/2+20,stage>=4?F(U(),1)+' mV':'U',C.accent,meterValueSize,'middle');drawing.append(caption2);
- const sample=P(240,687),sampleCaption=txt(sample[0],sample[1],'Solution à analyser',C.muted,narrow?14:18,'middle');drawing.append(sampleCaption);
- const labels=[
-  {id:1,st:2,title:'Solution interne',sub:narrow?'pH constant · Ag/AgCl':W<800?'pH fixe · Ag/AgCl interne':'pH constant · contact Ag/AgCl interne',color:C.blue,anchor:[ic-22,312],badge:[separate?92:108,312]},
-  {id:2,st:3,title:'Référence Ag/AgCl',sub:'Électrolyte KCl',color:C.orange,anchor:[rc,425],badge:[398,412]},
-  {id:3,st:3,title:'Jonction poreuse',sub:'Contact ionique',color:C.orange,anchor:[poreX-4,489],badge:[398,499]},
-  {id:4,st:1,title:'Membrane de verre',sub:narrow?'Sensible au pH':'Sensible au pH extérieur',color:C.red,anchor:[ic+36,582],badge:[365,600]}
- ];
- const layout={separate,frame,origin,scale,source,internalContact:{x:ic-7,y:404,w:14,h:38},referenceContact:{x:rc-7,y:404,w:14,h:38},pore:{x:poreX-8,y:474,w:8,h:30},beaker,referenceChannel:separate?{left:307,right:353,top:190,bottom:555}:{left:265,right:305,top:190,bottom:535}};
- window.TC4AssemblyLayout=layout;
- for(const l of labels){
-  if(stage<l.st)continue;
-  const a=P(...l.anchor),b=P(...l.badge);
-  const lead=el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:l.color,'stroke-width':1.25},drawing);
-  el('circle',{cx:a[0],cy:a[1],r:2.5,fill:l.color},drawing);
-  el('circle',{cx:b[0],cy:b[1],r:narrow?10:12,fill:C.panel,stroke:l.color,'stroke-width':1.5},drawing);
-  const n=txt(b[0],b[1]+5,l.id,l.color,narrow?13:15,'middle',{'font-weight':'bold'});drawing.append(n);
-  let lx,ly;
-  if(narrow){const col=(l.id-1)%2,row=Math.floor((l.id-1)/2);lx=14+col*(W-20)/2;ly=H*.77+row*H*.125;}
-  else{lx=W*.55;ly=H*(.25+(l.id-1)*.20);}
-  circle(lx+10,ly-6,narrow?9:12,C.panel,l.color,{'stroke-width':1.5});txt(lx+10,ly-1,l.id,l.color,narrow?12:15,'middle',{'font-weight':'bold'});
-  const titleX=lx+(narrow?25:32),titleSize=narrow?14:W<800?18:22;
-  clickableText(titleX,ly,l.title,l.color,()=>{if(l.id===4)setView('membrane');else{state.stage=l.st;$('stage').value=l.st;render()}},titleSize);
-  txt(titleX,ly+(narrow?20:27),l.sub,C.muted,narrow?11:W<800?14:16);
- }
+function record(a,ph){
+  a.set('ph',ph,{silent:true});
+  st.points=st.points.filter(q=>q.pH!==ph);st.points.push({pH:ph,u:U(a,ph)});
+  if(st.points.length>2)st.points.shift();
+  st.cal=M.calibrate(st.points);st.calT=a.p.T;
+  a.refresh();
 }
-function membrane(){
- const a=W*.37,b=W*.63,top=H*.19,bottom=H*.80,mid=(top+bottom)/2,band=Math.min(32,W*.04)*zoom;
- rect(18,top,a-18,bottom-top,C.blue,'none',{'fill-opacity':.07});rect(b,top,W-b-18,bottom-top,C.red,'none',{'fill-opacity':.06});rect(a,top,b-a,bottom-top,C.line);rect(a,top,band,bottom-top,C.blue,'none',{'fill-opacity':.28});rect(b-band,top,band,bottom-top,C.red,'none',{'fill-opacity':.28});
- txt(a*.50,H*.09,'Intérieur',C.blue,23,'middle');txt(a*.50,H*.09+29,'pH fixe : 7,0',C.muted,18,'middle');txt((W+b)/2,H*.09,'Échantillon',C.red,23,'middle');txt((W+b)/2,H*.09+29,'pH : '+F(state.pH),C.muted,18,'middle');
- txt(W/2,mid-14,'Verre',C.ink,24,'middle');txt(W/2,mid+16,'conduction ionique',C.muted,W<650?14:18,'middle');
- // Symbolic local exchanges, without a path transporting hydronium across the glass.
- const count=4+Math.round((12-state.pH)*.65);
- for(let side=0;side<2;side++){const n=side?count:7;for(let i=0;i<n;i++){const yy=top+24+(bottom-top-48)*(i+.5)/n;const xx=side?b+25+(i%2)*Math.min(45,W*.055):a-25-(i%2)*Math.min(45,W*.055);circle(xx,yy,11,side?C.red:C.blue,'none',{opacity:.75});txt(xx,yy+5,'H⁺',C.panel,13,'middle');const phase=Math.sin(state.phase*3+i);line(side?b-band/2:a+band/2,yy,side?b+12+phase*5:a-12-phase*5,yy,side?C.red:C.blue,1.5);}}
- const y=H*.88;if(W<600){for(const[x,c]of [[a,C.blue],[b,C.red]]){txt(x,y,'Couche',c,16,'middle');txt(x,y+20,'hydratée',c,16,'middle')}}else{txt(a,y,'Couche hydratée',C.blue,20,'middle');txt(b,y,'Couche hydratée',C.red,20,'middle')}txt(W/2,H*.97,W<600?'Échanges locaux · schéma non à l’échelle':'Échanges aux deux interfaces · nombre d’ions symbolique · épaisseurs agrandies',C.muted,W<650?12:15,'middle');
+function effacer(a){st.points=[];st.cal=null;a.refresh()}
+function statutCal(a){
+  const n=st.points.length;
+  if(n===0)return 'Aucun point enregistré.';
+  if(n===1)return 'Un point enregistré (pH '+fm.fix(st.points[0].pH,0)+') : ajouter le second.';
+  const q=st.points.map(p=>fm.fix(p.pH,0)).join(' et ');
+  return 'Tampons '+q+' enregistrés à '+fm.fix(st.calT,0)+' °C · pente mémorisée '+fm.fix(Math.abs(st.cal.m),2)+' mV par unité de pH.';
 }
-let plot=null;
-function calibration(){
- const left=72,right=W-35,top=42,bottom=H-52,mid=(top+bottom)/2;
- const phMin=7-5/zoom,phMax=7+5/zoom,uMax=340/zoom;
- const X=p=>left+(p-phMin)/(phMax-phMin)*(right-left),Y=u=>mid-u/uMax*(bottom-top)/2;plot={left,right,top,bottom,X,Y,phMin,phMax};
- for(let p=Math.ceil(phMin);p<phMax-.2;p++){line(X(p),top,X(p),bottom,C.grid);if(X(p)<right-40)txt(X(p),bottom+27,p,C.muted,17,'middle')}
- for(let u=-300;u<=300;u+=100)if(Math.abs(u)<=uMax){line(left,Y(u),right,Y(u),u?C.grid:C.line,u?1:1.5);txt(left-10,Y(u)+6,u,C.muted,17,'end')}
- txt(left,24,'U (mV)',C.ink,20);txt(right,bottom+27,'pH',C.ink,19,'end');
- const defs=el('defs'),clip=el('clipPath',{id:'plotclip'},defs);el('rect',{x:left,y:top,width:right-left,height:bottom-top},clip);const g=el('g',{'clip-path':'url(#plotclip)'});
- const curve=el('path',{d:`M${X(phMin)},${Y(U(phMin))}L${X(phMax)},${Y(U(phMax))}`,stroke:C.muted,'stroke-width':2,'stroke-dasharray':'6 7',fill:'none'},g);
- if(cal)el('path',{d:`M${X(phMin)},${Y(cal.m*phMin+cal.b)}L${X(phMax)},${Y(cal.m*phMax+cal.b)}`,stroke:C.accent,'stroke-width':3,fill:'none'},g);
- state.points.forEach(p=>{el('circle',{cx:X(p.pH),cy:Y(p.u),r:7,fill:C.accent,stroke:C.panel,'stroke-width':2},g);const n=el('text',{x:X(p.pH)+11,y:Y(p.u)-14,fill:C.accent,'font-size':19},g);n.textContent='Tampon '+F(p.pH,0)});
- const curX=X(state.pH),curY=Y(U());el('path',{d:`M${curX},${bottom}V${curY}H${left}`,stroke:C.red,'stroke-width':1.5,'stroke-dasharray':'4 5',fill:'none'},g);el('circle',{cx:curX,cy:curY,r:8,fill:C.red,stroke:C.panel,'stroke-width':2},g);
- txt(right,26,cal?'Droite mémorisée':'Deux points pour étalonner',cal?C.accent:C.muted,W<650?15:19,'end');
+
+const BASE={ph:7,T:25,eff:100,off:0,stage:4,sep:false};
+const A=AnimKit.app({
+  code:'TC4',partie:'VertEmeraude',chapitre:'TC4 Réactions acido-basiques',
+  titre:'Électrode combinée du pH-mètre',sousTitre:'Coupe, membrane et étalonnage',
+  fichier:'Electrode_Combinee',
+  onglets:['Coupe','Membrane','Étalonnage'],
+  temps:true,pas:.5,
+  panneaux:[
+    {id:'coupe',poids:1,onglets:[0],ratioTel:1.65},
+    {id:'membrane',poids:1,onglets:[1],ratioTel:.95},
+    {id:'etal',poids:1,onglets:[2],ratioTel:1}
+  ],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Sonde idéale',titre:'η = 100 %, U₇ = 0, 25 °C, étalonnage effacé',valeurs:BASE,action:a=>effacer(a)},
+      {label:'Dérive après étalonnage',titre:'Étalonnage fait avec une sonde idéale, puis η = 92 %, U₇ = 15 mV',valeurs:BASE,action:a=>{
+        st.points=[{pH:4,u:M.voltage(4)},{pH:7,u:0}];st.cal=M.calibrate(st.points);st.calT=25;
+        a.set('eff',92,{silent:true});a.set('off',15,{silent:true});a.set('ph',9,{silent:true});a.setTab(2)}},
+      {label:'Étalonnée à 25 °C, mesure à 40 °C',titre:'Même étalonnage, solution plus chaude : la pente de la sonde a changé',valeurs:BASE,action:a=>{
+        st.points=[{pH:4,u:M.voltage(4)},{pH:7,u:0}];st.cal=M.calibrate(st.points);st.calT=25;
+        a.set('T',40,{silent:true});a.set('ph',9,{silent:true});a.setTab(2)}}],items:[]},
+    {titre:'La solution',items:[
+      {id:'ph',label:'pH extérieur',min:2,max:12,step:.1,dec:1,value:7},
+      {type:'boutons',items:[{label:'Tampon 4',action:a=>a.set('ph',4)},{label:'Tampon 7',action:a=>a.set('ph',7)},{label:'Basique 10',action:a=>a.set('ph',10)}]},
+      {type:'note',html:'Teinte de repérage : les solutions ne sont pas réellement colorées.'}]},
+    {titre:'Explorer la sonde',onglets:[0],items:[
+      {id:'stage',type:'select',label:'Étape de la coupe',options:[[1,'1 · La membrane sensible'],[2,'2 · La chaîne indicatrice'],[3,'3 · La référence et sa jonction'],[4,'4 · Les deux chaînes et le voltmètre']],value:4},
+      {id:'sep',type:'check',label:'Deux électrodes séparées',value:false},
+      {type:'note',html:'Cliquer sur une légende pour isoler son rôle (la membrane ouvre le zoom).'}]},
+    {titre:'Étalonnage en deux points',onglets:[2],items:[
+      {type:'boutons',items:[{label:'Enregistrer pH 4',action:a=>record(a,4)},{label:'Enregistrer pH 7',action:a=>record(a,7)},{label:'Enregistrer pH 10',action:a=>record(a,10)},{label:'Effacer les points',action:a=>effacer(a)}]},
+      {type:'note',html:a=>statutCal(a)}]},
+    {titre:'Le modèle de la sonde',items:[
+      {id:'T',label:'Température',min:5,max:45,step:1,value:25,unit:'°C'},
+      {id:'eff',label:'Sensibilité η',min:85,max:100,step:1,value:100,unit:'%'},
+      {id:'off',label:'Décalage U<sub>7</sub>',min:-30,max:30,step:1,value:0,unit:'mV'},
+      {type:'note',html:'Après étalonnage, modifier η, U<sub>7</sub> ou la température fait apparaître une erreur de pH (dérive) ; réenregistrer deux tampons la corrige.'}]},
+    {titre:'Affichages',items:[
+      {id:'theo',type:'check',label:'Réponse théorique de la sonde et pente (prévision)',value:false,onglets:[1,2]}]}
+  ],
+  aide:{
+    voit:'Une <b>électrode combinée</b> : deux chaînes électrochimiques réunies dans un même corps. La chaîne <b>indicatrice</b> (contact Ag/AgCl, solution interne de pH fixe, membrane de verre) et la <b>référence</b> Ag/AgCl–KCl, en contact avec l\'échantillon par une jonction poreuse. Le pH-mètre mesure la tension <i class="m">U</i> entre les deux.',
+    faire:'<ul><li><b>Coupe</b> : choisir l\'étape (ou la lecture) pour révéler les éléments ; cocher « Deux électrodes séparées » pour comparer les montages ; cliquer sur une légende pour isoler son rôle.</li><li><b>Membrane</b> : faire varier le pH extérieur ; le pH intérieur reste fixé à 7.</li><li><b>Étalonnage</b> : enregistrer deux tampons distincts parmi 4, 7 et 10, puis tester une solution avec le curseur ou en déplaçant le point sur le graphique. Modifier η, <i class="m">U</i><sub>7</sub> ou la température après étalonnage : la lecture dérive.</li><li>La réponse théorique de la sonde et sa pente sont <b>masquées</b> au départ : les faire prévoir, puis cocher.</li></ul>',
+    modele:'<i class="m">U</i> = <i class="m">U</i><sub>7</sub> + η <i class="m">S</i>(<i class="m">T</i>) (7 − pH), avec <i class="m">S</i>(<i class="m">T</i>) = <i class="m">RT</i> ln 10 / ℱ en mV par unité de pH (59.16 mV à 25 °C). η est utilisé sous forme de fraction. Modèle affine sur la plage choisie (la loi <i class="m">U</i>(pH) est hors programme, seule la pente de Nernst se rattache au cours) ; erreurs acide/alcaline et variations du potentiel de jonction exclues. Les tampons 4, 7 et 10 sont des valeurs pédagogiques, pas une table de tampons commerciaux. Dans la membrane, les échanges de protons ont lieu aux interfaces hydratées : aucun trajet de H<sub>3</sub>O<sup>+</sup> à travers tout le verre n\'est dessiné ; le nombre d\'ions et les épaisseurs sont symboliques. Le temps est pédagogique, sans cinétique réelle. La température ne modifie que la pente de la sonde (le pH réel des solutions n\'est pas calculé en fonction de <i class="m">T</i>).',
+    cours:'TC4 : mesure du pH par une électrode de verre, étalonnage par deux solutions tampons, limites de la mesure.'
+  },
+  change(a,id,v){
+    if(id==='stage')st.timer=0;
+  },
+  onglet(a,i){a.play(false);st.timer=0},
+  reset(a){st.phase=0;st.timer=0;st.dir=1},
+  step(a,dt){
+    st.phase+=dt;
+    if(a.tab===0){st.timer+=dt;if(st.timer>1.8){st.timer=0;a.set('stage',a.p.stage%4+1)}}
+    else if(a.tab===2){
+      let v=a.p.ph+st.dir*dt*.9;
+      if(v>=12){v=12;st.dir=-1}else if(v<=2){v=2;st.dir=1}
+      a.p.ph=Math.round(v*100)/100;a.refresh();
+    }
+  },
+  draw(a){
+    if(a.tab===0)coupe(a);else if(a.tab===1)membrane(a);else etalonnage(a);
+    info(a);
+  }
+});
+
+/* ---------- dessin de la coupe (géométrie d'origine 480 × 700) ---------- */
+function coupe(a){
+  const P=a.panels.coupe,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,narrow=W<650,stage=+p.stage,separate=!!p.sep;
+  const frame=narrow?{x:8,y:5,w:W-16,h:H*.70-8}:{x:12,y:8,w:W*.51-16,h:H-20};
+  const src={w:480,h:700},sc=Math.min(frame.w/src.w,frame.h/src.h);
+  const org={x:frame.x+frame.w/2-src.w*sc/2,y:frame.y+frame.h/2-src.h*sc/2};
+  const Pt=(x,y)=>[org.x+x*sc,org.y+y*sc];
+  const glass=C.ink2,body=C.card,blue=C.B,orange=C.E,red=C.F;
+  const gp=(d,stroke,w=3,fill='none',x='')=>`<path d="${d}" stroke="${stroke}" stroke-width="${w}" fill="${fill}" stroke-linejoin="round" stroke-linecap="round" ${x}/>`;
+  const gb=(x,y,w,h,fill,stroke='none',sw=1,x2='')=>`<rect x="${x}" y="${y}" width="${Math.max(0,w)}" height="${Math.max(0,h)}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" rx="3" ${x2}/>`;
+  const ic=separate?165:225,rc=separate?330:286,il=ic-40,ir=ic+40,top=190,shoulder=535;
+  const internal=`M${il} ${top}H${ir}V${shoulder}C${ir+33} 572 ${ir+13} 615 ${ic} 615C${il-13} 615 ${il-33} 572 ${il} ${shoulder}Z`;
+  const membr=`M${il} ${shoulder}C${il-33} 572 ${il-13} 615 ${ic} 615C${ir+13} 615 ${ir+33} 572 ${ir} ${shoulder}`;
+  const beakerD='M55 352V630Q55 650 75 650H405Q425 650 425 630V352';
+  let g=`<defs><clipPath id="tc4e-sample"><path d="${beakerD}Z"/></clipPath><clipPath id="tc4e-int"><path d="${internal}"/></clipPath></defs>`;
+  /* échantillon : dessiné d'abord, derrière les deux compartiments */
+  g+=gb(55,382,370,268,C.cSoft,'none',1,'clip-path="url(#tc4e-sample)"');
+  g+=gb(55,382,370,268,p.ph<7?red:blue,'none',1,'fill-opacity=".05" clip-path="url(#tc4e-sample)"');
+  g+=gp('M55 382H425',C.c,2,'none','opacity=".55"')+gp(beakerD,glass,3);
+  /* référence */
+  let poreX;
+  if(separate){
+    g+=gp('M307 190H353V538Q353 555 337 555H323Q307 555 307 538Z',glass,3,body);
+    g+=gp('M310 225H350V538Q350 552 337 552H323Q310 552 310 538Z','none',0,orange,`fill-opacity="${stage>=3?.16:.025}"`);
+    g+=gp('M310 225H350',orange,1.5,'none',`opacity="${stage>=3?.6:.12}"`)+gp('M353 474V504',body,6);
+    poreX=353;
+  }else{
+    g+=gp('M145 190H305V535H265V190H185V535H145Z',glass,3,body);
+    g+=gb(148,225,154,307,orange,'none',0,`fill-opacity="${stage>=3?.16:.025}"`);
+    g+=gp('M148 225H302',orange,1.5,'none',`opacity="${stage>=3?.6:.12}"`)+gp('M305 474V504',body,6);
+    poreX=305;
+  }
+  /* chaîne indicatrice : un seul volume fermé, bulbe compris */
+  g+=gp(internal,blue,3,body);
+  g+=gb(ic-80,225,160,395,blue,'none',0,`fill-opacity="${stage>=2?.14:.035}" clip-path="url(#tc4e-int)"`);
+  g+=gp(`M${il+2} 225H${ir-2}`,blue,1.5,'none',`opacity="${stage>=2?.7:.18}"`);
+  const wire=(cx,col,on)=>`<g opacity="${on?1:.15}">`+gp(`M${cx} 184V411`,glass,5)+gb(cx-7,404,14,38,col,col,1.5)+'</g>';
+  g+=wire(ic,blue,stage>=2)+wire(rc,orange,stage>=3);
+  /* jonction poreuse */
+  g+=gb(poreX-8,474,8,30,body,orange,2,`rx="0" opacity="${stage>=3?1:.2}"`);
+  for(let y=479;y<503;y+=6)g+=gp(`M${poreX-7} ${y}H${poreX-1}`,orange,1.3,'none',`opacity="${stage>=3?1:.2}"`);
+  g+=gp(membr,red,5);
+  /* têtes isolantes, câbles, voltmètre */
+  if(separate)g+=gb(ic-48,174,96,22,C.cSoft,glass,2)+gb(299,174,62,22,C.cSoft,glass,2);
+  else g+=gb(137,174,176,22,C.cSoft,glass,2);
+  const meter={x:112,y:20,w:256,h:132};
+  g+=`<g opacity="${stage>=4?1:.2}">`+gp(`M${ic} 174V165H180V152`,blue,3)+gp(`M${rc} 174V160H300V152`,orange,3)+'</g>';
+  g+=gb(meter.x,meter.y,meter.w,meter.h,C.paper,C.rule,2,'rx="10"');
+  for(const x of [180,300])g+=`<circle cx="${x}" cy="152" r="4" fill="${glass}"/>`;
+  let o=`<g transform="translate(${org.x.toFixed(2)} ${org.y.toFixed(2)}) scale(${sc.toFixed(4)})">${g}</g>`;
+  /* textes (taille fixe à l'écran) */
+  const mc=Pt(meter.x+meter.w/2,0)[0],mt=Pt(0,meter.y)[1],mh=meter.h*sc;
+  o+=S.text(mc,mt+mh/2-8,'pH-mètre',{anchor:'middle',size:narrow?15:18,c:stage>=4?C.ink:C.ink2,halo:false});
+  o+=S.text(mc,mt+mh/2+20,stage>=4?mV(U(a))+' mV':S.v('U'),{anchor:'middle',size:narrow?18:21,c:C.c,halo:false,weight:700});
+  const sm=Pt(240,687);
+  o+=S.text(sm[0],sm[1],'Solution à analyser',{anchor:'middle',size:narrow?14:17,c:C.ink2});
+  /* légendes numérotées, cliquables */
+  const labels=[
+    {id:1,st:2,t:'Solution interne',s:narrow?'pH constant · Ag/AgCl':W<800?'pH fixe · Ag/AgCl interne':'pH constant · contact Ag/AgCl interne',col:blue,an:[ic-22,312],bd:[separate?92:108,312]},
+    {id:2,st:3,t:'Référence Ag/AgCl',s:'Électrolyte KCl',col:orange,an:[rc,425],bd:[398,412]},
+    {id:3,st:3,t:'Jonction poreuse',s:'Contact ionique',col:orange,an:[poreX-4,489],bd:[398,499]},
+    {id:4,st:1,t:'Membrane de verre',s:narrow?'Sensible au pH':'Sensible au pH extérieur',col:red,an:[ic+36,582],bd:[365,600]}];
+  st.hits=[];
+  for(const l of labels){
+    if(stage<l.st)continue;
+    const q1=Pt(...l.an),q2=Pt(...l.bd);
+    o+=S.line(q1[0],q1[1],q2[0],q2[1],{c:l.col,w:1.25})+S.circle(q1[0],q1[1],2.5*k,{fill:l.col});
+    o+=S.circle(q2[0],q2[1],(narrow?10:12)*k,{fill:C.card,c:l.col,w:1.5})+S.text(q2[0],q2[1],l.id,{anchor:'middle',size:narrow?13:15,c:l.col,weight:700,halo:false});
+    let lx,ly;
+    if(narrow){const col=(l.id-1)%2,row=Math.floor((l.id-1)/2);lx=14+col*(W-20)/2;ly=H*.78+row*H*.115}
+    else{lx=W*.55;ly=H*(.25+(l.id-1)*.17)}
+    const ts=(narrow?14:W<800?17:21)*k,ss=(narrow?13:W<800?14:16)*k;
+    o+=S.circle(lx+10*k,ly,(narrow?9:12)*k,{fill:C.card,c:l.col,w:1.5})+S.text(lx+10*k,ly,l.id,{anchor:'middle',size:narrow?12:15,c:l.col,weight:700,halo:false});
+    o+=S.text(lx+(narrow?25:32)*k,ly,l.t,{size:ts/k,c:l.col,weight:700});
+    o+=S.text(lx+(narrow?25:32)*k,ly+ts*.95,l.s,{size:ss/k,c:C.ink2});
+    st.hits.push({x:lx,y:ly-ts*.7,w:narrow?(W-20)/2-6:W*.42,h:ts*1.9,id:l.id,st:l.st});
+  }
+  const msg=separate?'Deux électrodes, deux connexions':'Une seule sonde, deux chaînes électrochimiques';
+  if(narrow)o+=S.text(W/2,H-12*k,msg,{anchor:'middle',size:13,c:C.ink});
+  else o+=S.text(W*.55,H*.93,msg,{size:15,c:C.ink});
+  a.svg('coupe',o);
 }
-function render(){clearScene();for(const v of ['assembly','membrane','calibration'])toggle($('view-'+v),state.view===v);$('assembly-controls').hidden=state.view!=='assembly';$('cal-controls').hidden=state.view!=='calibration';$('cal-status').textContent=state.points.length===0?'Aucun point enregistré.':state.points.length===1?'Un point enregistré : ajouter le second.':'Deux points enregistrés · pente '+F(cal.m,2)+' mV/pH.';
- $('legend').hidden=state.view!=='calibration';$('legend').innerHTML='<span><i style="--c:var(--muted)" class="dashed"></i>Réponse actuelle</span><span><i style="--c:var(--accent)"></i>Étalonnage mémorisé</span><span><i style="--c:var(--red)"></i>Solution testée</span>';
- if(state.view==='assembly')assembly();else if(state.view==='membrane')membrane();else calibration();
- metric(1,'pH extérieur',F(state.pH));metric(2,'Tension U',F(U(),1)+' <small>mV</small>');const reading=M.read(U(),cal);metric(3,cal?'pH après étalonnage':'Pente idéale à '+F(state.T,0)+' °C',cal?F(reading,2):'−'+F(M.slope(state.T),2)+' <small>mV/pH</small>');
- if(state.view==='assembly')note(state.separate?'Deux électrodes, deux connexions':'Une seule sonde, deux chaînes électrochimiques',state.stage<4?'Révéler les éléments avec le menu des étapes ou le bouton Animer.':'La membrane répond au pH ; la référence fournit un potentiel stable et sa jonction assure le contact ionique.');
- else if(state.view==='membrane')note('Le pH interne reste fixe, le pH extérieur varie','Les protons échangent aux interfaces hydratées. Ils ne traversent pas librement toute la membrane de verre.');
- else if(cal){const err=reading-state.pH,extrap=state.pH<Math.min(...state.points.map(p=>p.pH))||state.pH>Math.max(...state.points.map(p=>p.pH));if(Math.abs(err)<.005&&extrap)note('Mesure au-delà des tampons : extrapolation','Choisir deux tampons encadrant le pH attendu : 4 et 7, ou 7 et 10. La droite mémorisée est ici prolongée.');else note(Math.abs(err)<.005?'Étalonnage cohérent avec la sonde':'Une dérive de la sonde fausse le pH affiché',Math.abs(err)<.005?'Tester une autre solution, ou modifier la sensibilité et le décalage pour simuler une dérive.':'Erreur simulée : '+(err>=0?'+':'')+F(err,2)+' unité de pH. Réenregistrer les deux tampons pour corriger.');}
- else note('Étalonner avant de convertir les mV en pH','Enregistrer deux tampons distincts parmi pH 4, 7 et 10. Leur droite permet de convertir la tension de la solution testée.');
+
+/* ---------- membrane de verre ---------- */
+function membrane(a){
+  const P=a.panels.membrane,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,sm=W<600;
+  const x1=W*.37,x2=W*.63,top=H*.19,bot=H*.80,mid=(top+bot)/2,band=Math.min(32,W*.04);
+  let o=S.rect(18,top,x1-18,bot-top,{fill:C.B,fop:.08})+S.rect(x2,top,W-x2-18,bot-top,{fill:C.F,fop:.07});
+  o+=S.rect(x1,top,x2-x1,bot-top,{fill:C.rule})+S.rect(x1,top,band,bot-top,{fill:C.B,fop:.3})+S.rect(x2-band,top,band,bot-top,{fill:C.F,fop:.3});
+  o+=S.text(x1/2,H*.09,'Intérieur',{anchor:'middle',size:sm?16:22,c:C.B,weight:700})+S.text(x1/2,H*.09+(sm?20:28),'pH fixe : 7.0',{anchor:'middle',size:sm?13:17,c:C.ink2});
+  o+=S.text((W+x2)/2,H*.09,'Échantillon',{anchor:'middle',size:sm?16:22,c:C.F,weight:700})+S.text((W+x2)/2,H*.09+(sm?20:28),'pH : '+fm.fix(p.ph,1),{anchor:'middle',size:sm?13:17,c:C.ink2});
+  o+=S.text(W/2,mid-14*k,'Verre',{anchor:'middle',size:sm?18:24,c:C.ink,weight:700})+S.text(W/2,mid+14*k,'conduction ionique',{anchor:'middle',size:sm?13:17,c:C.ink2});
+  /* échanges locaux symboliques : aucun trajet de H₃O⁺ à travers le verre */
+  const cnt=4+Math.round((12-p.ph)*.65),dx=Math.min(45,W*.055);
+  for(let side=0;side<2;side++){
+    const n=side?cnt:7,col=side?C.F:C.B;
+    for(let i=0;i<n;i++){
+      const yy=top+24+(bot-top-48)*(i+.5)/n,xx=side?x2+25+(i%2)*dx:x1-25-(i%2)*dx,ph=Math.sin(st.phase*3+i);
+      o+=S.line(side?x2-band/2:x1+band/2,yy,side?x2+12+ph*5:x1-12-ph*5,yy,{c:col,w:1.5});
+      o+=S.circle(xx,yy,11*k,{fill:col,op:.85})+S.text(xx,yy,'H'+S.sup('+'),{anchor:'middle',size:13,c:C.card,halo:false,weight:700});
+    }
+  }
+  const y=H*.88;
+  if(sm){for(const[x,c]of[[x1,C.B],[x2,C.F]]){o+=S.text(x,y,'Couche',{anchor:'middle',size:14,c});o+=S.text(x,y+19*k,'hydratée',{anchor:'middle',size:14,c})}}
+  else o+=S.text(x1,y,'Couche hydratée',{anchor:'middle',size:19,c:C.B})+S.text(x2,y,'Couche hydratée',{anchor:'middle',size:19,c:C.F});
+  o+=S.text(W/2,H*.965,sm?'Échanges locaux · schéma non à l\'échelle':'Échanges aux deux interfaces · nombre d\'ions symbolique · épaisseurs agrandies',{anchor:'middle',size:13,c:C.ink2});
+  if(p.theo)o+=S.text(W/2,H*.31,p.ph<7?'pH extérieur < 7 : plus de H'+S.sup('+')+' côté échantillon, '+S.v('U')+' > U'+S.r('₇'):p.ph>7?'pH extérieur > 7 : moins de H'+S.sup('+')+' côté échantillon, '+S.v('U')+' < U'+S.r('₇'):'pH extérieur = 7 : '+S.v('U')+' = U'+S.r('₇'),{anchor:'middle',size:sm?13:15,c:C.cInk});
+  a.svg('membrane',o);
 }
-function tick(dt){state.phase+=dt;if(state.view==='assembly'){autoTimer+=dt;if(autoTimer>2){autoTimer=0;state.stage=state.stage%4+1;$('stage').value=state.stage}render()}else if(state.view==='membrane')render();else{state.pH=7+4.8*Math.sin(state.phase*.3);setField('ph',+state.pH.toFixed(2));render()}}
-$('scene').addEventListener('pointerdown',e=>{if(state.view!=='calibration')return;const b=$('scene').getBoundingClientRect();if(e.clientY-b.top<plot.top||e.clientY-b.top>plot.bottom)return;const move=e=>{state.pH=Math.max(2,Math.min(12,plot.phMin+(e.clientX-b.left-plot.left)/(plot.right-plot.left)*(plot.phMax-plot.phMin)));setField('ph',+state.pH.toFixed(2));render()};playing=false;syncPlay();move(e);$('scene').setPointerCapture(e.pointerId);$('scene').onpointermove=move;$('scene').onpointerup=$('scene').onpointercancel=()=>{$('scene').onpointermove=null}});
-sync();render();
-window.TC4App={getState:()=>structuredClone({...state,cal}),setView,render};
-</script><!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
-})();
+
+/* ---------- étalonnage ---------- */
+function etalonnage(a){
+  const P=a.panels.etal,S=a.S,C=a.C,k=a.k,p=a.p;
+  const UM=360,G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:2,xmax:12,ymin:-UM,ymax:UM,xticks:[2,3,4,5,6,7,8,9,10,11,12],yticks:[-300,-200,-100,0,100,200,300],xlab:'pH',ylab:S.v('U')+' (mV)',padB:40*k});
+  st.G=G;
+  let o=G.svg+S.clip('tc4e-g',G);
+  /* réponse réelle de la sonde : prévision, masquée par défaut */
+  if(p.theo)o+=S.curve([[2,U(a,2)],[12,U(a,12)]],G,{c:C.pred,w:2,dash:`${6*k} ${6*k}`});
+  if(st.cal)o+=S.curve([[2,st.cal.m*2+st.cal.b],[12,st.cal.m*12+st.cal.b]],G,{c:C.c,w:3});
+  for(const q of st.points){
+    o+=S.circle(G.X(q.pH),G.Y(q.u),7*k,{fill:C.c,c:C.card,w:2});
+    o+=S.text(G.X(q.pH)+11*k,G.Y(q.u)-14*k,'Tampon '+fm.fix(q.pH,0),{size:14,c:C.cInk});
+  }
+  const u=U(a),cx=G.X(p.ph),cy=G.Y(u);
+  o+=`<path d="M${cx.toFixed(1)},${(G.y0+G.h).toFixed(1)}V${cy.toFixed(1)}H${G.x0.toFixed(1)}" fill="none" stroke="${C.F}" stroke-width="${(1.5*k).toFixed(1)}" stroke-dasharray="${4*k} ${5*k}"/>`;
+  const r=lu(a);
+  if(st.cal&&r!==null&&isFinite(r)){
+    /* conversion : la tension lue se reporte sur la droite mémorisée, puis sur l'axe des pH */
+    const rx=G.X(clamp(r,-5,20));
+    o+=S.line(G.x0,cy,rx,cy,{c:C.c,w:1.2,dash:`${3*k} ${4*k}`})+S.line(rx,cy,rx,G.y0+G.h,{c:C.c,w:1.2,dash:`${3*k} ${4*k}`});
+    o+=S.circle(rx,G.y0+G.h,5*k,{fill:C.c});
+  }
+  o+=S.circle(cx,cy,8*k,{fill:C.F,c:C.card,w:2});
+  /* messages dans la scène */
+  let y=G.y0+8*k;const msg=(t,c)=>{o+=S.text(G.x0+10*k,y,t,{size:14,c,base:'top'});y+=19*k};
+  msg(st.cal?'Droite mémorisée':'Deux points pour étalonner',st.cal?C.cInk:C.ink2);
+  if(st.cal&&r!==null){
+    const err=r-p.ph,lo=Math.min(...st.points.map(q=>q.pH)),hi=Math.max(...st.points.map(q=>q.pH));
+    if(Math.abs(p.T-st.calT)>.5)msg('Étalonnée à '+fm.fix(st.calT,0)+' °C, mesure à '+fm.fix(p.T,0)+' °C : la pente a changé',C.F);
+    if(Math.abs(err)>=.005)msg('Erreur de lecture : '+(err>=0?'+':'−')+fm.fix(Math.abs(err),2)+' unité de pH',C.F);
+    else if(p.ph<lo-1e-9||p.ph>hi+1e-9)msg('Hors des tampons : extrapolation de la droite',C.ink2);
+  }
+  a.svg('etal',o);
+}
+
+/* ---------- mesures et légende ---------- */
+function info(a){
+  const p=a.p,arr=[];
+  if(a.tab>=1)arr.push({label:`Tension ${Mh.v('U')}`,value:mV(U(a)),unit:'mV'});
+  if(a.tab===2){
+    const r=lu(a);
+    if(r!==null&&isFinite(r))arr.push({label:'pH lu après étalonnage',value:fm.fix(r,2),hint:`pH réel de la solution : ${fm.fix(p.ph,1)}`});
+    else arr.push({label:'pH lu',value:'—',hint:'étalonnage incomplet'});
+  }
+  if(p.theo&&a.tab>=1)arr.push({label:`Pente ${Mh.v('S')}(${Mh.v('T')})`,value:'−'+fm.fix(M.slope(p.T),2),unit:'mV par unité de pH',hint:`${Mh.v('U')} = ${Mh.v('U','7')} + η ${Mh.v('S')}(7 − pH)`});
+  a.metrics(arr);
+  a.legend(a.tab===2?[p.theo&&{c:a.C.pred,label:'réponse réelle de la sonde',dash:true},{c:a.C.c,label:'droite mémorisée'},{c:a.C.F,label:'solution testée'}]:[]);
+  a.clock('');
+}
+
+/* ---------- interactions ---------- */
+A.drag('coupe',{
+  hit:(x,y)=>st.hits.some(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h),
+  start:(x,y)=>{const h=st.hits.find(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h);if(!h)return;if(h.id===4)A.setTab(1);else A.set('stage',h.st)},
+  move:()=>{},end:()=>{}
+});
+const phDe=x=>{const G=st.G;return Math.round(clamp(2+(x-G.x0)/G.w*10,2,12)*100)/100};
+A.drag('etal',{
+  hit:(x,y)=>{const G=st.G;return !!G&&x>=G.x0&&x<=G.x0+G.w&&y>=G.y0&&y<=G.y0+G.h},
+  start:x=>{A.play(false);A.set('ph',phDe(x))},
+  move:x=>{A.set('ph',phDe(x))},end:()=>{}
+});
+
 </script>
-<!-- CPGE_MENU_SCRIPT_END -->
-</body></html>
+</body>
+</html>

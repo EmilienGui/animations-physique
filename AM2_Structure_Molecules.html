@@ -1,233 +1,1377 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Atelier AM2 MPSI autonome hors connexion : Structure · géométrie · polarité"><title>De la liaison à la molécule · AM2 · MPSI</title><style>:root{color-scheme:light;--paper:#eff5f2;--surface:#ffffff;--ink:#182d28;--muted:#52675f;--line:#cbdcd3;--accent:#008060;--accent-ink:#006b50;--soft:#e5f3ec;--blue:#245fa8;--red:#bf4150;--violet:#7950a0;--gold:#9e6919}
-:root[data-theme=dark]{color-scheme:dark;--paper:#101e1a;--surface:#172a23;--ink:#edf6ef;--muted:#b4cbbf;--line:#365647;--accent:#70d6ad;--accent-ink:#89e0ba;--soft:#233e31;--blue:#91beff;--red:#ff95a1;--violet:#d6afff;--gold:#f2ca83}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;border-top:5px solid var(--accent);background:var(--paper);color:var(--ink);font:17px/1.45 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:40px;padding:7px 11px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);line-height:1.2}button:hover{border-color:var(--accent);background:var(--soft)}button[aria-pressed=true],button.primary{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--surface)}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] button.primary{color:#102e21}button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button:disabled{opacity:.45;cursor:default}.shell{height:calc(100dvh - 5px);max-width:2200px;margin:auto;padding:14px 20px 10px;display:flex;flex-direction:column;gap:11px}.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:bold;color:var(--accent-ink)}h1{font-size:28px;font-weight:500;letter-spacing:-.035em;line-height:1.15;margin:4px 0 0}.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.actions button{font-size:15px;white-space:nowrap}.actions #fullscreen{width:40px;padding:5px;font-size:23px}.steps{display:grid;grid-template-columns:repeat(var(--steps),1fr);gap:7px;flex-shrink:0}.steps button{text-align:left;font-size:17px;padding:10px 13px}.steps small{opacity:.7;margin-right:10px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;flex:1;min-height:0}.main{display:flex;flex-direction:column;gap:9px;min-width:0;min-height:0}.card{flex:1;min-height:300px;background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 26px #173c3608}.toolbar{display:flex;gap:7px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:8px 11px;border-bottom:1px solid var(--line);flex-shrink:0}.toolbar-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.toolbar button{min-height:34px;font-size:14px;padding:5px 10px}.toolbar .zoom{flex-wrap:nowrap;margin-left:auto}.toolbar .zoom button{min-width:34px}.toolbar label{font-size:14px;color:var(--muted)}#scene-wrap{flex:1;min-height:0;position:relative}#scene{display:block;width:100%;height:100%;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}#scene [data-drag],#scene [data-click]{cursor:grab}#scene [data-click]{cursor:pointer}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;flex-shrink:0}.metric{border-left:1px solid var(--line);padding-left:14px;min-width:0}.metric:first-child{border:0;padding:0}.metric-label{color:var(--muted);font-size:15px}.metric-value{font-size:30px;line-height:1.25;letter-spacing:-.025em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.message{font-size:18px;color:var(--accent-ink);margin:0;min-height:27px}.hint{font-size:13px;color:var(--muted);margin:0}.aside{overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:11px;scrollbar-width:thin}.section{padding:16px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 12px}.section p{margin:8px 0}.field{margin:12px 0}.field>label{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;font-size:15px}input[type=range]{width:100%;accent-color:var(--accent-ink);height:25px;cursor:pointer}input[type=number]{width:82px;padding:4px;border-radius:5px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}select{width:100%;padding:9px 7px;border-radius:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:16px}.row{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}.row button{flex:1;font-size:14px}.check{display:flex;gap:9px;align-items:center;font-size:15px;margin:10px 0;cursor:pointer}.check input{width:18px;height:18px;accent-color:var(--accent-ink);flex-shrink:0}.note{font-size:14px;color:var(--muted)}.formula{font:21px/1.5 Georgia,serif}.callout{background:var(--soft);padding:11px;border-radius:7px;font-size:15px}.swatch{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px}.footer{display:flex;justify-content:space-between;gap:15px;font-size:12px;color:var(--muted);flex-shrink:0}dialog{width:min(790px,calc(100% - 30px));max-height:85dvh;overflow:auto;padding:26px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:17px;line-height:1.6}dialog::backdrop{background:#071a1399}dialog h2{font-size:26px;font-weight:500;margin:0 0 15px}dialog a{color:var(--accent-ink)}dialog .close{display:flex;justify-content:flex-end}#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:90vw;padding:10px 18px;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:0 5px 30px #0002;z-index:10;font-size:15px}#toast:empty{display:none}.projection .aside,.projection .footer,.projection .eyebrow,.projection .hint{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:8px}.projection .metric-label{font-size:21px}.projection .metric-value{font-size:38px}.projection .message{font-size:22px}.projection .steps button{font-size:20px}.projection .toolbar button{font-size:17px}
-@media(max-width:1350px){h1{font-size:25px}.shell{padding:10px 12px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 275px;gap:10px}.section{padding:13px}.footer{display:none}.steps button{font-size:16px}.metric-value{font-size:28px}.actions button{padding:7px 9px;font-size:14px}}
-@media(max-width:850px){.shell{height:auto;min-height:calc(100dvh - 5px)}.header{gap:10px}.actions{justify-content:flex-start}.workspace{grid-template-columns:1fr}.card{flex:none;height:570px}.aside{overflow:visible;display:grid;grid-template-columns:1fr 1fr}.steps{grid-template-columns:repeat(2,1fr)}.projection .card{height:65dvh;min-height:450px}.projection .shell{height:auto;min-height:100dvh}.projection .metric-value{font-size:30px}.projection .metric-label{font-size:16px}.projection .message{font-size:19px}}
-@media(max-width:520px){.shell{padding:9px}.card{height:590px}.aside{grid-template-columns:1fr}h1{font-size:24px}.steps button{font-size:15px;padding:9px}.steps small{margin-right:5px}.toolbar{padding:7px}.toolbar button{padding:5px 7px;font-size:13px}.metrics{gap:6px}.metric{padding-left:7px}.metric-label{font-size:12px}.metric-value{font-size:22px}.message{font-size:16px}.projection .metric-value{font-size:25px}.projection .metric-label{font-size:13px}.projection .steps button{font-size:16px}}
-.fraction{display:inline-flex;flex-direction:column;align-items:stretch;vertical-align:middle;text-align:center;font-family:Georgia,'Times New Roman',serif;line-height:1.1;margin:0 .12em;white-space:nowrap}.fraction>.numerator{border-bottom:1.3px solid currentColor;padding:0 .18em .09em}.fraction>.denominator{padding:.09em .18em 0}.fraction sup{font-size:.67em}.metric-value .fraction{font-size:.78em}.field .fraction{font-size:.9em}.arrow-key{font-size:15px;line-height:1.6}.arrow-key p{margin:7px 0}
-:root{--result:#c24e0c}:root[data-theme=dark]{--result:#ffc178}
-@media print{.actions,.aside,.toolbar,.footer,.hint{display:none}.shell{height:auto}.workspace{display:block}.card{height:650px;box-shadow:none}}
-</style></head>
-<body><main class="shell"><header class="header"><div><div class="eyebrow">AM2 · Architecture de la matière · MPSI</div><h1>De la liaison à la molécule</h1></div><div class="actions"><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter la scène et ses paramètres en SVG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran">⛶</button></div></header>
-<nav class="steps" id="tabs" aria-label="Vues de l’atelier" style="--steps:4"><button data-mode="liaison" aria-pressed="false"><small>01</small>Liaison</button><button data-mode="lewis" aria-pressed="false"><small>02</small>Lewis</button><button data-mode="geometrie" aria-pressed="false"><small>03</small>Géométrie</button><button data-mode="polarite" aria-pressed="true"><small>04</small>Polarité</button></nav>
-<div class="workspace"><section class="main"><div class="card"><div class="toolbar"><div class="toolbar-group"><button id="play" aria-pressed="false">Animer</button><button id="reset">Réinitialiser</button></div><div class="toolbar-group zoom"><button id="zoom-out" aria-label="Réduire">−</button><button id="frame">Cadrer</button><button id="zoom-in" aria-label="Agrandir">+</button></div></div><div id="scene-wrap"><svg id="scene" role="img" aria-label="Scène interactive : Structure · géométrie · polarité"></svg></div></div>
-<div class="metrics"><div class="metric"><div class="metric-label" id="metric-label-0"></div><div class="metric-value" id="metric-value-0"></div></div><div class="metric"><div class="metric-label" id="metric-label-1"></div><div class="metric-value" id="metric-value-1"></div></div><div class="metric"><div class="metric-label" id="metric-label-2"></div><div class="metric-value" id="metric-value-2"></div></div></div><p class="message" id="message" role="status" aria-live="off"></p><p class="hint" id="hint"></p></section><aside class="aside" id="aside" aria-label="Réglages et explications"></aside></div>
-<footer class="footer"><span>E. Guillaume · MPSI · AM2</span><span>Structure · géométrie · polarité · autonome hors connexion</span></footer></main>
-<dialog id="about"><h2>De la liaison à la molécule</h2>
-<p><strong>Quatre vues reliées.</strong> Choisir une molécule et retrouver ses représentations dans Lewis, Géométrie et Polarité. La vue Liaison propose H₂ et HCl, avec un profil de Morse illustratif. Les valeurs rₑ et D sont des repères arrondis ; D règle la profondeur du modèle sans correction vibrationnelle quantique.</p>
-<p><strong>Manipuler.</strong> Glisser l’atome ou le point violet dans Liaison. Dans Lewis, sélectionner un atome, ajouter ou retirer ses doublets libres ; cliquer une liaison ou utiliser le sélecteur pour changer sa multiplicité. « À construire » conserve le squelette. « Compléter » rétablit la structure de référence. La vérification du décompte ne prouve pas l’unicité ou la stabilité d’un schéma quelconque.</p>
-<p><strong>Géométrie.</strong> Les angles sont fournis et arrondis, conformément au cours. Les coordonnées 3D de NH₃ schématisent une pyramide ; les lobes des doublets libres sont des domaines explicatifs, sans densité quantique calculée. Glisser pour tourner ; Cadrer rétablit la caméra. Les longueurs graphiques ne sont pas les longueurs de liaison réelles.</p>
-<p><strong>Polarité.</strong> La construction vectorielle 3D est agrandie et partage la caméra de la molécule. « Agrandir la somme » lui donne toute la scène. La résultante μ molécule est orange, plus épaisse, avec un libellé renforcé.  Le vecteur moment dipolaire est orienté de − vers +. Les dipôles de liaison sont des contributions qualitatives pondérées par les différences d’électronégativité. Ils ne prédisent pas une valeur expérimentale en debyes. Les charges partielles affichent seulement un partage schématique en δ ; elles ne sont pas les charges formelles de Lewis. Les valeurs expérimentales sont indiquées à part. Pour AB₂, les dipôles et leur somme sont en unités arbitraires ; on peut changer l’angle et rompre l’égalité des deux contributions.</p>
-<p><strong>Mésomérie.</strong> NO₂⁻ présente deux écritures de Lewis. L’entité réelle ne bascule pas entre ces dessins ; ses deux liaisons sont équivalentes. La polarité des ions n’est pas étudiée : leur moment dipolaire dépend de l’origine.</p>
-<p><strong>Animation.</strong> La vibration est imposée, très ralentie. Une courbe d’énergie ne suffit pas à modéliser une capture : l’énergie doit pouvoir être évacuée pour former une molécule stable à partir d’atomes séparés.</p><p><strong>Commandes.</strong> Espace : animer/pause ; R : réinitialiser les paramètres de l’atelier ; F : plein écran. « Projection » masque les réglages et agrandit les informations ; « Réglages » permet de revenir. Zoom et Cadrer restent près du dessin. « Image » exporte un SVG autonome dans le thème courant avec les valeurs affichées.</p>
-<p><strong>Sources et inspiration.</strong> Cours AM2 d’E. Guillaume ; PhET <a href="https://phet.colorado.edu/en/simulations/molecule-polarity">Molecule Polarity</a>, <a href="https://phet.colorado.edu/en/simulations/molecule-shapes">Molecule Shapes</a>, <a href="https://phet.colorado.edu/en/simulations/atomic-interactions">Atomic Interactions</a> et <a href="https://phet.colorado.edu/en/simulations/sugar-and-salt-solutions">Sugar and Salt Solutions</a>. Conception et code originaux, sans ressource chargée depuis ces sites. Données de phases : <a href="https://webbook.nist.gov/chemistry/">NIST Chemistry WebBook</a> ; références détaillées dans Sources.md.</p><div class="close"><button id="close-help">Fermer</button></div></dialog><div id="toast" role="status"></div>
-<script>/* Outils SVG communs, embarqués dans chaque HTML autonome. */
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="De la liaison covalente à la polarité : puits de Morse, atelier de Lewis, géométrie 3D, polarité d&#x27;une molécule par somme de dipôles de liaison à prévoir puis vérifier.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Structure des molécules · AM2 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
 'use strict';
-const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
-const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),rad=Math.PI/180;
-const fmt=(x,d=1)=>Number.isFinite(x)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}).format(Math.abs(x)<1e-9?0:x):'—';
-const V={add:(a,b)=>a.map((v,i)=>v+b[i]),sub:(a,b)=>a.map((v,i)=>v-b[i]),mul:(a,k)=>a.map(v=>v*k),dot:(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),norm:a=>Math.hypot(...a)};
-const C={},scene=$('scene');let W=900,H=500,zoom=1,yaw=.4,pitch=.22,playing=false,time=0,last=0,app,drag=null;
-function palette(){const s=getComputedStyle(document.documentElement);for(const k of ['paper','surface','ink','muted','line','accent','accent-ink','soft','blue','red','violet','gold','result'])C[k.replace('-','')]=s.getPropertyValue('--'+k).trim();}
-function el(tag,attrs={},parent=scene){const n=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);parent.append(n);return n;}
-function path(ps){return ps.map((p,i)=>(i?'L':'M')+p.map(v=>Number(v).toFixed(2)).join(',')).join(' ');}
-function line(a,b,color=C.line,width=2,extra={},parent=scene){return el('path',{d:path([a,b]),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round',...extra},parent);}
-function curve(ps,color=C.accent,width=2,extra={},parent=scene){return el('path',{d:path(ps),fill:'none',stroke:color,'stroke-width':width,'stroke-linejoin':'round',...extra},parent);}
-function textAt(x,y,t,color=C.ink,size=22,anchor='start',extra={},parent=scene){const n=el('text',{x,y,fill:color,'font-size':size,'text-anchor':anchor,'dominant-baseline':'middle',...extra},parent);n.textContent=t;return n;}
-function label(x,y,t,color=C.ink,size=22,anchor='start',extra={}){return textAt(x,y,t,color,size,anchor,{'paint-order':'stroke',stroke:C.surface,'stroke-width':5,'stroke-linejoin':'round',...extra});}
-function circle(p,r,fill,extra={},parent=scene){return el('circle',{cx:p[0],cy:p[1],r,fill,...extra},parent);}
-function rect(x,y,w,h,fill=C.soft,extra={}){return el('rect',{x,y,width:w,height:h,rx:10,fill,...extra});}
-function arrow(a,b,color=C.accent,width=3,dash=false,parent=scene){if(Math.hypot(b[0]-a[0],b[1]-a[1])<2)return;line(a,b,color,width,dash?{'stroke-dasharray':'6 5'}:{},parent);const t=Math.atan2(b[1]-a[1],b[0]-a[0]),l=11,w=5;el('path',{d:path([b,[b[0]-l*Math.cos(t)+w*Math.sin(t),b[1]-l*Math.sin(t)-w*Math.cos(t)],[b[0]-l*Math.cos(t)-w*Math.sin(t),b[1]-l*Math.sin(t)+w*Math.cos(t)]])+'Z',fill:color},parent);}
-function panel(x,y,w,h,title){rect(x,y,w,h,'none',{stroke:C.line});textAt(x+17,y+25,title,C.accentink,Math.min(21,w/15));}
-function rotated(p){let [x,y,z=0]=p;const xx=x*Math.cos(yaw)+z*Math.sin(yaw),zz=-x*Math.sin(yaw)+z*Math.cos(yaw);return [xx,y*Math.cos(pitch)-zz*Math.sin(pitch),y*Math.sin(pitch)+zz*Math.cos(pitch)];}
-function project(p,c,s){const q=rotated(p);return [c[0]+q[0]*s,c[1]-q[1]*s,q[2]];}
-function atom(p,symbol,r=25,extra={}){const colors={H:C.surface,O:C.red,N:C.blue,C:C.ink,Cl:C.accent,S:C.gold,B:C.violet,F:C.accent,A:C.violet};const col=colors[symbol]||C.violet;circle(p,r,col,{stroke:symbol==='H'?C.muted:col,'stroke-width':1.6,...extra});textAt(p[0],p[1]+1,symbol,symbol==='H'?C.ink:(symbol==='C'?C.surface:document.documentElement.dataset.theme==='dark'?'#102e21':'#fff'),r*.75,'middle',{'pointer-events':'none'});}
-function wrapText(x,y,t,maxChars=58,size=20,color=C.muted,lineHeight=28){const words=t.split(' ');let s='',j=0;for(const w of words){if((s+' '+w).length>maxChars&&s){textAt(x,y+j*lineHeight,s,color,size);s=w;j++;}else s+=(s?' ':'')+w;}if(s)textAt(x,y+j*lineHeight,s,color,size);return j+1;}
-function fractionHTML(n,d){return `<span class="fraction" role="math" aria-label="${n} sur ${d}"><span class="numerator">${n}</span><span class="denominator">${d}</span></span>`;}
-function fraction(n,d,prefix=''){return {numerator:String(n),denominator:String(d),prefix};}
-function formulaFraction(cx,cy,prefix,numerator,denominator,suffix='',color=C.violet,size=22){
- const group=el('g',{'data-fraction':'true',role:'math','aria-label':prefix+' '+numerator+' sur '+denominator+' '+suffix}),ctx=document.createElement('canvas').getContext('2d');ctx.font=size+'px Georgia';
- const pw=ctx.measureText(prefix).width,sw=ctx.measureText(suffix).width,fw=Math.max(ctx.measureText(numerator).width,ctx.measureText(denominator).width)+16,total=pw+fw+sw+22,start=cx-total/2,fx=start+pw+11;
- const t=(x,y,s,anchor='start')=>textAt(x,y,s,color,size,anchor,{'font-family':'Georgia, serif',style:'font-family:Georgia,serif'},group);
- t(start,cy+1,prefix);t(fx+fw/2,cy-size*.67,numerator,'middle');line([fx,cy],[fx+fw,cy],color,1.5,{},group);t(fx+fw/2,cy+size*.69,denominator,'middle');if(suffix)t(fx+fw+11,cy+1,suffix);
- return group;
-}
-function metrics(items,message,hint=''){for(let i=0;i<3;i++){const value=items[i]?.[1]??'',node=$('metric-value-'+i);$('metric-label-'+i).textContent=items[i]?.[0]||'';if(typeof value==='object'){node.innerHTML=value.prefix+fractionHTML(value.numerator,value.denominator);node.dataset.exportText=value.prefix+value.numerator+' sur '+value.denominator;}else{node.textContent=value;delete node.dataset.exportText;}}$('message').textContent=message;$('hint').textContent=hint;}
-function range(id,title,min,max,value,step=1,unit=''){return `<div class="field"><label for="${id}">${title}<span><output id="${id}-out">${fmt(value,step<1?1:0)}</output> ${unit}</span></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${value}"></div>`;}
-function select(id,title,options,value){return `<div class="field"><label for="${id}">${title}</label><select id="${id}">${options.map(([v,t])=>`<option value="${v}" ${String(v)===String(value)?'selected':''}>${t}</option>`).join('')}</select></div>`;}
-function check(id,title,value){return `<label class="check"><input type="checkbox" id="${id}" ${value?'checked':''}>${title}</label>`;}
-function section(title,body){return `<section class="section"><h2>${title}</h2>${body}</section>`;}
-function render(){if(!app)return;palette();const r=scene.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(250,r.height);scene.setAttribute('viewBox',`0 0 ${W} ${H}`);scene.replaceChildren();rect(0,0,W,H,C.surface,{rx:0});app.render();}
-function refresh(){app.controls();render();}
-function toast(s){$('toast').textContent=s;clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').textContent='',4500);}
-function resetView(){zoom=1;yaw=.4;pitch=.22;render();}
-function play(){if($('play').disabled)return;playing=!playing;$('play').textContent=playing?'Pause':'Animer';$('play').setAttribute('aria-pressed',playing);render();}
-function stop(){playing=false;$('play').textContent='Animer';$('play').setAttribute('aria-pressed','false');}
-function exportImage(){
- render();const copy=scene.cloneNode(true),rows=[],ctx=document.createElement('canvas').getContext('2d');ctx.font='16px Arial';
- for(const s of [document.title,Array.from({length:3},(_,i)=>$('metric-label-'+i).textContent+' : '+($('metric-value-'+i).dataset.exportText||$('metric-value-'+i).textContent)).join(' · '),$('message').textContent,$('hint').textContent]){let row='';for(const word of s.split(' ')){if(row&&ctx.measureText(row+' '+word).width>W-32){rows.push(row);row=word;}else row+=(row?' ':'')+word;}if(row)rows.push(row);}
- const extra=rows.length*25+22;copy.setAttribute('xmlns',NS);copy.setAttribute('font-family','Arial, Helvetica, sans-serif');copy.setAttribute('width',Math.ceil(W));copy.setAttribute('height',Math.ceil(H+extra));copy.setAttribute('viewBox',`0 0 ${W} ${H+extra}`);
- const bg=document.createElementNS(NS,'rect');for(const[k,v]of Object.entries({x:0,y:H,width:W,height:extra,fill:C.surface}))bg.setAttribute(k,v);copy.append(bg);
- rows.forEach((s,i)=>{const n=document.createElementNS(NS,'text');for(const[k,v]of Object.entries({x:15,y:H+25+i*25,'font-size':16,fill:C.ink}))n.setAttribute(k,v);n.textContent=s;copy.append(n);});
- const blob=new Blob([new XMLSerializer().serializeToString(copy)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=app.file+'_'+app.mode+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Image SVG exportée avec les paramètres.');
-}
-function bind(){
- $('theme').onclick=()=>{const d=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=d?'dark':'light';$('theme').textContent=d?'Clair':'Sombre';render();};
- $('help').onclick=()=>$('about').showModal();$('close-help').onclick=()=>$('about').close();$('export').onclick=exportImage;
- $('projection').onclick=()=>{const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',p);requestAnimationFrame(render);};
- $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){toast('Plein écran indisponible dans cette fenêtre.');}};
- document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');render();});
- $('zoom-in').onclick=()=>{zoom=clamp(zoom*1.15,.65,1.8);render();};$('zoom-out').onclick=()=>{zoom=clamp(zoom/1.15,.65,1.8);render();};$('frame').onclick=resetView;$('reset').onclick=()=>{stop();time=0;app.reset();resetView();refresh();};$('play').onclick=play;
- $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;stop();app.mode=b.dataset.mode;zoom=1;app.controls();for(const n of $('tabs').children)n.setAttribute('aria-pressed',n.dataset.mode===app.mode);render();});
- $('aside').addEventListener('input',e=>{if(e.target.tagName==='SELECT'||e.target.type==='checkbox')return;const o=$(e.target.id+'-out');if(o)o.textContent=fmt(+e.target.value,e.target.step<1?1:0);app.input(e.target.id,e.target.value);render();});
- $('aside').addEventListener('change',e=>{if(e.target.tagName==='SELECT'||e.target.type==='checkbox'){app.input(e.target.id,e.target.type==='checkbox'?e.target.checked:e.target.value);refresh();}});
- $('aside').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b){app.action(b.dataset.action);refresh();}});
- scene.addEventListener('pointerdown',e=>{const r=scene.getBoundingClientRect(),p=[e.clientX-r.left,e.clientY-r.top],target=e.target.closest('[data-drag],[data-click]');if(target?.dataset.click){app.action(target.dataset.click);refresh();return;}drag={kind:target?.dataset.drag||'background',p,last:p,yaw,pitch};scene.setPointerCapture(e.pointerId);app.startDrag?.(drag,p);});
- scene.addEventListener('pointermove',e=>{if(!drag)return;const r=scene.getBoundingClientRect(),p=[e.clientX-r.left,e.clientY-r.top];app.drag(drag,p);drag.last=p;render();});
- scene.addEventListener('pointerup',()=>drag=null);scene.addEventListener('pointercancel',()=>drag=null);
- scene.addEventListener('keydown',e=>{const t=e.target.closest('[data-click]');if(t&&['Enter',' '].includes(e.key)){e.preventDefault();app.action(t.dataset.click);refresh();}});
- document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||$('about').open)return;if(e.code==='Space'){e.preventDefault();play();}if(e.key.toLowerCase()==='r')$('reset').click();if(e.key.toLowerCase()==='f')$('fullscreen').click();});
- new ResizeObserver(render).observe($('scene-wrap'));
- requestAnimationFrame(function frame(t){const dt=last?Math.min((t-last)/1000,.05):0;last=t;if(playing&&!$('about').open&&!document.hidden){time+=dt;app.tick?.(dt);render();}requestAnimationFrame(frame);});
-}
-</script><script>/* AM2 : liaison covalente, atelier Lewis, géométrie et polarité. */
-const tet=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(p=>V.mul(p,1/Math.sqrt(3)));
-function bent(a){return [[-Math.sin(a*rad/2),-Math.cos(a*rad/2),0],[Math.sin(a*rad/2),-Math.cos(a*rad/2),0]];}
-const Molecules={
- H2:{name:'H₂ · dihydrogène',symbols:['H','H'],p:[[0,0,0],[1,0,0]],b:[[0,1,1]],lp:[0,0],val:[1,1],q:0,shape:'Linéaire',angle:180,mu:0,chi:[2.2,2.2]},
- HCl:{name:'HCl · chlorure d’hydrogène',symbols:['Cl','H'],p:[[0,0,0],[1,0,0]],b:[[0,1,1]],lp:[3,0],val:[7,1],q:0,shape:'Linéaire',angle:180,mu:1.08,chi:[3.16,2.2]},
- CO2:{name:'CO₂ · dioxyde de carbone',symbols:['C','O','O'],p:[[0,0,0],[-1,0,0],[1,0,0]],b:[[0,1,2],[0,2,2]],lp:[0,2,2],val:[4,6,6],q:0,shape:'Linéaire',angle:180,mu:0,chi:[2.55,3.44,3.44]},
- H2O:{name:'H₂O · eau',symbols:['O','H','H'],p:[[0,0,0],...bent(104.5)],b:[[0,1,1],[0,2,1]],lp:[2,0,0],val:[6,1,1],q:0,shape:'Coudée',angle:104.5,mu:1.85,chi:[3.44,2.2,2.2]},
- NH3:{name:'NH₃ · ammoniac',symbols:['N','H','H','H'],p:[[0,0,0],...[0,120,240].map(a=>{const h=Math.sqrt((Math.cos(107*rad)+.5)/1.5),r=Math.sqrt(1-h*h);return [Math.cos(a*rad)*r,-h,Math.sin(a*rad)*r];})],b:[[0,1,1],[0,2,1],[0,3,1]],lp:[1,0,0,0],val:[5,1,1,1],q:0,shape:'Pyramidale',angle:107,mu:1.47,chi:[3.04,2.2,2.2,2.2]},
- CH4:{name:'CH₄ · méthane',symbols:['C','H','H','H','H'],p:[[0,0,0],...tet],b:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],lp:[0,0,0,0,0],val:[4,1,1,1,1],q:0,shape:'Tétraédrique',angle:109.5,mu:0,chi:[2.55,2.2,2.2,2.2,2.2]},
- BCl3:{name:'BCl₃ · trichlorure de bore',symbols:['B','Cl','Cl','Cl'],p:[[0,0,0],...[90,210,330].map(a=>[Math.cos(a*rad),Math.sin(a*rad),0])],b:[[0,1,1],[0,2,1],[0,3,1]],lp:[0,3,3,3],val:[3,7,7,7],q:0,shape:'Trigonale plane',angle:120,mu:0,chi:[2.04,3.16,3.16,3.16]},
- NO2:{name:'NO₂⁻ · ion nitrite',symbols:['N','O','O'],p:[[0,0,0],...bent(115)],b:[[0,1,2],[0,2,1]],lp:[1,2,3],val:[5,6,6],q:-1,shape:'Coudée',angle:115,mu:null,chi:[3.04,3.44,3.44]}
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
 };
-const bondData={H2:{r0:74,D:436,a:.018,s:['H','H']},HCl:{r0:127,D:431,a:.014,s:['H','Cl']}};
-function morse(r,b){const e=Math.exp(-b.a*(r-b.r0));return {E:b.D*((1-e)**2-1),F:-2*b.D*b.a*e*(1-e)};}
-function formal(m,orders,lone){return m.val.map((v,i)=>v-2*lone[i]-m.b.reduce((s,b,j)=>s+(b[0]===i||b[1]===i?orders[j]:0),0));}
-function countElectrons(orders,lone){return 2*(orders.reduce((a,b)=>a+b,0)+lone.reduce((a,b)=>a+b,0));}
-const initialStructure=()=>({id:'H2O',bond:'H2',r:74,vibration:10,exercise:false,orders:[1,1],lone:[2,0,0],selected:0,selectedBond:0,charges:true,domains:false,dipoles:true,result:true,partial:true,fiction:false,angle:104.5,strength:1,equal:true,compare:false,resonance:0,sumFocus:false});
-let S=initialStructure(),layout={};
-function current(){return Molecules[S.id];}
-function canonical(){const m=current();S.orders=m.b.map(b=>b[2]);S.lone=[...m.lp];S.resonance=0;S.selected=0;S.selectedBond=0;}
-function points2D(m,c,scale){if(m.symbols.length===2)return [[c[0]-scale*.65,c[1]],[c[0]+scale*.65,c[1]]];if(S.id==='CH4')return [[...c],...[0,90,180,270].map(a=>[c[0]+Math.cos(a*rad)*scale,c[1]-Math.sin(a*rad)*scale])];if(S.id==='NH3')return [[...c],...[90,210,330].map(a=>[c[0]+Math.cos(a*rad)*scale,c[1]-Math.sin(a*rad)*scale])];return m.p.map(p=>[c[0]+p[0]*scale,c[1]-p[1]*scale]);}
-function drawLewis(m,c,scale,editable=false,small=false){
- const ps=points2D(m,c,scale),orders=S.orders,lone=S.lone,r=small?18:27;
- for(let j=0;j<m.b.length;j++){const [a,b]=m.b[j],pa=ps[a],pb=ps[b],d=V.sub(pb,pa),l=V.norm(d),u=V.mul(d,1/l),n=[-u[1],u[0]],start=V.add(pa,V.mul(u,r+5)),end=V.add(pb,V.mul(u,-r-5));for(let k=0;k<orders[j];k++){const sh=(k-(orders[j]-1)/2)*7;line(V.add(start,V.mul(n,sh)),V.add(end,V.mul(n,sh)),C.ink,2.5);}if(editable)line(start,end,'transparent',26,{'data-click':'bond:'+j,tabindex:0,role:'button','aria-label':'Modifier la liaison '+m.symbols[a]+' '+m.symbols[b]});}
- const f=formal(m,orders,lone);
- for(let i=0;i<ps.length;i++){const p=ps[i];if(editable)circle(p,r+25,'transparent',{stroke:S.selected===i?C.line:'none','stroke-width':1.5,'stroke-dasharray':'4 5','data-click':'atom:'+i,tabindex:0,role:'button','aria-label':'Sélectionner '+m.symbols[i]+' '+i});textAt(p[0],p[1],m.symbols[i],C.ink,small?25:37,'middle',{'pointer-events':'none'});
-  const directions=[-90,0,90,180],occupied=m.b.filter(b=>b[0]===i||b[1]===i).map(b=>Math.atan2(ps[b[0]===i?b[1]:b[0]][1]-p[1],ps[b[0]===i?b[1]:b[0]][0]-p[0])/rad);
-  const ranked=directions.map(a=>({a,sep:Math.min(...occupied.map(b=>Math.abs(((a-b+540)%360)-180)))})).sort((a,b)=>b.sep-a.sep);
-  for(let j=0;j<lone[i];j++){const special=i===0&&(S.id==='H2O'||S.id==='NO2')?[-135,-45,90,180]:null,a=(special?special[j%4]:ranked[j%4].a)*rad,dist=small?26:39,mid=[p[0]+dist*Math.cos(a),p[1]+dist*Math.sin(a)],perp=[-Math.sin(a)*6,Math.cos(a)*6];line(V.sub(mid,perp),V.add(mid,perp),C.accent,small?2:3);}
-  if(S.charges&&f[i])label(p[0]+(small?29:46),p[1]-24,(Math.abs(f[i])===1?'':Math.abs(f[i]))+(f[i]>0?'+':'−'),C.violet,small?18:24,'middle');
- }
- if(m.q){const xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]),x=Math.min(...xs)-65,y=Math.min(...ys)-65,w=Math.max(...xs)-x+65,h=Math.max(...ys)-y+65;curve([[x+12,y],[x,y],[x,y+h],[x+12,y+h]],C.muted,2);curve([[x+w-12,y],[x+w,y],[x+w,y+h],[x+w-12,y+h]],C.muted,2);label(x+w+11,y-3,'−',C.violet,25);}
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
 }
-function drawBond(){
- const b=bondData[S.bond],r=S.r,m=morse(r,b),compact=W<600;
- const top=compact?H*.38:H*.40,baseY=H*.24,scale=Math.min(W*.00175,1.45)*zoom,dist=Math.min(r*scale,W*.77),a=[W/2-dist/2,baseY],p=[W/2+dist/2,baseY];
- line(a,p,C.line,4);atom(a,b.s[0],27);atom(p,b.s[1],27,{'data-drag':'distance',tabindex:0,role:'slider','aria-label':'Distance entre atomes','aria-valuemin':35,'aria-valuemax':400,'aria-valuenow':fmt(r)});layout.bond={scale};
- const arrowY=baseY+48,direction=Math.sign(m.F),fl=clamp(Math.abs(m.F)*8,0,60);arrow([a[0],arrowY],[a[0]-direction*fl,arrowY],C.violet);arrow([p[0],arrowY],[p[0]+direction*fl,arrowY],C.violet);label(W/2,34,b.s.join(' — '),C.accentink,24,'middle');
- const x0=60,y0=top+20,gw=W-95,gh=H-y0-55,rmin=35,rmax=400,emin=-b.D*1.13,emax=b.D*.55;
- const P=(rr,ee)=>[x0+(rr-rmin)/(rmax-rmin)*gw,y0+(emax-ee)/(emax-emin)*gh];layout.graph={x0,gw,rmin,rmax};
- line(P(rmin,0),P(rmax,0),C.line,1.4,{'stroke-dasharray':'5 5'});line([x0,y0],[x0,y0+gh],C.muted,1.5);line([x0,y0+gh],[x0+gw,y0+gh],C.muted,1.5);
- const ps=[];for(let rr=rmin;rr<=rmax;rr+=1){const ee=morse(rr,b).E;if(ee<=emax&&ee>=emin)ps.push(P(rr,ee));}curve(ps,C.accent,3);
- for(const rr of [74,127,200,300,400]){const pp=P(rr,emin);line(pp,[pp[0],pp[1]+5],C.muted,1);textAt(pp[0],pp[1]+20,rr,C.muted,14,'middle');}
- textAt(x0+4,y0+10,'Eₚ (kJ·mol⁻¹)',C.muted,16);textAt(x0+gw,y0+gh+40,'r (pm)',C.muted,16,'end');textAt(x0-8,P(0,0)[1],'0',C.muted,16,'end');textAt(x0-8,P(0,-b.D)[1],'−'+b.D,C.muted,15,'end');
- const eq=P(b.r0,-b.D);circle(eq,5,C.accent);line(eq,P(b.r0,0),C.muted,1.2,{'stroke-dasharray':'4 5'});label(eq[0]+14,eq[1]+16,'rₑ = '+b.r0+' pm',C.accentink,18);
- const q=P(r,clamp(m.E,emin,emax));circle(q,9,C.violet,{stroke:C.surface,'stroke-width':3,'data-drag':'graph',tabindex:0,role:'slider','aria-label':'Distance sur la courbe','aria-valuenow':fmt(r)});if(m.E>emax)label(q[0]+14,q[1]+32,'Énergie hors cadre',C.violet,16);
- metrics([['Distance',fmt(r,0)+' pm'],['Énergie du modèle',fmt(m.E,0)+' kJ·mol⁻¹'],['Dissociation ≈',b.D+' kJ·mol⁻¹']],Math.abs(r-b.r0)<1?'Au minimum : équilibre stable.':r<b.r0?'À courte distance, les atomes se repoussent.':'Au-delà du minimum, l’interaction est attractive.','Glisser l’atome ou le point violet. Courbe de Morse illustrative ; vibration imposée, temps ralenti.');
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
 }
-function drawLewisView(){
- const m=current(),small=W<560,scale=Math.min(W/(m.symbols.length>4?4.5:3.8),H/3.7)*zoom,c=[W*.50,H*.49];
- label(22,31,m.name,C.accentink,small?21:24);drawLewis(m,c,scale,true);
- const total=m.val.reduce((a,b)=>a+b,0)-m.q,used=countElectrons(S.orders,S.lone),f=formal(m,S.orders,S.lone),oct=m.symbols.map((s,i)=>({s,n:2*S.lone[i]+2*m.b.reduce((a,b,j)=>a+(b[0]===i||b[1]===i?S.orders[j]:0),0)}));
- const sum=f.reduce((a,b)=>a+b,0),ok=used===total&&oct.every(o=>o.s==='H'?o.n===2:o.s==='B'?o.n===6:o.n===8);
- const y=H-63;textAt(22,y,'Doublet liant',C.ink,16);line([145,y],[184,y],C.ink,3);textAt(22,y+29,'Doublet non liant',C.accentink,16);line([178,y+29],[190,y+29],C.accent,3);
- if(S.id==='NO2')label(W/2,H-31,'Deux formes mésomères ; deux liaisons réelles équivalentes.',C.muted,small?12:17,'middle');
- metrics([['Électrons placés sur le total',fraction(used,total)],['Σ charges formelles',(sum>0?'+':'')+sum],['Vérification',ok?'Cohérent':'À compléter']],ok?(S.id==='BCl3'?'BCl₃ est lacunaire : six électrons autour de B.':'Décompte cohérent. La géométrie reste une information distincte.'):(used>total?'Trop d’électrons placés : retirer des doublets.':'Vérifier les électrons, le duet de H et l’octet des autres atomes.'),'Cliquer un atome pour le sélectionner ; cliquer une liaison pour changer sa multiplicité.');
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
 }
-function moleculeVectors(m){
- const p=S.fiction?[[0,0,0],...bent(S.angle)]:m.p;
- const vectors=(S.fiction?[0,1]:m.b.map((_,j)=>j)).map((j)=>{if(S.fiction){const len=S.strength*(j===1&&!S.equal?.55:1);return V.mul(p[j+1],len);}const[a,b]=m.b[j],d=V.sub(p[b],p[a]),sign=Math.sign(m.chi[a]-m.chi[b]),weight=Math.abs(m.chi[a]-m.chi[b]);return V.mul(d,sign*weight/V.norm(d));});
- return {p,vectors,sum:vectors.reduce((s,v)=>V.add(s,v),[0,0,0])};
-}
-function sumBox(focused=false){return focused?{x:18,y:63,w:W-36,h:H-108}:W<700?{x:12,y:H*.51,w:W-24,h:H*.43}:{x:W*.51,y:63,w:W*.47,h:H-108};}
-function drawVectorSum(vectors,sum,focused=false){
- const box=sumBox(focused),small=W<700;
- const frame=rect(box.x,box.y,box.w,box.h,'none',{stroke:C.line,'data-view':'vector-sum','data-drag':'rotation'});
- label(box.x+17,box.y+25,small?'Somme vectorielle · 3D':'Somme vectorielle en 3D',C.accentink,small?20:25);
- const chain=[[0,0,0]];for(const v of vectors)chain.push(V.add(chain[chain.length-1],v));
- const ps=chain.map(p=>{const q=rotated(p);return [q[0],-q[1]];}),xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]),minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
- const available={x:box.x+48,y:box.y+70,w:box.w-106,h:Math.max(35,box.h-143)},cx=(minx+maxx)/2,cy=(miny+maxy)/2;
- const k=Math.min(available.w/Math.max(.35,maxx-minx),available.h/Math.max(.35,maxy-miny))*zoom;
- const P=p=>[available.x+available.w/2+(p[0]-cx)*k,available.y+available.h/2+(p[1]-cy)*k],group=el('g',{'data-vector-sum':'3d','data-scale':k});
- for(let j=0;j<vectors.length;j++)arrow(P(ps[j]),P(ps[j+1]),C.blue,small?3:4,false,group);
- const start=P(ps[0]),end=P(ps[ps.length-1]),d=V.sub(end,start),length=V.norm(d),nonzero=V.norm(sum)>1e-7;
- if(nonzero&&length>2){const offset=[-d[1]*28/length,d[0]*28/length],a=V.add(start,offset),b=V.add(end,offset);line(start,a,C.result,1.2,{'stroke-dasharray':'3 4',opacity:.55});line(end,b,C.result,1.2,{'stroke-dasharray':'3 4',opacity:.55});line(a,b,C.surface,10);const g=el('g',{'data-vector':'molecular-resultant'});arrow(a,b,C.result,6,false,g);}
- else if(nonzero){circle(start,8,C.result);circle(start,3,C.surface);}
- else circle(start,5,C.result);
- const caption=nonzero?(length>2?'μ molécule':'μ dans l’axe de vue'):'μ molécule = 0';
- const size=small?23:30,tagWidth=Math.min(box.w-28,caption.length*size*.55+28),tx=box.x+(box.w-tagWidth)/2,ty=box.y+box.h-55;
- rect(tx,ty,tagWidth,43,C.result,{'fill-opacity':.09,rx:8});label(box.x+box.w/2,ty+22,caption,C.result,size,'middle',{'font-weight':'700'});
- if(!small||focused){const origin=[box.x+box.w-58,box.y+67];for(const [name,v]of [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]]]){const p=project(v,origin,24);arrow(origin,p,C.muted,1.4);textAt(p[0]+5,p[1],name,C.muted,13);}}
-}
-function polarityView(m){
- const info=moleculeVectors(m),ps=info.p.map(p=>{const q=rotated(p);return [q[0],-q[1]];}),narrow=W<700,box=narrow?{x:18,y:92,w:W-36,h:H*.48-92}:{x:25,y:88,w:W*.47-25,h:H-147};
- const xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]),minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
- const s=Math.min((box.w-80)/Math.max(.5,maxx-minx),(box.h-78)/Math.max(.45,maxy-miny))*zoom;
- const c=[box.x+box.w/2-(minx+maxx)*s/2,box.y+box.h/2-(miny+maxy)*s/2];
- return {c,s:Math.max(35,s)};
-}
-function drawMolecule(m,c,s,polarity,options={}){
- const {p,vectors,sum}=moleculeVectors(m),symbols=S.fiction?['A','B','B']:m.symbols,bonds=S.fiction?[[0,1,1],[0,2,1]]:m.b,points=p.map(q=>project(q,c,s));
- if(S.domains&&!S.fiction){for(let i=0;i<m.lp[0];i++){let q;if(S.id==='H2O')q=[(i?1:-1)*.5,.55,(i?1:-1)*.55];else if(S.id==='HCl')q=[[-.6,.6,0],[-.6,-.6,0],[-.55,0,.65]][i];else q=[0,1,0];const pp=project(q,c,s*.83);el('ellipse',{cx:pp[0],cy:pp[1],rx:27,ry:43,fill:C.accent,'fill-opacity':.14,stroke:C.accent,'stroke-dasharray':'4 5',transform:`rotate(${i?35:-35} ${pp[0]} ${pp[1]})`});circle([pp[0]-5,pp[1]],3,C.accent);circle([pp[0]+5,pp[1]],3,C.accent);}}
- for(let j=0;j<bonds.length;j++){const[a,b,rawOrder]=bonds[j],order=S.id==='NO2'&&!S.fiction?1.5:rawOrder,pa=points[a],pb=points[b],d=V.sub(pb.slice(0,2),pa.slice(0,2)),len=V.norm(d),n=[-d[1]/len,d[0]/len];for(let k=0;k<Math.ceil(order);k++){const sh=(k-(Math.ceil(order)-1)/2)*7;line(V.add(pa.slice(0,2),V.mul(n,sh)),V.add(pb.slice(0,2),V.mul(n,sh)),C.muted,order===1.5?3:5,order===1.5&&k?{'stroke-dasharray':'5 6'}:{});}}
- [...points.keys()].sort((a,b)=>points[a][2]-points[b][2]).forEach(i=>{atom(points[i],symbols[i],symbols[i]==='H'?22:29,{'data-drag':S.fiction&&i>0?'angle':'rotation'});});
- if(polarity){
-  if(S.partial){const qs=Array(symbols.length).fill(0);for(let j=0;j<bonds.length;j++){const[a,b]=bonds[j],v=vectors[j],dp=V.dot(v,V.sub(p[b],p[a]));qs[a]-=Math.sign(dp);qs[b]+=Math.sign(dp);}for(let i=0;i<qs.length;i++)if(qs[i])label(points[i][0]+(i?25:-29),points[i][1]-36,(Math.abs(qs[i])>1&&!(S.fiction&&!S.equal)?Math.abs(qs[i]):'')+'δ'+(qs[i]>0?'+':'−'),qs[i]>0?C.red:C.blue,20,'middle');}
-  if(S.dipoles){for(let j=0;j<bonds.length;j++){const[a,b]=bonds[j],mid=V.mul(V.add(p[a],p[b]),.5),v=vectors[j],l=V.norm(v);if(l<1e-9)continue;const n=V.mul(v,.43/Math.max(1,l)),pa=project(V.sub(mid,n),c,s),pb=project(V.add(mid,n),c,s);arrow([pa[0],pa[1]-41],[pb[0],pb[1]-41],C.blue,3);}}
-  if(S.result)drawVectorSum(vectors,sum);
- }
- return {sum,vectors,p,points};
-}
-function drawGeometry(polarity){
- const m=current(),small=W<600;
- if(S.fiction){yaw=0;pitch=0;}
- const view=polarity?polarityView(m):{c:[W*(W<700?.5:.48),H*(W<700?.37:.47)],s:Math.min(W*.24,H*.32)*zoom};layout.polarityCenter=view.c;
- let info;if(polarity&&S.sumFocus){info=moleculeVectors(m);drawVectorSum(info.vectors,info.sum,true);}else info=drawMolecule(m,view.c,view.s,polarity);
- label(22,30,S.fiction?'AB₂ · modèle à angle réglable':m.name,C.accentink,small?20:24);
- label(W-20,small?62:30,S.fiction?fmt(S.angle,1)+'°':m.shape,C.muted,small?16:20,'end');
- if(!polarity){label(22,H-32,small?'Angles fournis · domaines schématiques':'Angles fournis · interprétation qualitative par les domaines électroniques',C.muted,small?15:17);}
- else{label(22,H-22,'μ : de − vers +',C.blue,small?14:19);if(!small)label(W-20,H-22,'Flèches : modèle additif',C.muted,17,'end');}
- const norm=V.norm(info.sum),ion=m.q!==0&&!S.fiction;
- const val=S.fiction?fmt(norm,2)+' u. arb.':ion?'Ion chargé':norm<1e-7?'Apolaire':'Polaire';
- if(polarity)metrics([['Résultante du modèle',ion?'Non étudiée':val],['Angle',fmt(S.fiction?S.angle:m.angle,1)+'°'],[S.fiction?'Dipôles de liaison':'μ expérimental ≈',S.fiction?(S.equal?'Égaux':'Différents'):m.mu===null?'—':fmt(m.mu,2)+' D']],ion?'Pour un ion, le moment dipolaire dépend du choix de l’origine ; utiliser les molécules neutres.':S.fiction?'Déplacer B : la somme change avec l’angle, même si les dipôles de liaison restent égaux.':norm<1e-7?'Les contributions se compensent par symétrie.':'Les contributions ne se compensent pas.','Glisser le fond pour tourner la molécule ; AB₂ : glisser un atome B. Tailles et flèches schématiques.');
- else metrics([['Géométrie',m.shape],['Angle fourni ≈',fmt(m.angle,1)+'°'],['Doublets libres centraux',m.lp[0]]],'Le schéma de Lewis décrit les électrons ; la géométrie décrit leur organisation dans l’espace.','Glisser pour tourner. Les lobes schématisent les domaines non liants ; ils ne sont pas des orbitales calculées.');
-}
-app={file:'AM2_Structure_Molecules',mode:'polarite',
- controls(){
-  if(this.mode!=='polarite')S.fiction=false;
-  if(this.mode==='polarite'&&current().q){S.id='H2O';canonical();}
-  const m=current(),neutral=Object.entries(Molecules).filter(([id,m])=>this.mode!=='polarite'||m.q===0).map(([id,m])=>[id,m.name]);
-  $('play').disabled=this.mode==='lewis'||(this.mode==='polarite'&&S.fiction);
-  let content='';
-  if(this.mode==='liaison')content=section('Une liaison',select('bond','Espèce',[['H2','H₂ · dihydrogène'],['HCl','HCl · chlorure d’hydrogène']],S.bond)+range('r','Distance entre les noyaux',35,400,S.r,1,'pm')+`<div class="row"><button data-action="equilibrium">Équilibre</button><button data-action="far">Éloigner</button></div>`+range('vibration','Amplitude de vibration',0,25,S.vibration,1,'pm'))+section('Lire le puits',`<p class="formula">Eₚ(rₑ) = −D</p><p>La profondeur du puits est une énergie molaire de dissociation approximative.</p><p class="note">Le modèle de Morse décrit un profil d’énergie. Il ne représente ni des électrons sur des orbites ni une capture spontanée de deux atomes.</p>`);
-  else{
-   content=section('Molécule',select('molecule','Espèce étudiée',neutral,S.id)+(this.mode==='polarite'?check('fiction','Explorer le modèle AB₂',S.fiction):''));
-   if(this.mode==='lewis')content+=section('Atelier de Lewis',`<div class="row"><button data-action="exercise">À construire</button><button data-action="complete">Compléter</button></div>`+select('selected','Atome sélectionné',m.symbols.map((s,i)=>[i,s+' · atome '+(i+1)]),S.selected)+`<div class="row"><button data-action="lone-plus">+ Doublet libre</button><button data-action="lone-minus">− Doublet libre</button></div>`+select('selectedBond','Liaison sélectionnée',m.b.map((b,i)=>[i,m.symbols[b[0]]+' — '+m.symbols[b[1]]+' · '+(i+1)]),S.selectedBond)+`<div class="row"><button data-action="order">Changer la multiplicité</button></div>`+check('charges','Charges formelles',S.charges)+(S.id==='NO2'?'<div class="row"><button data-action="resonance">Autre forme mésomère</button></div>':''))+section('Repères',`<p>Chaque trait représente deux électrons.</p><p class="note">Charges formelles : partage égal des électrons de chaque liaison. Elles diffèrent des charges partielles.</p><div class="callout">BCl₃ illustre une exception à l’octet. NO₂⁻ illustre la mésomérie.</div>`);
-   else if(this.mode==='geometrie')content+=section('Représentation',check('domains','Domaines non liants centraux',S.domains)+`<div class="row"><button data-action="front">Vue de face</button><button data-action="perspective">Perspective</button></div>`)+section('De Lewis à l’espace',`<p>La géométrie d’équilibre minimise l’énergie totale.</p><p class="note">Les domaines électroniques tendent qualitativement à s’écarter. Cette image ne calcule pas les angles exacts.</p><div class="callout">CH₄ : 4 liaisons.<br>NH₃ : 3 liaisons + 1 doublet libre.<br>H₂O : 2 liaisons + 2 doublets libres.</div>`);
-   else content+=section('Polarisation',check('partial','Charges partielles',S.partial)+check('dipoles','Dipôles de liaison',S.dipoles)+check('result','Somme vectorielle',S.result)+`<div class="row"><button data-action="focus-sum">${S.sumFocus?'Vue complète':'Agrandir la somme'}</button></div>`+(S.fiction?range('angle','Angle B–A–B',20,180,S.angle,.5,'°')+range('strength','Norme du premier dipôle',0,2,S.strength,.1,'u. arb.')+check('equal','Deux dipôles égaux',S.equal):''))+section('Convention du cours',`<p class="formula">μ ≈ Σ μ<sub>liaison</sub></p><p>Somme <strong>vectorielle</strong>. Le moment dipolaire pointe de <strong>− vers +</strong>.</p><p class="note">La résultante μ molécule est en orange. Les flèches ont une échelle qualitative ; la vue 3D est commune aux deux dessins. Les valeurs expérimentales en debyes sont indiquées séparément.</p><div class="row"><button data-action="CO2">CO₂</button><button data-action="H2O">H₂O</button><button data-action="CH4">CH₄</button></div>`);
-  }$('aside').innerHTML=content;
- },
- render(){if(this.mode==='liaison')drawBond();else if(this.mode==='lewis')drawLewisView();else drawGeometry(this.mode==='polarite');},
- input(id,value){if(id==='molecule'){S.id=value;S.fiction=false;canonical();}else if(id==='bond'){stop();S.bond=value;S.r=bondData[value].r0;}else if(id==='selected'||id==='selectedBond')S[id]=+value;else if(['charges','domains','dipoles','result','partial','fiction','equal'].includes(id)){S[id]=value;if(id==='result'&&!value)S.sumFocus=false;}else if(['angle','strength','r','vibration'].includes(id)){if(id==='r')stop();S[id]=+value;}},
- action(a){if(a.startsWith('atom:'))S.selected=+a.split(':')[1];else if(a.startsWith('bond:')){S.selectedBond=+a.split(':')[1];S.orders[S.selectedBond]=S.orders[S.selectedBond]%3+1;}else if(a==='lone-plus')S.lone[S.selected]=Math.min(4,S.lone[S.selected]+1);else if(a==='lone-minus')S.lone[S.selected]=Math.max(0,S.lone[S.selected]-1);else if(a==='order')S.orders[S.selectedBond]=S.orders[S.selectedBond]%3+1;else if(a==='exercise'){S.orders=current().b.map(()=>1);S.lone=current().lp.map(()=>0);}else if(a==='complete')canonical();else if(a==='resonance'){S.resonance=1-S.resonance;S.orders=S.resonance?[1,2]:[2,1];S.lone=S.resonance?[1,3,2]:[1,2,3];}else if(a==='focus-sum'){S.sumFocus=!S.sumFocus;S.result=true;zoom=1;}else if(a==='front'){yaw=0;pitch=0;}else if(a==='perspective'){yaw=.6;pitch=.3;}else if(a==='equilibrium'){stop();S.r=bondData[S.bond].r0;}else if(a==='far'){stop();S.r=380;}else if(Molecules[a]){S.id=a;S.fiction=false;canonical();}},
- drag(d,p){if(this.mode==='liaison'){stop();if(d.kind==='graph'){const g=layout.graph;S.r=clamp(g.rmin+(p[0]-g.x0)/g.gw*(g.rmax-g.rmin),35,400);}else if(d.kind==='distance')S.r=clamp(S.r+2*(p[0]-d.last[0])/layout.bond.scale,35,400);const o=$('r-out');if(o)o.textContent=fmt(S.r,0);if($('r'))$('r').value=S.r;}else if(this.mode!=='lewis'){if(S.fiction){const c=layout.polarityCenter,a=Math.abs(Math.atan2(p[0]-c[0],p[1]-c[1]))/rad;S.angle=clamp(a*2,20,180);if($('angle'))$('angle').value=S.angle;if($('angle-out'))$('angle-out').textContent=fmt(S.angle,1);}else{yaw=d.yaw+(p[0]-d.p[0])*.008;pitch=clamp(d.pitch+(p[1]-d.p[1])*.006,-1.15,1.15);}}},
- tick(dt){if(this.mode==='liaison'){S.r=bondData[S.bond].r0+S.vibration*Math.sin(time*4);if($('r'))$('r').value=S.r;if($('r-out'))$('r-out').textContent=fmt(S.r,0);}if(this.mode==='geometrie'||(this.mode==='polarite'&&!S.fiction))yaw+=dt*.27;},reset(){S=initialStructure();canonical();}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
 };
-window.AM2={morse,formal,countElectrons,Molecules,bondData,moleculeVectors,get state(){return S;},get app(){return app;}};
-bind();refresh();
-</script></body></html>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+'use strict';
+/* =====================================================================
+   AM2 · physique (sans accès au DOM) : liaison de Morse, molécules, polarité,
+   interactions de van der Waals, solvants, états de la matière.
+   Partagé par AM2_Structure_Molecules et AM2_Interactions_Matiere (migration AnimKit du 8 novembre 2026).
+
+   Corrections du lot 17 :
+   - constantes de Morse tirées de la fréquence de vibration mesurée ωe (a = √(k/2D), k = μ_red (2π c ωe)²) :
+     a = 0.0199 pm⁻¹ pour H₂ et 0.0190 pm⁻¹ pour HCl (le dessin d'origine utilisait 0.018 et 0.014 : puits trop larges) ;
+   - ordres de grandeur énergétiques repris du cours (Keesom, Debye, London, liaison H, covalente) ;
+   - nouvelles molécules pour la polarité : CH₃Cl, CCl₄, cis- et trans-C₂H₂Cl₂.
+   Notation de balisage : H_2O (indice), Na^+ (exposant), traités par fh() en HTML et fs() en SVG.
+   ===================================================================== */
+globalThis.AM2P=(()=>{
+  const rad=Math.PI/180,NA=6.02214076e23,CL=2.99792458e8,UMA=1.66053907e-27;
+
+  /* ---------- vecteurs 3D ---------- */
+  const add=(a,b)=>a.map((v,i)=>v+b[i]),sub=(a,b)=>a.map((v,i)=>v-b[i]),mul=(a,k)=>a.map(v=>v*k);
+  const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),norm=a=>Math.hypot(...a);
+  const unit=a=>{const n=norm(a);return n<1e-12?a.map(()=>0):mul(a,1/n)};
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+
+  /* ---------- balisage chimique ---------- */
+  const SUBT=/_(\d+|r|A|ind|inst)(?![a-z])/g,SUPT=/\^(\d*[+−-])/g;
+  /** HTML : H_2O → H<sub>2</sub>O ; Na^+ → Na<sup>+</sup> */
+  const fh=s=>String(s).replace(SUBT,'<sub>$1</sub>').replace(SUPT,'<sup>$1</sup>');
+  /** texte brut pour les <option> d'une liste (pas de balises possibles) : indices et exposants Unicode */
+  const SUBU='₀₁₂₃₄₅₆₇₈₉',SUPU={'+':'⁺','−':'⁻','-':'⁻','0':'⁰','1':'¹','2':'²','3':'³'};
+  const fu=s=>String(s).replace(SUBT,(m,d)=>/^\d+$/.test(d)?[...d].map(c=>SUBU[+c]).join(''):d).replace(SUPT,(m,d)=>[...d].map(c=>SUPU[c]||c).join(''));
+  /** SVG : mêmes indices et exposants, en tspan (le dy est annulé pour ne pas décaler la suite) */
+  const fs=s=>String(s)
+    .replace(SUBT,'<tspan font-size="72%" dy="0.3em">$1</tspan><tspan dy="-0.3em">​</tspan>')
+    .replace(SUPT,'<tspan font-size="72%" dy="-0.5em">$1</tspan><tspan dy="0.5em">​</tspan>');
+
+  /* ---------- liaison covalente : modèle de Morse ---------- */
+  /* D : énergie de liaison du cours (kJ/mol, profondeur du puits) ; r0 en pm ;
+     ωe : nombre d'onde de vibration mesuré (cm⁻¹, NIST) ; m : masses atomiques (u) */
+  const bondData={
+    H2:{s:['H','H'],f:'H_2',nom:'dihydrogène',r0:74,D:436,omega:4401,m:[1.00783,1.00783]},
+    HCl:{s:['H','Cl'],f:'HCl',nom:'chlorure d’hydrogène',r0:127,D:431,omega:2990.9,m:[1.00783,34.96885]}
+  };
+  for(const b of Object.values(bondData)){
+    b.mu=b.m[0]*b.m[1]/(b.m[0]+b.m[1]);                                   // masse réduite (u)
+    b.k=b.mu*UMA*(2*Math.PI*CL*b.omega*100)**2;                          // raideur au fond du puits (N/m)
+    b.a=Math.sqrt(b.k/(2*b.D*1e3/NA))*1e-12;                              // pm⁻¹
+  }
+  const FORCE_NN=1e24/NA;                                                  // 1 kJ/mol/pm = 1.6605 nN
+  function morse(r,b){const e=Math.exp(-b.a*(r-b.r0));return{E:b.D*((1-e)**2-1),F:-2*b.D*b.a*e*(1-e)}}
+  /** distance où la force d'attraction est maximale (point d'inflexion du puits) */
+  const rForceMax=b=>b.r0+Math.LN2/b.a;
+
+  /* ---------- molécules ---------- */
+  const CHI={H:2.20,C:2.55,N:3.04,O:3.44,Cl:3.16,B:2.04};                  // Pauling
+  const ATOME={H:{c:'white',r:.2},C:{c:'dark',r:.28},N:{c:'blue',r:.28},O:{c:'red',r:.28},Cl:{c:'accent',r:.34},B:{c:'gold',r:.28}};
+  const bent=a=>[[-Math.sin(a*rad/2),-Math.cos(a*rad/2),0],[Math.sin(a*rad/2),-Math.cos(a*rad/2),0]];
+  const tet=[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(p=>mul(p,1/Math.sqrt(3)));
+  const cross2D=[[0,1],[1,0],[0,-1],[-1,0]];
+  const tri2D=[90,210,330].map(a=>[Math.cos(a*rad),Math.sin(a*rad)]);
+  const nh3=[0,120,240].map(a=>{const h=Math.sqrt((Math.cos(107*rad)+.5)/1.5),r=Math.sqrt(1-h*h);return[Math.cos(a*rad)*r,-h,Math.sin(a*rad)*r]});
+  /* 1,2-dichloroéthène : C=C le long de x, substituants à 120° (plan xy) */
+  const ethene=(clTop2)=>[[-.5,0,0],[.5,0,0],[-1,.866,0],[-1,-.866,0],[1,clTop2?.866:-.866,0],[1,clTop2?-.866:.866,0]];
+
+  const MOL={
+    H2:{f:'H_2',nom:'dihydrogène',sym:['H','H'],p:[[-.5,0,0],[.5,0,0]],b:[[0,1,1]],lp:[0,0],val:[1,1],q:0,forme:'Linéaire',ang:180,mu:0},
+    HCl:{f:'HCl',nom:'chlorure d’hydrogène',sym:['Cl','H'],p:[[-.5,0,0],[.5,0,0]],b:[[0,1,1]],lp:[3,0],val:[7,1],q:0,forme:'Linéaire',ang:180,mu:1.08},
+    CO2:{f:'CO_2',nom:'dioxyde de carbone',sym:['C','O','O'],p:[[0,0,0],[-1,0,0],[1,0,0]],b:[[0,1,2],[0,2,2]],lp:[0,2,2],val:[4,6,6],q:0,forme:'Linéaire',ang:180,mu:0},
+    H2O:{f:'H_2O',nom:'eau',sym:['O','H','H'],p:[[0,0,0],...bent(104.5)],b:[[0,1,1],[0,2,1]],lp:[2,0,0],val:[6,1,1],q:0,forme:'Coudée',ang:104.5,mu:1.85},
+    NH3:{f:'NH_3',nom:'ammoniac',sym:['N','H','H','H'],p:[[0,0,0],...nh3],p2:[[0,0],...tri2D],b:[[0,1,1],[0,2,1],[0,3,1]],lp:[1,0,0,0],val:[5,1,1,1],q:0,forme:'Pyramidale',ang:107,mu:1.47},
+    CH4:{f:'CH_4',nom:'méthane',sym:['C','H','H','H','H'],p:[[0,0,0],...tet],p2:[[0,0],...cross2D],b:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],lp:[0,0,0,0,0],val:[4,1,1,1,1],q:0,forme:'Tétraédrique',ang:109.5,mu:0},
+    CH3Cl:{f:'CH_3Cl',nom:'chlorométhane',sym:['C','Cl','H','H','H'],p:[[0,0,0],...tet],p2:[[0,0],...cross2D],b:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],lp:[0,3,0,0,0],val:[4,7,1,1,1],q:0,forme:'Tétraédrique (déformé)',ang:109.5,mu:1.9},
+    CCl4:{f:'CCl_4',nom:'tétrachlorométhane',sym:['C','Cl','Cl','Cl','Cl'],p:[[0,0,0],...tet],p2:[[0,0],...cross2D],b:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]],lp:[0,3,3,3,3],val:[4,7,7,7,7],q:0,forme:'Tétraédrique',ang:109.5,mu:0},
+    BCl3:{f:'BCl_3',nom:'trichlorure de bore',sym:['B','Cl','Cl','Cl'],p:[[0,0,0],...tri2D.map(p=>[p[0],p[1],0])],b:[[0,1,1],[0,2,1],[0,3,1]],lp:[0,3,3,3],val:[3,7,7,7],q:0,forme:'Trigonale plane',ang:120,mu:0},
+    cis:{f:'C_2H_2Cl_2',nom:'cis-1,2-dichloroéthène',sym:['C','C','Cl','H','Cl','H'],lib:'cis-C_2H_2Cl_2',p:ethene(true),b:[[0,1,2],[0,2,1],[0,3,1],[1,4,1],[1,5,1]],lp:[0,0,3,0,3,0],val:[4,4,7,1,7,1],q:0,forme:'Plane, Cl du même côté',ang:120,mu:1.9,central:-1},
+    trans:{f:'C_2H_2Cl_2',nom:'trans-1,2-dichloroéthène',sym:['C','C','Cl','H','Cl','H'],lib:'trans-C_2H_2Cl_2',p:ethene(false),b:[[0,1,2],[0,2,1],[0,3,1],[1,4,1],[1,5,1]],lp:[0,0,3,0,3,0],val:[4,4,7,1,7,1],q:0,forme:'Plane, Cl de part et d’autre',ang:120,mu:0,central:-1},
+    NO2:{f:'NO_2^−',nom:'ion nitrite',sym:['N','O','O'],p:[[0,0,0],...bent(115)],b:[[0,1,2],[0,2,1]],lp:[1,2,3],val:[5,6,6],q:-1,forme:'Coudée',ang:115,mu:null}
+  };
+  for(const [id,m] of Object.entries(MOL)){
+    m.id=id;
+    m.p2=m.p2||m.p.map(p=>[p[0],p[1]]);
+    m.central=m.central??0;
+    m.lib=m.lib||m.f;
+    m.chi=m.sym.map(s=>CHI[s]);
+  }
+  /* quand une molécule porte le nom de son isomère : intitulé court de la liste */
+  const LISTE=Object.entries(MOL).map(([id,m])=>[id,fu(m.lib)]);
+
+  /* ---------- schéma de Lewis ---------- */
+  const formal=(m,orders,lone)=>m.val.map((v,i)=>v-2*lone[i]-m.b.reduce((s,b,j)=>s+(b[0]===i||b[1]===i?orders[j]:0),0));
+  const countElectrons=(orders,lone)=>2*(orders.reduce((a,b)=>a+b,0)+lone.reduce((a,b)=>a+b,0));
+  function lewisCheck(m,orders,lone){
+    const total=m.val.reduce((a,b)=>a+b,0)-m.q,used=countElectrons(orders,lone),f=formal(m,orders,lone);
+    const around=m.sym.map((s,i)=>({s,n:2*lone[i]+2*m.b.reduce((a,b,j)=>a+(b[0]===i||b[1]===i?orders[j]:0),0)}));
+    const ok=used===total&&around.every(o=>o.s==='H'?o.n===2:o.s==='B'?o.n===6:o.n===8);
+    return{total,used,f,sum:f.reduce((a,b)=>a+b,0),ok,around};
+  }
+  /** directions (radians, y vers le bas) des doublets non liants d'un atome du schéma plan : de part et d'autre de la direction opposée aux liaisons */
+  function lonePairAngles(m,pts,i,n){
+    let s=[0,0];
+    for(const b of m.b)if(b[0]===i||b[1]===i){const j=b[0]===i?b[1]:b[0];s=add(s,unit([pts[j][0]-pts[i][0],pts[j][1]-pts[i][1]]))}
+    const base=Math.hypot(s[0],s[1])<.3?-Math.PI/2:Math.atan2(-s[1],-s[0]);
+    const spread=n===1?0:n===2?80*rad:n===3?65*rad:50*rad;
+    return Array.from({length:n},(_,j)=>base+(j-(n-1)/2)*spread);
+  }
+
+  /* ---------- polarité : somme vectorielle des moments de liaison ---------- */
+  /** convention du cours : \vec μ de − vers + ; module = écart d'électronégativité (échelle qualitative) */
+  function bondVectors(m,p=m.p){
+    return m.b.map(([a,b])=>{
+      const d=unit(sub(p[b],p[a])),w=m.chi[a]-m.chi[b];
+      return mul(d,w);               // w > 0 : a plus électronégatif, donc vecteur de a (−) vers b (+)
+    });
+  }
+  function polarity(m,p=m.p){
+    const vectors=bondVectors(m,p),sum=vectors.reduce((s,v)=>add(s,v),[0,0,0]);
+    const q=m.sym.map(()=>0);
+    m.b.forEach(([a,b],j)=>{const w=norm(vectors[j]);if(w<1e-9)return;const sg=dot(vectors[j],sub(p[b],p[a]))>0?1:-1;q[a]-=sg*w;q[b]+=sg*w});
+    return{vectors,sum,mod:norm(sum),apolar:norm(sum)<1e-7,qpartial:q};
+  }
+  /** modèle AB₂ à angle réglable : deux liaisons A–B, dipôles égaux ou non */
+  function ab2(angle,strength,equal){
+    const p=[[0,0,0],...bent(angle)],vectors=[mul(p[1],strength),mul(p[2],strength*(equal?1:.55))];
+    const sum=add(vectors[0],vectors[1]);return{p,vectors,sum,mod:norm(sum)};
+  }
+  /** directions des doublets non liants de l'atome central dans le modèle 3D (VSEPR, schématique) */
+  function lobes3D(m){
+    const c=m.central;if(c<0||!m.lp[c])return[];
+    const n=m.lp[c],nb=m.b.filter(b=>b[0]===c||b[1]===c).map(b=>unit(sub(m.p[b[0]===c?b[1]:b[0]],m.p[c])));
+    let s=[0,0,0];for(const v of nb)s=add(s,v);
+    let u=norm(s)<.3?[0,1,0]:unit(mul(s,-1));
+    const ref=Math.abs(u[1])<.9?[0,1,0]:[1,0,0],e1=unit(cross(u,ref)),e2=cross(u,e1);
+    if(n===1)return[u];
+    if(n===2){const w=nb.length>=2?unit(cross(nb[0],nb[1])):e1,th=54.75*rad;return[add(mul(u,Math.cos(th)),mul(w,Math.sin(th))),add(mul(u,Math.cos(th)),mul(w,-Math.sin(th)))]}
+    const th=70.5*rad;return Array.from({length:n},(_,j)=>add(mul(u,Math.cos(th)),mul(add(mul(e1,Math.cos(j*2*Math.PI/n)),mul(e2,Math.sin(j*2*Math.PI/n))),Math.sin(th))));
+  }
+
+  /* ---------- interactions de van der Waals (unités relatives) ---------- */
+  /* Ordres de grandeur du cours (kJ/mol) : Keesom 0.5–3 (≈ 1), Debye 0.02–0.5 (≈ 0.1), London 0.5–30 (≈ 10),
+     van der Waals en général 0.1–10, liaison H quelques dizaines (≈ 10 à 40), covalente 100–1000 ; RT ≈ 2.5 à 300 K. */
+  const REPERES=[
+    {id:'debye',label:'Debye',lo:.02,hi:.5,typ:.1,c:'purple'},
+    {id:'keesom',label:'Keesom',lo:.5,hi:3,typ:1,c:'blue'},
+    {id:'london',label:'London',lo:.5,hi:30,typ:10,c:'gold'},
+    {id:'hydrogen',label:'Liaison H',lo:10,hi:40,typ:25,c:'accent'},
+    {id:'cov',label:'Covalente',lo:100,hi:1000,typ:400,c:'red'}
+  ];
+  /** énergie relative de deux dipôles permanents : le premier le long de l'axe, le second incliné de θ ; d en unités de r₀ */
+  const dipoleEnergy=(deg,d)=>-2*Math.cos(deg*rad)/d**3;
+  /** énergie relative selon le mécanisme (signe négatif = attraction) */
+  function vdwEnergy(mech,deg,d,alpha=1,T=300,average=false){
+    if(mech==='keesom')return average?-300/T/d**6:dipoleEnergy(deg,d);
+    if(mech==='debye')return -2*alpha/d**6;
+    return -alpha/d**6;
+  }
+  /** exposant n de la loi |E| ∝ 1/rⁿ */
+  const vdwExponent=(mech,average)=>mech==='keesom'&&!average?3:6;
+  function vdwForce(mech,deg,d,alpha=1,T=300,average=false){
+    /* force sur la molécule 2 ; la force sur 1 est opposée */
+    if(mech==='keesom')return average?[-6*(300/T)/d**7,0]:[-6*Math.cos(deg*rad)/d**4,3*Math.sin(deg*rad)/d**4];
+    return[-(mech==='debye'?12:6)*alpha/d**7,0];
+  }
+  /** énergie coulombienne molaire d'une paire Na⁺/Cl⁻ à r = 0.50 nm dans un milieu de permittivité εr (kJ/mol) */
+  const screened=(eps,d=.5)=>-138.935456/(eps*d);
+
+  /* ---------- solvants et mélanges (valeurs du cours, température ambiante) ---------- */
+  const SOLVANTS={
+    water:{nom:'Eau',f:'H_2O',mu:1.85,eps:78,donneur:true,accepteur:true},
+    ethanol:{nom:'Éthanol',f:'C_2H_5OH',mu:1.70,eps:24,donneur:true,accepteur:true},
+    acetone:{nom:'Acétone',f:'(CH_3)_2CO',mu:2.90,eps:21,donneur:false,accepteur:true},
+    ether:{nom:'Éther diéthylique',f:'Et_2O',mu:1.15,eps:4.4,donneur:false,accepteur:true},
+    cyclo:{nom:'Cyclohexane',f:'C_6H_12',mu:0,eps:2.0,donneur:false,accepteur:false}
+  };
+  const MELANGES={
+    ethanol:{nom:'Eau + éthanol',autre:'ethanol',phase:'Une phase',partiel:false,detail:'L’eau et l’éthanol sont totalement miscibles : chacun peut donner et accepter des liaisons hydrogène.'},
+    acetone:{nom:'Eau + acétone',autre:'acetone',phase:'Une phase',partiel:false,detail:'L’acétone accepte des liaisons H de l’eau. Un solvant aprotique peut être totalement miscible avec l’eau.'},
+    cyclo:{nom:'Eau + cyclohexane',autre:'cyclo',phase:'Deux phases',partiel:false,detail:'Solubilités mutuelles très faibles. La phase riche en cyclohexane, moins dense, se place au-dessus.'},
+    ether:{nom:'Eau + éther diéthylique',autre:'ether',phase:'Deux phases',partiel:true,detail:'Miscibilité partielle aux proportions représentées : chaque phase contient les deux espèces.'}
+  };
+  /** solutés : ionique, polaire protique, apolaire polarisable */
+  const SOLUTES={
+    salt:{nom:'Chlorure de sodium',f:'NaCl',type:'ionique'},
+    sugar:{nom:'Saccharose',f:'C_12H_22O_11',type:'polaire, nombreux O–H'},
+    iodine:{nom:'Diiode',f:'I_2',type:'apolaire, très polarisable'}
+  };
+  /** solubilité qualitative (indice du cours, pas une loi) : renvoie {soluble, raison} */
+  function dissolution(sol,solv){
+    const water=solv==='water';
+    if(sol==='salt')return{soluble:water,raison:water?'solvant très dissociant (ε_r élevé) qui solvate les ions par ses dipôles':'ε_r faible : les ions restent associés, pas de solvatation efficace'};
+    if(sol==='sugar')return{soluble:water,raison:water?'nombreuses liaisons H possibles avec l’eau (donneur et accepteur)':'aucune liaison H possible avec le cyclohexane'};
+    return{soluble:!water,raison:water?'I_2 est très polarisable mais ne forme ni liaison H ni interaction ion–dipôle : il reste peu soluble dans l’eau':'interactions de London comparables à celles du corps pur : bonne solubilité'};
+  }
+
+  /* ---------- corps purs : températures de changement d'état à 1 atm (°C) ---------- */
+  const PURS={
+    water:{nom:'Eau',f:'H_2O',mp:0,bp:100,kind:'water',hb:true,M:18.0},
+    h2s:{nom:'Sulfure d’hydrogène',f:'H_2S',mp:-85.5,bp:-60.3,kind:'h2s',hb:false,M:34.1},
+    h2se:{nom:'Séléniure d’hydrogène',f:'H_2Se',mp:-65.7,bp:-41.3,kind:'h2s',hb:false,M:81.0},
+    h2te:{nom:'Tellurure d’hydrogène',f:'H_2Te',mp:-49,bp:-2,kind:'h2s',hb:false,M:129.6},
+    pentane:{nom:'n-Pentane',f:'C_5H_12',mp:-129.7,bp:36.1,kind:'pentane',hb:false,M:72.1},
+    heptane:{nom:'n-Heptane',f:'C_7H_16',mp:-90.6,bp:98.4,kind:'heptane',hb:false,M:100.2}
+  };
+  /** hydrures du groupe 16 par masse molaire croissante */
+  const GROUPE16=['water','h2s','h2se','h2te'];
+  function phase(p,T){if(Math.abs(T-p.mp)<.06)return'Fusion';if(Math.abs(T-p.bp)<.06)return'Ébullition';return T<p.mp?'Solide':T<p.bp?'Liquide':'Gaz'}
+
+  return{rad,NA,fu,add,sub,mul,dot,norm,unit,cross,clamp,fh,fs,bondData,morse,rForceMax,FORCE_NN,CHI,ATOME,MOL,LISTE,formal,countElectrons,lewisCheck,lonePairAngles,
+    bondVectors,polarity,ab2,lobes3D,REPERES,dipoleEnergy,vdwEnergy,vdwExponent,vdwForce,screened,SOLVANTS,MELANGES,SOLUTES,dissolution,PURS,GROUPE16,phase,bent};
+})();
+
+'use strict';
+/* =====================================================================
+   AM2 · dessin 3D en SVG pour les molécules (AnimKit)
+   - AM2V.View : rotation (lacet, tangage), cadrage stable, projection ; vue partagée entre deux panneaux possible
+   - AM2V.View.render(app, modèle, idPanneau, {box}) : chaîne SVG
+       modèle = {atoms:[{p,r,c,label}], bonds:[{a,b,c,width,dash,alpha}], arrows:[{a,b,c,width,dy,dash}],
+                 lobes:[{p,dir,len}], labels:[{p,text,dx,dy,size,c,align,weight}], bounds, pad}
+       c = nom de couleur : accent, blue, gold, red, purple, muted, white, dark
+   - AM2V.vecLabel : lettre avec flèche de vecteur dessinée au-dessus (le caractère combinant U+20D7 n'est pas fiable)
+   - AM2V.bind : glisser pour tourner (ou action personnalisée)
+   Aucun accès au DOM : fonctionne aussi dans Verifier_Source.cjs.
+   ===================================================================== */
+globalThis.AM2V=(()=>{
+  const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+  const rgb=s=>{s=String(s).trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+  const mix=(c,t,f)=>'rgb('+c.map((v,i)=>Math.round(v*(1-f)+t[i]*f)).join(',')+')';
+  const palette=C=>({accent:C.v,blue:C.B,gold:C.E,red:C.F,purple:C.dark?'#c690ff':'#8a45c8',muted:C.ink2,white:C.dark?'#e8efec':'#ffffff',dark:C.dark?'#8a9892':'#2b3632',ink:C.ink,line:C.rule});
+  const GRAD=['accent','blue','gold','red','purple','muted','white','dark'];
+  const LIGHT_TEXT=new Set(['dark','red','blue','purple','muted']);
+
+  class View{
+    constructor(yaw=.55,pitch=.3){this.home=[yaw,pitch];this.yaw=yaw;this.pitch=pitch;this.sc=100;this.cx=0;this.cy=0;this.box={x:0,y:0,w:300,h:300}}
+    reset(){this.yaw=this.home[0];this.pitch=this.home[1]}
+    set(yaw,pitch){this.yaw=yaw;this.pitch=pitch}
+    rot(p){const c=Math.cos(this.yaw),s=Math.sin(this.yaw),x=c*p[0]+s*p[2],z=-s*p[0]+c*p[2],cp=Math.cos(this.pitch),sp=Math.sin(this.pitch);return[x,cp*p[1]-sp*z,sp*p[1]+cp*z]}
+    /** cadrage par sphère englobante : l'échelle ne change pas pendant la rotation */
+    fit(model,box){
+      const pts=model.bounds||model.atoms.map(a=>a.p);
+      const lo=[0,1,2].map(k=>Math.min(...pts.map(p=>p[k]))),hi=[0,1,2].map(k=>Math.max(...pts.map(p=>p[k]))),c=lo.map((v,k)=>(v+hi[k])/2);
+      const rho=Math.max(.3,...pts.map(p=>Math.hypot(p[0]-c[0],p[1]-c[1],p[2]-c[2])))+(model.pad??.4),rc=this.rot(c);
+      this.sc=Math.min(box.w,box.h)/(2*rho)*.92;this.cx=rc[0];this.cy=rc[1];this.box=box;
+    }
+    proj(p){const q=this.rot(p);return[this.box.x+this.box.w/2+(q[0]-this.cx)*this.sc,this.box.y+this.box.h/2-(q[1]-this.cy)*this.sc,q[2]]}
+
+    render(a,model,id,opt={}){
+      const S=a.S,C=a.C,k=a.k,P=palette(C),col=n=>P[n]||n;
+      this.fit(model,opt.box);
+      const dash=d=>d&&d.length?d.map(v=>+(v*k).toFixed(1)).join(' '):undefined;
+      let s='<defs>';
+      for(const n of GRAD){const c=rgb(P[n]);s+=`<radialGradient id="mg-${id}-${n}" cx=".36" cy=".32" r=".78"><stop offset="0" stop-color="${mix(c,[255,255,255],.7)}"/><stop offset=".38" stop-color="${P[n]}"/><stop offset="1" stop-color="${mix(c,[0,0,0],.38)}"/></radialGradient>`}
+      s+='</defs>';
+      const items=[
+        ...model.atoms.map(at=>({z:this.rot(at.p)[2],at})),
+        ...(model.bonds||[]).map(b=>({z:this.rot(b.a.map((v,i)=>(v+b.b[i])/2))[2]-.02,b})),
+        ...(model.lobes||[]).map(l=>({z:this.rot(l.p.map((v,i)=>v+l.dir[i]*l.len))[2]-.01,l}))
+      ].sort((u,v)=>u.z-v.z);
+      for(const it of items){
+        if(it.at)s+=this.sphere(a,it.at,id,P);
+        else if(it.l)s+=this.lobe(a,it.l,P);
+        else{const b=it.b,A=this.proj(b.a),B=this.proj(b.b);s+=S.line(A[0],A[1],B[0],B[1],{c:col(b.c||'muted'),w:b.width||2.5,dash:dash(b.dash),op:b.alpha})}
+      }
+      for(const ar of model.arrows||[]){const A=this.proj(ar.a),B=this.proj(ar.b),dy=(ar.dy||0)*k;
+        s+=S.arrow(A[0],A[1]+dy,B[0],B[1]+dy,{c:col(ar.c||'blue'),w:ar.width||2.5,dash:dash(ar.dash),op:ar.alpha})}
+      for(const l of model.labels||[]){const q=this.proj(l.p);s+=S.text(q[0]+(l.dx||0)*k,q[1]+(l.dy||0)*k,l.text,{size:l.size||14,c:l.c?col(l.c):C.ink,anchor:l.align||'middle',weight:l.weight})}
+      return s;
+    }
+    sphere(a,at,id,P){
+      const S=a.S,k=a.k,p=this.proj(at.p),r=Math.max(5*k,at.r*this.sc),name=GRAD.includes(at.c)?at.c:'accent',c=P[name];
+      let s=`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r.toFixed(1)}" fill="url(#mg-${id}-${name})" stroke="${mix(rgb(c),[0,0,0],.32)}" stroke-width="${(.9*k).toFixed(2)}"${at.alpha!==undefined&&at.alpha<1?` opacity="${at.alpha}"`:''}/>`;
+      if(at.label&&r>=7*k)s+=S.text(p[0],p[1],at.label,{anchor:'middle',size:clamp(r/k*.95,10,22),c:LIGHT_TEXT.has(name)?'#ffffff':'#10201c',weight:700,halo:false});
+      return s;
+    }
+    /** domaine non liant schématique : ellipse allongée dans la direction dir, avec deux points (le doublet) */
+    lobe(a,l,P){
+      const S=a.S,k=a.k,A=this.proj(l.p),B=this.proj(l.p.map((v,i)=>v+l.dir[i]*l.len)),ang=Math.atan2(B[1]-A[1],B[0]-A[0]),len=Math.hypot(B[0]-A[0],B[1]-A[1]);
+      const m=[(A[0]+B[0])/2,(A[1]+B[1])/2],rx=Math.max(8*k,len*.62+6*k),ry=Math.max(7*k,this.sc*.2);
+      const ux=Math.cos(ang),uy=Math.sin(ang);
+      return`<ellipse cx="${m[0].toFixed(1)}" cy="${m[1].toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${P.accent}" fill-opacity=".16" stroke="${P.accent}" stroke-width="${(1.6*k).toFixed(1)}" stroke-dasharray="${4*k} ${4*k}" transform="rotate(${(ang*180/Math.PI).toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)})"/>`+
+        S.circle(m[0]-ux*5*k,m[1]-uy*5*k,2.6*k,{fill:P.accent})+S.circle(m[0]+ux*5*k,m[1]+uy*5*k,2.6*k,{fill:P.accent});
+    }
+  }
+
+  /** symbole de vecteur : lettre en italique, indice éventuel, flèche dessinée au-dessus. anchor : 'middle' | 'start' */
+  function vecLabel(a,x,y,sym,sub,o={}){
+    const S=a.S,k=a.k,size=(o.size??15)*k,c=o.c||a.C.ink,w=size*.62*sym.length,x0=(o.anchor==='start')?x:x-w/2;
+    let s=S.text(x0+w/2,y,S.v(sym,sub),{anchor:'middle',size:o.size??15,c,weight:o.weight});
+    s+=S.arrow(x0,y-size*.72,x0+w,y-size*.72,{c,w:1.2,head:5*k});
+    return s;
+  }
+
+  /**
+   * Interaction dans un panneau : glisser fait tourner la vue (si canRotate), sinon onSlide(x, y, dx, dy, d).
+   * Plusieurs vues peuvent tourner ensemble (views = [vue1, vue2]) : elles prennent le même lacet et tangage.
+   */
+  function bind(a,id,views,o={}){
+    views=[].concat(views);
+    let d=null;
+    a.drag(id,{
+      hit:o.hit,
+      start(x,y){const v=views[0];d={x0:x,y0:y,yaw:v.yaw,pitch:v.pitch};if(o.start)o.start(x,y,d)},
+      move(x,y){if(!d)return;
+        if(!o.canRotate||o.canRotate()){const yaw=d.yaw+(x-d.x0)*.009,pitch=clamp(d.pitch+(y-d.y0)*.009,-1.45,1.45);views.forEach(v=>v.set(yaw,pitch));if(o.onRotate)o.onRotate(yaw,pitch)}
+        else if(o.onSlide)o.onSlide(x,y,x-d.x0,y-d.y0,d)},
+      end(){d=null}
+    });
+  }
+  return{View,vecLabel,bind,palette,clamp,mix,rgb};
+})();
+
+// @titre Structure des molécules · AM2 · MPSI
+// @sortie ../AM2_Structure_Molecules/AM2_Structure_Molecules.html
+// @inclure AM2_physique.js
+// @inclure AM2_commun.js
+// @description De la liaison covalente à la polarité : puits de Morse, atelier de Lewis, géométrie 3D, polarité d'une molécule par somme de dipôles de liaison à prévoir puis vérifier.
+'use strict';
+/* =====================================================================
+   AM2 · Structure des molécules (4 onglets) · migré sur AnimKit le 8 novembre 2026
+   1 La liaison (modèle de Morse) · 2 Atelier de Lewis · 3 Géométrie · 4 Polarité
+   Corrections du lot 17 :
+   - constantes de Morse déduites de la fréquence de vibration mesurée (a = 0.0199 pm⁻¹ pour H₂, 0.0190 pm⁻¹ pour HCl) ;
+   - notations du cours : longueur de liaison l, énergie de liaison D = 𝒩_A|ε|, dipôle \vec{μ} (liaison en bleu, total en rouge) ;
+   - la somme vectorielle n'est plus affichée d'emblée : on prévoit « polaire ou apolaire », puis on vérifie.
+   Ajouts : CH₃Cl et CCl₄ (liaisons polaires, molécule polaire ou non), cis- et trans-1,2-dichloroéthène (même formule,
+   polarités différentes), force maximale du puits.
+   ===================================================================== */
+const P=AM2P,V=AM2V,M=AnimKit.M,clamp=P.clamp,rad=P.rad;
+const view=new V.View(.5,.28),view2=new V.View(.5,.28);     // même orientation pour la molécule et la somme
+const lay={};
+const iv=(s,sub)=>`<i class="m">${s}</i>${sub?`<sub>${sub}</sub>`:''}`;
+const titre=m=>m.id==='cis'||m.id==='trans'?m.nom:`${P.fs(m.lib)} · ${m.nom}`;
+const ab2on=a=>a.tab===3&&a.p.pol==='AB2';
+const turns=a=>a.tab>=2&&!ab2on(a);
+
+/* ---------- Lewis : état modifiable ---------- */
+const canon=a=>{const m=P.MOL[a.p.lew];a.p.orders=m.b.map(b=>b[2]);a.p.lone=[...m.lp];a.p.res=0};
+const blank=a=>{const m=P.MOL[a.p.lew];a.p.orders=m.b.map(()=>1);a.p.lone=m.lp.map(()=>0);a.p.res=0};
+
+/* =====================================================================
+   Onglet 1 · la liaison covalente
+   ===================================================================== */
+function drawBond(a){
+  const Pn=a.panels.scene,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,pal=V.palette(C),f=a.fmt;
+  const b=P.bondData[a.p.bond],r=a.p.r,m=P.morse(r,b),Fnn=m.F*P.FORCE_NN;
+  const hs=clamp(H*.31,105*k,175*k),rA=b.s.map(s=>(s==='H'?13:19)*k),scale=W*.72/400,dist=r*scale,cx=W/2,cy=hs*.5,xa=cx-dist/2,xb=cx+dist/2;
+  let s=S.line(xa,cy,xb,cy,{c:C.rule,w:3});
+  const dy=cy-Math.max(...rA)-14*k;
+  s+=S.arrow(cx,dy,xa,dy,{c:C.ink2,w:1.3,head:6*k})+S.arrow(cx,dy,xb,dy,{c:C.ink2,w:1.3,head:6*k})+
+     S.text(cx,dy-11*k,`${S.v('r')} = ${f.fix(r,0)} pm`,{anchor:'middle',size:14,c:C.ink});
+  b.s.forEach((sym,i)=>{const x=i?xb:xa;
+    s+=S.circle(x,cy,rA[i],{fill:sym==='H'?pal.white:pal.accent,c:C.ink2,w:1.3})+S.text(x,cy,sym,{anchor:'middle',size:sym==='H'?15:19,c:'#10201c',weight:700,halo:false})});
+  /* forces exercées sur les deux atomes : répulsives à courte distance, attractives au-delà du puits */
+  const dir=Math.sign(m.F),L=clamp(Math.abs(m.F)*8*k,0,50*k),ay=cy+Math.max(...rA)+17*k;
+  if(L>2){s+=S.arrow(xa,ay,xa-dir*L,ay,{c:C.F,w:3.2})+S.arrow(xb,ay,xb+dir*L,ay,{c:C.F,w:3.2})}
+  else s+=S.text(cx,ay,'forces nulles',{anchor:'middle',size:13,c:C.F});
+  /* courbe E_p(r) */
+  const emin=-b.D*1.12,emax=b.D*.6;
+  const G=S.graph({x:0,y:hs,w:W,h:H-hs,xmin:30,xmax:400,ymin:emin,ymax:emax,xticks:[50,100,150,200,250,300,350,400],yticks:[-400,-200,0,200],padL:52*k,padB:38*k,
+    xlab:`${S.v('r')} (pm)`,ylab:`${P.fs('𝒩_A')} ${S.v('E','p')} (kJ·mol${S.sup('−1')})`});
+  s+=G.svg+S.clip('amclip',G);
+  const pts=[];for(let q=30;q<=400;q+=2)pts.push([q,P.morse(q,b).E]);
+  s+=S.line(G.X(30),G.Y(0),G.X(400),G.Y(0),{c:C.ink2,w:1,dash:`${5*k} ${5*k}`})+S.curve(pts,G,{c:C.Ep,w:2.8});
+  s+=S.line(G.X(b.r0),G.Y(-b.D),G.X(b.r0),G.Y(0),{c:C.ink2,w:1,dash:`${4*k} ${4*k}`})+S.line(G.x0,G.Y(-b.D),G.X(b.r0),G.Y(-b.D),{c:C.ink2,w:1,dash:`${4*k} ${4*k}`});
+  s+=S.text(G.X(b.r0)+14*k,G.Y(-b.D)+16*k,`${S.v('l')} = ${b.r0} pm  ·  ${S.v('D')} = ${b.D} kJ·mol${S.sup('−1')}`,{size:13,c:C.ink});
+  s+=S.text(G.X(400)-4*k,G.Y(0)-10*k,'atomes séparés : 0',{anchor:'end',size:12,c:C.ink2});
+  const fm=P.rForceMax(b),qf=[G.X(fm),G.Y(P.morse(fm,b).E)];
+  s+=S.circle(qf[0],qf[1],4.5*k,{fill:C.card,c:C.F,w:1.8});
+  const qm=[G.X(r),G.Y(clamp(m.E,emin,emax))];
+  s+=S.circle(qm[0],qm[1],8*k,{fill:C.Em,c:C.card,w:2.5});
+  if(m.E>emax)s+=S.text(qm[0]+14*k,qm[1]+16*k,'énergie hors cadre',{size:12,c:C.Em});
+  a.svg('scene',s);
+  lay.bond={xb,cy,rb:rA[1],scale,G:{x0:G.x0,y0:G.y0,w:G.w,h:G.h,xv:G.xv}};
+  a.metrics([
+    {label:'Distance',value:f.fix(r,0),unit:'pm'},
+    {label:'Énergie molaire',value:f.fix(m.E,0),unit:'kJ·mol⁻¹'},
+    {label:'Force sur un atome',value:f.fix(Math.abs(Fnn),1),unit:'nN',hint:Math.abs(r-b.r0)<1.5?'nulle à l’équilibre':m.F>0?'répulsive':'attractive'}
+  ]);
+  a.legend([{c:C.Ep,label:'énergie potentielle'},{c:C.F,label:'force sur chaque atome'},{c:C.Em,label:'configuration actuelle',dot:true},{c:C.F,label:'force maximale (inflexion)',dot:true}]);
+}
+
+/* =====================================================================
+   Onglet 2 · atelier de Lewis
+   ===================================================================== */
+function drawLewis(a){
+  const Pn=a.panels.scene,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,pal=V.palette(C);
+  const m=P.MOL[a.p.lew],o=a.p.orders,lone=a.p.lone,chk=P.lewisCheck(m,o,lone);
+  const xs=m.p2.map(p=>p[0]),ys=m.p2.map(p=>p[1]),mx=(Math.min(...xs)+Math.max(...xs))/2,my=(Math.min(...ys)+Math.max(...ys))/2;
+  const sc=Math.min((W-170*k)/Math.max(Math.max(...xs)-Math.min(...xs),.8),(H-190*k)/Math.max(Math.max(...ys)-Math.min(...ys),.8),170*k);
+  const cx=W/2,cy=H*.47,pt=m.p2.map(p=>[cx+(p[0]-mx)*sc,cy-(p[1]-my)*sc]),rA=21*k;
+  lay.lewis={pts:pt,m,rA};
+  let s=S.text(18*k,14*k,titre(m),{base:'top',size:16,c:C.cInk,weight:600});
+  m.b.forEach(([i,j],n)=>{
+    const A=pt[i],B=pt[j],d=Math.hypot(B[0]-A[0],B[1]-A[1]),u=[(B[0]-A[0])/d,(B[1]-A[1])/d],nrm=[-u[1],u[0]];
+    for(let q=0;q<o[n];q++){const sh=(q-(o[n]-1)/2)*7*k;
+      s+=S.line(A[0]+u[0]*(rA+4*k)+nrm[0]*sh,A[1]+u[1]*(rA+4*k)+nrm[1]*sh,B[0]-u[0]*(rA+4*k)+nrm[0]*sh,B[1]-u[1]*(rA+4*k)+nrm[1]*sh,{c:C.ink,w:2.6})}
+  });
+  m.sym.forEach((sym,i)=>{
+    const p=pt[i];
+    s+=S.text(p[0],p[1],sym,{anchor:'middle',size:25,c:C.ink,weight:600,halo:false});
+    P.lonePairAngles(m,pt,i,lone[i]).forEach(t=>{
+      const mid=[p[0]+(rA+10*k)*Math.cos(t),p[1]+(rA+10*k)*Math.sin(t)],pp=[-Math.sin(t)*6*k,Math.cos(t)*6*k];
+      s+=S.line(mid[0]-pp[0],mid[1]-pp[1],mid[0]+pp[0],mid[1]+pp[1],{c:C.v,w:3.4})});
+    const fc=chk.f[i];
+    if(a.p.charges&&fc){const q=[p[0]+rA+4*k,p[1]-rA-2*k];
+      s+=S.circle(q[0],q[1],8*k,{fill:C.card,c:pal.purple,w:1.6})+S.text(q[0],q[1],(Math.abs(fc)>1?Math.abs(fc):'')+(fc>0?'+':'−'),{anchor:'middle',size:Math.abs(fc)>1?12:13,c:pal.purple,weight:700,halo:false})}
+  });
+  if(m.q){
+    const ps=pt,x0=Math.min(...ps.map(p=>p[0]))-48*k,x1=Math.max(...ps.map(p=>p[0]))+48*k,y0=Math.min(...ps.map(p=>p[1]))-62*k,y1=Math.max(...ps.map(p=>p[1]))+50*k;
+    s+=S.poly([[x0+10*k,y0],[x0,y0],[x0,y1],[x0+10*k,y1]],{c:C.ink2,w:1.6})+S.poly([[x1-10*k,y0],[x1,y0],[x1,y1],[x1-10*k,y1]],{c:C.ink2,w:1.6});
+    s+=S.text(x1+8*k,y0-2*k,m.q>0?'+':'−',{size:20,c:pal.purple,weight:700});
+  }
+  const msg=chk.ok?(a.p.lew==='BCl3'?'Cohérent : seulement six électrons autour de B (lacune électronique)':'Décompte cohérent : duets et octets respectés'):
+    chk.used>chk.total?'Trop d’électrons placés : retirer des doublets':'À compléter : duet de H, octet des autres atomes';
+  s+=S.text(W/2,H-22*k,msg,{anchor:'middle',size:W<520?12.5:14.5,c:chk.ok?C.v:C.ink2,weight:chk.ok?600:400});
+  s+=S.text(W/2,H-44*k,'Cliquer un atome : doublet non liant · cliquer une liaison : multiplicité',{anchor:'middle',size:W<520?11.5:13,c:C.ink2,halo:false});
+  a.svg('scene',s);
+  const sg=chk.sum,f=a.fmt;
+  a.metrics([
+    {label:'Électrons placés',value:`${chk.used} / ${chk.total}`,hint:'doublets comptés par deux',warn:chk.used>chk.total},
+    {label:'Σ charges formelles',value:(sg>0?'+':sg<0?'−':'')+Math.abs(sg),hint:'charge de l’espèce : '+(m.q>0?'+':m.q<0?'−':'')+Math.abs(m.q),warn:sg!==m.q},
+    {label:'Vérification',value:chk.ok?'Cohérent':'À compléter',warn:!chk.ok&&chk.used>chk.total}
+  ]);
+  a.legend([{c:C.ink,label:'doublet liant (trait entre atomes)'},{c:C.v,label:'doublet non liant'},{c:pal.purple,label:'charge formelle',dot:true}]);
+}
+function lewisHit(x,y,k){
+  const L=lay.lewis;if(!L)return null;
+  let best=null;
+  L.pts.forEach((p,i)=>{const d=Math.hypot(x-p[0],y-p[1]);if(d<L.rA+14*k&&(!best||d<best.d))best={t:'atom',i,d}});
+  if(best)return best;
+  L.m.b.forEach(([i,j],n)=>{
+    const A=L.pts[i],B=L.pts[j],dx=B[0]-A[0],dy=B[1]-A[1],l2=dx*dx+dy*dy,t=clamp(((x-A[0])*dx+(y-A[1])*dy)/l2,0,1),d=Math.hypot(x-(A[0]+t*dx),y-(A[1]+t*dy));
+    if(d<13*k&&(!best||d<best.d))best={t:'bond',n,d}});
+  return best;
+}
+
+/* =====================================================================
+   Onglets 3 et 4 · molécules en 3D
+   ===================================================================== */
+const unitP=(p,q)=>P.unit(P.sub(q,p));
+function bondLines(p,bonds,res){
+  const out=[];
+  bonds.forEach(([i,j,ord],n)=>{
+    const order=res?1.5:ord,d=unitP(p[i],p[j]);
+    let nv=P.cross(d,[0,0,1]);if(P.norm(nv)<.3)nv=P.cross(d,[0,1,0]);nv=P.unit(nv);
+    const cnt=Math.ceil(order);
+    for(let q=0;q<cnt;q++){
+      const sh=(q-(cnt-1)/2)*.12,off=P.mul(nv,sh);
+      out.push({a:P.add(p[i],off),b:P.add(p[j],off),c:'muted',width:cnt>1?3.2:4.2,dash:(order===1.5&&q===1)?[5,5]:undefined});
+    }
+  });
+  return out;
+}
+function molModel(a,m,o={}){
+  const p=o.p||m.p,sym=o.sym||m.sym,bonds=o.bonds||m.b;
+  const atoms=sym.map((s,i)=>({p:p[i],r:(P.ATOME[s]||{r:.3}).r,c:(P.ATOME[s]||{c:'purple'}).c,label:s}));
+  const model={atoms,bonds:bondLines(p,bonds,o.res),arrows:[],lobes:[],labels:[],bounds:p.slice(),pad:.6};
+  if(o.lobes&&!o.fiction)for(const dir of P.lobes3D(m))model.lobes.push({p:p[m.central],dir,len:.62});
+  return model;
+}
+function polModel(a,m,info,fiction){
+  const p=fiction?info.p:m.p,sym=fiction?['A','B','B']:m.sym,bonds=fiction?[[0,1,1],[0,2,1]]:m.b;
+  const model=molModel(a,m,{p,sym,bonds,res:false,fiction});
+  const q=fiction?[-(P.norm(info.vectors[0])+P.norm(info.vectors[1])),P.norm(info.vectors[0]),P.norm(info.vectors[1])]:info.qpartial;
+  if(a.p.part)sym.forEach((s,i)=>{if(Math.abs(q[i])<1e-6)return;
+    const left=p[i][0]<(p[0][0]-.05)||(Math.abs(p[i][0]-p[0][0])<.05&&i%2===0);
+    model.labels.push({p:p[i],text:'δ'+(q[i]>0?'+':'−'),dx:left?-27:27,dy:-30,size:17,c:q[i]>0?'red':'blue',weight:700})});
+  if(a.p.bdip)bonds.forEach(([i,j],n)=>{
+    const v=info.vectors[n],w=P.norm(v);if(w<1e-9)return;
+    const mid=P.mul(P.add(p[i],p[j]),.5),h=.46*clamp(w/1.2,.3,1),u=P.unit(v);
+    model.arrows.push({a:P.sub(mid,P.mul(u,h)),b:P.add(mid,P.mul(u,h)),c:'blue',width:3.4,dy:-24})});
+  return model;
+}
+const polInfo=(a,m)=>ab2on(a)?(()=>{const r=P.ab2(a.p.angle,a.p.strength,a.p.equal);return{...r,fiction:true}})():{...P.polarity(m),p:m.p,fiction:false};
+
+const domains=m=>{
+  if(m.central<0)return'trigonal autour de chaque C';
+  if(m.sym.length===2)return'molécule diatomique';
+  const c=m.central,nb=m.b.filter(b=>b[0]===c||b[1]===c).length,nl=m.lp[c];
+  return`${nb+nl} (${nb} liaison${nb>1?'s':''} + ${nl} non liant${nl>1?'s':''})`;
+};
+
+function drawGeometry(a){
+  const Pn=a.panels.scene,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,m=P.MOL[a.p.geo];
+  const model=molModel(a,m,{res:m.q!==0&&a.p.geo==='NO2',lobes:a.p.lobes});
+  let s=view.render(a,model,'scene',{box:{x:0,y:30*k,w:W,h:H-72*k}});
+  s+=S.text(18*k,14*k,titre(m),{base:'top',size:16,c:C.cInk,weight:600});
+  s+=S.text(W/2,H-20*k,'Angles fournis · domaines non liants schématiques (pas des orbitales calculées)',{anchor:'middle',size:W<520?11.5:13,c:C.ink2,halo:false});
+  a.svg('scene',s);
+  a.metrics([
+    {label:'Géométrie',value:m.forme},
+    {label:'Angle fourni',value:a.fmt.fix(m.ang,1),unit:'°'},
+    {label:'Domaines autour du centre',value:domains(m)}
+  ]);
+  a.legend([{c:V.palette(C).muted,label:'liaison'},m.lp[m.central]&&a.p.lobes&&{c:C.v,label:'domaine non liant du centre (doublet)'}]);
+}
+
+function drawPolarity(a){
+  const PL=a.panels.scene,PS=a.panels.somme,k=a.k,S=a.S,C=a.C,pal=V.palette(C),f=a.fmt;
+  const fiction=ab2on(a),m=fiction?{lib:'AB_2',nom:'modèle à angle réglable',forme:f.fix(a.p.angle,1)+'°',mu:null,q:0,ang:a.p.angle,sym:['A','B','B'],b:[[0,1,1],[0,2,1]],chi:[0,0,0],p:[],central:0,lp:[0,0,0]}:P.MOL[a.p.pol];
+  const info=polInfo(a,m),show=fiction||a.p.reveal;
+  if(fiction)view.set(0,0),view2.set(0,0);
+  /* panneau de gauche : molécule, charges partielles, dipôles de liaison */
+  const model=polModel(a,m,info,fiction);
+  let s=view.render(a,model,'scene',{box:{x:0,y:32*k,w:PL.w,h:PL.h-64*k}});
+  s+=S.text(18*k,14*k,titre(m),{base:'top',size:16,c:C.cInk,weight:600});
+  s+=S.text(PL.w/2,PL.h-20*k,fiction?'Glisser un atome B : l’angle change, les dipôles de liaison restent identiques':'Chaque liaison polarisée a un dipôle de − vers + ; la molécule les combine',{anchor:'middle',size:PL.w<520?11.5:13,c:C.ink2,halo:false});
+  a.svg('scene',s);
+  /* panneau de droite : somme vectorielle (cachée tant qu'on n'a pas prévu) */
+  const pts=[[0,0,0]];info.vectors.forEach(v=>pts.push(P.add(pts[pts.length-1],v)));
+  let t=S.text(18*k,14*k,'Somme vectorielle',{base:'top',size:16,c:C.cInk,weight:600});
+  if(!show){
+    const cx=PS.w/2,cy=PS.h/2,sz=PS.w<420?15:17;
+    t+=S.text(cx,cy-30*k,'Prévoir d’abord',{anchor:'middle',size:sz+3,c:C.ink,weight:600})+
+       S.text(cx,cy,'La molécule est-elle polaire ?',{anchor:'middle',size:sz,c:C.ink2})+
+       S.text(cx,cy+26*k,'Choisir une réponse, puis cocher',{anchor:'middle',size:sz-2,c:C.ink2,halo:false})+
+       S.text(cx,cy+46*k,'« Afficher la somme vectorielle ».',{anchor:'middle',size:sz-2,c:C.ink2,halo:false});
+  }else{
+    const sm=[];info.vectors.forEach((v,j)=>{if(P.norm(v)>1e-9)sm.push({a:pts[j],b:pts[j+1],c:'blue',width:3.6})});
+    const model2={atoms:[],bonds:[],arrows:sm,bounds:pts.concat([[0,0,0]]),pad:.3};
+    t+=view2.render(a,model2,'somme',{box:{x:0,y:34*k,w:PS.w,h:PS.h-96*k}});
+    const A=view2.proj(pts[0]),B=view2.proj(pts[pts.length-1]),d=Math.hypot(B[0]-A[0],B[1]-A[1]),nonzero=P.norm(info.sum)>1e-7;
+    if(nonzero&&d>3){
+      const n=[-(B[1]-A[1])/d*30*k,(B[0]-A[0])/d*30*k],A2=[A[0]+n[0],A[1]+n[1]],B2=[B[0]+n[0],B[1]+n[1]];
+      t+=S.line(A[0],A[1],A2[0],A2[1],{c:C.F,w:1.1,dash:`${3*k} ${4*k}`,op:.55})+S.line(B[0],B[1],B2[0],B2[1],{c:C.F,w:1.1,dash:`${3*k} ${4*k}`,op:.55})+S.arrow(A2[0],A2[1],B2[0],B2[1],{c:C.F,w:5});
+      t+=V.vecLabel(a,(A2[0]+B2[0])/2+n[0]*.5,(A2[1]+B2[1])/2+n[1]*.5-4*k,'μ','tot',{c:C.F,size:16,weight:700});
+    }else if(nonzero){t+=S.circle(A[0],A[1],9*k,{fill:C.F})+S.circle(A[0],A[1],3.5*k,{fill:C.card})+S.text(A[0]+16*k,A[1]-14*k,'μ dans l’axe de vue',{size:13,c:C.F})}
+    else{t+=S.circle(A[0],A[1],5*k,{fill:C.F})+V.vecLabel(a,A[0]+34*k,A[1]-18*k,'μ','tot',{c:C.F,size:16,weight:700,anchor:'start'})+S.text(A[0]+34*k+62*k,A[1]-18*k,'= 0',{size:16,c:C.F,weight:700})}
+    t+=S.text(PS.w/2,PS.h-34*k,nonzero?'La chaîne ne se referme pas : la molécule est polaire':'La chaîne se referme : la molécule est apolaire',{anchor:'middle',size:PS.w<420?12:14,c:nonzero?C.F:C.v,weight:600});
+  }
+  a.svg('somme',t);
+  /* mesures */
+  let verdict='',warn=false;
+  if(show&&!fiction&&a.p.guess){const ok=(a.p.guess==='apolaire')===info.apolar;verdict=ok?'prévision correcte':'prévision à revoir';warn=!ok}
+  if(fiction)a.metrics([
+    {label:'Dipôle résultant',value:f.fix(info.mod,2),unit:'u. arb.',hint:'dépend de l’angle'},
+    {label:'Angle B–A–B',value:f.fix(a.p.angle,1),unit:'°'},
+    {label:'Dipôles de liaison',value:a.p.equal?'égaux':'différents'}]);
+  else a.metrics([
+    {label:'Molécule',value:show?(info.apolar?'Apolaire':'Polaire'):'à prévoir',hint:verdict||(show?'':'somme masquée'),warn},
+    {label:'Géométrie',value:`${m.forme}`,hint:'angle ≈ '+f.fix(m.ang,1)+'°'},
+    {label:'μ expérimental',value:show?(m.mu===null?'—':f.fix(m.mu,2)):'—',unit:show&&m.mu!==null?'D':'',hint:show?'modèle additif : qualitatif':''}
+  ]);
+  a.legend([{c:C.B,label:'dipôle de liaison'},show&&{c:C.F,label:'dipôle total de la molécule'},a.p.part&&{c:C.F,label:'δ+',dot:true},a.p.part&&{c:C.B,label:'δ−',dot:true}]);
+}
+
+/* =====================================================================
+   Application
+   ===================================================================== */
+const SPECIES=P.LISTE;
+const NEUTRAL=P.LISTE.filter(([id])=>!P.MOL[id].q);
+const polPresets=[['CO2','CO_2'],['H2O','H_2O'],['NH3','NH_3'],['BCl3','BCl_3'],['CH4','CH_4'],['CH3Cl','CH_3Cl'],['CCl4','CCl_4'],['cis','cis-C_2H_2Cl_2'],['trans','trans-C_2H_2Cl_2']]
+  .map(([id,lab])=>({label:P.fh(lab),onglets:[3],valeurs:{pol:id,guess:'',reveal:false}}));
+
+const A=AnimKit.app({
+  code:'AM2',partie:'VertEmeraude',chapitre:'AM2 Structure des molécules',
+  titre:'Structure des molécules',sousTitre:'Liaison covalente, schéma de Lewis, géométrie et polarité',fichier:'Structure_Molecules',
+  onglets:['Liaison covalente','Atelier de Lewis','Géométrie','Polarité'],
+  temps:a=>a.tab!==1&&!ab2on(a),pas:.12,
+  panneaux:[{id:'scene',poids:1,ratioTel:.95},{id:'somme',poids:1,ratioTel:.8,onglets:[3]}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Équilibre',onglets:[0],action:a=>a.set('r',P.bondData[a.p.bond].r0,{silent:true})},
+      {label:'Atomes très proches',onglets:[0],valeurs:{r:45}},
+      {label:'Force maximale',onglets:[0],action:a=>a.set('r',Math.round(P.rForceMax(P.bondData[a.p.bond])),{silent:true})},
+      {label:'Atomes éloignés',onglets:[0],valeurs:{r:380}},
+      {label:'À construire',onglets:[1],action:a=>blank(a)},
+      {label:'Solution',onglets:[1],action:a=>canon(a)},
+      {label:'Vue de face',onglets:[2],action:()=>{view.set(0,0);view2.set(0,0)}},
+      {label:'Perspective',onglets:[2],action:()=>{view.set(.5,.28);view2.set(.5,.28)}},
+      ...polPresets]},
+    {titre:'Liaison',onglets:[0],items:[
+      {id:'bond',type:'select',label:'Espèce',options:[['H2','H₂ · dihydrogène'],['HCl','HCl · chlorure d’hydrogène']],value:'H2'},
+      {id:'r',label:'Distance entre les noyaux',min:35,max:400,step:1,value:74,unit:'pm'},
+      {id:'amp',label:'Amplitude de vibration (lecture)',min:0,max:25,step:1,value:10,unit:'pm'},
+      {type:'note',html:a=>{const b=P.bondData[a.p.bond];
+        return`Profondeur du puits : ${iv('D')} = ${b.D} kJ·mol<sup>−1</sup> (énergie de liaison du cours), longueur ${iv('l')} = ${b.r0} pm.<br>`+
+          `Modèle de Morse : ${iv('E','p')}(${iv('r')}) = ${iv('D')}[(1 − e<sup>−${iv('a')}(${iv('r')}−${iv('l')})</sup>)<sup>2</sup> − 1] avec ${iv('a')} = ${a.fmt.fix(b.a,4)} pm<sup>−1</sup>, déduit de la fréquence de vibration mesurée (${iv('ω','e')} = ${a.fmt.sig(b.omega,4)} cm<sup>−1</sup>).<br>`+
+          `Au fond du puits la liaison se comporte comme un ressort de raideur ${iv('k')} = 2${iv('D')}${iv('a')}<sup>2</sup> ≈ ${a.fmt.sig(b.k,3)} N·m<sup>−1</sup>.`}}]},
+    {titre:'Atelier de Lewis',onglets:[1],items:[
+      {id:'lew',type:'select',label:'Espèce',options:SPECIES,value:'H2O'},
+      {id:'charges',type:'check',label:'Afficher les charges formelles',value:true},
+      {type:'boutons',items:[{label:'À construire',action:a=>blank(a)},{label:'Solution',action:a=>canon(a)}]},
+      {type:'boutons',si:a=>a.p.lew==='NO2',items:[{label:'Autre forme mésomère',action:a=>{a.p.res=1-a.p.res;a.p.orders=a.p.res?[1,2]:[2,1];a.p.lone=a.p.res?[1,3,2]:[1,2,3]}}]},
+      {type:'note',html:a=>'Chaque trait représente un doublet liant (deux électrons). Charge formelle : partage égal des électrons de chaque liaison ; elle diffère de la charge partielle.<br>'+(a.p.lew==='BCl3'?'<b>BCl<sub>3</sub></b> illustre une exception à l’octet.':a.p.lew==='NO2'?'<b>NO<sub>2</sub><sup>−</sup></b> illustre la mésomérie : deux formes limites, deux liaisons équivalentes.':'')}]},
+    {titre:'Représentation',onglets:[2],items:[
+      {id:'geo',type:'select',label:'Espèce',options:SPECIES,value:'H2O'},
+      {id:'lobes',type:'check',label:'Domaines non liants du centre',value:false},
+      {type:'note',html:a=>'La géométrie d’équilibre minimise l’énergie totale ; les domaines électroniques (liants ou non) tendent qualitativement à s’écarter. Cette image ne calcule pas les angles.<br>CH<sub>4</sub> : 4 liaisons · NH<sub>3</sub> : 3 liaisons + 1 doublet non liant · H<sub>2</sub>O : 2 liaisons + 2 doublets non liants.'}]},
+    {titre:'Prévoir la polarité',onglets:[3],items:[
+      {id:'pol',type:'select',label:'Espèce',options:[...NEUTRAL,['AB2','AB₂ · angle réglable (modèle)']],value:'CO2'},
+      {id:'guess',type:'seg',label:'Votre prévision',options:[['polaire','Polaire'],['apolaire','Apolaire']],value:'',si:a=>!ab2on(a)},
+      {id:'reveal',type:'check',label:'Afficher la somme vectorielle',value:false,si:a=>!ab2on(a)},
+      {id:'part',type:'check',label:'Charges partielles δ',value:true},
+      {id:'bdip',type:'check',label:'Dipôles de liaison',value:true},
+      {id:'angle',label:'Angle B–A–B',min:20,max:180,step:.5,value:104.5,unit:'°',si:a=>ab2on(a)},
+      {id:'strength',label:'Norme du dipôle A–B',min:.2,max:2,step:.1,value:1,unit:'u. arb.',si:a=>ab2on(a)},
+      {id:'equal',type:'check',label:'Les deux dipôles de liaison sont égaux',value:true,si:a=>ab2on(a)},
+      {type:'note',html:a=>ab2on(a)?'Deux liaisons A–B identiques : la somme dépend de l’angle. À 180° les dipôles se compensent ; si les deux normes diffèrent, la compensation n’est jamais complète.':
+        `Dans le <b>modèle additif</b>, on approche <i class="m">μ</i> de la molécule par la somme <b>vectorielle</b> des dipôles de liaison, orientés de <b>−</b> vers <b>+</b>. Elle est polaire si ${M.vec('<i class="m">μ</i>')} ≠ ${M.vec('0')}.<br>Une molécule peut avoir des liaisons polarisées et être apolaire (CO<sub>2</sub>, CCl<sub>4</sub>, <i>trans</i>) : tout dépend de la géométrie.`}]}
+  ],
+  aide:{
+    voit:'Quatre vues d’une même idée, du modèle de la liaison à la polarité d’une molécule. 1 : énergie d’interaction de deux atomes en fonction de leur distance (puits de Morse). 2 : atelier de Lewis où l’on place les doublets. 3 : géométrie en 3D. 4 : dipôles de liaison, charges partielles et somme vectorielle, cachée tant qu’on n’a pas fait de prévision.',
+    faire:'<ul><li>Onglet 1 : glisser l’atome de droite ou le point sur la courbe ; lancer la lecture pour voir la vibration autour de la position d’équilibre.</li><li>Onglet 2 : cliquer un atome pour ajouter un doublet non liant, cliquer une liaison pour changer sa multiplicité ; le décompte des électrons et les charges formelles se mettent à jour.</li><li>Onglets 3 et 4 : glisser dans la scène pour tourner la molécule, Lecture pour la faire tourner seule.</li><li>Onglet 4 : choisir « Polaire » ou « Apolaire », puis cocher « Afficher la somme vectorielle » pour vérifier. Comparer CO<sub>2</sub> et H<sub>2</sub>O, CH<sub>4</sub>, CH<sub>3</sub>Cl et CCl<sub>4</sub>, cis et trans.</li></ul>',
+    modele:'Le puits de Morse est un profil d’énergie illustratif : il ne représente ni des électrons sur des orbites ni une capture spontanée de deux atomes. Sa largeur est déduite de la fréquence de vibration mesurée ; sa profondeur est l’énergie de liaison du cours. Les domaines non liants sont schématiques (pas des orbitales calculées). Le modèle additif des dipôles de liaison utilise les écarts d’électronégativité de Pauling comme normes relatives : il dit si les contributions se compensent, pas la valeur en debye, donnée séparément.',
+    cours:'AM2 : longueur et énergie de liaison, schéma de Lewis (octet, charges formelles, mésomérie), géométrie des molécules, moment dipolaire d’une liaison et d’une molécule, polarité.'
+  },
+  init(a){canon(a)},
+  change(a,id,v){
+    if(id==='bond')a.p.r=P.bondData[v].r0;
+    else if(id==='lew')canon(a);
+    else if(id==='pol'){a.p.guess='';a.p.reveal=false}
+  },
+  onglet(a){a.play(false)},
+  reset(a){a.t=0},
+  peutLire(a){return a.tab!==1&&!ab2on(a)},
+  step(a,dt){
+    a.t+=dt;
+    if(a.tab===0){const b=P.bondData[a.p.bond];a.p.r=b.r0+a.p.amp*Math.sin(4*a.t);a.refresh()}
+    else if(turns(a)){view.yaw+=dt*.45;view2.yaw=view.yaw;view2.pitch=view.pitch}
+  },
+  draw(a){
+    if(a.tab===0)drawBond(a);else if(a.tab===1)drawLewis(a);else if(a.tab===2)drawGeometry(a);else drawPolarity(a);
+  }
+});
+
+/* ---------- interactions dans la scène ---------- */
+const inGraph=(x,y)=>{const g=lay.bond&&lay.bond.G;return g&&x>=g.x0-6&&x<=g.x0+g.w+6&&y>=g.y0-6&&y<=g.y0+g.h+6};
+{
+  let d=null;
+  A.drag('scene',{
+    hit:(x,y)=>A.tab===0&&lay.bond&&(inGraph(x,y)||Math.hypot(x-lay.bond.xb,y-lay.bond.cy)<lay.bond.rb+16*A.k),
+    start(x,y){A.play(false);d={kind:inGraph(x,y)?'graph':'atom',x0:x,r0:A.p.r}},
+    move(x,y){if(!d)return;
+      const v=d.kind==='graph'?lay.bond.G.xv(x):d.r0+(x-d.x0)*2/lay.bond.scale;
+      A.set('r',Math.round(clamp(v,35,400)),{silent:true})},
+    end(){d=null}
+  });
+  A.drag('scene',{
+    hit:(x,y)=>A.tab===1&&!!lewisHit(x,y,A.k),
+    start(x,y){
+      const h=lewisHit(x,y,A.k);if(!h)return;
+      const m=P.MOL[A.p.lew];
+      if(h.t==='atom'){if(m.sym[h.i]!=='H')A.p.lone[h.i]=(A.p.lone[h.i]+1)%5}
+      else A.p.orders[h.n]=A.p.orders[h.n]%3+1;
+      A.refresh();
+    },
+    move(){},end(){}
+  });
+}
+V.bind(A,'scene',[view,view2],{
+  hit:()=>A.tab>=2,
+  canRotate:()=>!ab2on(A),
+  start:()=>A.play(false),
+  onSlide(x,y){
+    const q=view.proj([0,0,0]);
+    A.set('angle',clamp(Math.abs(Math.atan2(x-q[0],y-q[1]))*2/rad,20,180),{silent:true});
+  }
+});
+V.bind(A,'somme',[view,view2],{canRotate:()=>true,start:()=>A.play(false)});
+
+</script>
+</body>
+</html>

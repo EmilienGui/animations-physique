@@ -1,133 +1,724 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Les trois lois de Kepler : ellipse, aires et périodes. Animation MPSI autonome hors connexion.">
-<title>Kepler · MC6 · MPSI</title>
+<meta name="description" content="Les trois lois de Kepler sur un même mouvement : ellipse et foyer, loi des aires, troisième loi et planètes du système solaire.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Lois de Kepler · MC6 · MPSI</title>
 <style>
-:root{color-scheme:light;--paper:#f6f3f1;--surface:#fffefa;--ink:#181c23;--secondary:#53595e;--line:#ded7d3;--accent:#8b2432;--accent-ink:#771f2b;--soft:#f5e9e8;--orbit:#8b2432;--orbit2:#2563a7;--gold:#ad7419;--teal:#237a70;--violet:#7753ab;--star:#be861f;--shadow:0 8px 28px #4d222008}
-:root[data-theme=dark]{color-scheme:dark;--paper:#14181f;--surface:#1c222b;--ink:#f3f2ee;--secondary:#bbc3cd;--line:#3c424e;--accent:#ee93a0;--accent-ink:#ffadba;--soft:#35272f;--orbit:#ff9ba9;--orbit2:#8cbeff;--gold:#f0c169;--teal:#83d3c0;--violet:#c8aff7;--star:#ffd17b;--shadow:0 8px 28px #0002}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:40px;padding:7px 12px;border:1px solid var(--line);border-radius:7px;color:var(--ink);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;gap:7px}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.4;cursor:default}button[aria-pressed=true],button[aria-selected=true],.primary{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--surface)}:root[data-theme=dark] button[aria-pressed=true],:root[data-theme=dark] button[aria-selected=true],:root[data-theme=dark] .primary{color:#22191e}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.topline{height:5px;background:#8b2432}.shell{max-width:2000px;margin:auto;padding:14px 20px 10px;height:calc(100dvh - 5px);display:flex;flex-direction:column;gap:12px}.masthead,.heading,.header-actions,.tabs,.view-tools,.transport{display:flex;align-items:center;gap:8px}.masthead{justify-content:space-between;gap:18px;flex:none}.eyebrow{font-size:13px;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.1em;font-weight:bold;margin-bottom:3px}.heading{gap:12px}.chapter{border:1px solid var(--accent);padding:4px 8px;border-radius:5px;font-size:17px;color:var(--accent-ink)}h1{font-size:32px;font-weight:500;letter-spacing:-.035em;line-height:1.1;margin:0}.subtitle{font-size:16px;color:var(--secondary);margin-left:8px}.header-actions button{font-size:16px}.icon-button{width:40px;padding:6px;font-size:23px}.tab-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:none}.tabs{gap:5px}.tabs button{font-size:20px;padding:8px 17px}.tab-note{font-size:16px;color:var(--secondary);text-align:right}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;flex:1;min-height:0}.experiment{display:flex;flex-direction:column;gap:11px;min-width:0;min-height:0}.scene-card{display:flex;flex-direction:column;flex:1;min-height:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}.scene-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px 0;flex:none}.scene-heading{font-size:17px;font-weight:normal;color:var(--secondary);margin:0}.view-tools{gap:4px}.view-tools button{min-height:34px;font-size:16px;padding:4px 9px}.view-tools .zoom{font-size:24px;width:34px;padding:0}.stage{flex:1;position:relative;min-height:180px}#scene{display:block;width:100%;height:100%;position:absolute;inset:0;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}#scene .label{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}#scene [data-mobile]{cursor:grab}.scene-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px 7px;flex:none;color:var(--secondary);font-size:14px}.legend{display:flex;gap:14px;flex-wrap:wrap}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{display:inline-block;width:22px;height:3px;background:var(--c)}.legend i.dashed{background:repeating-linear-gradient(90deg,var(--c) 0 5px,transparent 5px 8px)}.transport{padding:9px 13px;border-top:1px solid var(--line);flex:none;gap:9px}.transport button{min-width:42px}.transport #play{min-width:110px}.timeline{display:flex;align-items:center;gap:10px;flex:1;min-width:30px}.clock{font-variant-numeric:tabular-nums;font-size:18px;white-space:nowrap;min-width:128px;text-align:right}.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));flex:none}.metric{padding:0 15px;border-left:1px solid var(--line);min-width:0}.metric:first-child{border:0;padding-left:0}.metric-label{font-size:17px;color:var(--secondary)}.metric-value{font-size:36px;line-height:1.18;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}.unit{font-size:17px;letter-spacing:0;color:var(--secondary);margin-left:5px}.law{display:flex;align-items:flex-start;gap:12px;flex:none;min-height:62px}.law-index{font-family:Georgia,serif;color:var(--accent-ink);font-size:32px;line-height:1.1;width:28px;flex:none}.law-formula{font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2}.law-detail{font-size:17px;color:var(--secondary);margin-top:4px}.presets{display:flex;flex-wrap:wrap;gap:6px;flex:none}.presets button{font-size:16px;min-height:33px;padding:5px 10px;background:transparent}.controls{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:16px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 12px}.field-head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:17px;margin:12px 0 0}.field-head:first-of-type{margin-top:0}.value-field{display:flex;align-items:center;gap:6px;color:var(--secondary);font-size:14px}input[type=number]{width:78px;text-align:right;padding:5px;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--paper);font-size:18px;font-variant-numeric:tabular-nums}input[type=range]{accent-color:var(--accent-ink);width:100%;height:24px;margin:8px 0 0;cursor:pointer;min-width:0}input[type=checkbox]{accent-color:var(--accent-ink);width:19px;height:19px;margin:0;flex:none}select{padding:7px 8px;border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--paper);width:100%;font-size:17px}.checks{display:grid;gap:11px}.checks label{display:flex;align-items:center;gap:9px;font-size:17px;cursor:pointer}.note{font-size:14px;color:var(--secondary);margin:9px 0 0}.formula{font-family:Georgia,serif;font-size:23px;margin:9px 0}.small-stats{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:16px;font-variant-numeric:tabular-nums}.small-stats dt{color:var(--secondary)}.small-stats dd{margin:0;text-align:right}.body-key{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orbit);margin-right:7px}.body-key.second{background:var(--orbit2)}.footer{display:flex;justify-content:space-between;color:var(--secondary);font-size:12px;flex:none}.projection .controls,.projection .footer,.projection .presets,.projection .eyebrow,.projection .chapter,.projection .subtitle,.projection .tab-note,.projection .drag-hint{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:10px}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:21px}.projection .unit{font-size:21px}.projection .law-formula{font-size:28px}.projection .law-detail{font-size:20px}.projection .scene-heading{font-size:20px}.projection .legend{font-size:18px}.projection .transport button{font-size:20px}.projection .clock{font-size:21px}.projection h1{font-size:30px}dialog{max-height:86dvh;width:min(780px,calc(100% - 30px));overflow:auto;padding:26px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:var(--surface)}dialog::backdrop{background:#080d18a0}dialog h2{font-size:27px;font-weight:500;margin:0 0 15px}dialog p,dialog li{font-size:18px;line-height:1.55;color:var(--secondary)}dialog strong{color:var(--ink)}.close-row{text-align:right}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent-ink);color:var(--surface);border-radius:6px;padding:12px 20px;z-index:10}.toast:empty{display:none}[hidden]{display:none!important}
-@media(min-width:1600px){.shell{padding:18px 28px 12px;gap:15px}.workspace{grid-template-columns:minmax(0,1fr) 350px;gap:22px}.control-section{padding:20px}.section-label{font-size:15px}.field-head,.checks label{font-size:19px}.note{font-size:16px}.scene-heading{font-size:20px}.scene-meta{font-size:17px}.metric-label{font-size:20px}.metric-value{font-size:40px}.law-detail{font-size:20px}.law-formula{font-size:28px}.subtitle{font-size:19px}.header-actions button{font-size:18px}.controls .small-stats{font-size:18px}.presets button{font-size:18px}}
-@media(max-width:1100px){.subtitle,.tab-note{display:none}.shell{padding:12px;gap:10px}.workspace{grid-template-columns:minmax(0,1fr) 290px;gap:12px}.header-actions button{font-size:15px;padding:7px 9px}.metric-value{font-size:31px}.unit{font-size:15px}.metric-label{font-size:16px}.scene-meta{font-size:13px}.drag-hint{display:none}}
-@media(max-width:780px){.shell{height:auto;min-height:100dvh}.masthead{flex-wrap:wrap;gap:12px}.header-actions{margin-left:auto}.workspace{grid-template-columns:1fr;flex:none}.scene-card{height:490px;flex:none}.controls{overflow:visible;display:grid;grid-template-columns:1fr 1fr}.control-section{border-bottom:1px solid var(--line)}.control-section:nth-child(odd){border-right:1px solid var(--line)}.footer{display:none}.law-detail{font-size:16px}.tabs button{font-size:18px;padding:7px 13px}.projection .shell{height:100dvh;min-height:680px}.projection .workspace{flex:1}.projection .scene-card{height:auto;flex:1}.projection .metric-value{font-size:34px}.projection .metric-label{font-size:17px}.projection .unit{font-size:17px}.projection .law-detail{font-size:17px}.projection .law-formula{font-size:23px}}
-@media(max-width:520px){.header-actions{margin-left:0;flex-wrap:wrap}.header-actions button{font-size:14px}.eyebrow{font-size:12px}.scene-card{height:440px}.scene-heading{font-size:14px}.scene-toolbar{padding:8px 8px 0;gap:5px}.view-tools button{font-size:14px}.tabs{width:100%;gap:4px}.tabs button{flex:1;padding:7px 9px;font-size:17px}.tab-row{display:block}.controls{grid-template-columns:1fr}.control-section:nth-child(odd){border-right:0}.transport{flex-wrap:wrap;padding:8px;gap:7px}.transport #play{min-width:96px}.timeline{order:4;flex-basis:100%}.clock{margin-left:auto;font-size:16px}.scene-meta{padding:0 10px 7px}.metric{padding:0 8px}.metric-label{font-size:13px}.metric-value{font-size:27px}.unit{font-size:13px;margin-left:3px}.law-formula{font-size:22px}.law-index{font-size:28px;width:20px}.law{gap:8px;min-height:70px}.law-detail{font-size:15px}.presets button{font-size:14px}.projection .metric-value{font-size:28px}.projection .metric-label{font-size:14px}.projection .unit{font-size:14px}.projection .law-detail{font-size:16px}.projection .scene-heading{font-size:15px}.projection .legend{font-size:15px}.projection .transport button{font-size:17px}}
-@media print{.controls,.header-actions,.presets,.footer,.transport{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:600px}.scene-toolbar{display:none}}
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Les valeurs occupent la place libre à côté de l’orbite, pour préserver sa hauteur. */
-.scene-content{display:grid;grid-template-columns:minmax(0,1fr) 195px;flex:1;min-height:0}.scene-content .readout{display:flex;flex-direction:column;justify-content:center;gap:25px;padding:20px 14px 20px 0}.scene-content .metric{border:0;padding:0}.scene-content .metric-value{white-space:normal}.scene-content .unit{white-space:nowrap}.scene-content .metric-label{margin-bottom:4px}.primary:hover{background:var(--accent-ink);color:var(--surface);filter:brightness(1.1)}:root[data-theme=dark] .primary:hover{color:#22191e}.scene-content .stage{min-height:180px}.projection .scene-content{grid-template-columns:minmax(0,1fr) 255px}.projection .scene-content .readout{gap:35px;padding-right:24px}.projection .law{min-height:62px}
-@media(min-width:1600px){.scene-content{grid-template-columns:minmax(0,1fr) 245px}.scene-content .readout{gap:35px;padding-right:25px}}
-@media(max-width:1100px){.scene-content{grid-template-columns:minmax(0,1fr) 170px}.scene-content .readout{gap:22px;padding-right:10px}}
-@media(max-width:780px){.scene-content{grid-template-columns:minmax(0,1fr) 160px}.scene-content .metric-value{font-size:30px}.scene-content .unit{font-size:15px}.scene-card{height:540px}.projection .scene-content{grid-template-columns:minmax(0,1fr) 190px}.projection .scene-content .readout{padding-right:12px}}
-@media(max-width:520px){.scene-content,.projection .scene-content{display:flex;flex-direction:column}.scene-content .readout,.projection .scene-content .readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:5px 10px 12px}.scene-content .stage{flex:1;min-height:200px}.scene-content .metric-value,.projection .scene-content .metric-value{font-size:25px}.scene-content .metric-label{font-size:13px}.scene-content .unit{font-size:13px}.scene-card{height:570px}.scene-meta{font-size:13px}.scene-toolbar{flex-wrap:wrap}.scene-toolbar .view-tools{margin-left:auto}.projection .scene-content .stage{min-height:180px}}
-#scene:focus-visible{outline:2px dashed var(--accent);outline-offset:-4px}
-</style>
-<!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* MC6 · dérivées temporelles pointées (ṙ, θ̇) en HTML, indépendantes de la police (repris de MC2) */
+.pt1{position:relative;display:inline-block}
+.pt1::after{position:absolute;left:0;right:0;top:-.38em;text-align:center;font-style:normal;line-height:1;content:"˙"}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
 <body>
-<div class="topline"></div>
-<main class="shell">
- <header class="masthead">
-  <div><div class="eyebrow">Mécanique · Expériences interactives</div><div class="heading"><span class="chapter">MC6</span><h1>Kepler</h1><span class="subtitle">Les trois lois, un même mouvement</span></div></div>
-  <div class="header-actions">
-   <button id="theme" aria-pressed="false" title="Changer de thème">Sombre</button>
-   <button id="help" class="icon-button" title="Modèle et utilisation" aria-label="Modèle et utilisation">ⓘ</button>
-   <button id="export" title="Enregistrer le schéma en SVG">Image ↓</button>
-   <button id="projection" aria-pressed="false" title="Agrandir la scène et masquer les réglages">Projection</button>
-   <button id="fullscreen" class="icon-button" aria-label="Plein écran" title="Plein écran">⛶</button>
-  </div>
- </header>
- <div class="tab-row"><nav class="tabs" aria-label="Lois de Kepler"><button data-view="orbit" aria-pressed="true">1 · Orbite</button><button data-view="areas" aria-pressed="false">2 · Aires</button><button data-view="periods" aria-pressed="false">3 · Périodes</button></nav><span class="tab-note">Un astre central fixe · un mouvement plan</span></div>
- <div class="workspace">
-  <section class="experiment" aria-label="Animation de Kepler">
-   <div class="scene-card">
-    <div class="scene-toolbar"><h2 id="scene-heading" class="scene-heading">L’astre attracteur occupe un foyer</h2><div class="view-tools"><button id="zoom-out" class="zoom" aria-label="Réduire le dessin">−</button><button id="fit" title="Rétablir la vue entière">Cadrer</button><button id="zoom-in" class="zoom" aria-label="Agrandir le dessin">+</button></div></div>
-    <div class="scene-content"><div class="stage"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="group" tabindex="0" aria-labelledby="scene-title scene-desc"><title id="scene-title">Une orbite elliptique autour d’un foyer</title><desc id="scene-desc">Déplacer le mobile avec la souris ou les flèches du clavier.</desc><g id="drawing"></g></svg></div><div class="readout" aria-label="Grandeurs calculées"><div class="metric"><div class="metric-label" id="label-1"></div><div class="metric-value" id="metric-1"></div></div><div class="metric"><div class="metric-label" id="label-2"></div><div class="metric-value" id="metric-2"></div></div><div class="metric"><div class="metric-label" id="label-3"></div><div class="metric-value" id="metric-3"></div></div></div></div>
-    <div class="scene-meta"><div id="legend" class="legend"></div><span class="drag-hint">Glisser le mobile · glisser le fond pour déplacer la vue</span></div>
-    <div class="transport"><button id="play" class="primary" aria-label="Mettre en pause">❚❚ Pause</button><button id="restart" title="Revenir au périastre à t = 0" aria-label="Revenir à t égal zéro">↺</button><button id="step" title="Avancer d’un intervalle Δt" hidden>+ Δt</button><label class="timeline"><span class="sr-only" hidden>Position dans le tour du mobile 1</span><input type="range" id="phase" min="0" max="1000" step="1" value="0" aria-label="Position dans le tour du mobile 1"></label><output id="clock" class="clock">t = 0,00 an</output></div>
-   </div>
-   <div class="law"><span id="law-index" class="law-index">I</span><div><div id="law-formula" class="law-formula"></div><div id="law-detail" class="law-detail"></div></div></div>
-  </section>
-  <aside class="controls" aria-label="Réglages de l’animation">
-   <section class="control-section"><h2 class="section-label">Explorer</h2><div class="presets" id="presets" aria-label="Situations caractéristiques"></div></section>
-   <section class="control-section"><h2 class="section-label" id="orbit-label">01 / L’orbite</h2>
-    <label class="field-head" for="a1"><span>Demi-grand axe <i>a₁</i></span><span class="value-field"><input id="a1" type="number" min="0.3" max="5" step="0.05" value="1" aria-label="Demi-grand axe du mobile 1 en UA"> UA</span></label><input id="a1-range" type="range" min="0.3" max="5" step="0.05" value="1" aria-label="Régler le demi-grand axe du mobile 1">
-    <label class="field-head" for="e1"><span>Excentricité <i>e₁</i></span><span class="value-field"><input id="e1" type="number" min="0" max="0.95" step="0.01" value="0.55" aria-label="Excentricité du mobile 1"></span></label><input id="e1-range" type="range" min="0" max="0.95" step="0.01" value="0.55" aria-label="Régler l’excentricité du mobile 1">
-    <dl class="small-stats"><dt>Périastre <i>rₚ</i></dt><dd id="rp"></dd><dt>Apoastre <i>rₐ</i></dt><dd id="ra"></dd></dl>
-   </section>
-   <section id="second-controls" class="control-section" hidden><h2 class="section-label"><span class="body-key second"></span>02 / Le mobile 2</h2>
-    <label class="field-head" for="a2"><span>Demi-grand axe <i>a₂</i></span><span class="value-field"><input id="a2" type="number" min="0.3" max="5" step="0.05" value="1" aria-label="Demi-grand axe du mobile 2 en UA"> UA</span></label><input id="a2-range" type="range" min="0.3" max="5" step="0.05" value="1" aria-label="Régler le demi-grand axe du mobile 2">
-    <label class="field-head" for="e2"><span>Excentricité <i>e₂</i></span><span class="value-field"><input id="e2" type="number" min="0" max="0.95" step="0.01" value="0.15" aria-label="Excentricité du mobile 2"></span></label><input id="e2-range" type="range" min="0" max="0.95" step="0.01" value="0.15" aria-label="Régler l’excentricité du mobile 2">
-    <dl class="small-stats"><dt>Tours du mobile 1</dt><dd id="turns1">0</dd><dt>Tours du mobile 2</dt><dd id="turns2">0</dd><dt>T₁² / a₁³</dt><dd id="ratio1"></dd><dt>T₂² / a₂³</dt><dd id="ratio2"></dd></dl><p class="note">Les deux rapports sont exprimés en an²/UA³.</p>
-    <p class="note">Même astre attracteur, même horloge. Les mobiles partent ensemble de leur périastre à t = 0.</p>
-   </section>
-   <section id="areas-controls" class="control-section" hidden><h2 class="section-label">02 / Des durées égales</h2>
-    <label class="field-head" for="dt"><span>Intervalle Δt</span><span class="value-field"><input id="dt" type="number" min="2" max="12" step="1" value="6" aria-label="Durée des secteurs en pourcentage de la période"> % T₁</span></label><input id="dt-range" type="range" min="2" max="12" step="1" value="6" aria-label="Régler l’intervalle des secteurs">
-    <p class="note">Trois secteurs de référence, autour du périastre, de l’apoastre et entre les deux. Leurs angles et leurs formes diffèrent ; leurs aires sont égales.</p>
-    <div class="formula">d𝒜 / dt = 𝒞 / 2</div><p class="note">𝒞 = r² θ̇ : constante des aires. Les marques sur l’orbite sont espacées du même Δt.</p>
-   </section>
-   <section class="control-section"><h2 class="section-label">L’astre attracteur</h2>
-    <label class="field-head" for="mass"><span>Masse <i>mₒ</i></span><span class="value-field"><input id="mass" type="number" min="0.25" max="4" step="0.05" value="1" aria-label="Masse de l’astre en masses solaires"> M☉</span></label><input id="mass-range" type="range" min="0.25" max="4" step="0.05" value="1" aria-label="Régler la masse de l’astre attracteur">
-    <p class="note">À géométrie fixée, une masse centrale plus grande donne un mouvement plus rapide.</p>
-   </section>
-   <section class="control-section"><h2 class="section-label">Affichages</h2><div class="checks">
-    <label><input id="velocity" type="checkbox" checked>Vecteur vitesse</label>
-    <label><input id="radius" type="checkbox" checked>Rayon-vecteur OM</label>
-    <label><input id="geometry" type="checkbox" checked>Foyers, centre et grand axe</label>
-    <label><input id="marks" type="checkbox">Positions à temps égaux</label>
-   </div><p class="note">Les vecteurs vitesse partagent une échelle commune, ajustée au cadrage. Les astres sont agrandis pour être visibles.</p></section>
-   <section class="control-section"><h2 class="section-label">Lecture</h2><label for="rate" class="note">Temps simulé par seconde réelle</label><select id="rate"><option value="0.01">0,01 an / s · très lent</option><option value="0.03">0,03 an / s · lent</option><option value="0.06" selected>0,06 an / s</option><option value="0.12">0,12 an / s</option><option value="0.25">0,25 an / s</option><option value="0.5">0,50 an / s · rapide</option></select><p class="note">Espace : pause · R : t = 0 · C : cadrer · F : plein écran. Sur le dessin, ← et → déplacent le mobile.</p><button id="reset" style="width:100%;margin-top:12px">Tout réinitialiser</button></section>
-  </aside>
- </div>
- <footer class="footer"><span>E. Guillaume · MPSI · MC6</span><span>Modèle képlérien · fichier autonome hors connexion · longueurs en UA</span></footer>
-</main>
-<dialog id="info"><h2>Kepler · modèle et utilisation</h2>
- <p><strong>Manipuler.</strong> Choisir une loi, régler a et e, puis lancer ou interrompre le mouvement. Glisser un mobile pour le positionner sur son orbite : la même horloge déplace les deux mobiles dans la vue Périodes. Glisser le fond pour déplacer la vue ; utiliser +, − ou Cadrer. Les flèches du clavier sur le dessin déplacent le mobile 1 (Maj : pas plus grand).</p>
- <p><strong>Orbite.</strong> O est le foyer occupé par l’astre attracteur, F′ le second foyer, C le centre de l’ellipse. P et A désignent le périastre et l’apoastre. Lorsque e = 0, les deux foyers et le centre se confondent. Le mouvement s’effectue dans le sens trigonométrique.</p>
- <p><strong>Aires.</strong> Les trois secteurs sont des intervalles de référence fixes, tous de durée Δt. Les positions ponctuelles correspondent aussi à des intervalles Δt ; le dernier intervalle avant le retour à t = 0 peut être incomplet. « + Δt » met en pause et avance d’un intervalle. La loi des aires vaut pour toute force centrale ; les trajectoires affichées ici sont képlériennes.</p>
- <p><strong>Périodes.</strong> Les deux mobiles sont indépendants et interagissent uniquement avec le même astre central. t = 0 correspond au périastre pour chacun. Changer a ou la masse centrale remet les horloges à zéro ; modifier e conserve t et T. La barre de temps permet de choisir t entre 0 et T₁. Le bouton ↺ remet les deux mobiles à t = 0.</p>
- <p><strong>Hypothèses.</strong> Gravitation newtonienne d’un astre ponctuel fixe, masses des mobiles négligeables devant sa masse, absence de perturbations et de frottements. L’équation de Kepler E − e sin E = nt est résolue numériquement ; le mouvement n’est pas uniforme en angle polaire. Cette animation traite les états liés, 0 ≤ e ≤ 0,95. Elle ne modélise pas les collisions avec la surface d’un astre.</p>
- <p><strong>Unités et dessin.</strong> 1 UA = 149 597 870 700 m ; 1 an = 365,25 jours ; GM☉ = 1,32712440018 × 10²⁰ m³·s⁻². T est calculée à partir de ces constantes. La masse réglée est un multiple de la masse solaire, via GM. Le temps est accéléré ; tailles des corps, couleurs et épaisseurs sont conventionnelles. Les distances orbitales ont la même échelle dans les deux directions. Les vitesses sont affichées en km/s ; 𝒞 en UA²/an ; les aires en UA².</p>
- <p><strong>Projection et export.</strong> Projection masque les réglages et agrandit les légendes ; Réglages les réaffiche. Image prépare un aperçu ; Enregistrer le SVG télécharge le dessin avec ses paramètres, le temps, les valeurs et la loi courante. Les thèmes clair et sombre s’appliquent aussi à l’export. Aucune ressource extérieure n’est nécessaire.</p>
- <div class="close-row"><button id="close-info">Fermer</button></div>
-</dialog>
-<dialog id="export-info"><h2>Enregistrer le schéma</h2><p>Le SVG conserve les tracés, les paramètres et les valeurs de cet instant.</p><div id="export-preview" style="border:1px solid var(--line);border-radius:6px;overflow:auto;max-height:48vh"></div><div style="display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:18px"><a id="download-svg" style="color:var(--accent-ink);font-size:19px" download>Enregistrer le SVG</a><button id="close-export">Fermer</button></div></dialog>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script id="kepler-model">
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* MC6_Lois_Kepler · modèle physique d'origine (HTML du 25 octobre 2026), extrait tel quel au lot 6 ; contrôlé par ../MC6_Lois_Kepler/Verifier_Modele.mjs. */
 /* Modèle indépendant du dessin : UA, année julienne et multiple de GM solaire. */
 window.KeplerModel=(()=>{
  'use strict';
@@ -158,257 +749,248 @@ window.KeplerModel=(()=>{
  function swept(o,m0,m1){const e0=eccentric(m0,o.e),e1=eccentric(m1,o.e);return .5*o.a*o.b*(e1-e0-o.e*(Math.sin(e1)-Math.sin(e0)));}
  return Object.freeze({TAU,AU,YEAR,GM,MU,mod,eccentric,orbit,atMean,atTime,swept});
 })();
-</script>
-<script>
-(()=>{
- 'use strict';
- const $=id=>document.getElementById(id),K=window.KeplerModel,NS='http://www.w3.org/2000/svg';
- const defaults={a1:1,e1:.55,a2:1,e2:.15,mass:1,dt:6,velocity:true,radius:true,geometry:true,marks:false,rate:.06};
- let state={...defaults},view='orbit',t=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,dark=false,zoom=1,pan=[0,0],W=900,H=400,scale=1,center=[0,0],last=0,drag=null,wasPlaying=false,toastTimer,resizeFrame,exportUrl=null;
- let o1,o2,p1,p2,labels=[],obstacles=[],C={},vectorScale=1;
- const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(x)<1e-10?0:x);
- const el=(tag,attrs={},parent=$('drawing'))=>{const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));parent.append(n);return n;};
- const path=points=>points.map((p,i)=>(i?'L':'M')+p.map(v=>v.toFixed(3)).join(',')).join(' ');
- const P=(x,y)=>[W/2+(x-center[0])*scale+pan[0],H/2-(y-center[1])*scale+pan[1]];
- const world=(x,y)=>[(x-W/2-pan[0])/scale+center[0],-(y-H/2-pan[1])/scale+center[1]];
- const line=(a,b,color,width=1,extra={},parent)=>el('path',{d:path([a,b]),fill:'none',stroke:color,'stroke-width':width,...extra},parent);
- function text(p,s,color=C.ink,size=22,anchor='start',extra={},parent){const n=el('text',{x:p[0],y:p[1],fill:color,'font-size':size,'text-anchor':anchor,...extra},parent);n.textContent=s;return n;}
- const proj=()=>document.body.classList.contains('projection');
- function palette(){const css=getComputedStyle(document.documentElement);for(const k of ['ink','secondary','line','accent','accent-ink','surface','orbit','orbit2','gold','teal','violet','star'])C[k]=css.getPropertyValue('--'+k).trim();}
- function orbitModels(){o1=K.orbit(state.a1,state.e1,state.mass);o2=K.orbit(state.a2,state.e2,state.mass);p1=K.atTime(o1,t);p2=K.atTime(o2,t);}
- function camera(){
-  const box=$('scene').getBoundingClientRect();W=Math.max(260,box.width);H=Math.max(170,box.height);$('scene').setAttribute('viewBox',`0 0 ${W} ${H}`);
-  const os=view==='periods'?[o1,o2]:[o1],left=Math.min(...os.map(o=>-o.ra)),right=Math.max(...os.map(o=>o.rp)),b=Math.max(...os.map(o=>o.b));
-  center=[(left+right)/2,0];const marginX=W<500?48:65,marginY=proj()?55:45;
-  scale=Math.min(Math.max(100,W-2*marginX)/(right-left),Math.max(75,H-2*marginY)/(2*b))*zoom;
+
+/* =====================================================================
+   MC6 · outils communs aux animations du chapitre (lot 6, 2 novembre 2026)
+   Caméra monde → écran avec zoom et déplacement, placement d'étiquettes sans
+   recouvrement, barre d'échelle, glisser (objet ou fond).
+   ===================================================================== */
+window.MC6=(()=>{
+'use strict';
+/** Caméra d'un panneau : b = {xmin,xmax,ymin,ymax} en unités du monde, y vers le haut. */
+function camera(P,b,marge=28){
+  const dx=Math.max(1e-12,b.xmax-b.xmin), dy=Math.max(1e-12,b.ymax-b.ymin);
+  const s=Math.min(Math.max(40,P.w-2*marge)/dx,Math.max(40,P.h-2*marge)/dy)*(P.zoom||1);
+  const cx=(b.xmin+b.xmax)/2, cy=(b.ymin+b.ymax)/2;
+  const X=(x,y)=>[P.w/2+(x-cx)*s+(P.panX||0),P.h/2-(y-cy)*s+(P.panY||0)];
+  const inv=(px,py)=>[(px-P.w/2-(P.panX||0))/s+cx,-(py-P.h/2-(P.panY||0))/s+cy];
+  return {X,inv,s};
+}
+/** Placeur d'étiquettes : essaie plusieurs positions et garde la moins encombrée. */
+function placer(a,P){
+  const boxes=[], obst=[];
+  const plain=h=>String(h).replace(/<tspan[^>]*font-size="72%"[^>]*>([^<]*)<\/tspan>/g,'$1').replace(/<[^>]+>/g,'').replace(/&[a-z]+;/g,'x');
+  const hit=(A,B,p=3)=>A.x<B.x+B.w+p&&A.x+A.w+p>B.x&&A.y<B.y+B.h+p&&A.y+A.h+p>B.y;
+  return {
+    obstacle(x,y,r=10){obst.push({x:x-r,y:y-r,w:2*r,h:2*r})},
+    /** renvoie le SVG de l'étiquette ; pref = [dx,dy] préféré */
+    put(x,y,html,o={}){
+      if(!(x>-60&&x<P.w+60&&y>-60&&y<P.h+60))return'';
+      const size=(o.size??14)*a.k, w=plain(html).length*size*.56+4, h=size*1.2;
+      const pr=o.pref||[10,-12];
+      const cand=[pr,[10,size+6],[-w-10,-12],[-w-10,size+6],[10,-2.4*size],[-w-10,-2.4*size],[14,2.6*size],[-w-14,2.6*size],[-w/2,-1.6*size],[-w/2,2*size]];
+      let best=null;
+      for(const[dx,dy]of cand){const bx=Math.max(4,Math.min(P.w-w-4,x+dx)), by=Math.max(h+2,Math.min(P.h-4,y+dy));
+        const B={x:bx,y:by-h,w,h};let c=Math.hypot(bx-x-dx,by-y-dy)*.02+Math.hypot(dx,dy)*.01;
+        for(const b of boxes)if(hit(B,b))c+=100;for(const b of obst)if(hit(B,b,1))c+=30;
+        if(!best||c<best.c)best={x:bx,y:by,B,c}}
+      boxes.push(best.B);
+      return a.S.text(best.x,best.y-h*.35,html,{size:o.size??14,c:o.c,weight:o.weight,math:o.math});
+    }
+  };
+}
+/** Barre d'échelle en bas à gauche. */
+function scaleBar(a,P,cam,unit,cible=90){
+  const raw=cible*a.k/cam.s, p=10**Math.floor(Math.log10(raw)), q=raw/p, L=(q>=5?5:q>=2?2:1)*p, w=L*cam.s, y=P.h-12*a.k, x=12*a.k, C=a.C;
+  const lab=(L>=1?a.fmt.fix(L,0).replace(/\B(?=(\d{3})+(?!\d))/g,' '):a.fmt.sig(L,1))+' '+unit;
+  return a.S.line(x,y,x+w,y,{c:C.ink2,w:2})+a.S.line(x,y-4*a.k,x,y+4*a.k,{c:C.ink2})+a.S.line(x+w,y-4*a.k,x+w,y+4*a.k,{c:C.ink2})+a.S.text(x,y-10*a.k,lab,{size:12.5,c:C.ink2});
+}
+/** Glisser dans un panneau : objets saisissables (grab renvoie un gestionnaire) sinon déplacement de la vue. */
+function drag(a,id,grab){
+  const P=a.panels[id];let h=null,start=null;
+  a.drag(id,{
+    hit:(x,y,e)=>true,
+    start:(x,y,e)=>{h=grab?grab(x,y,e):null;start={x,y,px:P.panX,py:P.panY};if(h&&h.start)h.start(x,y)},
+    move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
+    end:e=>{if(h&&h.end)h.end(e);h=null}
+  });
+  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
+  P.node.style.touchAction='none';
+}
+/** Nombre avec espaces fines de milliers (point décimal conservé). */
+function nb(a,x,d=0){const s=a.fmt.fix(x,d);const[i,f]=s.split('.');return i.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+(f?'.'+f:'')}
+/** Durée lisible. */
+function duree(a,s){const f=a.fmt;if(!isFinite(s))return'—';if(Math.abs(s)<120)return f.sig(s,3)+' s';if(Math.abs(s)<7200)return f.sig(s/60,3)+' min';if(Math.abs(s)<172800)return f.sig(s/3600,3)+' h';return f.sig(s/86400,3)+' j'}
+/** Lettre pointée (dérivée temporelle) : HTML et SVG. */
+const dot=(x='r')=>`<span class="m pt1">${x}</span>`;
+const Sdot=(x='r')=>`<tspan font-family='${AnimKit.MATH}' font-style="italic">${x}</tspan><tspan dx="-0.42em" dy="-0.12em">˙</tspan><tspan dy="0.12em" dx="0.12em">\u200b</tspan>`;
+return Object.freeze({camera,placer,scaleBar,drag,nb,duree,dot,Sdot});
+})();
+
+// @titre Lois de Kepler · MC6 · MPSI
+// @sortie ../MC6_Lois_Kepler/MC6_Lois_Kepler.html
+// @inclure MC6_Lois_Kepler_physique.js
+// @inclure MC6_commun.js
+// @style MC6_commun.css
+// @description Les trois lois de Kepler sur un même mouvement : ellipse et foyer, loi des aires, troisième loi et planètes du système solaire.
+'use strict';
+/* =====================================================================
+   MC6 · Lois de Kepler (lot 6)
+   Modèle : KeplerModel d'origine (UA, année julienne, multiple de G m_☉), inchangé.
+   Notations du cours MC6 : O centre attracteur, péricentre P et apocentre A,
+   r_min = a(1 − e), r_max = a(1 + e), constante des aires 𝒞 = r²θ̇, m_O masse centrale.
+   ===================================================================== */
+const K=window.KeplerModel, Mh=AnimKit.M, mv=(s,sub,sup)=>Mh.v(s,sub,sup);
+/* Planètes : tableau du cours (§ 1.2), a en 10⁶ km et T en années ; a ramené à l'UA du tableau (Terre). */
+const PLANETES=[['Mercure',57.95,.241],['Vénus',108.11,.615],['Terre',149.57,1],['Mars',227.84,1.881],['Jupiter',778.1,11.861],['Saturne',1427,29.457],['Uranus',2870.3,84.008],['Neptune',4499.9,164.78]].map(([n,a,T])=>({n,a:a/149.57,T}));
+const RATE=.06;   // années simulées par seconde réelle à la vitesse × 1
+let o1,o2;
+const models=a=>{o1=K.orbit(a.p.a1,a.p.e1,a.p.mass);o2=K.orbit(a.p.a2,a.p.e2,a.p.mass)};
+
+const A=AnimKit.app({
+  code:'MC6', partie:'RougeGrenat', chapitre:'MC6 Mouvement dans un champ de force centrale conservatif',
+  titre:'Lois de Kepler', sousTitre:'Un centre attracteur fixe, un mouvement plan : ellipse, loi des aires, loi des périodes',
+  onglets:['Orbite','Aires','Périodes'],
+  temps:true, pas:1/48, vitesses:[.25,.5,1,2,4,8], vitesse:1,
+  panneaux:[{id:'scene',titre:'Orbite autour du centre attracteur O',poids:1.6,zoom:true,ratioTel:.85},
+            {id:'log',titre:'Troisième loi : planètes du système solaire',poids:1,onglets:[2],ratioTel:.8}],
+  curseur:{max:a=>a.tab===2?3*Math.max(o1.T,o2.T):o1.T,get:a=>a.t,set:(a,v)=>{a.t=v}},
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Cercle',valeurs:{e1:0},si:a=>a.tab<2},
+      {label:'Ellipse',valeurs:{a1:1,e1:.55},si:a=>a.tab<2},
+      {label:'Très excentrique',valeurs:{a1:1,e1:.9},si:a=>a.tab<2},
+      {label:'Même a, e différents',valeurs:{a1:1,a2:1,e1:.7,e2:.1},si:a=>a.tab===2},
+      {label:`${mv('a')}<sub>2</sub> = 2${mv('a')}<sub>1</sub>`,valeurs:{a1:1,a2:2,e1:.15,e2:.15},si:a=>a.tab===2},
+      {label:'Deux cercles',valeurs:{a1:1,a2:1.6,e1:0,e2:0},si:a=>a.tab===2},
+      {label:'Terre et Mars',valeurs:{a1:1,e1:.017,a2:1.52,e2:.093,mass:1},si:a=>a.tab===2}]},
+    {titre:'Orbite du mobile 1',items:[
+      {id:'a1',label:`Demi-grand axe ${mv('a')}<sub>1</sub>`,min:.3,max:5,step:.05,unit:'UA',value:1},
+      {id:'e1',label:`Excentricité ${mv('e')}<sub>1</sub>`,min:0,max:.95,step:.01,value:.55}]},
+    {titre:'Orbite du mobile 2',onglets:[2],items:[
+      {id:'a2',label:`Demi-grand axe ${mv('a')}<sub>2</sub>`,min:.3,max:5,step:.05,unit:'UA',value:1},
+      {id:'e2',label:`Excentricité ${mv('e')}<sub>2</sub>`,min:0,max:.95,step:.01,value:.15},
+      {type:'note',html:'Même centre attracteur, même horloge : les deux mobiles partent ensemble de leur péricentre à <span class="m">t</span> = 0.'}]},
+    {titre:'Des durées égales',onglets:[1],items:[
+      {id:'dt',label:`Durée Δ${mv('t')} (en % de ${mv('T')}<sub>1</sub>)`,min:2,max:12,step:1,unit:'%',value:6},
+      {id:'live',type:'check',label:'Aire balayée en direct pendant Δ<span class="m">t</span>',value:true},
+      {type:'note',html:'Trois secteurs de référence, autour du péricentre, de l\'apocentre et entre les deux, chacun parcouru pendant Δ<span class="m">t</span>.'}]},
+    {titre:'Centre attracteur',items:[
+      {id:'mass',label:`Masse ${mv('m')}<sub>O</sub>`,min:.25,max:4,step:.05,unit:'m<sub>☉</sub>',value:1},
+      {type:'note',html:'À géométrie fixée, une masse centrale plus grande donne un mouvement plus rapide.'}]},
+    {titre:'Affichage',items:[
+      {id:'vel',type:'check',label:'Vecteur vitesse',value:true},
+      {id:'ray',type:'check',label:`Rayon-vecteur ${Mh.vec('OM')}`,value:true},
+      {id:'geo',type:'check',label:'Foyers, centre et grand axe',value:true,onglets:[0,1]},
+      {id:'marks',type:'check',label:'Positions à intervalles de temps égaux',value:false,onglets:[0,2]},
+      {id:'ratios',type:'check',label:`Rapports ${mv('T')}<sup>2</sup>/${mv('a')}<sup>3</sup> (vérifier la prévision)`,value:false,onglets:[2]},
+      {id:'droite',type:'check',label:'Droite de pente 3/2 (graphe logarithmique)',value:false,onglets:[2]}]}
+  ],
+  aide:{
+    voit:'L\'orbite elliptique d\'un mobile autour du centre attracteur O, placé à un foyer. Onglet 2 : trois secteurs parcourus pendant la même durée. Onglet 3 : deux mobiles sur une même horloge et, à droite, les planètes du système solaire en coordonnées logarithmiques.',
+    faire:'<ul><li>Régler <span class="m">a</span> et <span class="m">e</span>, lancer, glisser le mobile sur son orbite ou parcourir le tour avec le curseur temporel.</li><li>Onglet 2 : comparer la forme et l\'angle des secteurs, puis suivre l\'aire balayée en direct.</li><li>Onglet 3 : prévoir lequel des deux mobiles revient le premier, puis afficher les rapports <span class="m">T</span>²/<span class="m">a</span>³ et la droite de pente 3/2.</li><li>Glisser le fond pour déplacer la vue ; molette ou boutons pour zoomer.</li></ul>',
+    modele:'Mouvement képlérien exact autour d\'un centre fixe : équation de Kepler résolue par Newton protégé, vitesse et aire balayée analytiques. Longueurs en UA, temps en années juliennes, <span class="m">G m</span><sub>☉</sub> = 1.327 × 10<sup>20</sup> m<sup>3</sup>·s<sup>−2</sup>. Les astres sont agrandis ; le temps est accéléré. Les planètes viennent du tableau du cours.',
+    cours:'MC6 § 4.1 : première loi (ellipse de foyer O), deuxième loi (d𝒜/d<span class="m">t</span> = 𝒞/2, avec 𝒞 = <span class="m">r</span>²<span class="m pt1">θ</span>), troisième loi <span class="m">T</span>²/<span class="m">a</span>³ = 4π²/(<span class="m">G m</span><sub>O</sub>). Péricentre P et apocentre A : <span class="m">r</span><sub>min</sub> + <span class="m">r</span><sub>max</sub> = 2<span class="m">a</span>.',
+    touches:'<kbd>←</kbd> recule d\'un pas'
+  },
+  touches:{arrowleft:a=>{a.play(false);a.t=Math.max(0,a.t-o1.T/48)}},
+  init(a){models(a);MC6.drag(a,'scene',grab)},
+  reset(a){models(a);a.t=0},
+  change(a,id){if(['a1','e1','a2','e2','mass'].includes(id)){models(a);if(id!=='e1'&&id!=='e2')a.t=0;a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0}},
+  onglet(a){a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0},
+  step(a,dt){a.t+=Math.max(0,dt)*RATE;const m=a.tab===2?3*Math.max(o1.T,o2.T):o1.T;if(a.t>m)a.t-=m},
+  draw(a){models(a);scene(a);if(a.tab===2)logPlot(a);infos(a)}
+});
+
+/* ---------- caméra et saisie du mobile ---------- */
+let cam=null;
+function bornes(a){const os=a.tab===2?[o1,o2]:[o1];const l=Math.min(...os.map(o=>-o.ra)),r=Math.max(...os.map(o=>o.rp)),b=Math.max(...os.map(o=>o.b));return{xmin:l,xmax:r,ymin:-b,ymax:b}}
+function grab(x,y){
+  const a=A;if(!cam)return null;
+  const list=a.tab===2?[[o1,1],[o2,2]]:[[o1,1]];
+  for(const[o,i]of list){const p=K.atTime(o,a.t),q=cam.X(p.x,p.y);if(Math.hypot(q[0]-x,q[1]-y)<24*a.k)
+    return{start(){a.play(false)},move(px,py){const[wx,wy]=cam.inv(px,py),E=Math.atan2(wy/o.b,wx/o.a+o.e),tm=K.mod(E-o.e*Math.sin(E))/o.n;
+      if(i===1||a.tab<2)a.t=tm;else{const k=Math.round((a.t-tm)/o.T);a.t=Math.max(0,tm+k*o.T)}}}}
+  return null;
+}
+
+/* ---------- scène ---------- */
+function scene(a){
+  const P=a.panels.scene,S=a.S,C=a.C,k=a.k;
+  cam=MC6.camera(P,bornes(a),34*k);const X=cam.X, L=MC6.placer(a,P);
+  const os=a.tab===2?[o1,o2]:[o1], col=[C.cInk,C.B];
   const vmax=Math.max(...os.map(o=>Math.sqrt(o.mu*(1+o.e)/(o.a*(1-o.e)))));
-  vectorScale=.15*(right-left)/vmax;
- }
- function arrow(a,b,color,width=2.5){line(a,b,color,width);const angle=Math.atan2(b[1]-a[1],b[0]-a[0]),L=11;el('path',{d:path([b,[b[0]-L*Math.cos(angle-.4),b[1]-L*Math.sin(angle-.4)],[b[0]-L*Math.cos(angle+.4),b[1]-L*Math.sin(angle+.4)]])+'Z',fill:color});}
- function collision(a,b,pad=7){return a.x<b.x+b.w+pad&&a.x+a.w+pad>b.x&&a.y<b.y+b.h+pad&&a.y+a.h+pad>b.y;}
- function label(p,s,color=C.ink,preferred=[14,-18],size=proj()?27:22){
-  if(p[0]<-80||p[0]>W+80||p[1]<-80||p[1]>H+80)return;
-  const w=s.length*size*.57,h=size*1.2,choices=[preferred,[16,32],[-w-16,-18],[-w-16,32],[14,-48],[-w-14,-48],[18,60],[-w-18,60]];
-  let best=null;
-  for(const [dx,dy] of choices){const x=Math.max(8,Math.min(W-w-8,p[0]+dx)),y=Math.max(h+5,Math.min(H-15,p[1]+dy)),box={x,y:y-h*.85,w,h};let cost=Math.hypot(x-p[0],y-p[1])*.03;for(const b of labels)if(collision(box,b))cost+=100;for(const b of obstacles)if(collision(box,b,2))cost+=30;if(!best||cost<best.cost)best={x,y,box,cost};}
-  labels.push(best.box);if(Math.hypot(best.x-p[0],best.y-p[1])>60)line(p,[best.x+Math.min(12,w/2),best.y-h*.4],color,1,{opacity:.45});
-  text([best.x,best.y],s,color,size,'start',{'class':'label'});
- }
- function drawOrbit(o,color,second=false){const p=P(-o.a*o.e,0);el('ellipse',{cx:p[0],cy:p[1],rx:o.a*scale,ry:o.b*scale,fill:color,'fill-opacity':second?.015:.025,stroke:color,'stroke-width':second?2.5:3,'stroke-dasharray':second?'9 7':'none'});}
- function geometry(){
-  if(!state.geometry)return;
-  const a=P(-o1.ra,0),b=P(o1.rp,0),c=P(-o1.a*o1.e,0),f=P(-2*o1.a*o1.e,0);
-  line(a,b,C.secondary,1,{'stroke-dasharray':'5 7',opacity:.6});
-  for(const p of [a,b])el('circle',{cx:p[0],cy:p[1],r:4,fill:C.orbit});
-  label(a,'A',C.orbit,[-30,-18]);label(b,'P',C.orbit,[13,-18]);
-  if(o1.e<1e-9)label(P(0,0),'O = C = F′',C.secondary,[18,35]);
-  else{
-   line([c[0]-5,c[1]],[c[0]+5,c[1]],C.secondary,1.5);line([c[0],c[1]-5],[c[0],c[1]+5],C.secondary,1.5);
-   el('circle',{cx:f[0],cy:f[1],r:3.5,fill:C.secondary});label(c,'C',C.secondary,[-8,33]);label(f,'F′',C.secondary,[-9,-19]);
-  }
-  // Cotation du grand axe à distance fixe sous l’ellipse : les lettres ne changent pas d’échelle.
-  const yy=P(0,-o1.b)[1]+27;
-  if(yy<H-10&&b[0]-a[0]>110){line([a[0],yy],[b[0],yy],C.secondary,1);for(const x of [a[0],b[0]])line([x,yy-5],[x,yy+5],C.secondary,1);label([(a[0]+b[0])/2,yy],'2a₁',C.secondary,[-17,23],proj()?25:21);}
- }
- function sector(o,m0,dm,color,index){
-  const pts=[P(0,0)],n=180,E0=K.eccentric(m0,o.e),E1=K.eccentric(m0+dm,o.e);for(let j=0;j<=n;j++){const E=E0+(E1-E0)*j/n;pts.push(P(o.a*(Math.cos(E)-o.e),o.b*Math.sin(E)));}
-  el('path',{d:path(pts)+'Z',fill:color,'fill-opacity':dark?.23:.19,stroke:color,'stroke-width':1.3});
-  const q=K.atMean(o,m0+dm/2),anchor=P(q.x*.65,q.y*.65);return {anchor,s:'𝒜'+['₁','₂','₃'][index],color};
- }
- function drawMarks(o,color){
-  const dm=K.TAU*state.dt/100;for(let k=0;k*dm<K.TAU-1e-9;k++){const q=K.atMean(o,k*dm),p=P(q.x,q.y);el('circle',{cx:p[0],cy:p[1],r:3.3,fill:C.surface,stroke:color,'stroke-width':1.5});}
- }
- function drawBody(o,p,color,index){
-  const pt=P(p.x,p.y),O=P(0,0);if(state.radius)line(O,pt,color,1.5,{'stroke-dasharray':'5 5',opacity:.7});
-  if(state.velocity){const tip=P(p.x+p.vx*vectorScale,p.y+p.vy*vectorScale);arrow(pt,tip,color);if(Math.hypot(tip[0]-pt[0],tip[1]-pt[1])>17)label(tip,view==='periods'?'v'+['₁','₂'][index-1]:'v',color,[10,-12],proj()?26:22);}
-  const g=el('g',{'data-mobile':index,'aria-label':`Mobile ${index}, à déplacer sur son orbite`});
-  el('circle',{cx:pt[0],cy:pt[1],r:21,fill:color,'fill-opacity':.06,stroke:color,'stroke-opacity':.25,'stroke-dasharray':'3 5'},g);
-  el('circle',{cx:pt[0],cy:pt[1],r:8,fill:color,stroke:C.surface,'stroke-width':2},g);
-  label(pt,view==='periods'?'M'+['₁','₂'][index-1]:'M',color,[15,-19],proj()?29:24);
- }
- function draw(){
-  orbitModels();camera();labels=[];obstacles=[];$('drawing').replaceChildren();
-  for(const p of view==='periods'?[p1,p2]:[p1]){const q=P(p.x,p.y);obstacles.push({x:q[0]-12,y:q[1]-12,w:24,h:24});}
-  const O=P(0,0);obstacles.push({x:O[0]-14,y:O[1]-14,w:28,h:28});
-  let sectorLabels=[];
-  if(view==='areas'){const dm=K.TAU*state.dt/100;sectorLabels=[sector(o1,-dm/2,dm,C.gold,0),sector(o1,Math.PI-dm/2,dm,C.teal,1),sector(o1,1.5*Math.PI-dm/2,dm,C.violet,2)];}
-  drawOrbit(o1,C.orbit);if(view==='periods')drawOrbit(o2,C.orbit2,true);
-  if(state.marks||view==='areas'){drawMarks(o1,C.orbit);if(view==='periods')drawMarks(o2,C.orbit2);}
-  if(view!=='periods')geometry();
-  el('circle',{cx:O[0],cy:O[1],r:15,fill:C.star,'fill-opacity':.12});el('circle',{cx:O[0],cy:O[1],r:8,fill:C.star});
-  if(!(state.geometry&&view!=='periods'&&o1.e<1e-9))label(O,'O',C.ink,[15,32],proj()?28:24);
-  for(const s of sectorLabels)label(s.anchor,s.s,s.color,[8,-8],proj()?28:24);
-  drawBody(o1,p1,C.orbit,1);if(view==='periods')drawBody(o2,p2,C.orbit2,2);
-  const scaleAU=niceScale(100/scale),bar=scaleAU*scale;
-  if(W>370&&H>200){line([18,H-15],[18+bar,H-15],C.secondary,2);for(const x of [18,18+bar])line([x,H-20],[x,H-10],C.secondary,1.5);text([18,H-29],fmt(scaleAU,scaleAU<1?2:1)+' UA',C.secondary,proj()?22:17);}
-  updateValues();
- }
- function niceScale(x){const n=10**Math.floor(Math.log10(x)),q=x/n;return (q>=5?5:q>=2?2:1)*n;}
- const metric=(i,label,value,unit)=>{$('label-'+i).textContent=label;$('metric-'+i).replaceChildren(document.createTextNode(value));if(unit){const u=document.createElement('span');u.className='unit';u.textContent=unit;$('metric-'+i).append(u);}};
- function updateValues(){
-  $('rp').textContent=fmt(o1.rp)+' UA';$('ra').textContent=fmt(o1.ra)+' UA';$('clock').textContent='t = '+fmt(t)+' an'+(t>=2?'s':'');
-  if(document.activeElement!==$('phase'))$('phase').value=K.mod(t,o1.T)/o1.T*1000;
-  $('phase').setAttribute('aria-valuetext',fmt(K.mod(t,o1.T)/o1.T*100,1)+' % du tour');
-  if(view==='orbit'){
-   metric(1,'Distance OM',fmt(p1.r),'UA');metric(2,'Vitesse v',fmt(p1.v*K.AU/K.YEAR/1000,1),'km/s');metric(3,'Période T₁',fmt(o1.T),'an');
-   $('law-formula').textContent='L’astre attracteur est au foyer O de l’ellipse.';
-   $('law-detail').textContent=state.e1===0?'e₁ = 0 : le cercle est une ellipse dont les foyers sont confondus.':'rₚ = a₁(1 − e₁) ; rₐ = a₁(1 + e₁). La vitesse est maximale au périastre.';
-  }else if(view==='areas'){
-   metric(1,'Durée commune Δt',fmt(o1.T*state.dt/100,3),'an');metric(2,'Aire de chaque secteur',fmt(o1.area*state.dt/100,3),'UA²');metric(3,'Constante des aires 𝒞',fmt(o1.C),'UA²/an');
-   $('law-formula').textContent='𝒜₁ = 𝒜₂ = 𝒜₃ = 𝒞 Δt / 2';
-   $('law-detail').textContent='Des durées égales donnent des aires égales, avec des angles et des distances parcourues différents.';
+  const vs=.28*(Math.max(...os.map(o=>o.ra+o.rp)))/vmax;     // échelle commune des vitesses
+  let s='';
+  const O=X(0,0);L.obstacle(O[0],O[1],14*k);
+  const ps=os.map(o=>K.atTime(o,a.t));ps.forEach(p=>{const q=X(p.x,p.y);L.obstacle(q[0],q[1],12*k)});
+  /* aires */
+  if(a.tab===1){const dm=K.TAU*a.p.dt/100,cs=[C.E,C.v,C.B],nm=['1','2','3'];
+    [-dm/2,Math.PI-dm/2,1.5*Math.PI-dm/2].forEach((m0,j)=>{s+=sector(o1,m0,dm,cs[j],.22);const q=K.atMean(o1,m0+dm/2),z=X(q.x*.62,q.y*.62);s+=S.text(z[0],z[1],S.r('𝒜')+`<tspan font-size="72%" dy="0.42em">${nm[j]}</tspan>`,{size:16,c:cs[j],anchor:'middle'})});
+    if(a.p.live){const M=o1.n*a.t;s+=sector(o1,M-dm,dm,C.c,.38)}}
+  /* orbites */
+  os.forEach((o,j)=>{const c=X(-o.a*o.e,0);s+=`<ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(o.a*cam.s).toFixed(1)}" ry="${(o.b*cam.s).toFixed(1)}" fill="none" stroke="${col[j]}" stroke-width="${(j?2:2.6)*k}"${j?` stroke-dasharray="${8*k} ${6*k}"`:''}/>`});
+  if((a.p.marks&&a.tab!==1)||a.tab===1){const dm=K.TAU*(a.tab===1?a.p.dt:6)/100;os.forEach((o,j)=>{for(let i=0;i*dm<K.TAU-1e-9;i++){const q=K.atMean(o,i*dm),z=X(q.x,q.y);s+=S.circle(z[0],z[1],3*k,{fill:C.card,c:col[j],w:1.3})}})}
+  /* géométrie de l'ellipse */
+  if(a.tab<2&&a.p.geo){const Ap=X(-o1.ra,0),Pp=X(o1.rp,0),Cc=X(-o1.a*o1.e,0),F2=X(-2*o1.a*o1.e,0);
+    s+=S.line(Ap[0],Ap[1],Pp[0],Pp[1],{c:C.ink2,w:1,dash:`${5*k} ${6*k}`,op:.7});
+    s+=S.circle(Ap[0],Ap[1],3.5*k,{fill:C.cInk})+S.circle(Pp[0],Pp[1],3.5*k,{fill:C.cInk});
+    s+=L.put(Ap[0],Ap[1],'A',{c:C.cInk,pref:[-18*k,-12*k],weight:600})+L.put(Pp[0],Pp[1],'P',{c:C.cInk,pref:[8*k,-12*k],weight:600});
+    if(o1.e>1e-9){s+=S.line(Cc[0]-5*k,Cc[1],Cc[0]+5*k,Cc[1],{c:C.ink2})+S.line(Cc[0],Cc[1]-5*k,Cc[0],Cc[1]+5*k,{c:C.ink2})+S.circle(F2[0],F2[1],3*k,{fill:C.ink2});
+      s+=L.put(Cc[0],Cc[1],'C',{c:C.ink2,pref:[-4*k,16*k]})+L.put(F2[0],F2[1],'F′',{c:C.ink2,pref:[-6*k,-12*k]})}
+    const yy=X(0,-o1.b)[1]+18*k;if(yy<P.h-30*k&&Pp[0]-Ap[0]>110){s+=S.line(Ap[0],yy,Pp[0],yy,{c:C.ink2,w:1})+S.line(Ap[0],yy-4*k,Ap[0],yy+4*k,{c:C.ink2,w:1})+S.line(Pp[0],yy-4*k,Pp[0],yy+4*k,{c:C.ink2,w:1});s+=S.text((Ap[0]+Pp[0])/2,yy+11*k,`2${S.v('a')}<tspan font-size="72%" dy="0.42em">1</tspan>`,{anchor:'middle',size:14,c:C.ink2})}}
+  /* centre attracteur */
+  s+=S.circle(O[0],O[1],14*k,{fill:'#f5b301',op:.18})+S.circle(O[0],O[1],7*k,{fill:'#f5b301'});
+  s+=L.put(O[0],O[1],a.tab<2&&a.p.geo&&o1.e<1e-9?'O = C = F′':'O',{pref:[10*k,20*k],weight:600});
+  /* mobiles */
+  os.forEach((o,j)=>{const p=ps[j],q=X(p.x,p.y),c=col[j];
+    if(a.p.ray)s+=S.line(O[0],O[1],q[0],q[1],{c,w:1.3,dash:`${4*k} ${4*k}`,op:.75});
+    if(a.p.vel){const t=X(p.x+p.vx*vs,p.y+p.vy*vs);s+=S.arrow(q[0],q[1],t[0],t[1],{c:C.v,w:2.2});if(Math.hypot(t[0]-q[0],t[1]-q[1])>18*k)s+=L.put(t[0],t[1],a.tab===2?S.v('v',String(j+1)):S.v('v'),{c:C.v,size:15})}
+    s+=S.circle(q[0],q[1],16*k,{fill:c,op:.12})+S.circle(q[0],q[1],7*k,{fill:c,c:C.card,w:1.5});
+    s+=L.put(q[0],q[1],a.tab===2?S.v('M',String(j+1)):S.v('M'),{c,size:16,pref:[12*k,-12*k]})});
+  s+=MC6.scaleBar(a,P,cam,'UA');
+  a.svg('scene',s);
+}
+function sector(o,m0,dm,c,op){
+  const X=cam.X,E0=K.eccentric(m0,o.e),E1=K.eccentric(m0+dm,o.e),O=X(0,0);let d=`M${O[0].toFixed(1)},${O[1].toFixed(1)}`;
+  for(let j=0;j<=90;j++){const E=E0+(E1-E0)*j/90,z=X(o.a*(Math.cos(E)-o.e),o.b*Math.sin(E));d+=`L${z[0].toFixed(1)},${z[1].toFixed(1)}`}
+  return A.S.path(d+'Z',{fill:c,fop:op,c,w:1.1});
+}
+
+/* ---------- graphe logarithmique de la troisième loi ---------- */
+function logPlot(a){
+  const P=a.panels.log,S=a.S,C=a.C,k=a.k,L10=Math.log10;
+  const G=S.graph({x:0,y:0,w:P.w,h:P.h,xmin:-.6,xmax:1.7,ymin:-.8,ymax:2.5,xlab:'log(a / 1 UA)',ylab:'log(T / 1 an)',padL:40*k,padB:34*k});
+  let s=G.svg+S.clip('clipLog',G);const Lp=MC6.placer(a,P);
+  if(a.p.droite){const mu=a.p.mass;s+=S.curve([[-.6,1.5*-.6-.5*L10(mu)],[1.7,1.5*1.7-.5*L10(mu)]],G,{c:C.pred,w:1.6,dash:`${6*k} ${5*k}`});
+    if(Math.abs(mu-1)>1e-9)s+=S.curve([[-.6,-.9],[1.7,2.55]],G,{c:C.ink2,w:1,dash:`${2*k} ${4*k}`,op:.6})}
+  PLANETES.forEach((p,i)=>{const x=G.X(L10(p.a)),y=G.Y(L10(p.T));s+=S.circle(x,y,4*k,{fill:C.ink2});Lp.obstacle(x,y,6*k);
+    s+=Lp.put(x,y,p.n,{size:12,c:C.ink2,pref:i%2?[8*k,14*k]:[-8*k-p.n.length*7*k,-8*k]})});
+  [[o1,C.cInk,'1'],[o2,C.B,'2']].forEach(([o,c,n])=>{const x=G.X(L10(o.a)),y=G.Y(L10(o.T));if(x>G.x0-2&&x<G.x0+G.w+2&&y>G.y0-2&&y<G.y0+G.h+2){s+=S.circle(x,y,6.5*k,{fill:c,c:C.card,w:1.5});s+=Lp.put(x,y,S.v('M',n),{c,size:15,pref:n==='1'?[10*k,-10*k]:[10*k,16*k]})}});
+  a.svg('log',s);
+}
+
+/* ---------- valeurs, légende, à retenir ---------- */
+function infos(a){
+  const f=a.fmt,p1=K.atTime(o1,a.t),T=mv('T'),al=mv('a');
+  const fr=Mh.frac;
+  if(a.tab===0){
+    a.metrics([{label:`Distance ${mv('r')} = OM`,value:f.sig(p1.r,3),unit:'UA',hint:`${mv('r')}<sub>min</sub> = ${f.sig(o1.rp,3)} UA · ${mv('r')}<sub>max</sub> = ${f.sig(o1.ra,3)} UA`},
+      {label:`Vitesse ${mv('v')}`,value:f.sig(p1.v*K.AU/K.YEAR/1000,3),unit:'km·s<sup>−1</sup>',hint:'maximale en P, minimale en A'},
+      {label:`Période ${T}<sub>1</sub>`,value:f.sig(o1.T,3),unit:'an',hint:`${mv('t')} = ${f.fix(K.mod(a.t,o1.T)/o1.T*100,0)} % du tour`}]);
+    a.insight(o1.e<1e-9?`Pour ${mv('e')} = 0, le cercle est une ellipse dont les deux foyers et le centre sont confondus : ${mv('r')} et ${mv('v')} sont constants.`
+      :`O occupe un foyer de l'ellipse. ${mv('r')}<sub>min</sub> = ${al}(1 − ${mv('e')}), ${mv('r')}<sub>max</sub> = ${al}(1 + ${mv('e')}) et, la constante des aires imposant ${mv('r')}<sub>min</sub>${mv('v')}<sub>P</sub> = ${mv('r')}<sub>max</sub>${mv('v')}<sub>A</sub> : ${fr(mv('v')+'<sub>P</sub>',mv('v')+'<sub>A</sub>')} = ${fr(mv('r')+'<sub>max</sub>',mv('r')+'<sub>min</sub>')} = ${f.sig(o1.ra/o1.rp,3)}.`,
+      [`O occupe un foyer de l'ellipse. ${mv('r')}<sub>min</sub> = ${al}(1 − ${mv('e')}), ${mv('r')}<sub>max</sub> = ${al}(1 + ${mv('e')}) et, la constante des aires imposant ${mv('r')}<sub>min</sub>${mv('v')}<sub>P</sub> = ${mv('r')}<sub>max</sub>${mv('v')}<sub>A</sub> : ${fr(mv('v')+'<sub>P</sub>',mv('v')+'<sub>A</sub>')} = ${fr(mv('r')+'<sub>max</sub>',mv('r')+'<sub>min</sub>')} = 39.0.`]);
+    a.legend([{c:a.C.cInk,label:'orbite'},{c:'#f5b301',label:'centre attracteur O',dot:true},a.p.vel&&{c:a.C.v,label:`vitesse ${mv('v')}`}]);
+  }else if(a.tab===1){
+    const dt=o1.T*a.p.dt/100;
+    a.metrics([{label:`Durée commune Δ${mv('t')}`,value:f.sig(dt,3),unit:'an'},
+      {label:'Aire de chaque secteur',value:f.sig(o1.area*a.p.dt/100,3),unit:'UA<sup>2</sup>',hint:`π${al}${mv('b')} × Δ${mv('t')}/${T}`},
+      {label:'Constante des aires 𝒞',value:f.sig(o1.C,3),unit:'UA<sup>2</sup>·an<sup>−1</sup>',hint:`𝒞 = ${mv('r')}<sup>2</sup>${MC6.dot('θ')}`}]);
+    a.insight(`${fr('d𝒜','d'+mv('t'))} = ${fr('𝒞','2')} : des durées égales balaient des aires égales, ${'𝒜'}<sub>1</sub> = 𝒜<sub>2</sub> = 𝒜<sub>3</sub> = ${fr('𝒞 Δ'+mv('t'),'2')}, avec des angles et des arcs parcourus différents.`);
+    a.legend([{c:a.C.E,label:'𝒜<sub>1</sub> (autour de P)'},{c:a.C.v,label:'𝒜<sub>2</sub> (autour de A)'},{c:a.C.B,label:'𝒜<sub>3</sub>'},a.p.live&&{c:a.C.c,label:'aire balayée pendant le dernier Δ<span class="m">t</span>'}]);
   }else{
-   metric(1,'Période T₁ · mobile 1',fmt(o1.T),'an');metric(2,'Période T₂ · mobile 2',fmt(o2.T),'an');metric(3,'Rapport T₂ / T₁',fmt(o2.T/o1.T,3),'');
-   $('law-formula').textContent='T₁² / a₁³ = T₂² / a₂³ = 4π² / (Gmₒ)';
-   $('law-detail').textContent=Math.abs(o1.a-o2.a)<1e-9?'Même demi-grand axe : même période, quelles que soient les excentricités.':'T₂ / T₁ = (a₂ / a₁)³ᐟ². Le demi-grand axe fixe la période ; l’excentricité ne la change pas.';
-   $('turns1').textContent=Math.floor((t+1e-10)/o1.T);$('turns2').textContent=Math.floor((t+1e-10)/o2.T);$('ratio1').textContent=fmt(o1.T**2/o1.a**3,4);$('ratio2').textContent=fmt(o2.T**2/o2.a**3,4);
+    const r=a.p.ratios,q=o=>f.sig(o.T**2/o.a**3,3);
+    a.metrics([{label:`Période ${T}<sub>1</sub>`,value:f.sig(o1.T,3),unit:'an',hint:r?`${T}<sub>1</sub><sup>2</sup>/${al}<sub>1</sub><sup>3</sup> = ${q(o1)} an<sup>2</sup>·UA<sup>−3</sup>`:`tours : ${Math.floor(a.t/o1.T+1e-10)}`},
+      {label:`Période ${T}<sub>2</sub>`,value:f.sig(o2.T,3),unit:'an',hint:r?`${T}<sub>2</sub><sup>2</sup>/${al}<sub>2</sub><sup>3</sup> = ${q(o2)} an<sup>2</sup>·UA<sup>−3</sup>`:`tours : ${Math.floor(a.t/o2.T+1e-10)}`},
+      {label:`Rapport ${T}<sub>2</sub>/${T}<sub>1</sub>`,value:r?f.sig(o2.T/o1.T,3):'?',unit:'',hint:r?`(${al}<sub>2</sub>/${al}<sub>1</sub>)<sup>3/2</sup> = ${f.sig((o2.a/o1.a)**1.5,3)}`:'à prévoir avant d\'afficher'}]);
+    const law=`${fr(T+'<sup>2</sup>',al+'<sup>3</sup>')} = ${fr('4π<sup>2</sup>',mv('G')+mv('m')+'<sub>O</sub>')} : le demi-grand axe fixe la période, l'excentricité ne la change pas. Les planètes s'alignent sur une droite de pente 3/2 en coordonnées logarithmiques.`;
+    a.insight(r?law:`Prévoir : lequel des deux mobiles revient le premier à son péricentre ? Afficher ensuite les rapports ${fr(T+'<sup>2</sup>',al+'<sup>3</sup>')}.`,[law]);
+    a.legend([{c:a.C.cInk,label:'mobile 1'},{c:a.C.B,label:'mobile 2',dash:true},{c:a.C.ink2,label:'planètes (cours)',dot:true},a.p.droite&&{c:a.C.pred,label:'pente 3/2',dash:true}]);
   }
- }
- function sync(skip=null){for(const key of ['a1','e1','a2','e2','mass','dt']){if(key!==skip)$(key).value=state[key];$(key+'-range').value=state[key];}for(const key of ['velocity','radius','geometry','marks'])$(key).checked=state[key];$('rate').value=state.rate;}
- function transport(){ $('play').textContent=playing?'❚❚ Pause':'▶ Lire';$('play').setAttribute('aria-label',playing?'Mettre en pause':'Lancer le mouvement');last=0;}
- function resetTime(){t=0;draw();}
- function setView(next){
-  view=next;zoom=1;pan=[0,0];for(const n of document.querySelectorAll('[data-view]'))n.setAttribute('aria-pressed',n.dataset.view===view);
-  $('second-controls').hidden=view!=='periods';$('areas-controls').hidden=view!=='areas';$('step').hidden=view!=='areas';$('geometry').disabled=view==='periods';
-  $('orbit-label').textContent=view==='periods'?'01 / Le mobile 1':'01 / L’orbite';
-  $('scene-heading').textContent=({orbit:'L’astre attracteur occupe un foyer',areas:'Trois secteurs · une même durée Δt',periods:'Deux orbites · une même horloge'})[view];
-  $('scene-title').textContent=({orbit:'Une ellipse autour d’un foyer',areas:'Trois secteurs d’aires égales',periods:'Comparaison de deux mouvements képlériens'})[view];
-  $('law-index').textContent=({orbit:'I',areas:'II',periods:'III'})[view];
-  $('legend').innerHTML=view==='areas'?'<span><i style="--c:var(--gold)"></i>𝒜₁</span><span><i style="--c:var(--teal)"></i>𝒜₂</span><span><i style="--c:var(--violet)"></i>𝒜₃</span>':view==='periods'?'<span><i style="--c:var(--orbit)"></i>Mobile 1</span><span><i class="dashed" style="--c:var(--orbit2)"></i>Mobile 2</span>':'<span><i style="--c:var(--orbit)"></i>Orbite</span><span><i style="--c:var(--star)"></i>Astre attracteur</span>';
-  const ps=view==='periods'?[['equal','Même a, e différents'],['double','a₂ = 2 a₁'],['both-circles','Deux cercles']]:[['circle','Cercle'],['ellipse','Ellipse'],['comet','Très excentrique']];
-  $('presets').replaceChildren();for(const [key,s] of ps){const b=document.createElement('button');b.textContent=s;b.dataset.preset=key;$('presets').append(b);}
-  draw();
- }
- function preset(key){
-  if(key==='circle')state.e1=0;if(key==='ellipse')Object.assign(state,{a1:1,e1:.55});if(key==='comet')Object.assign(state,{a1:1,e1:.9});
-  if(key==='equal')Object.assign(state,{a1:1,a2:1,e1:.7,e2:.1});if(key==='double')Object.assign(state,{a1:1,a2:2,e1:.15,e2:.15});if(key==='both-circles')Object.assign(state,{a1:1,a2:1.6,e1:0,e2:0});
-  t=0;zoom=1;pan=[0,0];sync();draw();
- }
- for(const key of ['a1','e1','a2','e2','mass','dt']){
-  const accept=(e,preserve=false)=>{let value=Number(e.target.value);if(e.target.value.trim()===''||!Number.isFinite(value))return;const n=$(key),lo=Number(n.min),hi=Number(n.max);value=Math.max(lo,Math.min(hi,value));state[key]=value;if(['a1','a2','mass'].includes(key))t=0;zoom=1;pan=[0,0];sync(preserve?key:null);draw();};
-  $(key+'-range').addEventListener('input',e=>accept(e));
-  $(key).addEventListener('input',e=>{const v=Number(e.target.value);if(e.target.value!==''&&Number.isFinite(v)&&v>=Number(e.target.min)&&v<=Number(e.target.max))accept(e,true);});
-  $(key).addEventListener('change',e=>{if(e.target.value.trim()===''||!Number.isFinite(Number(e.target.value))){sync();return;}accept(e);});
- }
- for(const key of ['velocity','radius','geometry','marks'])$(key).addEventListener('change',e=>{state[key]=e.target.checked;draw();});
- $('rate').addEventListener('change',e=>state.rate=Number(e.target.value));
- document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',()=>setView(n.dataset.view)));
- $('presets').addEventListener('click',e=>{const n=e.target.closest('[data-preset]');if(n)preset(n.dataset.preset);});
- $('play').addEventListener('click',()=>{playing=!playing;transport();});$('restart').addEventListener('click',resetTime);
- $('step').addEventListener('click',()=>{playing=false;transport();t+=o1.T*state.dt/100;draw();});
- $('phase').addEventListener('input',e=>{playing=false;transport();t=Number(e.target.value)/1000*o1.T;draw();});
- $('reset').addEventListener('click',()=>{state={...defaults};t=0;zoom=1;pan=[0,0];playing=false;transport();sync();setView('orbit');});
- const fit=()=>{zoom=1;pan=[0,0];draw();};$('fit').addEventListener('click',fit);
- const changeZoom=f=>{zoom=Math.max(.5,Math.min(3,zoom*f));draw();};$('zoom-in').addEventListener('click',()=>changeZoom(1.2));$('zoom-out').addEventListener('click',()=>changeZoom(1/1.2));
- $('projection').addEventListener('click',()=>{const on=document.body.classList.toggle('projection');$('projection').textContent=on?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',on);zoom=1;pan=[0,0];requestAnimationFrame(draw);});
- function setTheme(on){dark=on;document.documentElement.dataset.theme=on?'dark':'light';$('theme').textContent=on?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',on);palette();try{localStorage.setItem('mc6-kepler-theme',on?'dark':'light');}catch{}draw();}
- $('theme').addEventListener('click',()=>setTheme(!dark));
- function toast(s){$('toast').textContent=s;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3000);}
- async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur ne permet pas le plein écran ici.');}}
- $('fullscreen').addEventListener('click',fullscreen);
- $('help').addEventListener('click',()=>{wasPlaying=playing;playing=false;transport();$('info').showModal();});$('close-info').addEventListener('click',()=>$('info').close());$('info').addEventListener('close',()=>{playing=wasPlaying;transport();});
- document.addEventListener('visibilitychange',()=>{last=0;});
- document.addEventListener('keydown',e=>{
-  if($('info').open||$('export-info').open||/INPUT|SELECT|BUTTON|TEXTAREA/.test(e.target.tagName))return;
-  if(e.code==='Space'){e.preventDefault();playing=!playing;transport();}
-  if(e.key.toLowerCase()==='r')resetTime();if(e.key.toLowerCase()==='c')fit();if(e.key.toLowerCase()==='f')fullscreen();
-  if(e.target===$('scene')&&['ArrowLeft','ArrowRight','Home'].includes(e.key)){e.preventDefault();playing=false;transport();t=e.key==='Home'?0:Math.max(0,t+(e.key==='ArrowRight'?1:-1)*o1.T*(e.shiftKey?.05:1/120));draw();}
- });
- function pointerPoint(e){const r=$('scene').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
- $('scene').addEventListener('pointerdown',e=>{if(e.button!==0)return;const target=e.target.closest('[data-mobile]'),p=pointerPoint(e);drag={index:target?Number(target.dataset.mobile):0,start:p,pan:[...pan]};if(target){playing=false;transport();}e.preventDefault();$('scene').focus({preventScroll:true});$('scene').setPointerCapture(e.pointerId);});
- $('scene').addEventListener('pointermove',e=>{
-  if(!drag)return;const p=pointerPoint(e);if(!drag.index){pan=[drag.pan[0]+p[0]-drag.start[0],drag.pan[1]+p[1]-drag.start[1]];}else{
-   const o=drag.index===1?o1:o2,q=world(...p),E=Math.atan2(q[1]/o.b,q[0]/o.a+o.e);t=K.mod(E-o.e*Math.sin(E))/o.n;
-  }draw();
- });
- const endDrag=()=>{drag=null;};$('scene').addEventListener('pointerup',endDrag);$('scene').addEventListener('pointercancel',endDrag);$('scene').addEventListener('lostpointercapture',endDrag);
- $('scene').addEventListener('wheel',e=>{e.preventDefault();changeZoom(e.deltaY<0?1.08:1/1.08);},{passive:false});
- $('export').addEventListener('click',()=>{
-  wasPlaying=playing;playing=false;transport();draw();const clone=$('scene').cloneNode(true),extra=view==='periods'?`, a₂ = ${fmt(state.a2)} UA, e₂ = ${fmt(state.e2)}`:'';
-  const EW=Math.max(900,W);clone.setAttribute('width',EW);clone.setAttribute('height',H+250);clone.setAttribute('viewBox',`0 -90 ${EW} ${H+250}`);clone.removeAttribute('style');clone.removeAttribute('tabindex');clone.querySelector('#drawing').setAttribute('transform',`translate(${(EW-W)/2} 0)`);
-  const bg=document.createElementNS(NS,'rect');for(const [k,v] of Object.entries({x:0,y:-90,width:EW,height:H+250,fill:C.surface}))bg.setAttribute(k,v);clone.insertBefore(bg,clone.firstChild);
-  for(const n of clone.querySelectorAll('.label')){n.setAttribute('stroke',C.surface);n.setAttribute('stroke-width','5');n.setAttribute('paint-order','stroke');n.removeAttribute('class');}
-  for(const n of clone.querySelectorAll('[data-mobile]'))n.removeAttribute('data-mobile');
-  const add=(y,s,size=17)=>{let row='',yy=y;const max=(EW-36)/(size*.57);for(const word of s.split(' ')){if((row+' '+word).length>max&&row){const n=text([18,yy],row,C.ink,size,'start',{},clone);n.setAttribute('font-family','Arial, Helvetica, sans-serif');yy+=size*1.3;row='';}row+=(row?' ':'')+word;}const n=text([18,yy],row,C.ink,size,'start',{},clone);n.setAttribute('font-family','Arial, Helvetica, sans-serif');};
-  add(-57,'MC6 · Kepler · '+({orbit:'Orbite',areas:'Loi des aires',periods:'Loi des périodes'})[view],25);
-  add(-30,`a₁ = ${fmt(state.a1)} UA, e₁ = ${fmt(state.e1)}${extra} · mₒ = ${fmt(state.mass)} M☉ · t = ${fmt(t,3)} an`);
-  add(H+27,$('law-formula').textContent,21);
-  for(let i=1;i<=3;i++)add(H+37+i*24,$('label-'+i).textContent+' : '+[...$('metric-'+i).childNodes].map(n=>n.textContent).join(' '),18);
-  add(H+142,'E. Guillaume · MPSI · temps accéléré ; corps agrandis ; distances orbitales à même échelle.',14);
-  clone.setAttribute('font-family','Arial, Helvetica, sans-serif');clone.removeAttribute('id');clone.removeAttribute('aria-labelledby');clone.setAttribute('role','img');clone.setAttribute('aria-label','Schéma exporté de Kepler');clone.querySelector('desc').textContent='Instantané du modèle képlérien avec paramètres et valeurs calculées.';for(const n of clone.querySelectorAll('[id]'))n.removeAttribute('id');
-  exportUrl=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml;charset=utf-8'}));$('download-svg').href=exportUrl;$('download-svg').download='MC6_Kepler_'+view+'.svg';
-  const preview=clone.cloneNode(true);preview.style.width='100%';preview.style.height='auto';$('export-preview').replaceChildren(preview);$('export-info').showModal();
- });
- $('close-export').addEventListener('click',()=>$('export-info').close());$('export-info').addEventListener('close',()=>{const old=exportUrl;exportUrl=null;setTimeout(()=>URL.revokeObjectURL(old),10000);playing=wasPlaying;transport();});
- new ResizeObserver(()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(draw);}).observe($('scene').parentElement);
- function tick(now){if(last&&playing&&!document.hidden){t+=(now-last)/1000*state.rate;draw();}last=now;requestAnimationFrame(tick);}
- try{dark=localStorage.getItem('mc6-kepler-theme')==='dark';}catch{}
- sync();orbitModels();setView('orbit');setTheme(dark);transport();requestAnimationFrame(tick);
-})();
+  a.clock(`${mv('t')} = ${f.fix(a.t,2)} an`);
+}
+
 </script>
-<!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
-})();
-</script>
-<!-- CPGE_MENU_SCRIPT_END -->
 </body>
 </html>

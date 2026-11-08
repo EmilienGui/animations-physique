@@ -1,351 +1,1173 @@
 <!doctype html>
-<html lang="fr" data-theme="light">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>AM1 · Construire la structure électronique</title><style>:root{--accent:#008060;--accent-ink:#00694e;--accent-soft:#e0f3e9;--paper:#f2f5f2;--surface:#fff;--ink:#182c27;--muted:#526960;--line:#ccdad2;--core:#687b73;--warn:#8d4b0d;--warn-bg:#fff0d9;--bad:#b53442;--bad-bg:#fff0f0;--blue:#29649a;--box:54px;color-scheme:light;font-family:Arial,Helvetica,sans-serif;font-size:17px}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);line-height:1.4}html[data-theme=dark]{--accent:#65d8b0;--accent-ink:#8de5c5;--accent-soft:#173f34;--paper:#101c19;--surface:#192b25;--ink:#eef7f1;--muted:#b0c9bc;--line:#3a5548;--core:#a5b8ae;--warn:#ffd29a;--warn-bg:#49331d;--bad:#ffb0b8;--bad-bg:#47292e;--blue:#9bcaff;color-scheme:dark}
-button,select,input{font:inherit;color:var(--ink)}button,select,input[type=number]{background:var(--surface);border:1px solid var(--line);border-radius:7px;min-height:40px}button{cursor:pointer;padding:7px 12px;line-height:1.2;transition:background .15s,border-color .15s}button:hover{border-color:var(--accent);background:var(--accent-soft)}button:disabled{cursor:default;opacity:.5}button:focus-visible,select:focus-visible,input:focus-visible,canvas:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}select{padding:6px 30px 6px 9px;max-width:100%}input[type=number]{padding:6px 9px;width:100px}input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;vertical-align:middle}label{display:inline-flex;align-items:center;gap:8px}h1,h2,h3,p{margin:0}h1{font-size:clamp(23px,2vw,32px);font-weight:650;line-height:1.15}h2{font-size:22px;line-height:1.2}h3{font-size:21px}a{color:var(--accent-ink)}.eyebrow{color:var(--accent-ink);font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:5px}.muted,.small{color:var(--muted)}.small{font-size:14px;line-height:1.5}.section-label{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.045em;text-transform:uppercase}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
-header{padding:18px 24px 16px;border-bottom:1px solid var(--line);background:var(--surface)}.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.cpge-menu-header>:first-child{min-width:0;flex:1 1 420px}.cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}.cpge-global-actions>button{font:15px/1.2 Arial,Helvetica,sans-serif;height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap}.cpge-global-actions>button[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent)}.cpge-global-actions>button.cpge-fullscreen{width:40px;min-width:40px;padding:7px 0;font-size:22px}.setup{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 24px;font-size:15px}.presets{display:flex;gap:4px;flex-wrap:wrap}.presets button{min-width:37px;padding:6px 8px;font-size:15px}.presets button[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}.limit{margin-left:auto;white-space:nowrap}
-.workspace{padding:0 24px 20px;display:grid;grid-template-columns:minmax(570px,1fr) minmax(310px,370px);gap:18px;align-items:start;max-width:2100px;margin:auto}.panel{border:1px solid var(--line);border-radius:13px;background:var(--surface);box-shadow:0 2px 6px #102f1c04}.stage{padding:20px 24px}.entity-head{display:flex;align-items:center;gap:16px;min-height:82px;padding-bottom:14px}.element-tile{border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft);display:flex;flex-direction:column;align-items:center;min-width:80px;padding:7px 12px;color:var(--accent-ink)}.element-tile small{font-size:13px}.element-tile strong{font-size:38px;line-height:1.1}.element-tile sup{font-size:21px}.entity-name{flex:1;min-width:0}.entity-name h2{font-size:29px;font-weight:600;margin-bottom:4px}.counter{text-align:right;min-width:150px}.counter strong{font-size:32px;font-weight:550;display:block;line-height:1.2}.counter span{font-size:12px;display:block;color:var(--muted)}.configuration{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0 12px;margin-bottom:12px}.configuration .section-label{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.formula{font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.6;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 13px;min-height:48px}.formula sup{font-size:.64em;line-height:0}.config-term{white-space:nowrap;color:var(--core)}.config-term.valence{color:var(--accent-ink);font-weight:bold}.key{display:inline-flex;align-items:center;gap:5px;text-transform:none;font-size:12px;letter-spacing:0;font-weight:400}.key i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:5px}.key i.core-key{background:var(--core)}.playbar,.tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.playbar{margin-bottom:10px}.playbar button{font-size:15px}.primary{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);font-weight:600}.tools{border-top:1px solid var(--line);padding-top:10px;margin-bottom:9px}.tools .tool{min-width:40px;min-height:38px;font-size:24px;padding:3px 10px}.tools .tool[data-tool=erase]{font-size:14px}.tool.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent)}.tools label{margin-left:7px}.zoom{display:flex;gap:4px;align-items:center;margin-left:auto}.zoom button{min-height:34px;font-size:14px;padding:5px 10px}.zoom button:first-child,.zoom button:last-child{min-width:34px}.core-summary{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:0 0 8px;color:var(--core);border-radius:7px;background:var(--paper);font-size:16px}.core-summary button{min-height:28px;padding:2px 8px;font-size:13px;margin-left:auto}#orbitalsViewport{overflow-x:auto;padding:2px 3px 4px;margin:0 -3px}#orbitals{min-width:430px}.subshell-row{display:flex;align-items:center;gap:12px;padding:7px 0;min-height:65px}.subshell-row+.subshell-row{border-top:1px solid var(--line)}.subshell-row.core{color:var(--core)}.subshell-row.core .orbital-box{border-color:var(--line)}.subshell-name{min-width:80px;display:flex;flex-direction:column}.subshell-name strong{font:600 24px Georgia,serif;color:var(--accent-ink)}.subshell-row.core .subshell-name strong{color:var(--core)}.subshell-name small{font-size:12px;color:var(--muted)}.orbital-group{display:flex;gap:7px;align-items:flex-start}.orbital-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}.orbital-box{width:var(--box);height:calc(var(--box) * .78);min-height:39px;display:flex;align-items:center;justify-content:center;gap:0;border:1.5px solid var(--accent);border-radius:6px;background:var(--accent-soft);position:relative;cursor:copy;touch-action:manipulation}.orbital-box.over{outline:3px dashed var(--accent);outline-offset:3px}.orbital-box.invalid{background:var(--bad-bg);border-color:var(--bad)}.spin{padding:0 0;min-width:17px;min-height:30px;font:30px/1 Arial,sans-serif;border:0;background:transparent;color:var(--accent-ink);border-radius:2px}.invalid .spin{color:var(--bad)}.spin:hover{background:var(--surface)}.empty-slot{color:var(--muted);opacity:.45;font-size:19px;pointer-events:none}.orbital-view{min-height:22px;min-width:var(--box);padding:0 4px;font-size:12px;border:0;background:transparent;color:var(--muted)}.quantum{font-size:12px;white-space:nowrap;color:var(--muted)}.subshell-quantum{font-size:12px;color:var(--muted);margin-left:auto}.hint{margin:8px 0}.diagnostics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.diagnostic{padding:10px 11px;border:1px solid var(--line);background:var(--paper);border-radius:8px;font-size:13px;line-height:1.4}.diagnostic strong{font-size:16px;display:block;margin-bottom:3px;color:var(--accent-ink)}.diagnostic.bad{border-color:var(--bad);background:var(--bad-bg)}.diagnostic.bad strong{color:var(--bad)}.diagnostic.warn{background:var(--warn-bg);border-color:var(--warn)}.diagnostic.warn strong{color:var(--warn)}.situation-note{padding-top:12px;font-size:16px;color:var(--accent-ink);line-height:1.5}.sidebar{display:grid;gap:14px}.sidebar .panel{padding:18px}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:5px}.panel-title button{font-size:13px;padding:6px 8px;min-height:34px}.triangle-label{font-size:18px;margin-top:12px}.triangle-label span{display:block;font-size:13px;color:var(--muted)}#triangle{position:relative;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(7,36px);gap:4px;margin:12px 0 10px;padding:0 4px}#triangle svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.triangle-node{position:relative;z-index:1;font-size:17px;font-family:Georgia,serif;padding:2px;min-height:32px;margin:0 8px;background:var(--surface);border-color:var(--line)}.triangle-node.dim{opacity:.5}.triangle-node.active{background:var(--accent);color:var(--surface);border-color:var(--accent)}.triangle-node.diagonal{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.triangle-info{font-size:17px;min-height:52px;background:var(--accent-soft);border-radius:7px;padding:8px 10px;color:var(--accent-ink);margin-bottom:8px}.sidebar details summary{cursor:pointer;font-size:17px;font-weight:600}.sidebar details[open] summary{margin-bottom:16px}.challenge-panel select{width:100%;font-size:15px;margin:12px 0}.challenge-panel p{font-size:15px;line-height:1.55;margin-bottom:12px}.challenge-panel button{font-size:14px}.challenge-success{border-left:3px solid var(--accent);padding-left:10px}#shellTree details{border-top:1px solid var(--line);padding:8px 0}#shellTree details details{margin:8px 0 0 14px;font-size:14px}#shellTree summary{font-size:15px;font-weight:400}#shellTree p{padding:8px 0;font-size:14px;line-height:1.6}.identity-controls{display:flex;flex-direction:column;gap:12px;margin-bottom:15px;font-size:14px}.identity-controls label{justify-content:space-between}#nucleusInfo{font-size:18px;padding-bottom:10px;line-height:1.8}footer{display:flex;justify-content:space-between;gap:16px;padding:0 24px 15px;max-width:2100px;margin:auto;font-size:12px;color:var(--muted)}footer span{text-align:right}
-dialog{width:min(800px,calc(100% - 30px));max-height:90dvh;overflow:auto;border:1px solid var(--line);border-radius:13px;padding:26px;background:var(--surface);color:var(--ink);line-height:1.65;box-shadow:0 15px 70px #0003}dialog::backdrop{background:#081c16aa}dialog h2{font-size:28px;margin-bottom:18px}dialog p{margin-bottom:15px}dialog .dialog-close{float:right;margin-left:12px;margin-bottom:10px;font-size:14px}.example-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.example-grid button{padding:20px;text-align:left;font-size:15px;line-height:1.6}.example-grid strong{display:block;color:var(--accent-ink);font-size:21px;margin-bottom:5px}#status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99;background:var(--surface);color:var(--ink);box-shadow:0 4px 30px #0003;border:1px solid var(--accent);border-radius:8px;max-width:calc(100% - 30px);padding:12px 20px;font-size:16px}#spatialDialog{width:min(1250px,calc(100% - 30px));padding:24px}#spatialDialog h2{margin-bottom:12px}.spatial-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:15px;margin-bottom:14px}.spatial-controls .zoom{margin-left:0}.space-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px}#cloud{display:block;width:100%;height:440px;border-radius:10px;border:1px solid var(--line);touch-action:none;cursor:grab;background:var(--paper)}#cloud:active{cursor:grabbing}.space-caption{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:12px;color:var(--muted);margin:8px 0 16px}.space-caption span:first-child{font-size:16px;color:var(--accent-ink)}.radial{padding:12px;background:var(--paper);border-radius:10px}.radial>p:first-of-type{font-family:Georgia,serif;font-size:23px;color:var(--accent-ink);margin:4px 0}.radial svg{width:100%;height:auto}.radial p{font-size:14px}body.projection .secondary{display:none!important}body.projection header{padding:12px 20px}body.projection header .eyebrow{display:none}body.projection .workspace{padding:14px 20px;grid-template-columns:minmax(580px,1fr) minmax(310px,380px);gap:18px}body.projection .stage{padding:16px 22px}body.projection .entity-name h2{font-size:32px}body.projection .counter strong{font-size:39px}body.projection .formula{font-size:36px}body.projection .diagnostic strong{font-size:20px}body.projection .diagnostic{font-size:16px}body.projection .hint{display:none}body.projection .situation-note{font-size:21px}body.projection .subshell-name strong{font-size:29px}body.projection .triangle-info{font-size:21px}body.projection .triangle-node{font-size:22px}body.projection #triangle{grid-template-rows:repeat(7,43px)}body.projection .triangle-panel>.small{font-size:16px}
-@media(min-width:1550px){.workspace{grid-template-columns:minmax(700px,1fr) 400px;gap:22px}.stage{padding:24px 30px}.subshell-row{padding:10px 0;min-height:82px}.orbital-box{min-height:48px}.orbital-view{font-size:14px}.subshell-name{min-width:100px}.subshell-name strong{font-size:29px}.subshell-name small{font-size:14px}.spin{font-size:36px}.diagnostic{font-size:16px;padding:13px}.diagnostic strong{font-size:20px}.situation-note{font-size:19px}.formula{font-size:34px}.sidebar .panel{padding:22px}#triangle{grid-template-rows:repeat(7,42px)}.triangle-node{font-size:21px}.triangle-info{font-size:20px}.entity-head{padding-bottom:20px}.tools{margin-top:12px;margin-bottom:16px}}
-@media(max-width:1100px){header{padding:14px 16px}.workspace{padding:0 16px 18px;grid-template-columns:minmax(480px,1fr) 300px;gap:12px}.stage{padding:16px}.setup{padding:10px 16px}.sidebar .panel{padding:14px}.entity-name h2{font-size:24px}.counter{min-width:130px}.counter strong{font-size:28px}.tools label{margin-left:0}.diagnostics{grid-template-columns:1fr}.diagnostic{padding:8px 10px;display:flex;align-items:baseline;gap:10px}.diagnostic strong{min-width:80px;flex-shrink:0;margin:0}.subshell-row{gap:7px}.subshell-name{min-width:65px}.limit{display:none}.triangle-node{margin:0 5px}.space-layout{grid-template-columns:1fr 260px}body.projection .workspace{grid-template-columns:minmax(460px,1fr) 300px}}
-@media(max-width:820px){header{gap:14px}.cpge-global-actions{justify-content:flex-start;width:100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}.setup{gap:10px}.workspace,body.projection .workspace{display:flex;flex-direction:column;padding:0 10px 16px}.stage{width:100%;padding:14px}.sidebar{width:100%;grid-template-columns:1fr}.entity-head{gap:10px;flex-wrap:wrap}.element-tile{min-width:66px}.entity-name h2{font-size:24px}.entity-name .muted{font-size:14px}.counter{min-width:95px;margin-left:auto}.counter strong{font-size:26px}.counter span{max-width:100px;font-size:11px}.configuration .formula{font-size:28px}.formula{gap:0 10px}.playbar button{font-size:14px;padding:7px 9px}.tools .section-label{display:none}.tools label{font-size:13px}.zoom{margin-left:0}.subshell-quantum{display:none}.diagnostics{grid-template-columns:1fr}.hint{font-size:12px}#triangle{max-width:400px;margin-left:auto;margin-right:auto}.sidebar .triangle-panel{order:0}.example-grid{grid-template-columns:1fr}.space-layout{grid-template-columns:1fr}.radial{max-width:480px}#cloud{height:350px}#spatialDialog{padding:16px}.spatial-controls{gap:8px;font-size:14px}.space-caption{display:block}.space-caption span{display:block}.speed{display:none}footer{padding:0 14px 12px;display:block}footer span{display:block;text-align:left}body.projection .workspace{padding-top:12px}body.projection .formula{font-size:31px}body.projection .diagnostic{font-size:15px}body.projection .counter strong{font-size:30px}body.projection .situation-note{font-size:18px}}
-.orbital-wrap{position:relative;padding-right:8px}.orbital-view{position:absolute;right:-5px;bottom:-9px;background:var(--surface);border:1px solid var(--line);border-radius:50%;min-width:23px;width:23px;height:23px;min-height:23px;line-height:21px;padding:0;font-size:13px}.orbital-group{gap:10px}.orbital-wrap:has(.quantum) .orbital-view{bottom:auto;top:-7px}.entity-head{min-height:72px;padding-bottom:10px}.element-tile{min-width:70px;padding:5px 10px}.element-tile strong{font-size:34px}.configuration{padding:8px 0 9px}.subshell-row{min-height:62px;padding:8px 0}.hint{margin-top:13px}.core-summary{padding:6px 10px}.sidebar{max-height:calc(100dvh - 168px);overflow-y:auto;padding-right:2px;padding-bottom:5px;scrollbar-width:thin}body.projection .sidebar{max-height:calc(100dvh - 95px)}body.projection .entity-head{min-height:65px;padding-bottom:7px}body.projection .element-tile{padding:3px 8px}body.projection .configuration{padding:5px 0 7px;margin-bottom:8px}body.projection #valenceNote{display:none}body.projection .formula{min-height:46px;line-height:1.4}body.projection .tools{padding-top:7px;margin-top:0;margin-bottom:7px}body.projection .tools>label{display:none}body.projection .diagnostic:not(.bad):not(.warn)>span{display:none}body.projection .diagnostic{padding:8px 10px}body.projection .situation-note{font-size:20px;line-height:1.45;padding-top:9px}body.projection .subshell-row{min-height:65px;padding:9px 0}body.projection .triangle-panel{padding:16px}body.projection .stage{padding-top:13px;padding-bottom:13px}
-@media(min-width:1550px){.subshell-row{min-height:80px;padding:12px 0}.orbital-view{width:25px;height:25px;min-height:25px;min-width:25px;line-height:23px}.sidebar{max-height:calc(100dvh - 168px)}}
-@media(max-width:820px){.sidebar,body.projection .sidebar{max-height:none;overflow:visible;padding-right:0}.orbital-group{gap:7px}.subshell-name{min-width:65px}.subshell-row{gap:7px}.entity-head{flex-wrap:nowrap}.counter{min-width:90px}.entity-name h2{font-size:22px}.element-tile{min-width:57px;padding:5px 8px}.element-tile strong{font-size:30px}.diagnostic{display:block}.diagnostic strong{margin-bottom:3px}.stage .key{font-size:11px}.stage .section-label{font-size:12px}.configuration .section-label{gap:4px}.orbital-view{right:-4px}.subshell-quantum{display:none}body.projection .diagnostics{grid-template-columns:repeat(3,1fr)}body.projection .diagnostic{display:block}body.projection .diagnostic strong{font-size:17px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}@media print{header,.setup,.tools,.playbar,footer,.secondary,.orbital-view{display:none!important}.workspace{display:block}.sidebar{margin-top:20px;max-height:none;overflow:visible}.panel{break-inside:avoid;box-shadow:none}.stage{padding:10px}}
-/* Charges ioniques : même position dans la tuile et le nom de l’entité. */
-.ion-symbol{display:inline-block;white-space:nowrap}.ion-symbol sup{position:relative;top:-.5em;vertical-align:baseline;font-size:.62em;line-height:0;margin-left:.04em}
-</style></head>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Remplir les cases quantiques d&#x27;un atome ou d&#x27;un ion (Pauli, Hund, Klechkowski), comparer à la configuration réelle, puis visualiser les orbitales hydrogénoïdes.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Structure électronique · AM1 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
 <body>
-<header class="cpge-menu-header">
-  <div><div class="eyebrow">MPSI · AM1 · Architecture de la matière</div><h1>Construire la structure électronique</h1></div>
-  <div class="cpge-global-actions" role="group" aria-label="Commandes générales">
-    <button id="examples">Exemples</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Enregistrer le diagramme et son diagnostic en image SVG">Image</button><button id="projection">Projection</button><button id="fullscreen" class="cpge-fullscreen" aria-label="Plein écran">⛶</button>
-  </div>
-</header>
-<div class="setup secondary">
-  <label>Élément <select id="element" aria-label="Élément chimique"></select></label>
-  <label>Entité <select id="ion" aria-label="Atome ou ion usuel"></select></label>
-  <div class="presets" aria-label="Situations préparées"><button data-z="6">C</button><button data-z="7">N</button><button data-z="8">O</button><button data-z="11">Na</button><button data-z="17">Cl</button><button data-z="19">K</button><button data-z="20">Ca</button><button data-z="24">Cr</button><button data-z="29">Cu</button><button data-z="26">Fe</button></div>
-  <span class="small limit">Atelier guidé · 1 ≤ Z ≤ 36</span>
-</div>
-<main class="workspace">
-<section class="stage panel" aria-label="Atelier des cases quantiques">
-  <div class="entity-head">
-    <div class="element-tile"><small id="zLabel">Z = 8</small><strong id="symbol">O</strong></div>
-    <div class="entity-name"><h2 id="entityName">Oxygène</h2><div id="identityLine" class="muted"></div></div>
-    <div class="counter"><strong id="electronCounter">0 / 8</strong><span>électrons placés / attendus</span></div>
-  </div>
-  <div class="configuration"><div class="section-label">Configuration construite <span class="key"><i></i> valence <i class="core-key"></i> cœur</span></div><div id="configuration" class="formula" aria-live="off"></div><div id="valenceNote" class="small muted"></div></div>
-  <div class="playbar" aria-label="Construction automatique">
-    <button id="manual" class="primary" title="Préparer les sous-couches de cœur selon la convention du cours et vider la valence">À vous de remplir</button>
-    <button id="stepBack" aria-label="Reculer d’un électron dans la construction de référence">− e⁻</button><button id="step" aria-label="Ajouter un électron selon la construction de référence">+ e⁻</button>
-    <button id="play">▶ Lecture</button><button id="reset" title="Vider toutes les orbitales">Vider</button>
-    <label class="small speed secondary">Rythme <select id="speed" aria-label="Rythme de lecture"><option value="850">Lent</option><option value="400" selected>Normal</option><option value="150">Rapide</option></select></label>
-    <button id="reference" title="Afficher la configuration fondamentale de l’entité sélectionnée">Corriger</button>
-  </div>
-  <div class="tools" aria-label="Manipulation des électrons">
-    <span class="section-label">Déposer</span><button class="tool active" id="upTool" data-tool="1" draggable="true" aria-pressed="true" title="Cliquer dans une case ou y glisser cette flèche">↑</button><button class="tool" id="downTool" data-tool="-1" draggable="true" aria-pressed="false" title="Cliquer dans une case ou y glisser cette flèche">↓</button><button class="tool" data-tool="erase" aria-pressed="false">Gomme</button>
-    <label class="small"><input id="quantum" type="checkbox"> Nombres quantiques</label>
-    <label class="small"><input id="showCore" type="checkbox" checked> Déplier le cœur</label>
-    <div class="zoom"><button id="zoomOut" aria-label="Réduire les cases">−</button><button id="fit">Cadrer</button><button id="zoomIn" aria-label="Agrandir les cases">+</button></div>
-  </div>
-  <div id="coreSummary" class="core-summary"></div>
-  <div id="orbitalsViewport"><div id="orbitals" aria-label="Cases quantiques modifiables"></div></div>
-  <p class="small hint">Case vide : déposer une flèche. Flèche : inverser le spin, ou effacer avec la gomme. Bouton ◉ : voir la sous-couche dans l’espace.</p>
-  <div id="diagnostics" class="diagnostics" aria-live="polite"></div>
-  <p id="situationNote" class="situation-note"></p>
-</section>
-<aside class="sidebar">
-  <section class="panel triangle-panel">
-    <div class="panel-title"><h2>Pourquoi cet ordre ?</h2><button id="scan" title="Parcourir l’ordre empirique de Klechkowski">▶ Parcourir</button></div>
-    <div class="triangle-label">Klechkowski <span>n + ℓ croissant, puis n croissant</span></div>
-    <div id="triangle" aria-label="Triangle de Klechkowski, sous-couches s à f"></div>
-    <div id="triangleInfo" class="triangle-info"></div>
-    <p class="small muted">Ordre empirique de construction, avec exceptions. Ce schéma n’est pas une échelle quantitative des énergies.</p>
-  </section>
-  <section class="panel secondary challenge-panel">
-    <h2>À vous de jouer</h2>
-    <label class="sr-only" for="challenge">Choisir un défi</label><select id="challenge"><option value="">Choisir un petit défi…</option><option value="hundC">Carbone · avant d’apparier</option><option value="pauliN">Azote · une occupation interdite ?</option><option value="hundO">Oxygène · les spins célibataires</option><option value="iron">Fer(II) · quels électrons retirer ?</option><option value="copper">Cuivre · l’exception</option></select>
-    <p id="challengeText">Essayez une occupation : Pauli, Hund et la répartition entre sous-couches sont évalués séparément.</p>
-    <button id="solution" disabled>Révéler la correction</button>
-  </section>
-  <details class="panel secondary" id="shellPanel"><summary>Couche → sous-couche → orbitale</summary><label class="small"><input id="emptyShells" type="checkbox"> Afficher aussi toutes les sous-couches vacantes de l’atelier</label><div id="shellTree"></div><p class="small muted">La capacité d’une couche est 2n². L’atelier manipule les sous-couches de 1s à 4p ; l’arbre montre aussi les sous-couches inoccupées de n ≤ 4.</p></details>
-  <details class="panel secondary"><summary>Identité : noyau et électrons</summary><div class="identity-controls"><label>Nombre de masse A <input id="mass" type="number" min="8" max="300" step="1" value="16"></label><label>Électrons de l’entité <select id="identityElectrons"></select></label></div><div id="nucleusInfo"></div><p class="small muted">A est un entier, pas une masse isotopique en u. Modifier A change l’isotope ; modifier l’effectif électronique change la charge. Aucun critère de stabilité nucléaire n’est appliqué. Le sélecteur propose les ions monoatomiques usuels retenus pour chaque élément, ainsi que He⁺ étudié dans le cours. Leur présence dépend du milieu ; les ions des solides ne sont pas tous stables en solution.</p></details>
-</aside>
-</main>
-<footer class="secondary">E. Guillaume · MPSI · AM1 <span>Modèle d’orbitales indépendantes · Spin : propriété quantique, sans rotation classique de l’électron.</span></footer>
-<div id="status" role="status" hidden></div>
-<dialog id="helpDialog"><button class="dialog-close" aria-label="Fermer l’aide">Fermer</button><h2>Un atelier, trois lectures</h2>
-<p><b>Manipuler.</b> À l’ouverture et à chaque choix d’élément ou d’ion, toutes les cases sont vides et le cœur est déplié : construisez la structure dès 1s. « À vous de remplir » prépare seulement le cœur et laisse la valence à compléter. Sélectionnez ↑ ou ↓ et cliquez dans une case ; vous pouvez aussi glisser une flèche. Un clic sur une flèche inverse son spin. Avec la gomme, un clic la retire. Le clavier permet les mêmes actions par Tabulation, Entrée ou Espace.</p>
-<p><b>Comprendre.</b> Les trois diagnostics sont indépendants. Pauli interdit deux spins identiques dans la même orbitale et plus de deux électrons par orbitale. Hund concerne l’occupation fondamentale d’orbitales dégénérées : les célibataires sont d’abord aussi nombreux que possible, avec des spins parallèles. Une répartition contraire à Hund peut respecter Pauli. Une autre répartition entre sous-couches ne correspond pas à la référence fondamentale attendue.</p>
-<p><b>Suivre une construction.</b> « + e⁻ », « − e⁻ » et Lecture suivent une séquence de référence. Une occupation libre est remplacée par cette séquence au premier pas. Ce sont des étapes de construction, pas des ions intermédiaires ni une évolution physique dans le temps. Corriger affiche l’état de référence, Vider retire tous les électrons. La lecture reste en pause quand vous intervenez.</p>
-<p><b>Exceptions et ions.</b> Le triangle illustre le tri (n + ℓ, n), sans échelle d’énergie universelle. Cr : [Ar]3d⁵4s¹ ; Cu : [Ar]3d¹⁰4s¹. Le sélecteur propose les ions monoatomiques usuels retenus pour les éléments de H à Kr, ainsi que He⁺ étudié dans le cours. Pour les cations usuels du bloc d, les électrons 4s partent avant les 3d. Les éléments sans ion usuel retenu ne proposent que l’atome neutre. Les ions polyatomiques ne sont pas décrits par ces cases atomiques. Atteindre la configuration d’un gaz noble n’est pas un critère universel d’existence ou de stabilité d’un ion.</p>
-<p><b>Cœur et valence.</b> Pour les atomes s et p : couche de n maximal ; pour les cas d étudiés : ajout de (n − 1)d si elle est incomplète, selon le cours. Pour suivre l’ionisation, le repérage coloré garde les sous-couches de valence de l’atome neutre. He a deux électrons de valence. Kr en a huit et possède 28 électrons de cœur. Le cœur replié est seulement masqué : ses électrons restent comptés et contrôlés.</p>
-<p><b>Voir une orbitale.</b> ◉ ouvre un nuage de points tirés selon |ψ|², dans le modèle hydrogénoïde Z = 1. Les points sont des échantillons de probabilité et ne figurent ni des trajectoires ni plusieurs électrons. Les orbitales réelles pₓ, pᵧ, etc., sont distinguées des états propres de mℓ. La couleur de phase, facultative, indique le signe de ψ et aucune charge. Le graphe radial représente r²|R|², pas la densité locale |ψ|².</p>
-<p><b>Affichage.</b> Zoom et Cadrer ajustent les cases ; le texte garde sa taille. Projection agrandit l’essentiel et masque les panneaux secondaires ; ⛶ commande le plein écran indépendamment. Image enregistre un SVG autonome du diagramme courant et de ses diagnostics. Dans la vue spatiale, Image PNG enregistre le nuage.</p>
-<p class="small">Données : compilation PubChem (26/10/2026), contrôles NIST pour Cr/Cu ; configurations ioniques explicites ; listes et conventions précisées dans la notice. Atelier limité à Z ≤ 36. Sources et précisions dans la notice locale.</p></dialog>
-<dialog id="examplesDialog"><button class="dialog-close" aria-label="Fermer les exemples">Fermer</button><h2>Situations du cours</h2><div class="example-grid">
-<button data-example="6,0"><strong>C · N · O</strong>Le carbone pour commencer Hund</button><button data-example="11,1"><strong>Na → Na⁺</strong>Retirer l’électron 3s</button><button data-example="17,-1"><strong>Cl → Cl⁻</strong>Compléter la sous-couche 3p</button><button data-example="19,0"><strong>K · Ca</strong>L’arrivée de la sous-couche 4s</button><button data-example="24,0"><strong>Cr · Cu</strong>Les exceptions à la règle empirique</button><button data-example="26,2"><strong>Fe → Fe²⁺ → Fe³⁺</strong>Retirer 4s avant 3d</button></div></dialog>
-<dialog id="spatialDialog"><button class="dialog-close" aria-label="Fermer la vue spatiale">Fermer</button><div class="eyebrow">Représentation probabiliste · modèle hydrogénoïde Z = 1</div><h2 id="spatialTitle">Voir une sous-couche</h2>
-<div class="spatial-controls"><label>Orbitale réelle <select id="shape"></select></label><label><input id="phase" type="checkbox"> Colorer le signe de ψ</label><div class="zoom"><button id="spaceMinus" aria-label="Réduire le nuage">−</button><button id="spaceFit">Cadrer</button><button id="spacePlus" aria-label="Agrandir le nuage">+</button></div><button id="spaceExport">Image PNG</button></div>
-<div class="space-layout"><div><canvas id="cloud" tabindex="0" aria-label="Nuage de probabilité tridimensionnel. Glisser pour tourner ; flèches au clavier pour tourner ; plus et moins pour zoomer."></canvas><div class="space-caption"><span id="cloudLabel"></span><span>Glisser : tourner · Molette : zoomer · Cadrer : vue initiale</span></div></div><div class="radial"><h3>Distribution radiale</h3><p>r²|Rₙℓ(r)|²</p><svg id="radial" viewBox="0 0 360 260" role="img" aria-label="Distribution radiale normalisée, en fonction de r sur a0"></svg><p class="small">Probabilité par unité de rayon, toutes directions confondues. Elle diffère de la densité locale |ψ|².</p><p id="nodes" class="small"></p></div></div>
-<p id="basisNote" class="small"></p><p class="small muted">Échantillonnage fixe de 9 000 points selon |ψ|², avec les nœuds radiaux. Modèle Z = 1 ; distances en a₀, sans ajustement à l’atome sélectionné. La projection 2D superpose des points situés à différentes profondeurs.</p></dialog>
-<script>const ELEMENTS = [{"z":1,"symbol":"H","name":"Hydrogène","counts":{"1s":1}},{"z":2,"symbol":"He","name":"Hélium","counts":{"1s":2}},{"z":3,"symbol":"Li","name":"Lithium","counts":{"1s":2,"2s":1}},{"z":4,"symbol":"Be","name":"Béryllium","counts":{"1s":2,"2s":2}},{"z":5,"symbol":"B","name":"Bore","counts":{"1s":2,"2s":2,"2p":1}},{"z":6,"symbol":"C","name":"Carbone","counts":{"1s":2,"2s":2,"2p":2}},{"z":7,"symbol":"N","name":"Azote","counts":{"1s":2,"2s":2,"2p":3}},{"z":8,"symbol":"O","name":"Oxygène","counts":{"1s":2,"2s":2,"2p":4}},{"z":9,"symbol":"F","name":"Fluor","counts":{"1s":2,"2s":2,"2p":5}},{"z":10,"symbol":"Ne","name":"Néon","counts":{"1s":2,"2s":2,"2p":6}},{"z":11,"symbol":"Na","name":"Sodium","counts":{"1s":2,"2s":2,"2p":6,"3s":1}},{"z":12,"symbol":"Mg","name":"Magnésium","counts":{"1s":2,"2s":2,"2p":6,"3s":2}},{"z":13,"symbol":"Al","name":"Aluminium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":1}},{"z":14,"symbol":"Si","name":"Silicium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":2}},{"z":15,"symbol":"P","name":"Phosphore","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":3}},{"z":16,"symbol":"S","name":"Soufre","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":4}},{"z":17,"symbol":"Cl","name":"Chlore","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":5}},{"z":18,"symbol":"Ar","name":"Argon","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6}},{"z":19,"symbol":"K","name":"Potassium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":1}},{"z":20,"symbol":"Ca","name":"Calcium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2}},{"z":21,"symbol":"Sc","name":"Scandium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":1}},{"z":22,"symbol":"Ti","name":"Titane","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":2}},{"z":23,"symbol":"V","name":"Vanadium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":3}},{"z":24,"symbol":"Cr","name":"Chrome","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"3d":5,"4s":1}},{"z":25,"symbol":"Mn","name":"Manganèse","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":5}},{"z":26,"symbol":"Fe","name":"Fer","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":6}},{"z":27,"symbol":"Co","name":"Cobalt","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":7}},{"z":28,"symbol":"Ni","name":"Nickel","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":8}},{"z":29,"symbol":"Cu","name":"Cuivre","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":1,"3d":10}},{"z":30,"symbol":"Zn","name":"Zinc","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10}},{"z":31,"symbol":"Ga","name":"Gallium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":1}},{"z":32,"symbol":"Ge","name":"Germanium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":2}},{"z":33,"symbol":"As","name":"Arsenic","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":3}},{"z":34,"symbol":"Se","name":"Sélénium","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":4}},{"z":35,"symbol":"Br","name":"Brome","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":5}},{"z":36,"symbol":"Kr","name":"Krypton","counts":{"1s":2,"2s":2,"2p":6,"3s":2,"3p":6,"4s":2,"3d":10,"4p":6}}];</script><script>'use strict';
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
-let noticeTimer;
-function notice(message){$('status').textContent=message;$('status').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('status').hidden=true,5500);}
-function saveFile(text,name,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);}
-function palette(){const s=getComputedStyle(document.documentElement);return Object.fromEntries(['ink','muted','accent','accent-ink','accent-soft','surface','paper','line','core','bad','bad-bg','warn','warn-bg'].map(k=>[k,s.getPropertyValue('--'+k).trim()]));}
-function themeSync(){const dark=document.documentElement.dataset.theme==='dark';$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',dark);$('theme').setAttribute('aria-label',dark?'Passer au thème clair':'Passer au thème sombre');window.dispatchEvent(new Event('themechange'));}
-$('theme').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';themeSync();};
-$('projection').onclick=()=>{const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',p);window.dispatchEvent(new Event('resize'));};
-$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{notice('Le plein écran est indisponible dans cette fenêtre. Utilisez le plein écran du navigateur.');}};
-document.addEventListener('fullscreenchange',()=>{const active=!!document.fullscreenElement;$('fullscreen').setAttribute('aria-pressed',active);$('fullscreen').setAttribute('aria-label',active?'Quitter le plein écran':'Plein écran');});
-for(const [button,dialog] of [['help','helpDialog'],['examples','examplesDialog']])$(button).onclick=()=>$(dialog).showModal();
-document.querySelectorAll('.dialog-close').forEach(b=>b.onclick=()=>b.closest('dialog').close());
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-themeSync();
-</script><script>'use strict';
-const ORDER=['1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p','7s','5f','6d','7p'];
-const KEYS=ORDER.slice(0,8), L=key=>'spdf'.indexOf(key[1]), CAP=key=>2*(2*L(key)+1);
-const MASS=[1,4,7,9,11,12,14,16,19,20,23,24,27,28,31,32,35,40,39,40,45,48,51,52,55,56,59,58,63,64,69,74,75,80,79,84];
-const state={z:8,q:0,a:16,boxes:{},tool:1,active:'2p',timer:null,scanTimer:null,zoom:54,challenge:'',manual:false};
-const element=()=>ELEMENTS[state.z-1];
-const clone=x=>JSON.parse(JSON.stringify(x));
-// Références explicites : ions monoatomiques usuels, plus He⁺ étudié dans le cours.
-const HE={'1s':2},NE={...HE,'2s':2,'2p':6},AR={...NE,'3s':2,'3p':6},KR={...AR,'4s':2,'3d':10,'4p':6};
-const argonD=n=>({...AR,...(n?{'3d':n}:{})});
-const ION_CONFIGS={
-  1:{1:{},'-1':HE},2:{1:{'1s':1}},3:{1:HE},4:{2:HE},
-  7:{'-3':NE},8:{'-2':NE},9:{'-1':NE},11:{1:NE},12:{2:NE},13:{3:NE},
-  15:{'-3':AR},16:{'-2':AR},17:{'-1':AR},19:{1:AR},20:{2:AR},21:{3:AR},
-  22:{2:argonD(2),3:argonD(1),4:AR},23:{2:argonD(3),3:argonD(2)},
-  24:{2:argonD(4),3:argonD(3)},25:{2:argonD(5),3:argonD(4)},
-  26:{2:argonD(6),3:argonD(5)},27:{2:argonD(7),3:argonD(6)},28:{2:argonD(8)},
-  29:{1:argonD(10),2:argonD(9)},30:{2:argonD(10)},31:{3:argonD(10)},
-  33:{'-3':KR},34:{'-2':KR},35:{'-1':KR}
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
 };
-function charges(z){return [0,...Object.keys(ION_CONFIGS[z]||{}).map(Number).sort((a,b)=>b-a)];}
-function chargeLabel(q=state.q){return q===0?'':Math.abs(q)===1?(q>0?'+':'−'):Math.abs(q)+(q>0?'+':'−');}
-function entityText(q=state.q){return element().symbol+chargeLabel(q).replace(/[0-9+−]/g,c=>'⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻'['0123456789+−'.indexOf(c)]);}
-function entityHtml(){return '<span class="ion-symbol">'+esc(element().symbol)+(state.q?'<sup>'+chargeLabel()+'</sup>':'')+'</span>';}
-function chargeValue(q=state.q){return q===0?'nulle':(q>0?'+':'−')+(Math.abs(q)===1?'':Math.abs(q))+'e';}
-function targetCounts(){return clone(state.q?ION_CONFIGS[state.z][state.q]:element().counts);}
-function valenceKeys(){const c=element().counts,n=Math.max(...Object.keys(c).map(k=>+k[0]));return Object.keys(c).filter(k=>+k[0]===n||(k[1]==='d'&&+k[0]===n-1&&c[k]<10));}
-function emptyBoxes(){return Object.fromEntries(KEYS.map(k=>[k,Array.from({length:2*L(k)+1},()=>[])]));}
-function boxesFor(c){const boxes=emptyBoxes();for(const k of KEYS){const n=c[k]||0,m=boxes[k].length;for(let i=0;i<n;i++)boxes[k][i%m].push(i<m?1:-1);}return boxes;}
-function countsOf(boxes=state.boxes){return Object.fromEntries(KEYS.map(k=>[k,boxes[k].reduce((n,b)=>n+b.length,0)]).filter(([,v])=>v));}
-function electronTotal(boxes=state.boxes){return Object.values(countsOf(boxes)).reduce((a,b)=>a+b,0);}
-function sameCounts(a,b){return KEYS.every(k=>(a[k]||0)===(b[k]||0));}
-function prefixBoxes(n){const t=targetCounts(),b=emptyBoxes();let remaining=n,last='1s';for(const k of KEYS){const m=b[k].length;for(let i=0;i<(t[k]||0)&&remaining>0;i++){b[k][i%m].push(i<m?1:-1);remaining--;last=k;}}return {boxes:b,last};}
-function isPrefix(){return JSON.stringify(state.boxes)===JSON.stringify(prefixBoxes(electronTotal()).boxes);}
-function configHtml(c){const v=valenceKeys();const keys=Object.keys(c).filter(k=>c[k]).sort((a,b)=>+a[0]-b[0]||L(a)-L(b));return keys.length?keys.map(k=>'<span class="config-term '+(v.includes(k)?'valence':'')+'">'+k+'<sup>'+c[k]+'</sup></span>').join(''):'<span class="muted">Aucun électron placé</span>';}
-function plainConfig(c){return Object.keys(c).filter(k=>c[k]).sort((a,b)=>+a[0]-b[0]||L(a)-L(b)).map(k=>k+String(c[k]).replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])).join('  ');}
-function stop(){clearTimeout(state.timer);state.timer=null;$('play').textContent='▶ Lecture';$('play').setAttribute('aria-pressed','false');}
-function stopScan(){clearTimeout(state.scanTimer);state.scanTimer=null;$('scan').textContent='▶ Parcourir';}
-function selectElement(z,q=0,keepChallenge=false){
-  stop();stopScan();const oldZ=state.z;state.z=Math.max(1,Math.min(36,Math.round(z)));state.q=charges(state.z).includes(+q)?+q:0;if(oldZ!==state.z)state.a=MASS[state.z-1];state.boxes=emptyBoxes();state.active='1s';state.manual=true;$('showCore').checked=true;
-  if(!keepChallenge){state.challenge='';$('challenge').value='';$('challengeText').textContent='Essayez une occupation : Pauli, Hund et la répartition entre sous-couches sont évalués séparément.';$('solution').disabled=true;}
-  $('element').value=state.z;$('ion').innerHTML=charges(state.z).map(c=>'<option value="'+c+'">'+(c===0?'Atome neutre':entityText(c))+'</option>').join('');$('ion').value=state.q;
-  $('identityElectrons').innerHTML=charges(state.z).map(c=>'<option value="'+(state.z-c)+'">'+(state.z-c)+' e⁻'+(c?' · charge '+chargeValue(c):' · neutre')+'</option>').join('');$('identityElectrons').value=state.z-state.q;$('mass').min=state.z;$('mass').value=state.a;
-  document.querySelectorAll('[data-z]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.z===state.z));render();
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
 }
-function diagnose(boxes=state.boxes){
-  const c=countsOf(boxes),total=electronTotal(boxes),expected=state.z-state.q;
-  const invalid=[];const hund=[];
-  for(const k of KEYS){let hasBad=false;for(const [i,b] of boxes[k].entries())if(b.length>2||new Set(b).size!==b.length){invalid.push(k+' (mℓ = '+(i-L(k))+')');hasBad=true;}
-    if(!hasBad&&L(k)>0){const n=c[k]||0,m=boxes[k].length,singles=boxes[k].filter(b=>b.length===1);if(singles.length!==Math.min(n,2*m-n)||new Set(singles.map(b=>b[0])).size>1)hund.push(k);}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
   }
-  return {pauli:!invalid.length,hund:!hund.length,invalid,hundShells:hund,total,expected,countsMatch:sameCounts(c,targetCounts())};
-}
-function diagnosticsText(d){return [
-  {title:d.pauli?'✓ Pauli':'! Pauli',kind:d.pauli?'':'bad',text:d.pauli?'Deux électrons au plus par orbitale, spins opposés.':'Occupation interdite dans '+d.invalid.join(', ')+'.'},
-  {title:!d.pauli?'— Hund':d.hund?'✓ Hund':'! Hund',kind:!d.pauli?'warn':d.hund?'':'warn',text:!d.pauli?'Corriger d’abord les violations de Pauli.':d.hund?'Répartition et spins parallèles conformes dans chaque sous-couche.':'Occupation non fondamentale de '+d.hundShells.join(', ')+', sans violation de Pauli.'},
-  {title:d.total!==d.expected?'… Effectif':d.countsMatch?'✓ Répartition':'! Répartition',kind:d.total!==d.expected||!d.countsMatch?'warn':'',text:d.total!==d.expected?(d.total+' électrons placés ; '+d.expected+' attendus pour '+entityText()+'.'):d.countsMatch?'Effectifs des sous-couches conformes à la référence.':'Répartition entre sous-couches différente de la référence fondamentale.'}
-];}
-function visibleKeys(){const t=targetCounts();const last=Math.max(...KEYS.map((k,i)=>(t[k]||element().counts[k])?i:0));return KEYS.filter((k,i)=>$('emptyShells').checked||i<=last||state.boxes[k].some(b=>b.length));}
-function isCore(k){return !!element().counts[k]&&!valenceKeys().includes(k);}
-function renderOrbitals(){
-  const full=$('showCore').checked,q=$('quantum').checked,vis=visibleKeys(),core=vis.filter(isCore),coreN=core.reduce((s,k)=>s+(countsOf()[k]||0),0);
-  $('coreSummary').hidden=full||!core.length;$('coreSummary').innerHTML='<b>Cœur replié</b> '+core.map(k=>k).join(' · ')+' <span>('+coreN+' e⁻)</span><button id="expandCore">Déplier</button>';if($('expandCore'))$('expandCore').onclick=()=>{$('showCore').checked=true;renderOrbitals();};
-  $('orbitals').innerHTML=vis.filter(k=>full||!isCore(k)).map(k=>{
-    const n=+k[0],l=L(k),count=countsOf()[k]||0;
-    return '<div class="subshell-row '+(isCore(k)?'core':'')+'" data-shell="'+k+'"><div class="subshell-name"><strong>'+k+'<sup>'+count+'</sup></strong><small>'+((element().counts[k]||valenceKeys().includes(k))?(isCore(k)?'cœur':'valence'):'vacante')+'</small></div><div class="orbital-group">'+state.boxes[k].map((b,i)=>{
-      const bad=b.length>2||new Set(b).size!==b.length,ml=i-l;
-      return '<div class="orbital-wrap"><div class="orbital-box '+(bad?'invalid':'')+'" role="group" tabindex="0" data-key="'+k+'" data-i="'+i+'" aria-label="Déposer dans '+k+', mℓ '+ml+', '+b.length+' électron'+(b.length>1?'s':'')+'">'+b.map((spin,j)=>'<button class="spin" data-j="'+j+'" aria-label="Électron '+(j+1)+' de '+k+', mℓ '+ml+', spin '+(spin>0?'plus':'moins')+' un demi ; cliquer pour inverser, gomme pour retirer">'+(spin>0?'↑':'↓')+'</button>').join('')+(b.length===0?'<span class="empty-slot">·</span>':'')+'</div>'+(q?'<span class="quantum">mℓ = '+ml+'</span>':'')+'<button class="orbital-view" data-view="'+k+'" data-ml="'+ml+'" title="Voir les illustrations spatiales de la sous-couche '+k+'" aria-label="Voir dans l’espace la sous-couche '+k+', case mℓ '+ml+'">◉</button></div>';
-    }).join('')+'</div>'+(q?'<span class="subshell-quantum">n = '+n+'<br>ℓ = '+l+'<br>mₛ = ±½</span>':'')+'</div>';
-  }).join('');
-  $('orbitals').querySelectorAll('.orbital-box').forEach(box=>{
-    const k=box.dataset.key,i=+box.dataset.i;
-    box.onclick=e=>{
-      stop();stopScan();state.active=k;state.manual=true;const spin=e.target.closest('.spin');
-      if(spin){const j=+spin.dataset.j;if(state.tool==='erase')state.boxes[k][i].splice(j,1);else state.boxes[k][i][j]*=-1;}
-      else if(state.tool==='erase')state.boxes[k][i].pop();else deposit(k,i,state.tool);
-      renderPreservingFocus(k,i,spin?Math.min(+spin.dataset.j,state.boxes[k][i].length-1):null);
-    };
-    box.onkeydown=e=>{if(e.target!==box)return;if(['Enter',' '].includes(e.key)){e.preventDefault();box.click();}if(['Delete','Backspace'].includes(e.key)){e.preventDefault();stop();state.boxes[k][i].pop();renderPreservingFocus(k,i);}};
-    box.ondragover=e=>{e.preventDefault();box.classList.add('over');};box.ondragleave=()=>box.classList.remove('over');box.ondrop=e=>{e.preventDefault();stop();stopScan();box.classList.remove('over');const spin=Number(e.dataTransfer.getData('text/plain'));if(spin===1||spin===-1){state.active=k;state.manual=true;deposit(k,i,spin);renderPreservingFocus(k,i);}};
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
   });
-  $('orbitals').querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>window.openSpatial(b.dataset.view,+b.dataset.ml));
-}
-function deposit(k,i,spin){if(state.boxes[k][i].length>=3){notice('Trois flèches suffisent à montrer la violation de Pauli. Retirez-en pour continuer.');return;}state.boxes[k][i].push(+spin);}
-function renderPreservingFocus(k,i,j=null){render();const b=$('orbitals').querySelector('.orbital-box[data-key="'+k+'"][data-i="'+i+'"]');(j!==null&&j>=0?b?.querySelector('[data-j="'+j+'"]'):b)?.focus({preventScroll:true});}
-function renderIdentity(){const q=state.q;const neutron=state.a-state.z;$('identityLine').textContent='Z = '+state.z+' · '+(q?'ion de charge '+chargeValue():'atome neutre')+' · '+(state.z-q)+' e⁻ attendus';$('nucleusInfo').innerHTML='<b><sup>'+state.a+'</sup><sub>'+state.z+'</sub>'+element().symbol+'</b> : '+state.z+' protons · '+neutron+' neutrons<br>'+(state.z-q)+' électrons · charge '+chargeValue();}
-function situation(){
-  if(state.z===1&&state.q===1)return 'H⁺ : aucun électron. Pour l’isotope ¹H, le noyau est un proton ; en solution, il est solvaté.';
-  if(state.z===1&&state.q===-1)return 'H⁻ : 1s². L’ion hydrure possède deux électrons ; on le rencontre dans certains composés.';
-  if(state.z===2&&state.q===1)return 'He⁺ : 1s¹. Exemple d’ion hydrogénoïde étudié dans le cours, sans ion usuel de l’hélium en solution.';
-  if(state.z===26&&state.q===2)return 'Fe²⁺ : [Ar]3d⁶. Les deux électrons 4s ont été retirés avant les électrons 3d.';
-  if(state.z===26&&state.q===3)return 'Fe³⁺ : [Ar]3d⁵. Retirer les deux électrons 4s, puis un électron 3d.';
-  if(state.z===26)return 'Fe : [Ar]3d⁶4s². Convention du cours : 8 électrons de valence ; pour ioniser, retirer d’abord 4s.';
-  if(state.z===24)return 'Exception Cr : [Ar]3d⁵4s¹, et non [Ar]3d⁴4s². La lecture suit la configuration de référence, exception incluse.';
-  if(state.z===29)return 'Exception Cu : [Ar]3d¹⁰4s¹, et non [Ar]3d⁹4s². La règle empirique seule ne suffit pas.';
-  if(state.z===11&&state.q)return 'Na⁺ : [Ne]. L’électron 3s du sodium a été retiré ; le noyau est inchangé.';
-  if(state.z===17&&state.q)return 'Cl⁻ : [Ar]. Un électron supplémentaire complète 3p ; le noyau est inchangé.';
-  if(state.q>0)return 'Pour former '+entityText()+', on retire '+state.q+' électron'+(state.q>1?'s':'')+' à l’atome neutre.'+(state.z>=21&&state.z<=30?' Les électrons 4s sont retirés avant 3d.':'')+' Le noyau est inchangé.';
-  if(state.q<0)return 'Pour former '+entityText()+', on ajoute '+(-state.q)+' électron'+(state.q<-1?'s':'')+' à l’atome neutre. Le noyau est inchangé. L’existence de cet ion dépend du milieu.';
-  if(state.z===19||state.z===20)return 'Après 3p, la règle de Klechkowski place 4s avant 3d : 4s a n + ℓ = 4, contre 5 pour 3d.';
-  if([6,7,8].includes(state.z))return 'Dans 2p, trois orbitales de même énergie : occuper d’abord les cases séparément avec des spins parallèles, puis apparier.';
-  if(state.z===36)return 'Kr : 8 électrons de valence (4s²4p⁶), 28 de cœur. La sous-couche 3d pleine appartient ici au cœur.';
-  if(state.z===2)return 'He : 1s². Deux électrons de valence ; l’hélium appartient au bloc s et à la famille des gaz nobles.';
-  return 'Les cases décrivent des orbitales ; les flèches indiquent les deux projections possibles du spin. Leur ordre horizontal est conventionnel.';
-}
-function render(){
-  const c=countsOf(),v=valenceKeys(),valence=v.reduce((s,k)=>s+(c[k]||0),0),d=diagnose();$('symbol').innerHTML=entityHtml();$('zLabel').textContent='Z = '+state.z;$('entityName').innerHTML=esc(element().name)+(state.q?' · '+entityHtml():'');$('electronCounter').textContent=d.total+' / '+d.expected;$('configuration').innerHTML=configHtml(c);
-  $('valenceNote').textContent=state.q?'Repérage conservé des sous-couches de valence de l’atome neutre : '+valence+' e⁻ encore présents.':valence+' e⁻ de valence placés · '+(d.total-valence)+' e⁻ de cœur placés · convention du cours.';
-  renderIdentity();renderOrbitals();renderTriangle();$('diagnostics').innerHTML=diagnosticsText(d).map(x=>'<div class="diagnostic '+x.kind+'"><strong>'+x.title+'</strong><span>'+esc(x.text)+'</span></div>').join('');$('situationNote').textContent=situation();
-  if(state.challenge&&d.total===d.expected&&d.pauli&&d.hund&&d.countsMatch){$('challengeText').textContent='✓ Défi résolu. '+CHALLENGES[state.challenge].solution;$('challengeText').classList.add('challenge-success');}else{$('challengeText').classList.remove('challenge-success');if(state.challenge)$('challengeText').textContent=CHALLENGES[state.challenge].text;}
-}
-function prepareManual(){stop();stopScan();const c=targetCounts();for(const k of valenceKeys())delete c[k];state.boxes=boxesFor(c);state.manual=true;state.active=valenceKeys()[0]||'1s';$('upTool').click();render();notice('Cœur préparé. Complétez les sous-couches de valence avec les flèches.');}
-function oneStep(delta){stopScan();const total=electronTotal(),maximum=state.z-state.q;if(!isPrefix())notice('La construction de référence remplace l’occupation libre. Les étapes ne représentent pas des ions intermédiaires.');const n=Math.max(0,Math.min(maximum,total+delta));const p=prefixBoxes(n);state.boxes=p.boxes;state.active=p.last;state.manual=false;render();}
-function playTick(){if(electronTotal()>=state.z-state.q){stop();return;}oneStep(1);state.timer=setTimeout(playTick,+$('speed').value);}
-$('play').onclick=()=>{if(state.timer){stop();return;}stopScan();if(!isPrefix()||electronTotal()>=state.z-state.q){state.boxes=emptyBoxes();state.active='1s';render();}state.manual=false;$('play').textContent='Ⅱ Pause';$('play').setAttribute('aria-pressed','true');state.timer=setTimeout(playTick,+$('speed').value);};
-$('step').onclick=()=>{stop();oneStep(1);};$('stepBack').onclick=()=>{stop();oneStep(-1);};$('reset').onclick=()=>{stop();stopScan();state.boxes=emptyBoxes();state.active='1s';state.manual=true;render();};$('manual').onclick=prepareManual;
-$('reference').onclick=()=>{stop();stopScan();state.boxes=boxesFor(targetCounts());state.active=KEYS.filter(k=>targetCounts()[k]).at(-1)||'1s';state.manual=false;render();};
-$('element').innerHTML=ELEMENTS.map(e=>'<option value="'+e.z+'">'+e.z+' · '+e.symbol+' · '+e.name+'</option>').join('');$('element').onchange=()=>selectElement(+$('element').value);$('ion').onchange=()=>selectElement(state.z,+$('ion').value);$('identityElectrons').onchange=()=>selectElement(state.z,state.z-+$('identityElectrons').value);
-document.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>selectElement(+b.dataset.z));document.querySelectorAll('[data-example]').forEach(b=>b.onclick=()=>{selectElement(...b.dataset.example.split(',').map(Number));$('examplesDialog').close();});
-document.querySelectorAll('[data-tool]').forEach(b=>{b.onclick=()=>{state.tool=b.dataset.tool==='erase'?'erase':+b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',active);});};if(b.draggable)b.ondragstart=e=>{b.click();e.dataTransfer.setData('text/plain',b.dataset.tool);e.dataTransfer.effectAllowed='copy';};});
-$('quantum').onchange=renderOrbitals;$('showCore').onchange=renderOrbitals;$('emptyShells').onchange=renderOrbitals;
-function setZoom(value){state.zoom=Math.max(44,Math.min(82,value));document.documentElement.style.setProperty('--box',state.zoom+'px');}
-$('zoomIn').onclick=()=>setZoom(state.zoom+7);$('zoomOut').onclick=()=>setZoom(state.zoom-7);$('fit').onclick=()=>{setZoom(Math.max(44,Math.min(64,($('orbitalsViewport').clientWidth-125)/5-7)));$('orbitalsViewport').scrollLeft=0;};
-$('mass').onchange=()=>{state.a=Math.max(state.z,Math.min(300,Math.round(+$('mass').value)||state.z));$('mass').value=state.a;renderIdentity();};
-function renderTriangle(){
-  const n=+state.active[0],l=L(state.active),sum=n+l;let nodes='',points=[];
-  for(let nn=1;nn<=7;nn++)for(let ll=0;ll<Math.min(4,nn);ll++){
-    const key=nn+'spdf'[ll],rank=ORDER.indexOf(key),diag=nn+ll===sum;
-    if(diag)points.push([ll*100+50,(nn-1)*40+18,nn]);
-    nodes+='<button class="triangle-node '+(key===state.active?'active':diag?'diagonal':rank<0?'dim':'')+'" style="grid-row:'+nn+';grid-column:'+(ll+1)+'" data-node="'+key+'" title="'+key+' : n + ℓ = '+(nn+ll)+' ; capacité '+CAP(key)+' e⁻" aria-pressed="'+(key===state.active)+'">'+key+'</button>';
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
   }
-  points.sort((a,b)=>a[2]-b[2]);let path=points.map(p=>p.slice(0,2).join(',')).join(' ');
-  $('triangle').innerHTML='<svg viewBox="0 0 400 276" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="'+palette().accent+'"/></marker></defs><polyline points="'+path+'" fill="none" stroke="'+palette().accent+'" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)"/></svg>'+nodes;
-  const rank=ORDER.indexOf(state.active);$('triangleInfo').innerHTML='<b>'+state.active+'</b> : n + ℓ = '+n+' + '+l+' = <b>'+sum+'</b><br><span class="small">'+(rank>=0?'Rang '+(rank+1)+' du parcours usuel s–f. ':'Hors du parcours utile jusqu’à 7p. ')+CAP(state.active)+' e⁻ au maximum.</span>';
-  $('triangle').querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>{stopScan();state.active=b.dataset.node;renderTriangle();});
-}
-$('scan').onclick=()=>{if(state.scanTimer){stopScan();return;}stop();let i=0;$('scan').textContent='Ⅱ Pause';function tick(){state.active=ORDER[i++];renderTriangle();if(i<ORDER.length)state.scanTimer=setTimeout(tick,900);else stopScan();}tick();};
-function buildTree(){let tree='';for(let n=1;n<=4;n++){
-  tree+='<details><summary>Couche n = '+n+' · '+n*n+' orbitales · '+(2*n*n)+' e⁻ max.</summary>';
-  for(let l=0;l<n;l++){const key=n+'spdf'[l],m=2*l+1;tree+='<details><summary>'+key+' · ℓ = '+l+' · '+m+' orbitale'+(m>1?'s':'')+'</summary><p>mℓ = '+Array.from({length:m},(_,i)=>i-l).join(', ')+'<br>Chaque orbitale : mₛ = +½ ou −½.<br>Capacité de '+key+' : 2 × '+m+' = '+(2*m)+' e⁻.</p>'+(l<3?'<button data-tree-view="'+key+'">◉ Voir '+key+'</button>':'<p>Les formes f ne sont pas illustrées dans cet atelier.</p>')+'</details>';}
-  tree+='</details>';
-}$('shellTree').innerHTML=tree;$('shellTree').querySelectorAll('[data-tree-view]').forEach(b=>b.onclick=()=>window.openSpatial(b.dataset.treeView,0));}
-const CHALLENGES={
-  hundC:{z:6,q:0,text:'Les deux électrons 2p de C sont appariés dans une seule case. Pauli est-il respecté ? Réorganisez-les pour l’état fondamental.',solution:'C : 2p² occupe deux orbitales distinctes avec des spins parallèles. L’appariement initial respectait Pauli, mais pas Hund.',alter:b=>{b['2p']=[[1,-1],[],[]];}},
-  pauliN:{z:7,q:0,text:'Dans N, deux flèches identiques occupent la même orbitale 2p. Identifiez la règle violée, puis corrigez toute la sous-couche.',solution:'N : 2p³ possède trois célibataires de spins parallèles. Deux flèches identiques dans une même orbitale violent Pauli.',alter:b=>{b['2p']=[[1,1],[1],[]];}},
-  hundO:{z:8,q:0,text:'Dans O, les deux électrons célibataires 2p ont des spins opposés. La répartition respecte Pauli. Retrouvez l’occupation fondamentale usuelle.',solution:'O : 2p⁴ possède une paire et deux célibataires de spins parallèles. Le sens global des spins est arbitraire.',alter:b=>{b['2p']=[[1,-1],[1],[-1]];}},
-  iron:{z:26,q:2,text:'Fe²⁺ a ici été obtenu en retirant deux électrons 3d à Fe. Déplacez les électrons pour retrouver sa configuration fondamentale.',solution:'Fe²⁺ : [Ar]3d⁶. Les deux électrons 4s sont retirés d’abord ; Fe³⁺ est ensuite [Ar]3d⁵.',alter:b=>{b['4s']=[[1,-1]];b['3d']=[[1],[1],[1],[1],[]];}},
-  copper:{z:29,q:0,text:'L’application mécanique de Klechkowski propose 3d⁹4s² pour Cu. Retrouvez l’exception expérimentale attendue.',solution:'Cu : [Ar]3d¹⁰4s¹. Les règles empiriques ne remplacent pas la configuration de référence.',alter:b=>{b['4s']=[[1,-1]];b['3d']=[[1,-1],[1,-1],[1,-1],[1,-1],[1]];}}
-};
-$('challenge').onchange=()=>{const name=$('challenge').value;if(!name){state.challenge='';$('challengeText').textContent='Choisissez un défi pour préparer une situation.';$('solution').disabled=true;return;}const c=CHALLENGES[name];selectElement(c.z,c.q,true);state.boxes=boxesFor(targetCounts());state.active=KEYS.filter(k=>targetCounts()[k]).at(-1)||'1s';state.manual=false;state.challenge=name;c.alter(state.boxes);$('challengeText').textContent=c.text;$('solution').disabled=false;render();};
-$('solution').onclick=()=>{if(!state.challenge)return;stop();state.boxes=boxesFor(targetCounts());render();};
-document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();stopScan();}});
-window.addEventListener('themechange',()=>{if(Object.keys(state.boxes).length)renderTriangle();});
-function exportDiagram(){
-  const p=palette(),keys=visibleKeys().filter(k=>$('showCore').checked||!isCore(k)),c=countsOf(),d=diagnose(),height=380+keys.length*88+180;
-  const txt=(x,y,s,size=20,color=p.ink,extra='')=>'<text x="'+x+'" y="'+y+'" font-size="'+size+'" fill="'+color+'" '+extra+'>'+esc(s)+'</text>';
-  let svg='<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="'+height+'" viewBox="0 0 1300 '+height+'" role="img"><title>AM1 · Structure électronique · '+esc(entityText())+'</title><desc>Occupation actuelle des orbitales et trois diagnostics indépendants. Les cases cachées sont comptées. Schéma sans échelle énergétique quantitative.</desc><rect width="1300" height="'+height+'" fill="'+p.surface+'"/><g font-family="Arial,Helvetica,sans-serif">';
-  svg+=txt(40,42,'MPSI · AM1 · E. Guillaume',15,p['accent-ink'])+txt(40,90,'Construire la structure électronique',34)+txt(40,137,element().name+' · '+entityText()+' · Z = '+state.z+' · '+d.total+'/'+d.expected+' e⁻ placés',27);
-  svg+='<text x="40" y="184" font-size="30">'+(Object.keys(c).length?Object.keys(c).sort((a,b)=>+a[0]-b[0]||L(a)-L(b)).map(k=>'<tspan fill="'+(valenceKeys().includes(k)?p['accent-ink']:p.core)+'">'+esc(plainConfig({[k]:c[k]}))+'  </tspan>').join(''):'<tspan fill="'+p.muted+'">Aucun électron placé</tspan>')+'</text>'+txt(40,222,'Vert : sous-couches de valence de l’atome neutre ; gris : cœur.',16,p.muted);
-  const hidden=visibleKeys().filter(k=>isCore(k)&&!$('showCore').checked);if(hidden.length)svg+=txt(40,260,'Cœur replié : '+plainConfig(Object.fromEntries(hidden.map(k=>[k,c[k]||0])))+' · électrons inclus dans les diagnostics.',17,p.core);
-  keys.forEach((k,row)=>{const y=305+row*88;svg+=txt(40,y+32,k+'  ('+(c[k]||0)+' e⁻)',25,isCore(k)?p.core:p['accent-ink']);state.boxes[k].forEach((b,i)=>{const x=205+i*76,bad=b.length>2||new Set(b).size!==b.length;svg+='<rect x="'+x+'" y="'+y+'" width="65" height="49" rx="5" fill="'+(bad?p['bad-bg']:isCore(k)?p.paper:p['accent-soft'])+'" stroke="'+(bad?p.bad:isCore(k)?p.core:p.accent)+'" stroke-width="2"/>'+txt(x+32,y+36,b.map(s=>s>0?'↑':'↓').join(''),34,bad?p.bad:isCore(k)?p.core:p['accent-ink'],'text-anchor="middle"');if($('quantum').checked)svg+=txt(x+32,y+69,'mℓ='+ (i-L(k)),15,p.muted,'text-anchor="middle"');});});
-  svg+=txt(860,225,'Klechkowski',24,p['accent-ink'])+txt(860,254,'Tri (n + ℓ, n) · exceptions',16,p.muted);
-  for(let n=1;n<=7;n++)for(let l=0;l<Math.min(4,n);l++){const key=n+'spdf'[l];svg+=txt(880+l*92,290+(n-1)*45,key,22,key===state.active?p['accent-ink']:p.core,key===state.active?'font-weight="bold"':'');}
-  let y=325+keys.length*88;for(const entry of diagnosticsText(d)){svg+=txt(40,y,entry.title,22,entry.kind==='bad'?p.bad:entry.kind==='warn'?p.warn:p['accent-ink']);const words=entry.text.split(' '),lines=[''];for(const w of words){if((lines.at(-1)+' '+w).length>88)lines.push(w);else lines[lines.length-1]+=(lines.at(-1)?' ':'')+w;}lines.forEach((line,i)=>{svg+=txt(250,y+i*24,line,18,p.ink);});y+=Math.max(45,lines.length*24+12);}
-  svg+=txt(40,height-35,'Schéma de construction ; le spin n’est pas une rotation classique. Orbitales de 1s à 4p · Z ≤ 36.',16,p.muted)+'</g></svg>';
-  saveFile(svg,'AM1_'+element().symbol+(state.q?'_ion'+state.q:'')+'_Structure.svg','image/svg+xml');notice('Diagramme SVG enregistré avec le thème et l’occupation actuels.');return svg;
-}
-$('export').onclick=exportDiagram;
-buildTree();selectElement(8);setZoom(innerWidth>=1550?64:54);
-// Exposition en lecture seule par convention pour les contrôles locaux reproductibles.
-window.AM1={state,diagnose,targetCounts,countsOf,valenceKeys,boxesFor,prefixBoxes,selectElement,plainConfig,exportDiagram,render};
-</script><script>'use strict';
-// Modèle hydrogénoïde Z = 1 : R_nl ∝ exp(-ρ/2) ρ^l L_(n-l-1)^(2l+1)(ρ), ρ=2r/n.
-// L'échantillonnage sépare P(r) dr = r² |R|² dr et |Y_réel|² dΩ.
-const spatial={key:'2p',ml:0,n:2,l:1,shape:'pz',points:[],radial:[],cdf:[],dr:0,rmax:0,extent:0,yaw:.78,pitch:-.62,zoom:1.15,drag:null};
-function laguerre(k,alpha,x){if(k===0)return 1;let prev=1,current=1+alpha-x;for(let i=1;i<k;i++){const next=((2*i+1+alpha-x)*current-(i+alpha)*prev)/(i+1);prev=current;current=next;}return current;}
-function radialAmplitude(n,l,r){const rho=2*r/n;return Math.exp(-rho/2)*rho**l*laguerre(n-l-1,2*l+1,rho);}
-function angularAmplitude(shape,x,y,z){return ({s:()=>1,px:()=>x,py:()=>y,pz:()=>z,dxy:()=>2*x*y,dxz:()=>2*x*z,dyz:()=>2*y*z,dx2y2:()=>x*x-y*y,dz2:()=>.5*(3*z*z-1)})[shape]();}
-function randomGenerator(seed){let value=seed>>>0;return ()=>{value=(Math.imul(1664525,value)+1013904223)>>>0;return (value+.5)/4294967296;};}
-function inverseCdf(u){let low=0,high=spatial.cdf.length-1;while(low<high){const mid=(low+high)>>1;if(spatial.cdf[mid]<u)low=mid+1;else high=mid;}const previous=low?spatial.cdf[low-1]:0;const f=(u-previous)/(spatial.cdf[low]-previous||1);return Math.max(0,(low-1+f)*spatial.dr);}
-function generateCloud(){
-  const {n,l,shape}=spatial;spatial.rmax=6*n*n+10;const steps=5000;spatial.dr=spatial.rmax/steps;spatial.radial=Array.from({length:steps+1},(_,i)=>{const r=i*spatial.dr;return r*r*radialAmplitude(n,l,r)**2;});
-  const area=spatial.radial.reduce((a,b)=>a+b,0)*spatial.dr;spatial.radial=spatial.radial.map(y=>y/area);let sum=0;spatial.cdf=spatial.radial.map(v=>sum+=v*spatial.dr);spatial.cdf[steps]=1;spatial.extent=inverseCdf(.997);
-  const random=randomGenerator(179+n*1009+l*137+Array.from(shape).reduce((v,c)=>v+c.charCodeAt(0),0));spatial.points=[];
-  for(let i=0;i<9000;i++){
-    let x,y,z,a;
-    do{z=2*random()-1;const theta=2*Math.PI*random(),rho=Math.sqrt(1-z*z);x=rho*Math.cos(theta);y=rho*Math.sin(theta);a=angularAmplitude(shape,x,y,z);}while(random()>a*a);
-    const r=inverseCdf(random()),sign=Math.sign(radialAmplitude(n,l,r)*a)||1;spatial.points.push([x*r,y*r,z*r,sign]);
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
   }
-  drawRadial();drawCloud();
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
 }
-function rotate(x,y,z){const c=Math.cos(spatial.yaw),s=Math.sin(spatial.yaw),cp=Math.cos(spatial.pitch),sp=Math.sin(spatial.pitch);const xx=c*x+s*z,zz=-s*x+c*z;return [xx,cp*y-sp*zz,sp*y+cp*zz];}
-function drawCloud(){
-  if(!$('spatialDialog').open||!spatial.points.length)return;
-  const canvas=$('cloud'),rect=canvas.getBoundingClientRect(),width=Math.max(200,rect.width),height=Math.max(200,rect.height),ratio=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);const ctx=canvas.getContext('2d');ctx.scale(ratio,ratio);const p=palette(),dark=document.documentElement.dataset.theme==='dark';ctx.fillStyle=p.paper;ctx.fillRect(0,0,width,height);
-  const scale=.43*Math.min(width,height)/spatial.extent*spatial.zoom,cx=width/2,cy=height/2;
-  const points=spatial.points.map(point=>{const r=rotate(...point);return [cx+r[0]*scale,cy-r[1]*scale,r[2],point[3]];}).sort((a,b)=>a[2]-b[2]);
-  const phase=$('phase').checked;ctx.globalAlpha=dark?.38:.27;
-  for(const [x,y,depth,sign] of points){if(x<1||x>width-1||y<1||y>height-1)continue;ctx.fillStyle=phase&&sign<0?(dark?'#f5b972':'#a65d12'):dark?'#7be2bd':'#007856';const size=.75+.35*(depth/spatial.extent+1);ctx.beginPath();ctx.arc(x,y,Math.max(.5,size),0,Math.PI*2);ctx.fill();}
-  ctx.globalAlpha=1;ctx.strokeStyle=p.muted;ctx.lineWidth=1;ctx.font='15px Arial';ctx.fillStyle=p.ink;
-  const axisLength=Math.min(width,height)*.31;
-  [[1,0,0,'x'],[0,1,0,'y'],[0,0,1,'z']].forEach(([x,y,z,label])=>{const r=rotate(x,y,z),ex=cx+r[0]*axisLength,ey=cy-r[1]*axisLength;ctx.globalAlpha=.65;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ex,ey);ctx.stroke();ctx.globalAlpha=1;ctx.fillText(label,ex+5,ey-5);});
-  ctx.fillStyle=p.ink;ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);ctx.fill();ctx.font='14px Arial';ctx.fillStyle=p.muted;ctx.fillText('Noyau : origine du repère',14,height-15);
-  if(phase){ctx.fillStyle=dark?'#7be2bd':'#007856';ctx.fillText('ψ > 0',14,24);ctx.fillStyle=dark?'#f5b972':'#a65d12';ctx.fillText('ψ < 0',92,24);ctx.fillStyle=p.muted;ctx.fillText('Signe de ψ, aucune charge',14,46);}else ctx.fillText('Points échantillonnés selon |ψ|²',14,24);
-  const bar=Math.max(1,Math.round(spatial.extent/3)),length=bar*scale;ctx.strokeStyle=p.ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(width-25-length,height-33);ctx.lineTo(width-25,height-33);ctx.stroke();ctx.textAlign='right';ctx.fillStyle=p.ink;ctx.fillText(bar+' a₀',width-25,height-43);ctx.textAlign='left';
-}
-function drawRadial(){
-  const p=palette(),limit=inverseCdf(.999),maximum=Math.max(...spatial.radial),left=42,right=342,top=20,bottom=209;
-  let path='';for(let i=0;i<=350;i++){const r=limit*i/350,index=r/spatial.dr,lo=Math.floor(index),f=index-lo,y=(spatial.radial[lo]||0)*(1-f)+(spatial.radial[lo+1]||0)*f;path+=(i?' L':'M')+(left+(right-left)*i/350).toFixed(2)+','+(bottom-(bottom-top)*y/maximum).toFixed(2);}
-  let html='<title>Distribution radiale de '+spatial.key+'</title><desc>Fonction r²|R|² normalisée par son intégrale. Axe horizontal r/a₀. Le graphe s’arrête au rayon contenant 99,9 % de la probabilité.</desc><path d="M'+left+','+top+' V'+bottom+' H'+right+'" fill="none" stroke="'+p.muted+'" stroke-width="1.5"/><path d="'+path+'" fill="none" stroke="'+p.accent+'" stroke-width="3"/>';
-  for(let i=0;i<3;i++){const x=left+(right-left)*i/2,label=(limit*i/2).toFixed(i?1:0);html+='<path d="M'+x+','+bottom+' v5" stroke="'+p.muted+'"/><text x="'+x+'" y="235" text-anchor="middle" fill="'+p.muted+'" font-family="Arial" font-size="17">'+label+'</text>';}
-  html+='<text x="43" y="14" fill="'+p.muted+'" font-family="Arial" font-size="15">P(r) · intégrale = 1</text><text x="'+right+'" y="258" fill="'+p.muted+'" font-family="Arial" font-size="17" text-anchor="end">r / a₀</text>';$('radial').innerHTML=html;
-  const nr=spatial.n-spatial.l-1;$('nodes').textContent=nr+' nœud'+(nr>1?'s':'')+' radial'+(nr>1?'aux':'')+' (hors origine) · '+spatial.l+' nœud'+(spatial.l>1?'s':'')+' angulaire'+(spatial.l>1?'s':'')+'. Rayon tracé : 99,9 % de la probabilité radiale.';
-}
-function shapeLabel(){return spatial.n+({s:'s',px:'pₓ',py:'pᵧ',pz:'p_z',dxy:'dₓᵧ',dxz:'dₓz',dyz:'dᵧz',dx2y2:'dₓ²₋ᵧ²',dz2:'d_z²'})[spatial.shape];}
-function updateBasis(){
-  $('cloudLabel').textContent=shapeLabel()+' · n = '+spatial.n+', ℓ = '+spatial.l;
-  const eigen=spatial.shape==='s'||spatial.shape==='pz'||spatial.shape==='dz2';
-  $('basisNote').textContent='La case choisie était étiquetée mℓ = '+spatial.ml+'. La vue présente les orbitales d’une base réelle de la sous-couche '+spatial.key+'. '+(eigen?'La forme affichée correspond à mℓ = 0.':'La forme affichée combine des états propres de mℓ ; elle ne correspond pas à une seule valeur de mℓ.')+' Le signe global de ψ est conventionnel ; sa densité |ψ|² ne change pas quand ce signe est inversé.';
-}
-window.openSpatial=(key,ml=0)=>{
-  stop();stopScan();spatial.key=key;spatial.n=+key[0];spatial.l=L(key);spatial.ml=ml;
-  if(spatial.l>2||spatial.n<=spatial.l){notice('Cette forme n’est pas illustrée dans l’atelier.');return;}
-  const options=spatial.l===0?[['s','s']]:spatial.l===1?[['px','pₓ'],['py','pᵧ'],['pz','p_z']]:[['dxy','dₓᵧ'],['dxz','dₓz'],['dyz','dᵧz'],['dx2y2','dₓ²₋ᵧ²'],['dz2','d_z²']];
-  $('shape').innerHTML=options.map(([value,label])=>'<option value="'+value+'">'+spatial.n+label+'</option>').join('');spatial.shape=spatial.l===0?'s':spatial.l===1?(ml===0?'pz':'px'):(ml===0?'dz2':'dxy');$('shape').value=spatial.shape;spatial.yaw=.78;spatial.pitch=-.62;spatial.zoom=1.15;$('spatialTitle').textContent='Sous-couche '+key+' · orbitales réelles';if(!$('spatialDialog').open)$('spatialDialog').showModal();updateBasis();generateCloud();
-};
-$('shape').onchange=()=>{spatial.shape=$('shape').value;updateBasis();generateCloud();};$('phase').onchange=drawCloud;
-$('spaceFit').onclick=()=>{spatial.yaw=.78;spatial.pitch=-.62;spatial.zoom=1.15;drawCloud();};
-function spaceZoom(factor){spatial.zoom=Math.max(.55,Math.min(2.5,spatial.zoom*factor));drawCloud();}
-$('spaceMinus').onclick=()=>spaceZoom(1/1.18);$('spacePlus').onclick=()=>spaceZoom(1.18);
-const cloud=$('cloud');
-cloud.onpointerdown=e=>{cloud.setPointerCapture(e.pointerId);spatial.drag=[e.clientX,e.clientY];};cloud.onpointermove=e=>{if(!spatial.drag)return;spatial.yaw+=(e.clientX-spatial.drag[0])*.009;spatial.pitch=Math.max(-1.1,Math.min(1.1,spatial.pitch+(e.clientY-spatial.drag[1])*.009));spatial.drag=[e.clientX,e.clientY];drawCloud();};cloud.onpointerup=()=>spatial.drag=null;cloud.onpointercancel=()=>spatial.drag=null;cloud.onlostpointercapture=()=>spatial.drag=null;
-cloud.addEventListener('wheel',e=>{e.preventDefault();spaceZoom(e.deltaY<0?1.08:1/1.08);},{passive:false});
-cloud.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','=','Home'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft')spatial.yaw-=.12;if(e.key==='ArrowRight')spatial.yaw+=.12;if(e.key==='ArrowUp')spatial.pitch=Math.max(-1.1,spatial.pitch-.12);if(e.key==='ArrowDown')spatial.pitch=Math.min(1.1,spatial.pitch+.12);if(['+','='].includes(e.key))return spaceZoom(1.18);if(e.key==='-')return spaceZoom(1/1.18);if(e.key==='Home')return $('spaceFit').click();drawCloud();};
-window.addEventListener('resize',drawCloud);window.addEventListener('themechange',()=>{drawCloud();if(spatial.radial.length)drawRadial();});
-$('spatialDialog').addEventListener('close',()=>spatial.drag=null);
-$('spaceExport').onclick=()=>{
-  const p=palette(),source=$('cloud'),out=document.createElement('canvas');out.width=1200;out.height=Math.round(1200*source.height/source.width)+160;const ctx=out.getContext('2d');ctx.fillStyle=p.paper;ctx.fillRect(0,0,out.width,out.height);ctx.fillStyle=p.ink;ctx.font='30px Arial';ctx.fillText('AM1 · '+shapeLabel()+' · Nuage de probabilité |ψ|²',30,46);ctx.drawImage(source,0,80,out.width,out.height-160);ctx.font='18px Arial';ctx.fillStyle=p.muted;ctx.fillText('Modèle hydrogénoïde Z = 1 · 9 000 points · Illustration de la sous-couche '+spatial.key,30,out.height-45);ctx.fillText(''+($('phase').checked?'Couleurs : signe de ψ, aucune charge.':'Les points sont des échantillons de probabilité, sans trajectoire électronique.'),30,out.height-17);const a=document.createElement('a');a.href=out.toDataURL('image/png');a.download='AM1_Orbitale_'+spatial.n+spatial.shape+'.png';a.click();
-};
-window.AM1.spatial=spatial;window.AM1.radialAmplitude=radialAmplitude;window.AM1.angularAmplitude=angularAmplitude;
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
 </script>
-</body></html>
+<script>
+'use strict';
+/* =====================================================================
+   AM1 · physique (sans accès au DOM) : configurations électroniques de H à Kr, ions, diagnostics Pauli / Hund / effectifs.
+   Migration AnimKit du 8 novembre 2026 ; les configurations sont reconstruites par la règle de Klechkowski
+   avec les deux exceptions du cours (Cr : 3d⁵4s¹, Cu : 3d¹⁰4s¹) et contrôlées par leur nombre d'électrons.
+   Les 38 ions monoatomiques de l'ancien atelier sont repris tels quels (He⁺ compris).
+   ===================================================================== */
+globalThis.AM1P=(()=>{
+  const ORDER=['1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p','7s','5f','6d','7p'];
+  const KEYS=ORDER.slice(0,8);
+  const L=k=>'spdf'.indexOf(k[1]),CAP=k=>2*(2*L(k)+1);
+  const SYM='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr'.split(' ');
+  const NOM='Hydrogène Hélium Lithium Béryllium Bore Carbone Azote Oxygène Fluor Néon Sodium Magnésium Aluminium Silicium Phosphore Soufre Chlore Argon Potassium Calcium Scandium Titane Vanadium Chrome Manganèse Fer Cobalt Nickel Cuivre Zinc Gallium Germanium Arsenic Sélénium Brome Krypton'.split(' ');
+  const MASS=[1,4,7,9,11,12,14,16,19,20,23,24,27,28,31,32,35,40,39,40,45,48,51,52,55,56,59,58,63,64,69,74,75,80,79,84];
+  const EXC={24:{'4s':1,'3d':5},29:{'4s':1,'3d':10}};
+  function madelung(z){const c={};let r=z;for(const k of ORDER){if(r<=0)break;const n=Math.min(CAP(k),r);c[k]=n;r-=n}return c}
+  const ELEMENTS=SYM.map((s,i)=>{const z=i+1,c={...madelung(z),...(EXC[z]||{})};
+    if(Object.values(c).reduce((a,b)=>a+b,0)!==z)throw new Error('configuration incohérente : Z = '+z);
+    return{z,symbol:s,name:NOM[i],counts:c}});
+
+  /* ---------- ions monoatomiques (ancien atelier) ---------- */
+  const HE={'1s':2},NE={...HE,'2s':2,'2p':6},AR={...NE,'3s':2,'3p':6},KR={...AR,'4s':2,'3d':10,'4p':6};
+  const NOBLE={He:HE,Ne:NE,Ar:AR,Kr:KR};
+  const argonD=n=>({...AR,...(n?{'3d':n}:{})});
+  const ION_CONFIGS={
+    1:{1:{},'-1':HE},2:{1:{'1s':1}},3:{1:HE},4:{2:HE},
+    7:{'-3':NE},8:{'-2':NE},9:{'-1':NE},11:{1:NE},12:{2:NE},13:{3:NE},
+    15:{'-3':AR},16:{'-2':AR},17:{'-1':AR},19:{1:AR},20:{2:AR},21:{3:AR},
+    22:{2:argonD(2),3:argonD(1),4:AR},23:{2:argonD(3),3:argonD(2)},
+    24:{2:argonD(4),3:argonD(3)},25:{2:argonD(5),3:argonD(4)},
+    26:{2:argonD(6),3:argonD(5)},27:{2:argonD(7),3:argonD(6)},28:{2:argonD(8)},
+    29:{1:argonD(10),2:argonD(9)},30:{2:argonD(10)},31:{3:argonD(10)},
+    33:{'-3':KR},34:{'-2':KR},35:{'-1':KR}
+  };
+  const charges=z=>[0,...Object.keys(ION_CONFIGS[z]||{}).map(Number).sort((a,b)=>b-a)];
+  const SUPU='⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const chargeSup=q=>q===0?'':(Math.abs(q)>1?[...String(Math.abs(q))].map(c=>SUPU[+c]).join(''):'')+(q>0?'⁺':'⁻');
+  const label=(z,q)=>ELEMENTS[z-1].symbol+chargeSup(q);
+  const ION_LIST=[];for(let z=1;z<=36;z++)for(const q of charges(z))if(q)ION_LIST.push({z,q,label:label(z,q)});
+
+  const clone=x=>JSON.parse(JSON.stringify(x));
+  const targetCounts=(z,q)=>clone(q?ION_CONFIGS[z][q]:ELEMENTS[z-1].counts);
+  const valenceKeys=z=>{const c=ELEMENTS[z-1].counts,n=Math.max(...Object.keys(c).map(k=>+k[0]));return Object.keys(c).filter(k=>+k[0]===n||(k[1]==='d'&&+k[0]===n-1&&c[k]<10))};
+  const isCore=(k,z)=>!!ELEMENTS[z-1].counts[k]&&!valenceKeys(z).includes(k);
+
+  /* ---------- cases quantiques ---------- */
+  const emptyBoxes=()=>Object.fromEntries(KEYS.map(k=>[k,Array.from({length:2*L(k)+1},()=>[])]));
+  function boxesFor(c){const b=emptyBoxes();for(const k of KEYS){const n=c[k]||0,m=b[k].length;for(let i=0;i<n;i++)b[k][i%m].push(i<m?1:-1)}return b}
+  const countsOf=b=>Object.fromEntries(KEYS.map(k=>[k,b[k].reduce((n,x)=>n+x.length,0)]).filter(([,v])=>v));
+  const total=b=>Object.values(countsOf(b)).reduce((x,y)=>x+y,0);
+  const sameCounts=(a,b)=>KEYS.every(k=>(a[k]||0)===(b[k]||0));
+  function prefixBoxes(z,q,n){const t=targetCounts(z,q),b=emptyBoxes();let r=n,last='1s';
+    for(const k of KEYS){const m=b[k].length;for(let i=0;i<(t[k]||0)&&r>0;i++){b[k][i%m].push(i<m?1:-1);r--;last=k}}return{boxes:b,last}}
+
+  /* ---------- diagnostics indépendants ---------- */
+  function diagnose(boxes,z,q){
+    const c=countsOf(boxes),tot=total(boxes),expected=z-q,invalid=[],hund=[];
+    for(const k of KEYS){let bad=false;
+      boxes[k].forEach((b,i)=>{if(b.length>2||new Set(b).size!==b.length){invalid.push(k);bad=true}});
+      if(!bad&&L(k)>0){const n=c[k]||0,m=boxes[k].length,singles=boxes[k].filter(b=>b.length===1);
+        if(singles.length!==Math.min(n,2*m-n)||new Set(singles.map(b=>b[0])).size>1)hund.push(k)}}
+    return{pauli:!invalid.length,hund:!hund.length,invalid:[...new Set(invalid)],hundShells:hund,total:tot,expected,countsMatch:sameCounts(c,targetCounts(z,q))};
+  }
+
+  /* ---------- écriture des configurations ---------- */
+  const noble=c=>Object.keys(NOBLE).find(n=>sameCounts(c,NOBLE[n]))||null;
+  function condensed(c){
+    let core='';for(const n of['Kr','Ar','Ne','He'])if(Object.keys(NOBLE[n]).every(k=>(c[k]||0)===NOBLE[n][k])){core=n;break}
+    const terms=ORDER.filter(k=>c[k]&&!(core&&NOBLE[core][k])).map(k=>[k,c[k]]);
+    return{core,terms};
+  }
+  const terms=c=>ORDER.filter(k=>c[k]).map(k=>[k,c[k]]);
+  /** ions ayant exactement la configuration c (liste d'étiquettes), atome neutre compris */
+  const sameAs=c=>{const out=[];ELEMENTS.forEach(e=>{if(sameCounts(e.counts,c))out.push(label(e.z,0))});ION_LIST.forEach(i=>{if(sameCounts(ION_CONFIGS[i.z][i.q],c))out.push(i.label)});return out};
+
+  return{ORDER,KEYS,L,CAP,ELEMENTS,MASS,NOBLE,ION_CONFIGS,ION_LIST,charges,chargeSup,label,targetCounts,valenceKeys,isCore,
+    emptyBoxes,boxesFor,countsOf,total,sameCounts,prefixBoxes,diagnose,noble,condensed,terms,sameAs,clone};
+})();
+
+'use strict';
+/* =====================================================================
+   AM1 · orbitales hydrogénoïdes (sans DOM) : nuage de 9000 points et distribution radiale.
+   R_nl ∝ exp(−ρ/2) ρ^l L_{n−l−1}^{2l+1}(ρ) avec ρ = 2r/n, r en unités de a₀/Z : le modèle est donc EXACT pour
+   un ion hydrogénoïde (H, He⁺ : Z = 1, 2) ; pour un atome polyélectronique c'est une illustration.
+   Les longueurs sont calculées pour Z = 1 puis divisées par Z à l'affichage.
+   L'échantillonnage sépare P(r) dr = r²|R|² dr et |Y réel|² dΩ.
+   ===================================================================== */
+globalThis.AM1O=(()=>{
+  const SHAPES={0:['s'],1:['px','py','pz'],2:['dxy','dxz','dyz','dx2y2','dz2']};
+  const cache={};
+  function laguerre(k,al,x){if(k===0)return 1;let p=1,c=1+al-x;for(let i=1;i<k;i++){const nx=((2*i+1+al-x)*c-(i+al)*p)/(i+1);p=c;c=nx}return c}
+  const radialAmp=(n,l,r)=>{const rho=2*r/n;return Math.exp(-rho/2)*rho**l*laguerre(n-l-1,2*l+1,rho)};
+  const angularAmp=(sh,x,y,z)=>({s:()=>1,px:()=>x,py:()=>y,pz:()=>z,dxy:()=>2*x*y,dxz:()=>2*x*z,dyz:()=>2*y*z,dx2y2:()=>x*x-y*y,dz2:()=>.5*(3*z*z-1)})[sh]();
+  const rng=seed=>{let v=seed>>>0;return()=>{v=(Math.imul(1664525,v)+1013904223)>>>0;return(v+.5)/4294967296}};
+  function cloud(n,l,shape){
+    const key=n+shape;if(cache[key])return cache[key];
+    const rmax=6*n*n+10,steps=5000,dr=rmax/steps;
+    let radial=Array.from({length:steps+1},(_,i)=>{const r=i*dr;return r*r*radialAmp(n,l,r)**2});
+    const area=radial.reduce((a,b)=>a+b,0)*dr;radial=radial.map(y=>y/area);
+    let s=0;const cdf=radial.map(v=>s+=v*dr);cdf[steps]=1;
+    const inv=u=>{let lo=0,hi=cdf.length-1;while(lo<hi){const mid=(lo+hi)>>1;if(cdf[mid]<u)lo=mid+1;else hi=mid}const prev=lo?cdf[lo-1]:0;const f=(u-prev)/(cdf[lo]-prev||1);return Math.max(0,(lo-1+f)*dr)};
+    const rnd=rng(179+n*1009+l*137+[...shape].reduce((v,c)=>v+c.charCodeAt(0),0)),points=[];
+    for(let i=0;i<9000;i++){
+      let x,y,z,a;
+      do{z=2*rnd()-1;const th=2*Math.PI*rnd(),rho=Math.sqrt(1-z*z);x=rho*Math.cos(th);y=rho*Math.sin(th);a=angularAmp(shape,x,y,z)}while(rnd()>a*a);
+      const r=inv(rnd()),sign=Math.sign(radialAmp(n,l,r)*a)||1;points.push([x*r,y*r,z*r,sign]);
+    }
+    return cache[key]={points,radial,dr,extent:inv(.997),limit:inv(.999),max:Math.max(...radial),inv};
+  }
+  return{SHAPES,cloud,radialAmp,angularAmp,laguerre};
+})();
+
+// @titre Structure électronique · AM1 · MPSI
+// @sortie ../AM1_Structure_Electronique/AM1_Structure_Electronique.html
+// @inclure AM1_physique.js
+// @inclure AM1_orbitales.js
+// @description Remplir les cases quantiques d'un atome ou d'un ion (Pauli, Hund, Klechkowski), comparer à la configuration réelle, puis visualiser les orbitales hydrogénoïdes.
+'use strict';
+/* =====================================================================
+   AM1 · Structure électronique des atomes (3 onglets) · migré sur AnimKit le 8 novembre 2026
+   1 Remplir les cases · 2 Ions · 3 Orbitales
+   Physique : AM1_physique.js (configurations de H à Kr, ions, diagnostics) · AM1_orbitales.js (nuage et distribution radiale).
+   Propositions du lot 17 : la lecture « +e⁻ » affiche la configuration réelle de l'atome suivant (Cr, Cu réorganisés) ;
+   les prévisions (configuration attendue, ion) restent masquées tant qu'on ne demande pas la comparaison.
+   ===================================================================== */
+const P=AM1P,O=AM1O,M=AnimKit.M;
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const SUPU='⁰¹²³⁴⁵⁶⁷⁸⁹',sp=n=>[...String(n)].map(c=>SUPU[+c]).join('');
+const lay={boxes:[],last:null};
+const ROWS=['4p','3d','4s','3p','3s','2p','2s','1s'];
+const KLEC=['1s','2s','2p','3s','3p','4s','3d','4p'];
+const ORB={
+  '1s':{n:1,l:0,shape:'s',lab:'1s'},'2s':{n:2,l:0,shape:'s',lab:'2s'},
+  '2px':{n:2,l:1,shape:'px',lab:'2p (axe x)'},'2py':{n:2,l:1,shape:'py',lab:'2p (axe y)'},'2pz':{n:2,l:1,shape:'pz',lab:'2p (axe z)'},
+  '3s':{n:3,l:0,shape:'s',lab:'3s'},'3pz':{n:3,l:1,shape:'pz',lab:'3p (axe z)'},
+  '3dz2':{n:3,l:2,shape:'dz2',lab:'3d (z²)'},'3dxy':{n:3,l:2,shape:'dxy',lab:'3d (xy)'},'3dxz':{n:3,l:2,shape:'dxz',lab:'3d (xz)'},
+  '3dyz':{n:3,l:2,shape:'dyz',lab:'3d (yz)'},'3dx2y2':{n:3,l:2,shape:'dx2y2',lab:'3d (x²−y²)'}
+};
+const RV={1:5.5,2:16,3:36};                       // rayon de vue fixe, en a₀ pour Z = 1
+const ORBOPT=Object.keys(ORB).map(k=>[k,ORB[k].lab]);
+const IONOPT=P.ION_LIST.map(i=>[i.z+':'+i.q,i.label+' (Z = '+i.z+')']);
+const ionOf=v=>{const [z,q]=String(v).split(':').map(Number);return{z,q}};
+
+/* ---------- paragraphe SVG à retour à la ligne ---------- */
+function wrap(a,x,y,txt,maxW,size,c,lh=20){
+  const k=a.k,cw=.52*size*k,max=Math.max(8,Math.floor(maxW/cw)),lines=[];let cur='';
+  for(const w of String(txt).split(' ')){const t=cur?cur+' '+w:w;if(t.length>max&&cur){lines.push(cur);cur=w}else cur=t}
+  if(cur)lines.push(cur);
+  return{svg:lines.map((l,i)=>a.S.text(x,y+i*lh*k,l,{size,c,halo:false})).join(''),h:lines.length*lh*k};
+}
+
+/* ---------- état : cases, cible ---------- */
+function syncRef(a){const p=a.p;p.acc=0;if(p.mode==='ref')p.boxes=P.boxesFor(P.targetCounts(p.z,p.q))}
+function toFill(a){if(a.p.mode!=='fill')a.set('mode','fill',{silent:true})}
+const spinTxt=s=>s>0?'↑':'↓';
+
+/* configurations fautives des défis */
+function mk(spec){const b=P.emptyBoxes();for(const k in spec)spec[k].forEach((e,i)=>{b[k][i]=e.slice()});return b}
+const FAUX={
+  hundC:{z:6,q:0,b:()=>mk({'1s':[[1,-1]],'2s':[[1,-1]],'2p':[[1,-1],[],[]]})},
+  pauliN:{z:7,q:0,b:()=>mk({'1s':[[1,-1]],'2s':[[1,-1]],'2p':[[1,1],[1],[]]})},
+  hundO:{z:8,q:0,b:()=>mk({'1s':[[1,-1]],'2s':[[1,-1]],'2p':[[1,-1],[1,-1],[]]})},
+  copper:{z:29,q:0,b:()=>P.boxesFor({...P.NOBLE.Ar,'4s':2,'3d':9})},
+  iron:{z:26,q:2,b:()=>P.boxesFor({...P.NOBLE.Ar,'4s':2,'3d':4})}
+};
+function defi(a,id){
+  const d=FAUX[id],p=a.p;
+  p.z=d.z;p.q=d.q;a.set('z',d.z,{silent:true});
+  if(d.q)a.set('ion',d.z+':'+d.q,{silent:true});
+  a.set('mode','fill',{silent:true});p.boxes=d.b();p.acc=0;a.play(false);a.render();
+}
+
+/* =====================================================================
+   Panneau des cases quantiques
+   ===================================================================== */
+function drawCases(a){
+  const Pn=a.panels.cases,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p;
+  const dg=P.diagnose(p.boxes,p.z,p.q),cnt=P.countsOf(p.boxes);
+  const top=14*k,bot=12*k,rh=(H-top-bot)/8,labW=78*k;
+  const bw=Math.min(46*k,(W-labW-34*k)/5),bh=Math.min(rh*(p.qn?.6:.8),bw*1.15);
+  const x0=labW+12*k;
+  let s=S.arrow(14*k,H-bot,14*k,top-4*k,{c:C.ink2,w:1.6})+S.text(31*k,top+(H-top-bot)/2,'énergie croissante',{size:13,c:C.ink2,rot:-90,anchor:'middle',halo:false});
+  lay.boxes=[];
+  ROWS.forEach((key,r)=>{
+    const l=P.L(key),m=2*l+1,ry=top+r*rh+(rh-bh)/2-(p.qn?5*k:0),n=cnt[key]||0,hbad=dg.hundShells.includes(key);
+    s+=S.text(44*k,ry+bh/2,key,{size:18,c:hbad?C.F:C.ink,weight:700,halo:false});
+    if(p.qn)s+=S.text(44*k,ry+bh/2+19*k,`ℓ = ${l}`,{size:13,c:C.ink2,halo:false});
+    for(let i=0;i<m;i++){
+      const bx=x0+i*bw,e=p.boxes[key][i],bad=dg.invalid.includes(key)&&(e.length>2||new Set(e).size!==e.length);
+      lay.boxes.push({k:key,i,x:bx,y:ry,w:bw,h:bh});
+      s+=S.rect(bx,ry,bw,bh,{fill:C.cSoft,c:bad?C.F:C.ink2,w:bad?2.8:1.6,rx:3*k});
+      e.forEach((sg,j)=>{const ax=bx+bw*(e.length===1?.5:j?.7:.3),up=sg>0;
+        s+=up?S.arrow(ax,ry+bh*.84,ax,ry+bh*.16,{c:C.B,w:2.8}):S.arrow(ax,ry+bh*.16,ax,ry+bh*.84,{c:C.Em,w:2.8})});
+      if(p.qn){const ml=i-l;s+=S.text(bx+bw/2,ry+bh+13*k,ml>0?'+'+ml:ml<0?'−'+(-ml):'0',{anchor:'middle',size:13,c:C.ink2,halo:false})}
+    }
+    if(n)s+=S.text(x0+m*bw+10*k,ry+bh/2,`${n} e⁻`,{size:14,c:C.ink2,halo:false});
+  });
+  a.svg('cases',s);
+}
+
+/* =====================================================================
+   Panneau de droite : configuration, diagnostics, triangle de Klechkowski
+   ===================================================================== */
+function flow(a,x,y,maxW,tokens,size){
+  const k=a.k,S=a.S,C=a.C;let s='',cx=x,cy=y;const lh=size*1.55*k;
+  for(const t of tokens){
+    const w=(t.t.length*.6+.5)*size*k;
+    if(cx+w>x+maxW&&cx>x){cx=x;cy+=lh}
+    s+=S.text(cx,cy,t.t,{size,c:t.dim?C.ink2:C.ink,weight:t.dim?400:700,halo:false});
+    if(t.under)s+=S.line(cx,cy+size*.72*k,cx+w-.4*size*k,cy+size*.72*k,{c:C.c,w:2});
+    cx+=w;
+  }
+  return{svg:s,y:cy+lh};
+}
+function drawDroite(a){
+  const Pn=a.panels.droite,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p,f=a.fmt;
+  const z=p.z,q=p.q,el=P.ELEMENTS[z-1],cnt=P.countsOf(p.boxes),dg=P.diagnose(p.boxes,z,q);
+  const ref=P.targetCounts(z,q),showRef=p.mode==='ref'||p.verif,n=dg.total,ne=z-q;
+  const mx=W-36*k;
+  let s=S.text(18*k,10*k,`${el.name} · ${P.label(z,q)} · Z = ${z}`,{base:'top',size:16,c:C.cInk,weight:600});
+  let y=52*k;
+  /* configuration écrite */
+  let toks=[];
+  if(n===0)toks=[{t:'aucun électron placé',dim:true}];
+  else{
+    const val=q===0&&showRef?P.valenceKeys(z):[];
+    if(p.core){const cd=P.condensed(cnt);if(cd.core)toks.push({t:'['+cd.core+']',dim:true});for(const [kk,v] of cd.terms)toks.push({t:kk+sp(v),under:val.includes(kk)})}
+    else for(const [kk,v] of P.terms(cnt))toks.push({t:kk+sp(v),dim:!!val.length&&!val.includes(kk)&&q===0,under:val.includes(kk)});
+  }
+  const fl=flow(a,18*k,y,mx,toks,22);s+=fl.svg;y=fl.y;
+  s+=S.text(18*k,y-6*k,`${n} électron${n>1?'s':''} placé${n>1?'s':''} sur ${ne}`,{size:14,c:C.ink2,halo:false});y+=22*k;
+  /* diagnostics */
+  const diag=(ok,txt)=>{const w=wrap(a,42*k,y,txt,mx-24*k,14,ok?C.ink2:C.ink);
+    const r=S.text(18*k,y,ok?'✓':'✗',{size:16,c:ok?C.v:C.F,weight:700,halo:false});y+=Math.max(w.h,22*k)+2*k;return r+w.svg};
+  s+=diag(dg.pauli,dg.pauli?'Pauli : au plus deux électrons par case, de spins opposés.':`Pauli violé en ${dg.invalid.join(', ')} : deux électrons de même spin dans une case.`);
+  s+=diag(dg.hund,dg.hund?'Hund : spins parallèles dans des cases différentes avant tout appariement.':`Hund violée en ${dg.hundShells.join(', ')} : remplir d’abord toutes les cases avec des spins parallèles.`);
+  if(showRef&&p.mode==='fill'){
+    const ok=dg.countsMatch;
+    s+=diag(ok,ok?`Configuration identique à la configuration réelle de ${P.label(z,q)}.`:`Configuration réelle de ${P.label(z,q)} : ${P.terms(ref).map(([kk,v])=>kk+sp(v)).join(' ')}.`);
+  }
+  if(showRef&&n>0&&dg.countsMatch){
+    const nb=P.noble(cnt);
+    if(nb)s+=diag(true,`Configuration de gaz noble : celle de ${nb}.`);
+    if(a.tab===1){const same=P.sameAs(cnt);if(same.length>1){const w=wrap(a,18*k,y,`Même configuration électronique : ${same.join(', ')}.`,mx,14,C.ink2);s+=w.svg;y+=w.h+4*k}}
+  }
+  if(showRef&&q===0&&(z===24||z===29)&&dg.countsMatch&&p.hundx){
+    const w=wrap(a,18*k,y,'Exception à Klechkowski : une sous-couche d à moitié ou entièrement remplie est plus stable (hors programme).',mx,14,C.ink2);s+=w.svg;y+=w.h+4*k}
+  /* triangle de Klechkowski */
+  y+=6*k;
+  const avail=H-y-10*k;
+  if(avail>150*k){
+    s+=S.text(18*k,y,'Ordre de Klechkowski',{base:'top',size:15,c:C.cInk,weight:600});
+    const gy=y+44*k,ch=Math.min(70*k,(H-gy-12*k)/4),cw=Math.min(84*k,(W-70*k)/4),gx=Math.max(54*k,(W-4*cw)/2+24*k);
+    for(let l=0;l<4;l++)s+=S.text(gx+l*cw+cw/2,y+30*k,'spdf'[l]+` (ℓ = ${l})`,{anchor:'middle',size:13,c:C.ink2,halo:false});
+    const cell={},ctr=key=>{const nn=+key[0],l=P.L(key);return[gx+l*cw+cw/2,gy+(nn-1)*ch+ch/2]};
+    for(let nn=1;nn<=4;nn++){
+      s+=S.text(gx-14*k,gy+(nn-1)*ch+ch/2,`n = ${nn}`,{anchor:'end',size:13,c:C.ink2,halo:false});
+      for(let l=0;l<nn;l++){
+        const key=nn+'spdf'[l],[cx,cy]=ctr(key),v=cnt[key]||0,full=v===P.CAP(key),used=P.KEYS.includes(key);
+        cell[key]=[cx,cy];
+        s+=S.rect(cx-cw/2+3*k,cy-ch/2+3*k,cw-6*k,ch-6*k,{fill:full?C.c:v?C.cSoft:'none',fop:full?.28:1,c:v?C.c:C.rule,w:v?2:1.2,rx:4*k,dash:used?undefined:`${4*k} ${4*k}`});
+        s+=S.text(cx,cy-(p.nl?8*k:0),key+(v?sp(v):''),{anchor:'middle',size:16,c:v?C.ink:C.ink2,weight:v?700:400,halo:false});
+        if(p.nl)s+=S.text(cx,cy+12*k,`n+ℓ = ${nn+l}`,{anchor:'middle',size:13,c:C.ink2,halo:false});
+      }
+    }
+    for(let i=0;i<KLEC.length-1;i++){
+      const A1=cell[KLEC[i]],B1=cell[KLEC[i+1]],d=Math.hypot(B1[0]-A1[0],B1[1]-A1[1]),u=[(B1[0]-A1[0])/d,(B1[1]-A1[1])/d];
+      const t0=Math.min(.3*d,34*k),t1=Math.min(.3*d,30*k);
+      s+=S.arrow(A1[0]+u[0]*t0,A1[1]+u[1]*t0,B1[0]-u[0]*t1,B1[1]-u[1]*t1,{c:C.ink2,w:1.6,dash:`${5*k} ${4*k}`,op:.75});
+    }
+  }
+  a.svg('droite',s);
+  const ms=[{label:'Électrons placés',value:`${n} sur ${ne}`}];
+  if(showRef&&q===0)ms.push({label:'Électrons de valence',value:String(P.valenceKeys(z).reduce((t,kk)=>t+(ref[kk]||0),0)),hint:'dernière couche (et d incomplète)'});
+  a.metrics(ms);
+  a.legend([{c:C.B,label:'↑ spin +½',dot:true},{c:C.Em,label:'↓ spin −½',dot:true}]);
+}
+
+/* =====================================================================
+   Onglet orbitales : nuage (canvas) et distribution radiale (SVG)
+   ===================================================================== */
+function drawCloud(a){
+  const Pn=a.panels.orb,c=Pn.ctx,W=Pn.w,H=Pn.h,k=a.k,C=a.C,p=a.p;
+  const o=ORB[p.orb],cl=O.cloud(o.n,o.l,o.shape),Z=+p.Zh;
+  c.fillStyle=C.card;c.fillRect(0,0,W,H);
+  const R=Math.min(W,H)*.42,cx=W/2,cy=H/2+10*k,pxa=R/RV[o.n],sc=pxa/Z;
+  const cy1=Math.cos(p.yaw),sy=Math.sin(p.yaw),cp=Math.cos(p.pitch),sp_=Math.sin(p.pitch);
+  const proj=(x,y,zz)=>{const xr=x*cy1-y*sy,yr=x*sy+y*cy1,y2=yr*cp-zz*sp_,z2=yr*sp_+zz*cp;return[cx+xr,cy-z2,y2]};
+  /* axes */
+  c.lineWidth=1.4*k;c.font=`${14*k}px system-ui,sans-serif`;c.textAlign='center';c.textBaseline='middle';
+  for(const [lab,v] of[['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]]]){
+    const e=proj(v[0]*R*.98,v[1]*R*.98,v[2]*R*.98);
+    c.globalAlpha=.55;c.strokeStyle=C.ink2;c.beginPath();c.moveTo(cx,cy);c.lineTo(e[0],e[1]);c.stroke();
+    c.globalAlpha=1;c.fillStyle=C.ink2;c.fillText(lab,cx+(e[0]-cx)*1.06,cy+(e[1]-cy)*1.06);
+  }
+  /* nuage */
+  const N=Math.min(cl.points.length,p.npts),s=2.2*k,half=s/2;
+  let lastSign=0;
+  for(let i=0;i<N;i++){
+    const pt=cl.points[i],q=proj(pt[0]*sc,pt[1]*sc,pt[2]*sc),sg=p.phase?pt[3]:1;
+    if(sg!==lastSign){c.fillStyle=sg>0?C.B:C.F;lastSign=sg}
+    c.globalAlpha=clamp(.32+.4*(q[2]/R),.12,.8);
+    c.fillRect(q[0]-half,q[1]-half,s,s);
+  }
+  c.globalAlpha=1;
+  /* échelle */
+  const nice=[1,2,5,10,20].find(L=>L*pxa/Z>=50*k)||20,len=nice*pxa/Z;
+  c.strokeStyle=C.ink;c.lineWidth=2*k;c.beginPath();c.moveTo(18*k,H-26*k);c.lineTo(18*k+len,H-26*k);c.stroke();
+  c.textAlign='left';c.fillStyle=C.ink;c.fillText(`${nice} a₀`,18*k,H-44*k);
+  c.fillStyle=C.cInk;c.font=`600 ${16*k}px system-ui,sans-serif`;c.fillText(`${o.lab} · ${Z===1?'H':'He⁺'}`,18*k,22*k);
+}
+function drawRadial(a){
+  const Pn=a.panels.rad,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p,f=a.fmt;
+  const o=ORB[p.orb],cl=O.cloud(o.n,o.l,o.shape),Z=+p.Zh,dr=cl.dr;
+  const xmax=RV[o.n]/Z,ymax=Z*cl.max*1.15;
+  const Pr=r=>{const t=r*Z/dr,i=Math.floor(t);if(i<0||i>=cl.radial.length-1)return 0;const w=t-i;return Z*(cl.radial[i]*(1-w)+cl.radial[i+1]*w)};
+  let s='';
+  const G=S.graph({x:0,y:6*k,w:W,h:H-6*k,xmin:0,xmax,ymin:0,ymax,padL:62*k,padB:46*k,padT:22*k,
+    xfmt:v=>f.sig(v,2).replace(/\.0+$/,''),yfmt:v=>f.sig(v,2),
+    xlab:`${S.v('r')} (en ${S.v('a','0')})`,ylab:`densité radiale ${S.v('P')}(${S.v('r')}) (en ${S.v('a','0')}${S.sup('−1')})`});
+  s+=G.svg+S.clip('am1r',G);
+  const pts=[];for(let i=0;i<=300;i++){const r=xmax*i/300;pts.push([r,Pr(r)])}
+  s+=S.curve(pts,G,{c:C.c,w:3});
+  let imax=0;for(let i=0;i<cl.radial.length;i++)if(cl.radial[i]>cl.radial[imax])imax=i;
+  const rmp=imax*dr/Z;let mean=0;for(let i=0;i<cl.radial.length;i++)mean+=i*dr*cl.radial[i]*dr;mean/=Z;
+  lay.rad={rmp,mean,nodes:o.n-o.l-1};
+  if(p.marks){
+    s+=S.line(G.X(rmp),G.y0,G.X(rmp),G.y0+G.h,{c:C.B,w:1.8,dash:`${6*k} ${4*k}`});
+    s+=S.line(G.X(mean),G.y0,G.X(mean),G.y0+G.h,{c:C.Em,w:1.8,dash:`${2*k} ${4*k}`});
+  }
+  a.svg('rad',s);
+  const ar=`<i class="m">a</i><sub>0</sub>`;
+  const ms=[{label:'Orbitale',value:o.lab,hint:`n = ${o.n}, ℓ = ${o.l}`}];
+  if(p.marks)ms.push({label:'Rayon le plus probable',value:`${f.sig(rmp,3)} ${ar}`},{label:'Rayon moyen ⟨r⟩',value:`${f.sig(mean,3)} ${ar}`},{label:'Nœuds radiaux',value:String(o.n-o.l-1),hint:'n − ℓ − 1'});
+  a.metrics(ms);
+  const lg=[{c:C.B,label:p.phase?'signe + de la fonction d’onde':'densité de probabilité de présence',dot:true}];
+  if(p.phase)lg.push({c:C.F,label:'signe −',dot:true});
+  lg.push({c:C.c,label:'P(r) : probabilité par unité de longueur'});
+  if(p.marks)lg.push({c:C.B,label:'rayon le plus probable',dash:true},{c:C.Em,label:'rayon moyen',dash:true});
+  a.legend(lg);
+}
+
+/* =====================================================================
+   Application
+   ===================================================================== */
+const A=AnimKit.app({
+  code:'AM1',partie:'VertEmeraude',chapitre:'AM1 Structure électronique des atomes',
+  titre:'Structure électronique',sousTitre:'Cases quantiques, ions et orbitales hydrogénoïdes',fichier:'Structure_Electronique',
+  onglets:['Remplir les cases','Ions','Orbitales'],
+  temps:a=>a.tab!==1,pas:.7,
+  panneaux:[
+    {id:'cases',titre:'Cases quantiques',poids:1.15,onglets:[0,1],ratioTel:1.15},
+    {id:'droite',titre:'Configuration',poids:1,onglets:[0,1],ratioTel:1.45},
+    {id:'orb',titre:'Nuage de probabilité',type:'canvas',poids:1.1,onglets:[2],ratioTel:1},
+    {id:'rad',titre:'Distribution radiale',poids:1,onglets:[2],ratioTel:.9}
+  ],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Carbone à remplir',onglets:[0],action:a=>{a.set('z',6,{silent:true});a.set('mode','fill',{silent:true});a.p.boxes=P.emptyBoxes();a.p.q=0;a.play(false);a.render()}},
+      {label:'Fluor à remplir',onglets:[0],action:a=>{a.set('z',9,{silent:true});a.set('mode','fill',{silent:true});a.p.boxes=P.emptyBoxes();a.p.q=0;a.play(false);a.render()}},
+      {label:'Chrome réel',onglets:[0],valeurs:{z:24,mode:'ref'}},
+      {label:'Cuivre réel',onglets:[0],valeurs:{z:29,mode:'ref'}},
+      {label:'Défi : Hund (C)',onglets:[0],action:a=>defi(a,'hundC')},
+      {label:'Défi : Pauli (N)',onglets:[0],action:a=>defi(a,'pauliN')},
+      {label:'Défi : Hund (O)',onglets:[0],action:a=>defi(a,'hundO')},
+      {label:'Défi : cuivre',onglets:[0],action:a=>defi(a,'copper')},
+      {label:'Na⁺ et Ne',onglets:[1],valeurs:{ion:'11:1',mode:'ref'}},
+      {label:'O²⁻',onglets:[1],valeurs:{ion:'8:-2',mode:'ref'}},
+      {label:'Fe²⁺ réel',onglets:[1],valeurs:{ion:'26:2',mode:'ref'}},
+      {label:'Défi : Fe²⁺',onglets:[1],action:a=>defi(a,'iron')},
+      {label:'1s',onglets:[2],valeurs:{orb:'1s',Zh:'1'}},
+      {label:'2p',onglets:[2],valeurs:{orb:'2pz',Zh:'1'}},
+      {label:'3d',onglets:[2],valeurs:{orb:'3dz2',Zh:'1'}},
+      {label:'He⁺ 1s',onglets:[2],valeurs:{orb:'1s',Zh:'2'}}]},
+    {titre:'Atome',onglets:[0],items:[
+      {id:'z',label:'Numéro atomique Z',min:1,max:36,step:1,value:6}]},
+    {titre:'Ion',onglets:[1],items:[
+      {id:'ion',type:'select',label:'Ion monoatomique',options:IONOPT,value:'11:1'}]},
+    {titre:'Placer les électrons',onglets:[0,1],items:[
+      {id:'mode',type:'seg',label:'Cases',options:[['fill','Je place les électrons'],['ref','Configuration réelle']],value:'fill'},
+      {id:'tool',type:'seg',label:'Un clic sur une case',options:[['up','Ajouter ↑'],['down','Ajouter ↓'],['flip','Inverser un spin'],['erase','Gomme']],value:'up'},
+      {type:'boutons',items:[{label:'Vider',action:a=>{toFill(a);a.p.boxes=P.emptyBoxes();a.play(false);a.render()}},{label:'Corriger (voir la référence)',action:a=>{toFill(a);a.p.boxes=P.boxesFor(P.targetCounts(a.p.z,a.p.q));a.render()}}]},
+      {id:'verif',type:'check',label:'Comparer à la configuration réelle',value:false},
+      {id:'qn',type:'check',label:'Afficher les nombres quantiques ℓ, m_ℓ',value:false},
+      {id:'core',type:'check',label:'Écrire avec le cœur de gaz noble',value:false},
+      {id:'nl',type:'check',label:'Afficher n + ℓ dans le triangle',value:false,si:a=>a.tab===0},
+      {id:'hundx',type:'check',label:'Commentaire sur Cr et Cu (hors programme)',value:false,si:a=>a.tab===0},
+      {type:'note',html:a=>a.tab===1?'Un cation perd d’abord les électrons de plus grand <i class="m">n</i> : pour les métaux de transition, les 4s partent avant les 3d (Fe<sup>2+</sup> : [Ar]3d<sup>6</sup>).':'Remplir : Pauli (au plus deux électrons de spins opposés par case), Hund (spins parallèles dans des cases différentes), énergie croissante selon Klechkowski. Le bouton Lecture ajoute les électrons un à un en affichant la configuration réelle de chaque atome.'}]},
+    {titre:'Orbitale',onglets:[2],items:[
+      {id:'orb',type:'select',label:'Orbitale',options:ORBOPT,value:'1s'},
+      {id:'Zh',type:'seg',label:'Espèce hydrogénoïde',options:[['1','H (Z = 1)'],['2','He⁺ (Z = 2)']],value:'1'},
+      {id:'npts',label:'Nombre de points du nuage',min:500,max:9000,step:500,value:4000},
+      {id:'phase',type:'check',label:'Signe de la fonction d’onde',value:false},
+      {id:'marks',type:'check',label:'Rayon le plus probable, rayon moyen, nœuds',value:false},
+      {type:'boutons',items:[{label:'Recentrer la vue',action:a=>{a.p.yaw=.6;a.p.pitch=.35;a.render()}}]},
+      {type:'note',html:'Glisser dans le nuage pour le tourner. Le modèle est exact pour H et He⁺ ; pour un atome polyélectronique il ne donne qu’une illustration de la forme des orbitales. L’échelle est fixée par la valeur de <i class="m">n</i> (barre en <i class="m">a</i><sub>0</sub>).'}]}
+  ],
+  aide:{
+    voit:'Trois vues de la structure électronique. 1 : les cases quantiques d’un atome (Z de 1 à 36), la configuration écrite et le triangle de Klechkowski. 2 : les ions monoatomiques, avec leur configuration et les espèces isoélectroniques. 3 : le nuage de probabilité et la distribution radiale d’une orbitale hydrogénoïde.',
+    faire:'<ul><li>Onglets 1 et 2 : choisir l’outil, puis cliquer sur les cases pour placer les électrons ; les diagnostics de Pauli et de Hund s’affichent. Cocher « Comparer à la configuration réelle » pour vérifier.</li><li>Lecture : ajoute un électron à chaque pas, à partir du nombre d’électrons déjà placés ; Cr et Cu se réorganisent.</li><li>Onglet 3 : tourner le nuage, cocher le signe de la fonction d’onde ou les repères radiaux.</li></ul>',
+    modele:'Les configurations de H à Kr suivent la règle de Klechkowski, avec les exceptions du cours (Cr : 3d⁵4s¹, Cu : 3d¹⁰4s¹). Les orbitales sont celles de l’atome hydrogénoïde (R_nℓ exacte, harmoniques réelles) ; elles illustrent seulement les atomes polyélectroniques. Les ions listés sont ceux du cours, y compris Fe²⁺ : [Ar]3d⁶.',
+    cours:'AM1 : nombres quantiques, orbitales, principes de Pauli, Hund et Klechkowski, configurations électroniques des atomes et des ions.'
+  },
+  init(a){const p=a.p;p.z=6;p.q=0;p.mode='fill';p.boxes=P.emptyBoxes();p.acc=0;p.yaw=.6;p.pitch=.35},
+  change(a,id,v){
+    const p=a.p;
+    if(id==='z'){p.z=clamp(Math.round(v),1,36);p.q=0;syncRef(a)}
+    else if(id==='mode')syncRef(a);
+    else if(id==='ion'){const o=ionOf(v);p.z=o.z;p.q=o.q;if(p.mode==='ref')syncRef(a);else{p.boxes=P.emptyBoxes();p.acc=0}}
+  },
+  onglet(a,i){
+    const p=a.p;a.play(false);
+    if(i===0){p.q=0;syncRef(a);if(p.mode==='fill')p.boxes=P.emptyBoxes()}
+    else if(i===1){const o=ionOf(p.ion||'11:1');p.z=o.z;p.q=o.q;syncRef(a);if(p.mode==='fill')p.boxes=P.emptyBoxes()}
+  },
+  reset(a){a.t=0;a.p.acc=0},
+  peutLire(a){return a.tab!==1},
+  step(a,dt){
+    const p=a.p;a.t+=dt;
+    if(a.tab===2){p.yaw+=.7*dt;return}
+    if(a.tab!==0)return;
+    if(p.mode==='fill'){const n=P.total(p.boxes);p.z=clamp(n,1,36);p.q=0;a.set('z',p.z,{silent:true});a.set('mode','ref',{silent:true});syncRef(a);return}
+    if(p.z>=36){a.set('z',1,{silent:true});syncRef(a);return}
+    p.acc+=dt;
+    if(p.acc>=.7-1e-9){p.acc=0;a.set('z',p.z+1,{silent:true});syncRef(a);if(p.z>=36)a.play(false)}
+  },
+  draw(a){
+    if(a.tab<2){drawCases(a);drawDroite(a)}
+    else{drawCloud(a);drawRadial(a)}
+  }
+});
+
+/* ---------- clic sur une case ---------- */
+A.drag('cases',{
+  hit:(x,y)=>A.tab<2&&lay.boxes.some(b=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h),
+  start(x,y){
+    const b=lay.boxes.find(b=>x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h);if(!b)return;
+    A.play(false);
+    if(A.p.mode!=='fill'){A.p.boxes=P.clone(A.p.boxes);A.set('mode','fill',{silent:true})}
+    const e=A.p.boxes[b.k][b.i],tool=A.p.tool;
+    if(tool==='up'||tool==='down'){if(e.length<2)e.push(tool==='up'?1:-1)}
+    else if(tool==='flip'){if(e.length===1)e[0]=-e[0];else if(e.length===2){const j=x<b.x+b.w/2?0:1;e[j]=-e[j]}}
+    else e.pop();
+    A.p.acc=0;
+  },
+  move(){},end(){}
+});
+/* ---------- rotation du nuage ---------- */
+A.drag('orb',{
+  start(x,y){A.play(false);lay.last=[x,y]},
+  move(x,y){const l=lay.last;if(!l)return;A.p.yaw+=(x-l[0])*.01;A.p.pitch=clamp(A.p.pitch+(y-l[1])*.01,-1.5,1.5);lay.last=[x,y];A.render()},
+  end(){lay.last=null}
+});
+
+</script>
+</body>
+</html>

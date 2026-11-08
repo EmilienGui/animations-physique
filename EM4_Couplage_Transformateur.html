@@ -1,46 +1,721 @@
 <!doctype html>
-<html lang="fr" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Inductance mutuelle, mesure à vide, circuits couplés, recharge et transformateur idéal : atelier EM4 MPSI autonome."><title>Bobines couplées et transformateur · EM4 · MPSI</title><style>:root{color-scheme:light;--paper:#eef2f6;--surface:#fff;--ink:#162536;--muted:#536477;--line:#ced8e2;--accent:#254b70;--accent-ink:#254b70;--soft:#e9f0f7;--field:#2869ae;--flux:#256d62;--emf:#8f2227;--current:#995014;--normal:#8558a2;--pos:#c34542;--neg:#366ca4;--shadow:0 4px 22px #19344d09}
-:root[data-theme=dark]{color-scheme:dark;--paper:#101a26;--surface:#182535;--ink:#edf2f9;--muted:#b5c4d6;--line:#384e65;--accent:#a5c7eb;--accent-ink:#a5c7eb;--soft:#22384d;--field:#85bcff;--flux:#7cd4bc;--emf:#ffa3a2;--current:#ffc17c;--normal:#d1b2f1;--pos:#d76c6c;--neg:#668fcb;--shadow:0 4px 22px #0002}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 11px;border:1px solid var(--line);border-radius:6px;color:var(--ink);background:var(--surface);cursor:pointer;white-space:nowrap}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button[aria-pressed=true],button.primary{color:var(--surface);background:var(--accent-ink);border-color:var(--accent-ink)}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--field);outline-offset:3px}input,select{accent-color:var(--accent-ink)}input[type=number],select{color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:6px}input[type=number]{width:82px;text-align:right}input[type=range]{width:100%;height:23px;margin:6px 0 0;cursor:pointer}input[type=checkbox]{width:19px;height:19px;margin:0}select{width:100%;min-height:40px;max-width:100%}p{margin:8px 0}h1{font-size:28px;line-height:1.15;font-weight:500;letter-spacing:-.03em;margin:0}.topline{height:5px;background:#254b70}.shell{height:calc(100dvh - 5px);max-width:2050px;margin:auto;display:flex;flex-direction:column;gap:11px;padding:14px 18px 12px}.masthead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none}.brand{min-width:220px;flex:1}.eyebrow{color:var(--accent-ink);font-size:12px;letter-spacing:.11em;font-weight:bold;margin-bottom:3px;text-transform:uppercase}.global-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.global-actions button{font-size:15px;line-height:1.2}.global-actions #fullscreen{width:40px;max-width:40px;padding:0;font-size:23px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:14px;flex:1;min-height:0}.main{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(220px,1fr) auto minmax(155px,.56fr) auto;gap:9px}.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow)}.scene-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.scene-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 0;flex:none}.scene-top .kicker{font-size:12px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.06em}.scene-tools{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.scene-tools button{min-height:33px;font-size:14px;padding:4px 8px}.scene-tools .square{width:32px;padding:0;font-size:21px}.scene-svg{display:block;width:100%;height:100%;min-height:0;flex:1;touch-action:none;user-select:none}.scene-note{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:31px;font-size:15px;padding:2px 13px 7px;color:var(--muted)}.scene-note .emphasis{font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums}.scene-note .hint{font-size:13px}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:7px 0}.readout{min-width:0;padding:0 14px;border-left:1px solid var(--line)}.readout:first-child{border:0}.metric-label{display:flex;align-items:center;gap:7px;font-size:16px;color:var(--muted)}.metric-label:before{content:'';height:3px;width:16px;background:var(--c);flex:none}.metric-value{font-size:34px;line-height:1.18;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.metric-unit{font-size:.53em;letter-spacing:0;margin-left:4px;color:var(--muted)}.metric-extra{font-size:12px;color:var(--muted);min-height:16px}.plots-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.plot-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 13px 0;font-size:17px}.formula{font:21px Georgia,'Times New Roman',serif;color:var(--ink)}.plot-note{font-size:13px;color:var(--muted);text-align:right}.plot-svg{width:100%;height:100%;display:block;min-height:0;flex:1;touch-action:none}.transport{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-height:42px}.transport button{font-size:15px}.transport .time{color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}.transport .scrub{flex:1;min-width:70px;max-width:400px;margin:0}.status{font-size:15px;color:var(--muted);flex:1;min-width:160px}.controls{overflow:auto;min-height:0;scrollbar-width:thin;background:var(--surface);border:1px solid var(--line);border-radius:9px}.control-section{padding:15px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-title{font-size:12px;color:var(--accent-ink);letter-spacing:.09em;font-weight:bold;text-transform:uppercase;margin:0 0 11px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:16px;margin-top:12px}.field-head:first-child{margin-top:0}.field-head label{max-width:190px}.small-note{font-size:13px;color:var(--muted);line-height:1.5}.control-section .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}.control-section .row>button{font-size:14px;flex:1;min-height:36px;padding:5px 8px}.check{display:flex;gap:9px;align-items:center;font-size:16px;cursor:pointer;margin:10px 0}.explain{padding:9px 11px;background:var(--soft);border-left:3px solid var(--accent);font-size:14px;line-height:1.45;color:var(--muted);margin-top:10px}.mode-tabs{display:flex;gap:4px;margin-bottom:11px}.mode-tabs button{flex:1;padding:7px 5px;min-height:38px;font-size:13px;white-space:normal}.mobile-settings,.panel-close{display:none}.drawer-backdrop{display:none}.timeline-caption{font-size:13px;color:var(--muted)}.answer-masked{color:var(--muted)}.prediction .reveal-answer{visibility:hidden}.prediction .answer-value:after{content:'?';visibility:visible}.prediction .answer-value .metric-unit{visibility:hidden}dialog{width:min(800px,calc(100% - 28px));max-height:87dvh;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:25px;overflow:auto}dialog::backdrop{background:#061427a8}dialog h2{font-size:27px;font-weight:500;margin:0 0 16px}dialog h3{font-size:19px;margin-top:20px}dialog p,dialog li{font-size:17px;line-height:1.6;color:var(--muted)}dialog .close-row{display:flex;justify-content:flex-end;margin-top:22px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);padding:12px 18px;background:var(--accent-ink);color:var(--surface);border-radius:6px;z-index:20;font-size:16px}.toast:empty{display:none}[hidden]{display:none!important}svg text{font-family:Arial,Helvetica,sans-serif}.projection .controls,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{padding:10px 15px;max-width:none}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:20px}.projection .metric-extra{font-size:14px}.projection .scene-note .emphasis{font-size:22px}.projection .scene-note .hint{display:none}.projection .plot-head .formula{font-size:24px}.projection .plot-note{font-size:16px}.projection .transport button,.projection .status{font-size:18px}.projection .main{grid-template-rows:minmax(240px,1fr) auto minmax(165px,.55fr) auto}.projection .mobile-settings{display:none!important}
-@media(max-width:1200px){.workspace{grid-template-columns:minmax(0,1fr) 282px;gap:10px}.shell{padding:10px 12px;gap:9px}h1{font-size:25px}.scene-top{padding:7px 9px 0}.scene-top .kicker{font-size:11px}.metric-value{font-size:31px}.status{font-size:13px}.global-actions button{padding:7px 9px;font-size:14px}.readout{padding:0 10px}.scene-tools button{font-size:13px}.control-section{padding:13px}}
-@media(max-width:1000px){.workspace{grid-template-columns:1fr}.mobile-settings{display:inline-flex}.controls{position:fixed;inset:0 0 0 auto;width:min(340px,88vw);border-radius:0;z-index:12;transform:translateX(102%);transition:transform .18s ease;box-shadow:-8px 0 36px #0003}.panel-open .controls{transform:translateX(0)}.panel-close{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.drawer-backdrop{position:fixed;inset:0;background:#07162577;z-index:11}.panel-open .drawer-backdrop{display:block}.projection .controls{display:none}}
-@media(max-width:760px){.masthead{gap:10px}.brand{flex-basis:100%}.global-actions{justify-content:flex-start}.global-actions button{font-size:14px;padding:6px 9px}.shell{height:auto;min-height:calc(100dvh - 5px);padding:10px;gap:12px}.main{grid-template-rows:340px auto 270px auto}.workspace{flex:none}.scene-top{flex-wrap:wrap}.scene-tools{margin-left:auto}.scene-note .hint{display:none}.metric-label{font-size:14px}.metric-value{font-size:29px}.metric-extra{font-size:11px}.readout{padding:0 8px}.metric-label:before{width:10px}.transport .scrub{order:5;flex-basis:100%;max-width:none}.status{order:6;flex-basis:100%}.plot-head{flex-wrap:wrap;gap:3px;padding:8px 10px 0}.plot-note{text-align:left;font-size:12px}.projection .shell{height:auto;min-height:100dvh}.projection .main{grid-template-rows:350px auto 290px auto}.projection .metric-value{font-size:32px}.projection .metric-label{font-size:15px}.projection .metric-extra{font-size:12px}}
-@media(max-width:420px){h1{font-size:24px}.metric-value{font-size:25px}.metric-label{font-size:12px}.metric-unit{font-size:.5em}.scene-tools button{font-size:12px;padding:4px 6px}.scene-tools .square{width:29px}.scene-note .emphasis{font-size:15px}.scene-top .kicker{display:none}.scene-top{justify-content:flex-end}.scene-note{padding:2px 9px 7px}.projection .metric-value{font-size:29px}}
-.vec{display:inline-block;position:relative;padding-top:.04em}.vec:before{content:'→';position:absolute;left:0;right:0;top:-.66em;text-align:center;font-size:.9em;line-height:1}
-@media(prefers-reduced-motion:reduce){.controls{transition:none}}
-@media print{.controls,.global-actions,.transport{display:none}.shell{height:auto}.workspace{display:block}.main{grid-template-rows:400px auto 240px auto}.card{box-shadow:none}}
-/* Adaptations EM4 : quatre valeurs, vues accessibles et détails énergétiques. */
-.main{grid-template-rows:auto minmax(225px,1fr) auto minmax(166px,.55fr) auto;gap:8px}.view-tabs{display:flex;gap:6px;flex-wrap:wrap}.view-tabs button{min-height:37px;font-size:15px;padding:5px 13px}.readouts{grid-template-columns:repeat(4,minmax(0,1fr));padding:4px 0}.metric-label{font-size:14px}.metric-value{font-size:31px}.metric-extra{font-size:12px}.metric-unit{margin-left:5px}.select-label{display:block;margin:9px 0 5px;font-size:15px;color:var(--muted)}.select-label:first-child{margin-top:0}.control-section h2{font-size:12px}.param+.param{margin-top:12px}.scene-note .emphasis{font-size:16px}.scene-note .hint{max-width:45%;text-align:right;font-size:12px}.scene-top .kicker{font-size:11px}.scene-tools #equivalent[aria-pressed=true]{background:var(--soft);color:var(--accent-ink)}.balance-grid{display:grid;grid-template-columns:1fr auto;gap:10px 22px;margin:20px 0;font-size:18px}.balance-grid strong{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}.equation{font:22px/1.6 Georgia,'Times New Roman',serif;color:var(--ink);padding:14px;background:var(--soft);border-radius:6px}.balance-grid .separator{grid-column:1/-1;border-top:1px solid var(--line);height:1px}.balance-caption{font-size:15px!important}.metric-value small{font-size:.6em}.plot-head{min-height:30px}.plot-formula{font-size:20px}.transport .time{min-width:95px}.transport .scrub{max-width:230px}.projection .main{grid-template-rows:auto minmax(250px,1fr) auto minmax(175px,.5fr) auto}.projection .view-tabs button{font-size:18px;min-height:41px}.projection .metric-label{font-size:19px}.projection .metric-value{font-size:39px}.projection .metric-extra{font-size:14px}.projection .scene-note .emphasis{font-size:23px}.projection .scene-top .kicker{font-size:15px}.projection .scene-tools button{font-size:17px}.projection .transport .scrub{max-width:380px}svg [data-drag]{cursor:grab}svg [data-drag]:active{cursor:grabbing}svg [data-drag]:focus{outline:none;filter:drop-shadow(0 0 3px var(--field))}
-@media(min-width:1550px){.workspace{grid-template-columns:minmax(0,1fr) 332px}.metric-value{font-size:36px}.metric-label{font-size:17px}.metric-extra{font-size:14px}.scene-note .emphasis{font-size:20px}.scene-note .hint{font-size:14px}.view-tabs button{font-size:17px}.control-section{padding:18px}.scene-top .kicker{font-size:13px}}
-@media(max-width:1200px){.metric-value{font-size:29px}.readout{padding:0 8px}.metric-label{font-size:13px}.metric-extra{font-size:11px}.main{grid-template-rows:auto minmax(225px,1fr) auto minmax(160px,.5fr) auto}}
-@media(max-width:760px){.shell{height:auto}.main{grid-template-rows:auto 540px auto 400px auto}.view-tabs button{flex:1;font-size:14px;white-space:normal;padding:7px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px;padding:7px 0}.readout:nth-child(3){border:0}.metric-label{font-size:15px}.metric-value{font-size:31px}.metric-extra{font-size:12px}.scene-top .kicker{display:none}.scene-top{justify-content:flex-end}.scene-note .emphasis{font-size:16px}.scene-note .hint{display:none}.plot-head .formula{font-size:18px}.projection .main{grid-template-rows:auto 560px auto 420px auto}.projection .metric-value{font-size:34px}.projection .metric-label{font-size:17px}.projection .scene-note .emphasis{font-size:18px}.projection .view-tabs button{font-size:15px}.transport .scrub{max-width:none}.balance-grid{font-size:16px;gap:10px}.equation{font-size:19px}.scene-tools{flex-wrap:nowrap}}
-@media(max-width:420px){.metric-value{font-size:30px}.metric-label{font-size:14px}.view-tabs button{font-size:13px}.scene-tools button{font-size:13px}.scene-note{min-height:44px}.scene-note .emphasis{font-size:15px}.projection .view-tabs button{font-size:14px}.global-actions{gap:5px}.global-actions button{padding:6px 8px}.balance-grid strong{max-width:140px;overflow-wrap:anywhere}}
-@media print{.main{grid-template-rows:auto 440px auto 240px auto}.view-tabs{display:none}}
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Inductance mutuelle de deux bobines coaxiales et sa mesure ; circuits couplés en régime sinusoïdal forcé (Fresnel, accord, influence de k) ; transformateur idéal ; transport à haute tension.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Bobines couplées et transformateur · EM4 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Vue physique du transformateur : davantage de place pour le noyau. */
-@media(min-width:761px){.physical-transformer .main{grid-template-rows:auto minmax(255px,1.15fr) auto minmax(135px,.4fr) auto}.physical-transformer.projection .main{grid-template-rows:auto minmax(290px,1.1fr) auto minmax(135px,.4fr) auto}}
-</style></head>
-<body><div class="topline"></div><div class="shell">
-<header class="masthead"><div class="brand"><div class="eyebrow">EM4 · Induction de Neumann · MPSI</div><h1>Bobines couplées et transformateur</h1></div><div class="global-actions"><button id="settings" class="mobile-settings" aria-controls="controls" aria-expanded="false">Réglages</button><button id="balance">Bilan</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter le schéma, les valeurs et les courbes en SVG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran (F)">⛶</button></div></header>
-<div class="workspace"><main class="main"><nav class="view-tabs" id="modes" aria-label="Situations de l’atelier"><button data-mode="mutual" aria-pressed="false">Comprendre et mesurer M</button><button data-mode="transfer" aria-pressed="false">Transmettre de la puissance</button><button data-mode="transformer" aria-pressed="false">Transformateur idéal</button></nav>
-<section class="card scene-card" aria-label="Expérience"><div class="scene-top"><span class="kicker" id="scene-kicker"></span><div class="scene-tools"><button id="equivalent" aria-pressed="false" title="Afficher la f.é.m. auto-induite en convention générateur">Équivalent</button><button id="zoom-out" class="square" aria-label="Réduire le dessin">−</button><button id="zoom-in" class="square" aria-label="Agrandir le dessin">+</button><button id="frame">Cadrer</button></div></div><svg id="scene" class="scene-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Schéma interactif"></svg><div class="scene-note"><span class="emphasis" id="scene-state"></span><span class="hint" id="scene-hint"></span></div></section>
-<section class="readouts" aria-label="Valeurs calculées"><div class="readout" id="metric-0"><div class="metric-label" id="label-0"></div><div class="metric-value" id="value-0"></div><div class="metric-extra" id="extra-0"></div></div><div class="readout" id="metric-1"><div class="metric-label" id="label-1"></div><div class="metric-value" id="value-1"></div><div class="metric-extra" id="extra-1"></div></div><div class="readout" id="metric-2"><div class="metric-label" id="label-2"></div><div class="metric-value" id="value-2"></div><div class="metric-extra" id="extra-2"></div></div><div class="readout" id="metric-3"><div class="metric-label" id="label-3"></div><div class="metric-value" id="value-3"></div><div class="metric-extra" id="extra-3"></div></div></section>
-<section class="card plots-card" aria-label="Courbes synchronisées"><div class="plot-head"><span id="plot-formula" class="formula"></span><span id="plot-note" class="plot-note"></span></div><svg id="plots" class="plot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Courbes ; glisser pour examiner un instant"></svg></section>
-<div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Lecture</button><button id="reset">Recommencer</button><span class="time" id="time"></span><input id="scrub" class="scrub" type="range" min="0" max="1" step=".001" value="0" aria-label="Parcourir l’expérience"><span id="status" class="status"></span></div></main>
-<aside id="controls" class="controls" aria-label="Réglages"><div class="panel-close"><strong>Réglages</strong><button id="close-panel">Fermer</button></div><div id="panel-content"></div></aside></div></div>
-<div id="drawer-backdrop" class="drawer-backdrop"></div><dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">Bobines couplées et transformateur</h2><h3>Deux bobines longues coaxiales</h3><p>Les bobines ont la même longueur l ; S₂ ≤ S₁. Dans le modèle du cours, L₁ = μ₀N₁²S₁/l, L₂ = μ₀N₂²S₂/l et |M| = μ₀N₁N₂S₂/l, d’où k = |M|/√(L₁L₂) = √(S₂/S₁) = a₂/a₁. Des sections différentes donnent k &lt; 1 ; le couplage parfait réciproque exige S₂ = S₁. Les effets de bord sont négligés.</p>
-<p>La bobine 1 est alimentée par un courant imposé i₁ = I cos(2πft), où I est une amplitude. Le secondaire est ouvert et l’oscilloscope idéal ne prélève aucun courant : i₂ = 0, mais u₂ = M di₁/dt. La tension uR = Rₘi₁ sert à mesurer le courant. Avec les amplitudes U₂ et Uᴿ, |M| = RₘU₂/(2πfUᴿ). Les deux courbes de tension sont en quadrature.</p>
-<p>Inverser le repère 2 change la normale, le signe de M et les signes des grandeurs électriques référencées dans ce circuit ; cela ne retourne pas matériellement la bobine et ne change pas les puissances. La poignée verte modifie le rayon intérieur entre deux essais ; elle est accessible avec les flèches du clavier.</p>
-<h3>Circuits couplés avec pertes</h3><p>Le générateur impose une tension sinusoïdale de valeur efficace U. Les deux courants sont initialement référencés entrants par les bornes pointées des bobines. Avec R₂ = r₂ + Rcharge, les équations sont : L₁ di₁/dt + M di₂/dt + R₁i₁ = uₑ et M di₁/dt + L₂ di₂/dt + R₂i₂ = 0. Les phases et amplitudes sont calculées en régime sinusoïdal permanent, avec des phaseurs efficaces.</p>
-<p>L’impédance vue du primaire vaut Zentrée = R₁ + jωL₁ + ω²M²/(R₂ + jωL₂). Le courant primaire dépend donc de la charge et du couplage. À vide, i₂ = 0 et u₂ = M di₁/dt ; en charge, u₂ = −Rcharge i₂ avec ces références. Inverser le repère 2 change M, i₂ et u₂, mais laisse i₁, l’énergie et les puissances inchangés. Les flèches indiquent les références algébriques des courants et tensions : une intensité négative signifie que le courant circule dans le sens opposé à sa flèche. R₁, r₂ et Rcharge sont représentées séparément sur le schéma.</p>
-<p>Le coefficient k est réglable de 0 à 0,99. La position dessinée est schématique et ne fournit pas une loi M(distance) : glisser le récepteur règle k et relance un essai à géométrie fixe. Aucun effet d’induction lié au mouvement n’est calculé. Les arcs fins entre les bobines symbolisent le couplage mutuel ; ils ne constituent pas un calcul de champ spatial pour ces paramètres indépendants.</p>
-<p>Le préréglage « Recharge du cours » reprend L₁ = L₂ = 10 µH, k = 0,50, f = 140 kHz et R₂ = 5 Ω. La tension efficace nécessaire est choisie au départ pour obtenir une amplitude primaire de 2 A ; elle reste ensuite imposée. Le récepteur est une charge résistive simplifiée. Les circuits de redressement, la batterie et les résonances des chargeurs réels ne sont pas modélisés.</p>
-<h3>Énergie et puissances</h3><p>E_mag = ½L₁i₁² + ½L₂i₂² + Mi₁i₂. Le terme mutuel peut être négatif ; l’énergie totale reste positive puisque |M| ≤ √(L₁L₂). Le bilan instantané est uₑi₁ = R₁i₁² + r₂i₂² + Rcharge i₂² + dE_mag/dt. Sur une période, la variation moyenne d’énergie est nulle. Le rendement affiché est la puissance moyenne dans la charge divisée par la puissance moyenne fournie. Les pertes des deux bobinages sont distinguées de la charge.</p>
-<h3>Transformateur idéal</h3><p>Ce modèle est distinct des bobines à inductances finies : flux commun, absence de pertes et de fuites, courant magnétisant et énergie magnétique stockée négligés. Le primaire est en convention récepteur ; i₂ sort par le point du secondaire, en convention générateur. Ainsi v₁ = N₁ dΦ/dt, v₂ = N₂ dΦ/dt, v₂ = m v₁, i₁ = m i₂ et v₁i₁ = v₂i₂. La charge est résistive. À vide, i₁ = i₂ = 0 tandis que la tension secondaire reste non nulle.</p>
-<p>La source est sinusoïdale. Le flux commun par spire est Φ = √2U₁ sin(ωt)/(ωN₁), sans composante constante, et B = Φ/S pour S = 4 cm². La vue montre un noyau de fer doux fermé et ses enroulements de cuivre. Les lignes bleues sont canalisées dans le fer, sans flux de fuite dans le modèle idéal. Leur sens suit le signe de Φ ; leur contraste augmente avec |B|. À flux nul, seules des trajectoires repères grises en pointillés restent visibles, sans flèche bleue. Φ désigne le flux commun par spire. Le feuilletage et les spires sont représentés schématiquement ; le nombre de spires dessinées est échantillonné. Les brins arrière sont occultés par le noyau, les brins avant le recouvrent. Aucune saturation, hystérésis ni excitation continue n’est simulée.</p>
-<h3>Transport à haute tension</h3><p>Dans le même onglet, Application donne accès à une ligne résistive entre deux transformateurs idéaux, de rapports m et 1/m. La tension efficace de départ vaut U = 1 kV ; la puissance active P injectée dans la ligne est fixée et le facteur de puissance vaut 1. La charge s’adapte à chaque essai. Uligne = mU, I = P/Uligne, PJ = Rligne I², Preçue = P − PJ et la tension après abaissement vaut (Uligne − Rligne I)/m. Rligne désigne la résistance totale aller-retour. Les plages proposées garantissent Preçue ≥ 0. Cette vue est statique et ses courbes explorent le facteur m.</p><h3>Commandes communes</h3><p>Les réglages se trouvent à droite. Projection masque les réglages et agrandit les informations ; ⛶ active séparément le plein écran. Le zoom agit sur le dessin, en conservant la taille des textes. Cadrer rétablit la vue initiale. Image exporte la scène et ses courbes dans le thème choisi.</p><p>Lecture est volontairement ralentie. Les valeurs du temps sont celles du modèle physique. La barre du temps et les courbes permettent de revenir à un instant. Toute modification physique relance un essai avec une géométrie fixe ; une pause de lecture fige l’affichage. Raccourcis : Espace, lecture/pause ; R, recommencer ; F, plein écran ; Échap, fermer une fenêtre. Fichier autonome hors connexion.</p><div class="close-row"><button class="primary" data-close="help-dialog">Revenir à l’atelier</button></div></dialog>
-<dialog id="balance-dialog" aria-labelledby="balance-title"><h2 id="balance-title">Puissances et énergie</h2><div id="balance-content"></div><div class="close-row"><button class="primary" data-close="balance-dialog">Revenir à l’atelier</button></div></dialog>
-<div id="toast" class="toast" role="status"></div><script id="physics">'use strict';
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* EM4 · physique d'origine (ex-physique.js), équations inchangées */
+'use strict';
 // Les flux Φ sont les flux liés à l'ensemble des spires. Unités SI.
 const EM4Physics = (() => {
   const mu0=4*Math.PI*1e-7, clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -128,257 +803,447 @@ const EM4Physics = (() => {
 })();
 if(typeof module!=='undefined')module.exports=EM4Physics;
 if(typeof window!=='undefined')window.EM4Physics=EM4Physics;
-</script><script>'use strict';
-window.EM4UI=(()=>{
- const $=id=>document.getElementById(id),clamp=EM4Physics.clamp;
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
- const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(x)<1e-12?0:x);
- function si(v,unit){const a=Math.abs(v),scale=unit===''||unit==='%'||a<1e-18?1:a>=1e6?1e6:a>=1e3?1e3:a>=1?1:a>=1e-3?1e-3:a>=1e-6?1e-6:1e-9;return {value:fmt(v/scale,Math.abs(v/scale)>=100?1:2),unit:({1000000:'M',1000:'k',1:'',0.001:'m',0.000001:'µ',0.000000001:'n'})[scale]+unit,scale};}
- const quantity=(v,u)=>{const q=si(v,u);return `${q.value} ${q.unit}`;};
- function palette(){const s=getComputedStyle(document.documentElement),r={};for(const k of ['surface','paper','ink','muted','line','accent','soft','field','flux','current','emf','normal'])r[k]=s.getPropertyValue('--'+k).trim();return r;}
- const path=pts=>pts.map((p,i)=>(i?'L':'M')+p.map(v=>Number(v).toFixed(2)).join(',')).join(' ');
- const line=(a,b,c,w=2,extra='')=>`<path d="${path([a,b])}" fill="none" stroke="${c}" stroke-width="${w}" ${extra}/>`;
- function arrow(a,b,c,w=2.5,dash=false){const d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d<.01)return '';const t=Math.atan2(b[1]-a[1],b[0]-a[0]),l=Math.min(11,d*.35),h=Math.min(4.5,d*.15),p1=[b[0]-l*Math.cos(t)+h*Math.sin(t),b[1]-l*Math.sin(t)-h*Math.cos(t)],p2=[b[0]-l*Math.cos(t)-h*Math.sin(t),b[1]-l*Math.sin(t)+h*Math.cos(t)];return line(a,b,c,w,dash?'stroke-dasharray="5 5"':'')+`<path d="${path([b,p1,p2])}Z" fill="${c}"/>`;}
- function text(x,y,s,c,size=22,anchor='start',extra=''){const rich=esc(s).replace(/_\{([^}]+)\}|_([A-Za-z0-9]+)/g,(_,a,b)=>`<tspan baseline-shift="sub" font-size="${size*.68}">${a||b}</tspan>`);return `<text x="${x}" y="${y}" fill="${c}" font-size="${size}" text-anchor="${anchor}" ${extra}>${rich}</text>`;}
- const halo=(x,y,s,c,z=22,a='start')=>text(x,y,s,c,z,a,`paint-order="stroke" stroke="${palette().surface}" stroke-width="5" stroke-linejoin="round"`);
- const rect=(x,y,w,h,fill,stroke='none',r=6,extra='')=>`<rect x="${x}" y="${y}" width="${Math.max(0,w)}" height="${Math.max(0,h)}" rx="${r}" fill="${fill}" stroke="${stroke}" ${extra}/>`;
- function field(id,label,min,max,step,value,unit='',log=false){return `<div class="param"><div class="field-head"><label for="${id}-number">${label}${unit?' ('+unit+')':''}</label><input id="${id}-number" data-param="${id}" type="number" min="${min}" max="${max}" step="${step}" value="${value}"></div><input id="${id}" data-param="${id}" ${log?'data-log="true"':''} type="range" aria-label="${esc(label)}" min="${log?Math.log10(min):min}" max="${log?Math.log10(max):max}" step="${log?.004:step}" value="${log?Math.log10(value):value}"></div>`;}
- const select=(id,label,options,value)=>`<label class="select-label" for="${id}">${label}</label><select id="${id}">${options.map(([k,t])=>`<option value="${k}" ${String(k)===String(value)?'selected':''}>${t}</option>`).join('')}</select>`;
- const section=(title,content)=>`<section class="control-section"><h2 class="section-title">${title}</h2>${content}</section>`;
- const buttons=(items)=>`<div class="row">${items.map(([id,label])=>`<button id="${id}">${label}</button>`).join('')}</div>`;
- function bindFields(change){document.querySelectorAll('[data-param]').forEach(el=>{el.dataset.modelValue=$(el.dataset.param+'-number').value;el.addEventListener('input',()=>{if(el.value===''||!Number.isFinite(el.valueAsNumber))return;let v=el.dataset.log?10**el.valueAsNumber:el.valueAsNumber;const n=$(el.dataset.param+'-number'),step=Number(n.step);v=clamp(Math.round(v/step)*step,Number(n.min),Number(n.max));change(el.dataset.param,Number(v.toPrecision(10)));});});document.querySelectorAll('input[type=number]').forEach(el=>el.addEventListener('change',()=>{el.value=el.dataset.modelValue;}));}
- function syncFields(p){document.querySelectorAll('[data-param]').forEach(el=>{const v=p[el.dataset.param];if(v===undefined)return;el.dataset.modelValue=String(v);if(document.activeElement===el&&el.type==='number')return;el.value=el.dataset.log?Math.log10(Math.max(v,1e-30)):v;});}
- function metric(n,label,value,unit,extra='',color='field'){const q=si(value,unit);$('label-'+n).textContent=label;$('value-'+n).innerHTML=esc(q.value)+`<span class="metric-unit">${esc(q.unit)}</span>`;$('value-'+n).dataset.value=String(value);$('extra-'+n).textContent=extra;$('metric-'+n).style.setProperty('--c',`var(--${color})`);}
- function dimensions(svg){const b=svg.getBoundingClientRect(),w=Math.max(280,b.width),h=Math.max(120,b.height);svg.setAttribute('viewBox',`0 0 ${w} ${h}`);return {w,h};}
- function charts(svg,specs){const {w,h}=dimensions(svg),c=palette(),proj=document.body.classList.contains('projection'),small=w<640,font=proj?18:15,sets=[],parts=[];
-  specs.forEach((s,j)=>{const cell={x:small?0:j*w/specs.length,y:small?j*h/specs.length:0,w:small?w:w/specs.length,h:small?h/specs.length:h};const vals=s.series.flatMap(a=>a.points.map(p=>p[1])),peak=Math.max(1e-30,...vals.map(Math.abs)),unit=si(peak,s.unit),signed=s.signed===undefined?Math.min(...vals)<-peak*.001:s.signed;
-   const ymax=peak<1e-20?1:peak*1.12,ymin=signed?-ymax:0,x0=cell.x+68,x1=cell.x+cell.w-23,y0=cell.y+39,y1=cell.y+cell.h-33,X=x=>x0+(x-s.min)/(s.max-s.min)*(x1-x0),Y=y=>y1-(y-ymin)/(ymax-ymin)*(y1-y0);
-   let lx=cell.x+13;s.series.forEach(a=>{parts.push(line([lx,cell.y+18],[lx+14,cell.y+18],a.color,2.7,a.dash?'stroke-dasharray="4 3"':''));parts.push(text(lx+20,cell.y+24,a.name,a.color,proj?20:18));lx+=Math.max(65,a.name.length*10+32);});parts.push(text(cell.x+cell.w-15,cell.y+24,unit.unit,c.muted,font,'end'));
-   const ticks=signed?[-peak,0,peak]:[0,peak/2,peak];ticks.forEach(v=>{parts.push(line([x0,Y(v)],[x1,Y(v)],c.line,v===0?1.2:.7,v===0?'':'stroke-dasharray="2 4"'));parts.push(text(x0-8,Y(v)+5,fmt(v/unit.scale,peak/unit.scale<10?2:1),c.muted,font-1,'end'));});
-   const xu=si(Math.max(Math.abs(s.min),Math.abs(s.max)),s.xUnit===undefined?'s':s.xUnit);[s.min,(s.min+s.max)/2,s.max].forEach(x=>parts.push(text(X(x),y1+23,fmt(x/xu.scale,2),c.muted,font-1,'middle')));parts.push(text(x1,y0+15,(s.xLabel||'t')+(xu.unit?' ('+xu.unit+')':''),c.muted,font-1,'end'));
-   s.series.forEach((a,k)=>{parts.push(`<path d="${path(a.points.map(p=>[X(p[0]),Y(p[1])]))}" fill="none" stroke="${a.color}" stroke-width="2.6" stroke-linejoin="round" ${a.dash?'stroke-dasharray="6 5"':''}/><circle id="point-${j}-${k}" r="4.4" fill="${a.color}" stroke="${c.surface}" stroke-width="1.8"/>`);});
-   parts.push(`<path id="cursor-${j}" fill="none" stroke="${c.muted}" stroke-width="1.1" stroke-dasharray="4 4"/>`);sets.push({s,X,Y,x0,x1,y0,y1,cell});
-  });svg.innerHTML=parts.join('');
-  return {update(x,values){sets.forEach((a,j)=>{const xx=a.X(clamp(x,a.s.min,a.s.max));$('cursor-'+j).setAttribute('d',path([[xx,a.y0],[xx,a.y1]]));a.s.series.forEach((s,k)=>{const v=values[s.key],p=$('point-'+j+'-'+k);p.setAttribute('cx',xx);p.setAttribute('cy',a.Y(v));});});},xAt(e){const b=svg.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top,a=sets[small?Math.min(sets.length-1,Math.floor(y/h*sets.length)):Math.min(sets.length-1,Math.floor(x/w*sets.length))];return clamp(a.s.min+(x-a.x0)/(a.x1-a.x0)*(a.s.max-a.s.min),a.s.min,a.s.max);}};
- }
- // Coupe schématique d'un solénoïde ; les textes gardent leur taille en pixels.
- function coil(x1,x2,cy,r,color,turns=14,fill='none',opacity=.1){let s=rect(x1,cy-r,x2-x1,2*r,fill,'none',0,`opacity="${opacity}"`);for(let j=0;j<=turns;j++){const x=x1+(x2-x1)*j/turns;s+=`<ellipse cx="${x}" cy="${cy}" rx="${Math.max(3,r*.22)}" ry="${r}" fill="none" stroke="${color}" stroke-width="${j===0||j===turns?2.1:1.5}" opacity="${.55+.45*j/turns}"/>`;}return s;}
- function resistor(a,b,color,vertical=false){const d=Math.hypot(b[0]-a[0],b[1]-a[1]),len=Math.min(36,d*.6),mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;return line(a,b,color,2)+rect(mx-(vertical?7:len/2),my-(vertical?len/2:7),vertical?14:len,vertical?len:14,palette().surface,color,0);}
- function inductor(x,y,len,color,equivalent=false,turns=4){if(equivalent)return line([x,y-len/2],[x,y+len/2],color,2)+`<circle cx="${x}" cy="${y}" r="15" fill="${palette().surface}" stroke="${color}" stroke-width="2"/>`;let d=`M${x},${y-len/2}`;for(let j=0;j<turns;j++)d+=`c-17,0 -17,${len/turns} 0,${len/turns}`;return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.2"/>`;}
- function source(x,y,r,color,label='~'){return `<circle cx="${x}" cy="${y}" r="${r}" fill="${palette().surface}" stroke="${color}" stroke-width="2"/>`+text(x,y+6,label,color,22,'middle');}
- function badge(x,y,label,color){const size=15,w=label.length*8.1+20;return rect(x,y-20,w,29,palette().surface,palette().line,5)+text(x+10,y,label,color,size);}
- function bar(x,y,w,h,v,max,color,label,value){return text(x,y-9,label,palette().muted,16)+rect(x,y,w,h,palette().soft)+rect(x,y,w*clamp(v/Math.max(max,1e-30),0,1),h,color)+text(x+w,y-9,value,palette().ink,17,'end');}
- let toastTimer;function toast(t){$('toast').textContent=t;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',2500);}
- function setup(config){let dark=false,focus=null;try{dark=localStorage.getItem('EM4-theme')==='dark';}catch(_){}
-  const redraw=()=>config.redraw();function theme(){document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';try{localStorage.setItem('EM4-theme',dark?'dark':'light');}catch(_){}redraw();}
-  $('theme').onclick=()=>{dark=!dark;theme();};
-  function panel(open){document.body.classList.toggle('panel-open',open);$('settings').setAttribute('aria-expanded',String(open));document.querySelector('.main').inert=open;document.querySelector('.masthead').inert=open;if(open){focus=document.activeElement;$('controls').setAttribute('role','dialog');$('controls').setAttribute('aria-modal','true');$('close-panel').focus();}else{$('controls').removeAttribute('role');$('controls').removeAttribute('aria-modal');if(focus)focus.focus();}$('controls').inert=innerWidth<=1000&&!open;$('controls').setAttribute('aria-hidden',String(innerWidth<=1000&&!open));}
-  $('settings').onclick=()=>panel(true);$('close-panel').onclick=() =>panel(false);$('drawer-backdrop').onclick=()=>panel(false);
-  $('help').onclick=()=>{config.pause();$('help-dialog').showModal();};$('balance').onclick=()=>{config.pause();config.balance();$('balance-dialog').showModal();};document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-  $('projection').onclick=()=>{panel(false);const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(p));redraw();};
-  async function full(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){toast('Le plein écran est indisponible.');}}$('fullscreen').onclick=full;
-  document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');redraw();});
-  $('zoom-in').onclick=()=>config.zoom(.15);$('zoom-out').onclick=()=>config.zoom(-.15);$('frame').onclick=()=>config.zoom(0);
-  $('play').onclick=config.play;$('reset').onclick=config.reset;$('scrub').oninput=e=>config.scrub(Number(e.target.value));
-  let dragging=false;$('plots').addEventListener('pointerdown',e=>{dragging=true;$('plots').setPointerCapture(e.pointerId);config.chart(e);});$('plots').addEventListener('pointermove',e=>{if(dragging)config.chart(e);});$('plots').addEventListener('pointerup',()=>dragging=false);$('plots').addEventListener('pointercancel',()=>dragging=false);
-  $('export').onclick=()=>{config.pause();const c=palette(),a=$('scene').getBoundingClientRect(),b=$('plots').getBoundingClientRect(),w=Math.ceil(a.width),sh=Math.ceil(a.height),ph=Math.ceil(b.height),cols=w<600?2:4,rows=4/cols,height=sh+ph+125+rows*62;
-   let s=rect(0,0,w,height,c.surface)+text(18,32,config.title,c.ink,Math.min(26,w/19))+text(18,57,config.caption(),c.muted,w<600?12:15);
-   s+=`<g transform="translate(0,72)">${$('scene').innerHTML}</g>`;
-   for(let i=0;i<4;i++){const x=18+(i%cols)*w/cols,y=sh+100+Math.floor(i/cols)*62;s+=text(x,y,$('label-'+i).textContent,c.muted,14)+text(x,y+29,$('value-'+i).textContent,c.ink,24);}
-   s+=`<g transform="translate(0,${sh+85+rows*62})">${$('plots').innerHTML}</g>`+text(18,height-12,'EM4 · MPSI · E. Guillaume',c.muted,13);
-   const xml=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${height}" viewBox="0 0 ${w} ${height}"><style>text{font-family:Arial,Helvetica,sans-serif}</style>${s}</svg>`,url=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download=config.file+'.svg';link.click();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('Image SVG enregistrée.');};
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('panel-open'))panel(false);if(/INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement.tagName)||document.querySelector('dialog[open]')||e.ctrlKey||e.metaKey||e.altKey)return;if(e.code==='Space'){e.preventDefault();config.play();}if(e.key.toLowerCase()==='r')config.reset();if(e.key.toLowerCase()==='f')full();});
-  let resizePending=false;new ResizeObserver(()=>{if(resizePending)return;resizePending=true;requestAnimationFrame(()=>{resizePending=false;if(innerWidth>1000&&document.body.classList.contains('panel-open'))panel(false);const hidden=innerWidth<=1000&&!document.body.classList.contains('panel-open');$('controls').inert=hidden;$('controls').setAttribute('aria-hidden',String(hidden));redraw();});}).observe(document.querySelector('.main'));
-  theme();return {panel};
- }
- return {$,esc,clamp,fmt,si,quantity,palette,path,line,arrow,text,halo,rect,field,select,section,buttons,bindFields,syncFields,metric,dimensions,charts,coil,resistor,inductor,source,badge,bar,setup,toast};
-})();
-</script><script>'use strict';
-(()=>{
- const U=EM4UI,P=EM4Physics,{$,fmt,quantity:q,palette,field,select,section,buttons,text,halo,line,arrow,rect}=U;
- const state={mode:'mutual',q:0,playing:false,zoom:1,speed:1,usage:'alone',geo:{N1:800,N2:400,l:20,a1:2,a2:1,I:.15,f:2000,Rm:100,sign:1},transfer:{L1:50,L2:20,R1:2,r2:.5,Rload:10,U:6,f:50,k:.75,open:false,sign:1},ideal:{N1:600,N2:300,U:12,f:50,Rload:12,open:false,S:4},line:{m:10,P:100,Rline:1,U:1000}};
- let dirty=true,plot=null,last=0,drag=null;
- const isLine=()=>state.mode==='transformer'&&state.usage==='line';
- function params(){if(state.mode==='mutual'){const p=state.geo;return {...p,l:p.l*.01,a1:p.a1*.01,a2:p.a2*.01};}if(state.mode==='transfer'){const p=state.transfer;return {...p,L1:p.L1*.001,L2:p.L2*.001};}return isLine()?{...state.line,P:state.line.P*1000}:{...state.ideal,S:state.ideal.S*1e-4};}
- function duration(){return state.mode==='mutual'?2/state.geo.f:state.mode==='transfer'?2/state.transfer.f:2/state.ideal.f;}
- function sampleAt(t){const p=params();return state.mode==='mutual'?P.coaxial(p,t):state.mode==='transfer'?P.coupled(p,t):isLine()?P.line(p):P.transformer(p,t);}
- const sample=()=>sampleAt(state.q*duration());
- function updateTransport(){$('play').textContent=state.playing?'❚❚ Pause':'▶ Lecture';$('play').setAttribute('aria-pressed',String(state.playing));$('play').disabled=isLine();$('scrub').value=isLine()?(state.line.m-1)/19:state.q;$('time').textContent=isLine()?'m = '+fmt(state.line.m,1):'t = '+q(state.q*duration(),'s');$('status').textContent=isLine()?'Puissance injectée fixée':state.playing?'Lecture ralentie':state.q>=1?'Deux périodes écoulées':'Temps figé';}
- function pause(){state.playing=false;updateTransport();}
- function reset(){state.q=0;pause();render();}
- function setMode(mode){state.mode=mode;state.q=0;pause();dirty=true;panel();render();}
- function changed(){state.q=0;pause();dirty=true;U.syncFields(state.mode==='mutual'?state.geo:state.mode==='transfer'?state.transfer:isLine()?state.line:state.ideal);render();}
- function panel(){let h='';
-  if(state.mode==='mutual'){const g=state.geo;
-   h=section('Bobines longues coaxiales',field('N1','Spires de la bobine 1',100,2000,50,g.N1)+field('N2','Spires de la bobine 2',100,2000,50,g.N2)+field('l','Longueur commune l',10,40,.5,g.l,'cm')+field('a1','Rayon extérieur a₁',.5,2.5,.05,g.a1,'cm')+field('a2','Rayon intérieur a₂',.3,g.a1,.05,g.a2,'cm')+buttons([['same-section','Sections égales'],['reverse','Inverser le repère 2']])+'<div class="explain">La bobine 2 reste intérieure : a₂ ≤ a₁. L’influence totale réciproque est atteinte lorsque les sections sont égales : k = 1.</div>');
-   h+=section('Mesurer M à vide',field('I','Amplitude du courant imposé',.01,.5,.01,g.I,'A')+field('f','Fréquence',20,10000,10,g.f,'Hz',true)+field('Rm','Résistance de mesure',10,200,10,g.Rm,'Ω')+'<p class="small-note">i₁ est imposé. On mesure uR = Rₘi₁ et u₂ à l’oscilloscope idéal ; i₂ = 0.</p><div class="explain">|M| = Rₘ U₂/(2πf Uᴿ), avec U₂ et Uᴿ les amplitudes des deux tensions.</div>');
-  }else if(state.mode==='transfer'){const p=state.transfer;
-   h=section('Situations caractéristiques',select('preset','Accès rapide',[['default','Deux circuits couplés'],['open','Secondaire ouvert'],['weak','Faible couplage'],['charge','Recharge du cours'],['zero','Couplage nul']],p.open?'open':'default'));
-   h+=section('Couplage et alimentation',field('k','Coefficient de couplage k',0,.99,.01,p.k)+field('U','Tension efficace U',.1,24,.001,p.U,'V')+field('f','Fréquence',10,200000,10,p.f,'Hz',true)+field('L1','Inductance L₁',.005,100,.005,p.L1,'mH',true)+field('L2','Inductance L₂',.005,100,.005,p.L2,'mH',true)+buttons([['reverse','Inverser le repère 2']])+'<p class="small-note">La position dessinée traduit k sans définir une loi géométrique de distance. Glisser la bobine 2 règle k entre deux essais.</p>');
-   h+=section('Résistances et charge',select('secondary','Branchement du secondaire',[['closed','Charge résistive branchée'],['open','Secondaire ouvert']],p.open?'open':'closed')+field('Rload','Résistance de charge',.1,100,.1,p.Rload,'Ω',true)+field('R1','Pertes primaires R₁',.1,20,.1,p.R1,'Ω')+field('r2','Résistance du bobinage 2',.1,20,.1,p.r2,'Ω')+'<div class="explain">Le générateur impose une tension. Le courant primaire dépend du secondaire et du couplage. Le régime sinusoïdal permanent est calculé directement.</div>');
-  }else{
-   h=section('Application',select('usage','Situation étudiée',[['alone','Transformateur idéal'],['line','Transport à haute tension']],state.usage));
-   if(isLine()){const p=state.line;h+=section('Une même puissance à transporter',field('m','Facteur d’élévation m',1,20,.01,p.m)+field('P','Puissance active injectée',10,500,10,p.P,'kW')+field('Rline','Résistance totale de la ligne',.1,2,.1,p.Rline,'Ω')+buttons([['low-voltage','Sans élévation'],['high-voltage','Tension multipliée par 10']])+'<div class="explain">Deux transformateurs idéaux encadrent la ligne résistive. Tension efficace de départ : 1 kV. La puissance active injectée dans la ligne est fixée ; la charge réceptrice s’adapte.</div><p class="small-note">Facteur de puissance égal à 1. Uligne = mU ; I = P/Uligne ; pertes = Rligne I². La résistance est celle de l’aller et du retour réunis.</p>');}
-   else{const p=state.ideal;h+=section('Enroulements et source',select('preset','Accès rapide',[['lower','Abaisseur : m = ½'],['higher','Élévateur : m = 2'],['isolation','Isolement : m = 1'],['open','Secondaire ouvert']],p.open?'open':p.N2/p.N1===2?'higher':p.N2/p.N1===1?'isolation':'lower')+field('N1','Spires primaires N₁',200,2000,50,p.N1)+field('N2','Spires secondaires N₂',100,3000,50,p.N2)+field('U','Tension efficace primaire',1,24,.5,p.U,'V')+field('f','Fréquence',20,1000,10,p.f,'Hz',true));h+=section('Charge et hypothèses',select('secondary','Branchement du secondaire',[['closed','Charge résistive branchée'],['open','Secondaire ouvert']],p.open?'open':'closed')+field('Rload','Résistance de charge',1,100,1,p.Rload,'Ω')+'<div class="explain">Flux commun, aucune perte, courant magnétisant négligé. Le primaire reçoit la puissance ; le courant secondaire sort par la borne pointée.</div><p class="small-note">Section du noyau : 4 cm². Saturation, hystérésis et courant à vide sont exclus du modèle idéal.</p>');}
+
+/* =====================================================================
+   Outils communs des animations d'induction (EM4, copie des outils EM3) · AnimKit
+   - EMK.unit(max, unité) : préfixe SI lisible (m, µ, n, k) pour les axes et mesures
+   - EMK.vt(...)          : lettre surmontée d'une flèche (vecteur) dans un texte SVG
+   - EMK.tplot(...)       : graphe temporel tracé jusqu'à l'instant courant (option « futur »),
+                            tangente, aire algébrique sous la courbe, courbes fantômes
+   - EMK.split(box, n)    : découpe verticale d'un panneau en n graphes
+   ===================================================================== */
+'use strict';
+globalThis.EMK=(()=>{
+  const PREF=[[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n']];
+  /** facteur et préfixe pour que max soit entre 1 et 1000 */
+  function unit(max,u){
+    max=Math.abs(max);
+    if(!(max>0)||!isFinite(max))return {f:1,u};
+    for(const[s,p]of PREF)if(max>=s*.9995)return {f:1/s,u:p+u};
+    return {f:1e9,u:'n'+u};
   }
-  if(!isLine())h+=section('Lecture du phénomène',select('speed','Vitesse d’affichage',[['.25','Ralenti ×0,25'],['1','Lecture normale'],['2','Lecture ×2']],state.speed)+'<p class="small-note">Deux périodes physiques se déroulent en 8 s à l’écran. Les courbes affichent le temps physique.</p>');
-  $('panel-content').innerHTML=h;
-  U.bindFields((id,v)=>{const p=state.mode==='mutual'?state.geo:state.mode==='transfer'?state.transfer:isLine()?state.line:state.ideal;p[id]=v;if(state.mode==='mutual'){state.geo.a2=Math.min(state.geo.a2,state.geo.a1);const n=$('a2-number'),r=$('a2');n.max=state.geo.a1;r.max=state.geo.a1;}changed();});
-  if($('speed'))$('speed').onchange=e=>state.speed=Number(e.target.value);
-  if($('reverse'))$('reverse').onclick=()=>{(state.mode==='mutual'?state.geo:state.transfer).sign*=-1;changed();};
-  if($('same-section'))$('same-section').onclick=()=>{state.geo.a2=state.geo.a1;changed();};
-  if($('usage'))$('usage').onchange=e=>{state.usage=e.target.value;changed();panel();};
-  if($('secondary'))$('secondary').onchange=e=>{(state.mode==='transfer'?state.transfer:state.ideal).open=e.target.value==='open';changed();};
-  if($('low-voltage'))$('low-voltage').onclick=()=>{state.line.m=1;changed();};if($('high-voltage'))$('high-voltage').onclick=()=>{state.line.m=10;changed();};
-  if($('preset'))$('preset').onchange=e=>{const v=e.target.value;if(state.mode==='transfer'){Object.assign(state.transfer,{L1:50,L2:20,R1:2,r2:.5,Rload:10,U:6,f:50,k:.75,open:false,sign:1});if(v==='open')state.transfer.open=true;if(v==='weak')state.transfer.k=.15;if(v==='zero')state.transfer.k=0;if(v==='charge'){const I=2/Math.SQRT2,base={L1:10e-6,L2:10e-6,R1:.5,r2:.5,Rload:4.5,U:1,f:140000,k:.5,open:false,sign:1},z=P.coupledPhasors(base);Object.assign(state.transfer,{L1:.01,L2:.01,R1:.5,r2:.5,Rload:4.5,f:140000,k:.5,U:Number((I/P.abs(z.I1)).toFixed(3))});}}else{Object.assign(state.ideal,{N1:600,N2:v==='higher'?1200:v==='isolation'?600:300,U:12,f:50,Rload:12,open:v==='open'});}changed();panel();};
- }
- function mutualDrawing(m,p){const svg=$('scene'),{w,h}=U.dimensions(svg),c=palette(),stack=w<650,split=stack?w:w*.56,b1={x:0,y:0,w:split,h:stack?h*.49:h},b2={x:stack?0:split,y:stack?h*.49:0,w:stack?w:w-split,h:stack?h*.51:h},proj=document.body.classList.contains('projection'),f=proj?25:21;
-  const compact=b1.h<240,cx=b1.w*.52,len=b1.w*.66*state.zoom,r1=compact?Math.min(Math.max(12,(b1.h-112)/2),len/p.l*p.a1):Math.min(Math.max(8,(b1.h-150)/2),len/p.l*p.a1),r2=r1*p.a2/p.a1,cy=compact?65+r1:Math.max(72+r1,b1.h*.46),x1=cx-len/2,x2=cx+len/2;
-  let s=text(13,24,'Surface commune aux deux bobines',c.muted,proj?18:15)+U.coil(x1,x2,cy,r1,c.current,Math.min(24,5+Math.round(p.N1/80)),c.field,.025)+U.coil(x1,x2,cy,r2,c.flux,Math.min(23,4+Math.round(p.N2/80)),c.flux,.09);
-  if(Math.abs(m.B)>1e-12)s+=arrow(m.B>0?[x1+12,cy]:[x2-12,cy],m.B>0?[x2-12,cy]:[x1+12,cy],c.field,2.4);
-  s+=halo(cx,Math.max(54,cy-r1-18),'B₁ = '+q(m.B,'T'),c.field,f,'middle');s+=text(cx,compact?b1.h-14:cy+r1+26,'a₁ = '+q(p.a1,'m')+' · a₂ = '+q(p.a2,'m'),c.ink,b1.w<400?17:20,'middle');
-  if(!compact)s+=text(cx,b1.h-12,'S₂ ≤ S₁ · M = ± μ₀ N₁N₂ S₂/l',c.muted,b1.w<400?16:19,'middle');
-  const nx=x2+18;s+=arrow(p.sign>0?[nx,cy+15]:[nx+32,cy+15],p.sign>0?[nx+32,cy+15]:[nx,cy+15],c.normal,2,true)+halo(nx+16,cy+43,'n₂',c.normal,18,'middle');
-  s+=`<g data-drag="a2" role="button" tabindex="0" aria-label="Modifier le rayon intérieur ; flèches haut et bas"><circle cx="${cx}" cy="${cy-r2}" r="17" fill="transparent"/><circle cx="${cx}" cy="${cy-r2}" r="6" fill="${c.surface}" stroke="${c.flux}" stroke-width="2"/></g>`;
-  s+=line(stack?[12,b2.y]:[split,12],stack?[w-12,b2.y]:[split,h-12],c.line,1);
-  const y=b2.y,xx=b2.x+24; s+=text(xx,y+24,'Mesure à vide · i₂ = 0',c.muted,proj?18:16);
-  const yl=y+61,yb=y+b2.h-53,xl=b2.x+55,xc=b2.x+b2.w*.44,xr=b2.x+b2.w*.68,ym=(yl+yb)/2;
-  s+=line([xl,yl],[xc,yl],c.ink)+line([xl,yl],[xl,yb],c.ink)+line([xl,yb],[xc,yb],c.ink)+line([xc,yl],[xc,ym-23],c.ink)+line([xc,ym+23],[xc,yb],c.ink)+U.source(xl,ym,16,c.ink,'')+arrow([xl,ym+10],[xl,ym-10],c.current,2)+U.inductor(xc,ym,46,c.current);
-  s+=U.resistor([xl+10,yl],[xc-10,yl],c.ink)+text((xl+xc)/2,yl-14,'Rₘ',c.ink,18,'middle');
-  s+=U.inductor(xr,ym,46,c.flux)+line([xr,ym-23],[xr,yl],c.ink)+line([xr,yl],[xr+32,yl],c.ink)+line([xr,ym+23],[xr,yb],c.ink)+line([xr,yb],[xr+32,yb],c.ink);
-  s+=`<circle cx="${xr+32}" cy="${yl}" r="3" fill="${c.surface}" stroke="${c.ink}"/><circle cx="${xr+32}" cy="${yb}" r="3" fill="${c.surface}" stroke="${c.ink}"/>`;
-  s+=arrow([xr+49,p.sign>0?yb:yl],[xr+49,p.sign>0?yl:yb],c.emf,2)+text(xr+58,ym+6,'u₂',c.emf,f);
-  s+=text(b2.x+b2.w/2,y+b2.h-14,'|M| mesuré = '+q(m.measuredM,'H'),c.flux,f,'middle');svg.innerHTML=s;
- }
- function coupledDrawing(m,p,ideal=false){const svg=$('scene'),{w,h}=U.dimensions(svg),c=palette(),proj=document.body.classList.contains('projection'),small=w<650,f=proj?25:small?19:22;
-  // Deux mailles équilibrées, avec une colonne réservée au couplage magnétique.
-  const span=Math.min(w-24,1040),left=(w-span)/2,mid=left+span*.51,gap=span*(ideal?.16:.16+.12*(1-p.k));
-  const x1=mid-gap/2,x2=mid+gap/2,xl=left+26,xr=left+span-58,ax=(xl+x1)/2,bx=(x2+xr)/2;
-  const block=Math.min(h,320),top=(h-block)/2,yt=top+62,yb=top+block-40,ym=(yt+yb)/2,H=yb-yt;
-  const len=Math.min(H-12,Math.max(36,H*.74)*state.zoom),ct=ym-len/2,cb=ym+len/2,cw=U.clamp(14*state.zoom,11,18),sr=U.clamp(H*.20,16,23),vf=Math.min(24,H*.34);
-  function winding(x,color,direction,turns){let d=`M${x},${ct}`;for(let j=0;j<turns;j++)d+=`c${direction*cw*1.35},0 ${direction*cw*1.35},${len/turns} 0,${len/turns}`;return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.6"/>`;}
-  let s='<g id="power-circuit" stroke-linejoin="round" stroke-linecap="round">';
-  s+=text(ax,top+24,'Primaire',c.current,proj?20:17,'middle')+text(bx,top+24,'Secondaire',c.flux,proj?20:17,'middle');
-  s+=text(mid,top+24,ideal?(small?'Φ commun':'Flux commun'):'k = '+fmt(p.k,2),c.muted,small?14:proj?18:16,'middle');
-  // Source et pertes du primaire. Les résistances sont des composants distincts.
-  s+=line([xl,yt],[xl,yb],c.ink,2.1)+line([xl,yb],[x1,yb],c.ink,2.1)+line([x1,yt],[x1,ct],c.ink,2.1)+line([x1,cb],[x1,yb],c.ink,2.1)+U.source(xl,ym,sr,c.ink,'~');
-  if(ideal)s+=line([xl,yt],[x1,yt],c.ink,2.1)+text(x1-8,yt-13,'N₁ = '+fmt(p.N1,0),c.current,small?17:20,'end');
-  else s+=U.resistor([xl,yt],[x1,yt],c.ink)+text(ax,yt-13,'R₁',c.ink,18,'middle');
-  s+=winding(x1,c.current,1,ideal?U.clamp(Math.round(p.N1/200),3,8):5);
-  // Secondaire : résistance du bobinage en haut, charge sur la branche droite.
-  s+=line([x2,yt],[x2,ct],c.ink,2.1)+line([x2,cb],[x2,yb],c.ink,2.1)+line([x2,yb],[xr,yb],c.ink,2.1);
-  if(ideal)s+=line([x2,yt],[xr,yt],c.ink,2.1)+text(x2+8,yt-13,'N₂ = '+fmt(p.N2,0),c.flux,small?17:20);
-  else s+=U.resistor([x2,yt],[xr,yt],c.ink)+text(bx,yt-13,'r₂',c.ink,18,'middle');
-  s+=winding(x2,c.flux,-1,ideal?U.clamp(Math.round(p.N2/200),3,8):5);
-  if(p.open){s+=line([xr,yt],[xr,ym-15],c.ink,2.1)+line([xr,ym+15],[xr,yb],c.ink,2.1);for(const y of [ym-15,ym+15])s+=`<circle cx="${xr}" cy="${y}" r="3.3" fill="${c.surface}" stroke="${c.ink}" stroke-width="1.7"/>`;s+=text(xr+11,ym+6,'À vide',c.muted,small?15:17);}
-  else s+=line([xr,yt],[xr,yb],c.ink,2.1)+U.resistor([xr,ym-Math.min(28,H*.35)],[xr,ym+Math.min(28,H*.35)],c.flux,true)+text(xr+12,ym+6,'R_ch',c.flux,small?17:19);
-  // Les points sont attachés aux enroulements physiques, même si le repère 2 change.
-  s+=`<circle cx="${x1-7}" cy="${ct-5}" r="3.1" fill="${c.ink}"/><circle cx="${x2+7}" cy="${ct-5}" r="3.1" fill="${c.ink}"/>`;
-  if(ideal){s+=line([mid-4,ct-3],[mid-4,cb+3],c.muted,2.6)+line([mid+4,ct-3],[mid+4,cb+3],c.muted,2.6)+text(mid,yb+26,'Φ',c.field,f,'middle');}
-  else{if(p.k>0){const a=x1+cw+3,b=x2-cw-3,v=Math.min(28,H*.32);s+=`<path d="M${a},${ym-8} C${mid-12},${ym-v} ${mid+12},${ym-v} ${b},${ym-8} M${b},${ym+8} C${mid+12},${ym+v} ${mid-12},${ym+v} ${a},${ym+8}" fill="none" stroke="${c.field}" stroke-width="1.7" opacity="${.2+.6*p.k}"/>`;}s+=text(mid,ym+7,'M',c.normal,f,'middle')+text(x1,yb+26,'L₁',c.current,f,'middle')+text(x2,yb+26,'L₂',c.flux,f,'middle');}
-  // Flèches de référence fixes : les valeurs algébriques sont dans les grands afficheurs.
-  s+='<g id="reference-i1">'+arrow([ax+18,yb],[ax-18,yb],c.current,2.8)+text(ax,yb+26,'i₁',c.current,f,'middle')+'</g>';
-  const rightward=!ideal&&p.sign>0;
-  s+='<g id="reference-i2" data-direction="'+(rightward?'right':'left')+'">'+arrow([bx+(rightward?-16:16),yb],[bx+(rightward?16:-16),yb],c.flux,2.8)+text(bx,yb+26,'i₂',c.flux,f,'middle')+'</g>';
-  s+=arrow([xl+29,ym+vf],[xl+29,ym-vf],c.field,2)+text(xl+37,ym+6,ideal?'v₁':'uₑ',c.field,f);
-  const voltageUp=ideal||p.sign>0;
-  s+='<g id="reference-u2" data-direction="'+(voltageUp?'up':'down')+'">'+arrow([xr-27,ym+(voltageUp?vf:-vf)],[xr-27,ym+(voltageUp?-vf:vf)],c.emf,2)+text(xr-35,ym+6,ideal?'v₂':'u₂',c.emf,f,'end')+'</g>';
-  if(!ideal)s+=`<g data-drag="k" role="button" tabindex="0" aria-label="Glisser la bobine 2 pour régler le couplage ; flèches gauche et droite"><title>Glisser la bobine 2 pour régler k</title><rect x="${x2-cw-8}" y="${ct-8}" width="${2*cw+16}" height="${len+16}" fill="transparent"/></g>`;
-  s+='</g>';svg.innerHTML=s;
- }
- function transformerDrawing(m,p){const svg=$('scene'),{w,h}=U.dimensions(svg),c=palette(),small=w<650,proj=document.body.classList.contains('projection'),dark=document.documentElement.dataset.theme==='dark';
-  const f=small?18:proj?25:22,sideReserve=small?198:290;
-  const baseH=Math.min(h-88,280),baseW=Math.min(w-sideReserve,small?210:460,baseH*2.2),W=baseW*state.zoom,H=baseH*state.zoom;
-  const cx=w/2-(small?12:0),cy=56+(h-88)/2,x=cx-W/2,y=cy-H/2;
-  const d=Math.min(42,Math.max(15,H*.17),W*.22),holeW=W-2*d,holeH=H-2*d;
-  const leg1=x+d/2,leg2=x+W-d/2,rx=d/2+9,coilH=Math.max(30,holeH*.78),ct=cy-coilH/2,cb=cy+coilH/2;
-  const end1=leg1-rx,end2=leg2+rx,xg=Math.max(26,end1-(small?48:115)),xl=Math.min(w-53,end2+(small?48:115));
-  const sr=Math.min(21,Math.max(13,coilH*.20)),head=small?15:proj?21:18;
-  const face=dark?'#5a6b78':'#c6d0d8',shine=dark?'#788994':'#e2e8ed',edge=dark?'#293c4b':'#758593',seam=dark?'#a0adb5':'#526574';
-  const copper=dark?'#df9a56':'#c37b36',copperShadow=dark?'#78401d':'#815024',copperLight=dark?'#f5c28b':'#f7ca91';
-  function rounded(X,Y,A,B,r){return `M${X+r},${Y} H${X+A-r} Q${X+A},${Y} ${X+A},${Y+r} V${Y+B-r} Q${X+A},${Y+B} ${X+A-r},${Y+B} H${X+r} Q${X},${Y+B} ${X},${Y+B-r} V${Y+r} Q${X},${Y} ${X+r},${Y}Z`;}
-  const core=rounded(x,y,W,H,6)+' '+rounded(x+d,y+d,holeW,holeH,4);
-  function helix(X,N,side){const turns=U.clamp(Math.round(N/150),3,10),samples=turns*64,ry=Math.min(5,coilH/turns*.23),front=[],back=[];let points=[],wasFront=null,previous=null;
-   for(let j=0;j<=samples;j++){const t=j/samples,theta=(side<0?Math.PI:0)+(side<0?1:-1)*2*Math.PI*turns*t,pt=[X+rx*Math.cos(theta),ct+coilH*t+ry*Math.sin(theta)],isFront=Math.sin(theta)>=0;
-    if(wasFront!==null&&isFront!==wasFront){(wasFront?front:back).push(points);points=previous?[previous]:[];}points.push(pt);previous=pt;wasFront=isFront;
-   }if(points.length)(wasFront?front:back).push(points);
-   const paths=(parts,isFront)=>parts.map(a=>`<path d="${U.path(a)}" fill="none" stroke="${copperShadow}" stroke-width="${isFront?5:3.8}" stroke-linecap="round"/>`+(isFront?`<path d="${U.path(a)}" fill="none" stroke="${copper}" stroke-width="3.4" stroke-linecap="round"/><path d="${U.path(a)}" fill="none" stroke="${copperLight}" stroke-width=".9" opacity=".65" stroke-linecap="round"/>`:'')).join('');
-   return {back:paths(back,false),front:paths(front,true),turns};
+  function vt(a,x,y,l,sub,o={}){
+    const S=a.S,k=a.k,size=o.size??16,fs=size*k,wl=.62*fs,w=wl+(sub?.42*fs*String(sub).length:0);
+    const x0=o.anchor==='middle'?x-w/2:o.anchor==='end'?x-w:x;
+    return S.text(x0,y,S.v(l,sub),{size,c:o.c,weight:o.weight})+S.arrow(x0+.08*fs,y-.68*fs,x0+wl+.05*fs,y-.68*fs,{c:o.c,w:.9,head:4.2*k});
   }
-  const a=helix(leg1,p.N1,-1),b=helix(leg2,p.N2,1),amplitude=Math.SQRT2*p.U/(m.w*p.N1),on=Math.abs(m.phi)>amplitude*1e-8,sgn=on?Math.sign(m.phi):0;
-  const strength=on?.25+.75*Math.sqrt(U.clamp(Math.abs(m.B)/.4,0,1)):0;
-  let s=`<defs><linearGradient id="core-metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${shine}"/><stop offset=".38" stop-color="${face}"/><stop offset=".72" stop-color="${shine}"/><stop offset="1" stop-color="${face}"/></linearGradient><clipPath id="core-field-clip"><path d="${core}" clip-rule="evenodd"/></clipPath><clipPath id="transformer-view-clip"><rect x="0" y="55" width="${w}" height="${h-82}"/></clipPath></defs>`;
-  s+='<g id="physical-transformer" stroke-linejoin="round" stroke-linecap="round">';
-  s+='<g clip-path="url(#transformer-view-clip)">';
-  // Les parties arrière des spires sont occultées par le fer ; les parties avant le recouvrent.
-  s+=a.back+b.back;
-  for(let j=4;j>=1;j--)s+=`<path d="${core}" fill-rule="evenodd" transform="translate(${j*1.5},${-j*1.15})" fill="${edge}" stroke="${seam}" stroke-width=".7"/>`;
-  s+=`<path id="iron-core" d="${core}" fill-rule="evenodd" fill="url(#core-metal)" stroke="${edge}" stroke-width="1.4"/>`;
-  const loops=[];for(const k of [.26,.50,.74]){const v=d*k;loops.push(rounded(x+v,y+v,W-2*v,H-2*v,4));}
-  s+='<g id="core-flux-guides" clip-path="url(#core-field-clip)" opacity=".25">'+loops.map(path=>`<path d="${path}" fill="none" stroke="${seam}" stroke-width="1" stroke-dasharray="2 5"/>`).join('')+'</g>';
-  s+=`<g id="core-flux" clip-path="url(#core-field-clip)" data-sign="${sgn}" data-direction="${sgn>0?'counterclockwise':sgn<0?'clockwise':'none'}" opacity="${strength}">`;
-  loops.forEach(path=>s+=`<path class="core-field-line" d="${path}" fill="none" stroke="${c.field}" stroke-width="1.8"/>`);
-  if(on){const v=d/2,arr=(A,B)=>arrow(sgn>0?A:B,sgn>0?B:A,c.field,2.1),u=Math.min(14,H*.13);s+=arr([cx+16,y+v],[cx-16,y+v])+arr([x+v,cy-u],[x+v,cy+u])+arr([cx-16,y+H-v],[cx+16,y+H-v])+arr([x+W-v,cy+u],[x+W-v,cy-u]);}
-  s+='</g>';
-  // Repères colorés des deux enroulements ; le fil représenté reste du cuivre.
-  s+=rect(x-4,ct-5,d+8,coilH+10,c.current,'none',4,'opacity=".08"')+rect(x+W-d-4,ct-5,d+8,coilH+10,c.flux,'none',4,'opacity=".08"');
-  s+=a.front+b.front;
-  // Les connexions restent extérieures au noyau, dans deux circuits séparés.
-  s+=line([end1,ct],[xg,ct],c.ink,2)+line([xg,ct],[xg,cb],c.ink,2)+line([xg,cb],[end1,cb],c.ink,2)+U.source(xg,cy,sr,c.ink,'~');
-  s+=line([end2,ct],[xl,ct],c.ink,2)+line([end2,cb],[xl,cb],c.ink,2);
-  if(p.open){s+=line([xl,ct],[xl,cy-14],c.ink,2)+line([xl,cy+14],[xl,cb],c.ink,2);for(const yy of [cy-14,cy+14])s+=`<circle cx="${xl}" cy="${yy}" r="3" fill="${c.surface}" stroke="${c.ink}" stroke-width="1.6"/>`;s+=text(xl+11,cy+6,'À vide',c.muted,small?14:17);}
-  else{s+=line([xl,ct],[xl,cb],c.ink,2)+U.resistor([xl,cy-Math.min(25,coilH*.35)],[xl,cy+Math.min(25,coilH*.35)],c.flux,true)+text(xl+11,cy+6,'R_ch',c.flux,small?16:19);}
-  const ax=(xg+end1)/2,bx=(xl+end2)/2,refLen=small?12:19;
-  s+='<g id="reference-i1">'+arrow([ax+refLen,cb],[ax-refLen,cb],c.current,2.6)+text(ax,cb+23,'i₁',c.current,f,'middle')+'</g>';
-  s+='<g id="reference-i2" data-direction="left">'+arrow([bx+refLen,cb],[bx-refLen,cb],c.flux,2.6)+text(bx,cb+23,'i₂',c.flux,f,'middle')+'</g>';
-  const vf=Math.min(20,coilH*.34);
-  if(small){const tight1=end1-xg<40,tight2=xl-end2<40;s+=arrow([xg+(tight1?12:19),cy+vf],[xg+(tight1?12:19),cy-vf],c.field,1.9)+(tight1?'':text(xg,cb+23,'v₁',c.field,f,'middle'));s+='<g id="reference-u2" data-direction="up">'+arrow([xl-(tight2?12:19),cy+vf],[xl-(tight2?12:19),cy-vf],c.emf,1.9)+(tight2?'':text(xl-15,cy+6,'v₂',c.emf,f,'end'))+'</g>';}
-  else{s+=arrow([xg+30,cy+vf],[xg+30,cy-vf],c.field,2)+text(xg+39,cy+6,'v₁',c.field,f);s+='<g id="reference-u2" data-direction="up">'+arrow([xl-29,cy+vf],[xl-29,cy-vf],c.emf,2)+text(xl-38,cy+6,'v₂',c.emf,f,'end')+'</g>';}
-  s+=`<circle cx="${end1-6}" cy="${ct-6}" r="3.2" fill="${c.current}"/><circle cx="${end2+6}" cy="${ct-6}" r="3.2" fill="${c.flux}"/></g>`;
-  // Le nom du matériau et les valeurs occupent des zones sans ligne de champ.
-  const materialY=Math.max(22,y-34),turnsY=Math.max(45,y-12);
-  s+=text(cx,materialY,'Noyau de fer',c.ink,small?15:proj?20:18,'middle');if(y>materialY+12)s+=line([cx,materialY+6],[cx,y-5],c.muted,1.2);
-  s+=text(leg1,turnsY,'N₁ = '+fmt(p.N1,0),c.current,head,'middle')+text(leg2,turnsY,'N₂ = '+fmt(p.N2,0),c.flux,head,'middle');
-  const inside=holeW>Math.max(160,f*7)&&holeH>58;
-  if(inside){s+=text(cx,cy+(holeH>85?-5:7),'Φ = '+q(m.phi,'Wb'),c.field,f,'middle');if(holeH>85)s+=text(cx,cy+23,'B = '+q(m.B,'T'),c.muted,small?15:proj?19:17,'middle');}
-  else s+=text(cx,cy+8,'Φ',c.field,f+4,'middle')+text(cx,y+H+24,'Φ = '+q(m.phi,'Wb'),c.field,f,'middle');
-  s+='</g>';svg.innerHTML=s;
- }
- function lineDrawing(m,p){const svg=$('scene'),{w,h}=U.dimensions(svg),c=palette(),small=w<650,fs=document.body.classList.contains('projection')?27:22;
-  let s=text(15,25,'Deux transformateurs idéaux · ligne résistive',c.muted,small?14:17);
-  const items=[['Injection',q(p.P,'W'),'U = '+q(p.U,'V'),c.current],['Transport',q(m.Uline,'V'),'I = '+q(m.I,'A'),c.field],['Réception',q(m.Preceived,'W'),'U = '+q(m.Ureceived,'V'),c.flux]];
-  items.forEach((a,j)=>{const bw=small?w-56:(w-100)/3,bh=small?(h-82)/3:Math.min(130,h-100),x=small?28:25+j*(bw+25),y=small?42+j*(bh+13):(h-bh)/2;
-   s+=rect(x,y,bw,bh,c.soft,c.line,8)+text(x+15,y+25,a[0],c.muted,17)+text(x+15,y+58,a[1],a[3],fs)+text(x+15,y+bh-15,a[2],c.ink,small?17:19);
-   if(j<2)s+=small?arrow([w/2,y+bh+2],[w/2,y+bh+12],c.muted,2):arrow([x+bw+2,y+bh/2],[x+bw+23,y+bh/2],c.muted,2);
-  });s+=text(w/2,h-8,'Pertes Joule = '+q(m.Pjoule,'W')+' · m = '+fmt(p.m,1),c.emf,small?18:fs,'middle');svg.innerHTML=s;
- }
- function buildPlots(){const p=params(),c=palette(),T=duration(),n=400;const points=fn=>Array.from({length:n+1},(_,j)=>{const x=isLine()?1+19*j/n:T*j/n;return [x,fn(x)];});const series=(key,name,color,fn,dash=false)=>({key,name,color,points:points(fn),dash});let a,b;
-  if(state.mode==='mutual'){a={unit:'V',series:[series('uR','u_R',c.current,t=>P.coaxial(p,t).uR)]};b={unit:'V',series:[series('u2','u₂',c.emf,t=>P.coaxial(p,t).u2)]};}
-  else if(state.mode==='transfer'){const z=P.coupledPhasors(p);a={unit:'A',series:[series('i1','i₁',c.current,t=>P.coupled(p,t,z).i1),series('i2','i₂',c.flux,t=>P.coupled(p,t,z).i2,true)]};b={unit:'V',series:[series('u','uₑ',c.field,t=>P.coupled(p,t,z).u),series('u2','u₂',c.emf,t=>P.coupled(p,t,z).u2,true)]};}
-  else if(isLine()){a={unit:'A',series:[series('I','I ligne',c.current,m=>P.line(p,m).I)]};b={unit:'W',series:[series('Pjoule','P Joule',c.emf,m=>P.line(p,m).Pjoule)]};}
-  else{a={unit:'V',series:[series('v1','v₁',c.current,t=>P.transformer(p,t).v1),series('v2','v₂',c.flux,t=>P.transformer(p,t).v2,true)]};b={unit:'A',series:[series('i1','i₁',c.current,t=>P.transformer(p,t).i1),series('i2','i₂',c.flux,t=>P.transformer(p,t).i2,true)]};}
-  const axis=isLine()?{min:1,max:20,xLabel:'m',xUnit:''}:{min:0,max:T};plot=U.charts($('plots'),[{...axis,...a},{...axis,...b}]);dirty=false;
- }
- function render(){document.body.classList.toggle('physical-transformer',state.mode==='transformer'&&!isLine());const p=params(),m=sample();document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('equivalent').hidden=true;
-  if(state.mode==='mutual'){mutualDrawing(m,p);U.metric(0,'Inductance mutuelle M',m.M,'H','Signe lié aux orientations','normal');U.metric(1,'Couplage k',m.k,'','k = a₂/a₁','field');U.metric(2,'Tension à vide u₂',m.u2,'V','Amplitude '+q(m.U2,'V'),'emf');U.metric(3,'Courant secondaire',0,'A','Oscilloscope idéal : i₂ = 0','flux');$('scene-state').textContent=p.sign>0?'Repères concordants : M > 0.':'Repère 2 inversé : M < 0.';$('scene-hint').textContent='Poignée verte : rayon intérieur';$('plot-formula').innerHTML='u₂ = M di₁/dt = (M/R<sub>m</sub>) du<sub>R</sub>/dt';$('plot-note').textContent='Même fréquence · quadrature des tensions';$('scene-kicker').textContent='Flux mutuel, signe et mesure à vide';}
-  else if(state.mode==='transfer'){coupledDrawing(m,p);U.metric(0,'Courant primaire i₁',m.i1,'A','I₁ efficace = '+q(P.abs(m.I1),'A'),'current');U.metric(1,'Courant secondaire i₂',m.i2,'A','I₂ efficace = '+q(P.abs(m.I2),'A'),'flux');U.metric(2,'Puissance à la charge',m.Pload,'W','Valeur moyenne','field');U.metric(3,'Rendement',100*m.eta,'%','Pcharge / Pgénérateur','normal');$('scene-state').textContent='M = '+q(m.M,'H')+' · '+(p.open?'Secondaire à vide.':'La charge agit sur le primaire.');$('scene-hint').textContent='Flèches : références des valeurs algébriques';$('plot-formula').innerHTML='Φ₁ = L₁i₁ + Mi₂ &nbsp; · &nbsp; Φ₂ = L₂i₂ + Mi₁';$('plot-note').textContent='Continu : primaire · tirets : secondaire';$('scene-kicker').textContent='Deux circuits couplés en régime sinusoïdal';}
-  else if(isLine()){lineDrawing(m,p);U.metric(0,'Tension de transport',m.Uline,'V','Valeur efficace','field');U.metric(1,'Courant dans la ligne',m.I,'A','P injectée = '+q(p.P,'W'),'current');U.metric(2,'Pertes Joule',m.Pjoule,'W','Rligne I²','emf');U.metric(3,'Puissance reçue',m.Preceived,'W','Rendement '+fmt(100*m.eta,2)+' %','flux');$('scene-state').textContent='Même puissance injectée · tension multipliée par '+fmt(p.m,1)+'.';$('scene-hint').textContent='Les pertes sont divisées par m²';$('plot-formula').innerHTML='I = P/(mU) &nbsp; · &nbsp; P<sub>J</sub> = R<sub>ligne</sub>P²/(mU)²';$('plot-note').textContent='Glisser pour choisir le facteur m';$('scene-kicker').textContent='Pourquoi transporter à haute tension ?';}
-  else{transformerDrawing(m,p);U.metric(0,'Tension primaire v₁',m.v1,'V','U₁ efficace = '+q(m.V1,'V'),'current');U.metric(1,'Tension secondaire v₂',m.v2,'V','U₂ efficace = '+q(m.V2,'V'),'flux');U.metric(2,'Courant secondaire i₂',m.i2,'A','I₂ efficace = '+q(m.I2,'A'),'flux');U.metric(3,'Puissance transmise',m.P,'W','Valeur moyenne · aucune perte','field');$('scene-state').textContent='m = N₂/N₁ = '+fmt(m.m,2)+' · '+(m.m>1?'élévateur':m.m<1?'abaisseur':'isolement');$('scene-hint').textContent='B = '+q(m.B,'T')+' · i₂ sort par le point';$('plot-formula').innerHTML='v₂ = m v₁ &nbsp; · &nbsp; i₁ = m i₂ &nbsp; · &nbsp; v₁i₁ = v₂i₂';$('plot-note').textContent='Continu : primaire · tirets : secondaire';$('scene-kicker').textContent='Transformateur idéal · conventions du cours';}
-  if(dirty)buildPlots();plot.update(isLine()?p.m:state.q*duration(),m);updateTransport();
- }
- function scrub(x){pause();if(isLine()){state.line.m=Number((1+19*x).toFixed(2));U.syncFields(state.line);}else state.q=x;render();}
- function play(){if(isLine())return;if(state.q>=1)state.q=0;state.playing=!state.playing;last=performance.now();updateTransport();}
- function balance(){const m=sample(),p=params();let formula,rows,note;
-  if(state.mode==='mutual'){formula='M = ± μ₀ N₁N₂ S₂/l &nbsp; ; &nbsp; k = |M|/√(L₁L₂)';rows=[['Inductance propre L₁',q(m.L1,'H')],['Inductance propre L₂',q(m.L2,'H')],['Inductance mutuelle M',q(m.M,'H')],['Coefficient de couplage k',fmt(m.k,3)],['Amplitude de uR',q(m.UR,'V')],['Amplitude de u₂',q(m.U2,'V')],['|M| déduit des amplitudes',q(p.Rm*m.U2/(m.w*m.UR),'H')]];note='À vide, i₂ = 0 : aucune puissance n’est fournie au secondaire. Une tension est présente car le flux extérieur varie. Inverser le repère 2 inverse M et u₂, sans changer le champ physique ni l’amplitude mesurée.';}
-  else if(state.mode==='transfer'){formula='E<sub>mag</sub> = ½L₁i₁² + ½L₂i₂² + Mi₁i₂';rows=[['Puissance instantanée du générateur',q(m.Psource,'W')],['Puissance instantanée à la charge',q(m.PloadInstant,'W')],['Pertes instantanées des bobinages',q(m.PlossInstant,'W')],['Variation de l’énergie magnétique',q(m.dEnergy,'W')],['Terme propre ½L₁i₁²',q(m.E1,'J')],['Terme propre ½L₂i₂²',q(m.E2,'J')],['Terme mutuel Mi₁i₂',q(m.Em,'J')],['Énergie magnétique totale',q(m.energy,'J')],['Puissance moyenne fournie',q(m.Pin,'W')],['Puissance moyenne à la charge',q(m.Pload,'W')],['Pertes moyennes des bobinages',q(m.Ploss,'W')]];note='Bilan instantané : Pgéné = Pcharge + Ppertes + dEmag/dt. En régime permanent périodique, la variation moyenne d’énergie est nulle. Le terme mutuel peut être négatif ; l’énergie totale reste positive. Les deux courants sont référencés entrants dans les bobines pour le repère initial. Le modèle reste à k ≤ 0,99 ; le transformateur idéal utilise une description distincte.';}
-  else if(isLine()){formula='P<sub>injectée</sub> = P<sub>reçue</sub> + R<sub>ligne</sub>I²';rows=[['Puissance injectée dans la ligne',q(p.P,'W')],['Tension de transport efficace',q(m.Uline,'V')],['Courant efficace',q(m.I,'A')],['Pertes Joule',q(m.Pjoule,'W')],['Puissance reçue',q(m.Preceived,'W')],['Tension après abaissement',q(m.Ureceived,'V')],['Rendement de la liaison',fmt(100*m.eta,2)+' %']];note='Le modèle comprend deux transformateurs sans perte et une ligne purement résistive. À puissance injectée fixée et facteur de puissance égal à 1, multiplier la tension par m divise les pertes par m². La charge est adaptée à chaque essai ; la tension de réception tient compte de la chute ohmique.';}
-  else{formula='v₂/v₁ = N₂/N₁ = m &nbsp; ; &nbsp; i₁ = m i₂';rows=[['Rapport de transformation m',fmt(m.m,3)],['Tension primaire efficace',q(m.V1,'V')],['Tension secondaire efficace',q(m.V2,'V')],['Courant primaire efficace',q(m.I1,'A')],['Courant secondaire efficace',q(m.I2,'A')],['Puissance reçue instantanée v₁i₁',q(m.p1,'W')],['Puissance fournie instantanée v₂i₂',q(m.p2,'W')],['Flux commun par spire',q(m.phi,'Wb')]];note='Le primaire est en convention récepteur, le secondaire en convention générateur : i₂ sort de la borne pointée. Courant magnétisant et stockage d’énergie du noyau sont négligés dans ce modèle idéal. À vide, les courants sont nuls tandis que la tension secondaire reste présente. La loi de Faraday donne v₁ = N₁ dΦ/dt ; la tension et le flux sont en quadrature.';}
-  $('balance-content').innerHTML=`<div class="equation">${formula}</div><div class="balance-grid">${rows.map(([a,b])=>`<span>${a}</span><strong>${b}</strong>`).join('')}</div><p>${note}</p>`;
- }
- document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
- const svg=$('scene');svg.addEventListener('pointerdown',e=>{const t=e.target.closest('[data-drag]');if(!t)return;pause();drag={id:t.dataset.drag,x:e.clientX,y:e.clientY,value:t.dataset.drag==='k'?state.transfer.k:state.geo.a2};svg.setPointerCapture(e.pointerId);});svg.addEventListener('pointermove',e=>{if(!drag)return;if(drag.id==='k')state.transfer.k=Number(U.clamp(drag.value-(e.clientX-drag.x)*.003,0,.99).toFixed(2));else state.geo.a2=Math.round(U.clamp(drag.value-(e.clientY-drag.y)*.012,.3,state.geo.a1)*20)/20;changed();});svg.addEventListener('pointerup',()=>drag=null);svg.addEventListener('pointercancel',()=>drag=null);svg.addEventListener('keydown',e=>{const t=e.target.closest('[data-drag]');if(!t||!e.key.startsWith('Arrow'))return;e.preventDefault();const id=t.dataset.drag,sgn=e.key==='ArrowLeft'||e.key==='ArrowUp'?1:-1;if(id==='k')state.transfer.k=U.clamp(state.transfer.k+.01*sgn,0,.99);else state.geo.a2=U.clamp(state.geo.a2+.05*sgn,.3,state.geo.a1);changed();svg.querySelector(`[data-drag="${id}"]`)?.focus();});
- panel();U.setup({title:'Bobines couplées et transformateur',file:'EM4_Couplage_Transformateur',redraw(){dirty=true;render();},pause,play,reset,balance,scrub,zoom(d){state.zoom=d?U.clamp(state.zoom+d,.65,1.25):1;render();},chart(e){if(!plot)return;const x=plot.xAt(e);scrub(isLine()?(x-1)/19:x/duration());},caption:()=>isLine()?'Transport · P injectée = '+q(params().P,'W')+' · m = '+fmt(state.line.m,1):(state.mode==='mutual'?'Mesure à vide':state.mode==='transfer'?'Circuits couplés en RSF':'Transformateur idéal')+' · t = '+q(state.q*duration(),'s')});
- function tick(now){if(state.playing){const dt=Math.min(.08,(now-last)/1000);state.q=Math.min(1,state.q+dt*state.speed/8);if(state.q>=1)state.playing=false;render();}last=now;requestAnimationFrame(tick);}requestAnimationFrame(tick);
- window.EM4App={state,params,sample,sampleAt,setMode,render,balance,advance(seconds){state.q=U.clamp(state.q+seconds/duration(),0,1);render();}};
+  function split(P,n,gap){
+    const k=1,g=gap??6;const h=(P.h-g*(n-1))/n;
+    return Array.from({length:n},(_,i)=>({x:0,y:i*(h+g),w:P.w,h}));
+  }
+  /**
+   * o = {box, T, xmin, t, futur, n, ylab, xlab, sym:true (axe symétrique),
+   *      series:[{f|vals, c, w, dash, all(true : toujours entière), ghost}],
+   *      tangent:{f, df, c}, area:{f, c}, id, marks:[{x, label, c}]}
+   */
+  function tplot(a,o){
+    const S=a.S,k=a.k,C=a.C,n=o.n||300,x0=o.xmin??0,T=o.T,box=o.box;
+    const xs=Array.from({length:n+1},(_,i)=>x0+(T-x0)*i/n);
+    const ser=o.series.map(s=>({...s,v:s.vals||xs.map(s.f)}));
+    let lo=Infinity,hi=-Infinity;
+    for(const s of ser)for(const v of s.v)if(isFinite(v)){if(v<lo)lo=v;if(v>hi)hi=v}
+    if(o.zero!==false){lo=Math.min(lo,0);hi=Math.max(hi,0)}
+    if(o.sym){const m=Math.max(Math.abs(lo),Math.abs(hi));lo=-m;hi=m}
+    if(!(hi-lo>1e-30)){hi=1;lo=o.sym?-1:0}
+    const pd=(hi-lo)*.08;
+    const G=S.graph({x:box.x+4*k,y:box.y+2*k,w:box.w-8*k,h:box.h-4*k,xmin:x0,xmax:T,ymin:lo-(lo<0?pd:0),ymax:hi+pd,
+      xlab:o.xlab??`${S.v('t')} (s)`,ylab:o.ylab,padL:o.padL});
+    const tc=Math.max(x0,Math.min(T,o.t));
+    const id=(o.id||'g')+Math.round(box.y);
+    let s=G.svg+S.clip(id,G);
+    const upto=(v,all)=>{const pts=[];for(let i=0;i<=n;i++){if(!all&&xs[i]>tc+1e-12)break;pts.push([xs[i],v[i]])}return pts};
+    if(o.area){
+      const pts=[];for(let i=0;i<=n;i++){if(xs[i]>tc+1e-12)break;pts.push([xs[i],o.area.f(xs[i])])}
+      pts.push([tc,o.area.f(tc)]);
+      if(pts.length>1){const d='M'+G.X(pts[0][0]).toFixed(1)+','+G.Y(0).toFixed(1)+pts.map(p=>'L'+G.X(p[0]).toFixed(1)+','+G.Y(p[1]).toFixed(1)).join('')+'L'+G.X(tc).toFixed(1)+','+G.Y(0).toFixed(1)+'Z';
+        s+=`<g clip-path="url(#${id})"><path d="${d}" fill="${o.area.c}" fill-opacity=".22" stroke="none"/></g>`}
+    }
+    for(const sr of ser){
+      const all=o.futur||sr.all, pts=upto(sr.v,all);
+      if(!all&&!sr.vals&&sr.f)pts.push([tc,sr.f(tc)]);
+      s+=S.curve(pts,G,{c:sr.c,w:sr.w??2.4,dash:sr.dash?`${6*k} ${4*k}`:undefined,op:sr.op});
+    }
+    if(o.tangent){
+      const y0=o.tangent.f(tc),sl=o.tangent.df(tc),L=(T-x0)*.16;
+      s+=S.curve([[tc-L,y0-sl*L],[tc+L,y0+sl*L]],G,{c:o.tangent.c||C.pred,w:1.8,dash:`${5*k} ${3*k}`});
+    }
+    for(const m of o.marks||[]){if(m.x<x0||m.x>T)continue;
+      s+=S.line(G.X(m.x),G.y0,G.X(m.x),G.y0+G.h,{c:m.c||C.pred,w:1.2,dash:`${2*k} ${3*k}`})+S.text(G.X(m.x)+4*k,G.y0+4*k,m.label,{base:'top',size:13,c:m.c||C.pred})}
+    s+=S.line(G.X(tc),G.y0,G.X(tc),G.y0+G.h,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`});
+    for(const sr of ser)if(sr.f&&!sr.ghost){const y=sr.f(tc);if(isFinite(y))s+=S.circle(G.X(tc),G.Y(y),3.8*k,{fill:sr.c})}
+    return {svg:s,G};
+  }
+  return Object.freeze({unit,vt,split,tplot});
 })();
-</script></body></html>
+
+
+/* Symboles de circuit (normes françaises usuelles), en pixels d'écran.
+   Chaque fonction renvoie une chaîne SVG ; a = application AnimKit. */
+globalThis.EMC=(()=>{
+  const W=(a,x1,y1,x2,y2,c)=>a.S.line(x1,y1,x2,y2,{c:c||a.C.ink,w:2});
+  /** résistance (rectangle) entre deux points alignés */
+  function res(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,len=Math.min(o.len??34*k,L*.8),wd=o.wd??11*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(s,t)=>[mx+ux*s-uy*t,my+uy*s+ux*t];const q=[p(-len/2,-wd/2),p(len/2,-wd/2),p(len/2,wd/2),p(-len/2,wd/2)];
+    return W(a,x1,y1,mx-ux*len/2,my-uy*len/2,c)+W(a,mx+ux*len/2,my+uy*len/2,x2,y2,c)+S.poly(q,{c,w:2,fill:a.C.card,close:true});}
+  /** bobine idéale (quatre demi-boucles) */
+  function ind(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,len=Math.min(o.len??44*k,L*.85),n=4,r=len/(2*n),mx=(x1+x2)/2,my=(y1+y2)/2,sd=o.side??1;
+    const s0=[mx-ux*len/2,my-uy*len/2];let d=`M${s0[0].toFixed(1)},${s0[1].toFixed(1)}`;
+    for(let j=0;j<n;j++){const e=[s0[0]+ux*2*r*(j+1),s0[1]+uy*2*r*(j+1)];d+=`A${r.toFixed(1)},${r.toFixed(1)} 0 0 ${sd>0?1:0} ${e[0].toFixed(1)},${e[1].toFixed(1)}`;}
+    return W(a,x1,y1,s0[0],s0[1],c)+W(a,mx+ux*len/2,my+uy*len/2,x2,y2,c)+S.path(d,{c,w:2.4});}
+  /** générateur : cercle ; type '=' (continu) ou '~' ; flèche de f.é.m. facultative */
+  function gen(a,x,y,o={}){const S=a.S,k=a.k,c=o.c||a.C.ink,r=o.r??15*k;let s=S.circle(x,y,r,{fill:a.C.card,c,w:2});
+    if(o.type==='~')s+=S.path(`M${x-r*.55},${y}c${r*.18},${-r*.5} ${r*.37},${-r*.5} ${r*.55},0s${r*.37},${r*.5} ${r*.55},0`,{c,w:1.8});
+    else s+=S.line(x-r*.5,y-r*.22,x+r*.5,y-r*.22,{c,w:1.8})+S.line(x-r*.3,y+r*.22,x+r*.3,y+r*.22,{c,w:1.8});
+    return s;}
+  /** interrupteur entre (x1,y) et (x2,y) : ouvert ou fermé */
+  function sw(a,x1,y,x2,open,o={}){const S=a.S,k=a.k,c=o.c||a.C.ink;return S.circle(x1,y,2.6*k,{fill:c})+S.circle(x2,y,2.6*k,{fill:c})+S.line(x1,y,open?x2-2*k:x2,open?y-(x2-x1)*.55:y,{c,w:2.2});}
+  /** diode passante dans le sens (x1,y1)→(x2,y2) */
+  function diode(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,s=10*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(t,n)=>[mx+ux*t-uy*n,my+uy*t+ux*n];
+    return W(a,x1,y1,mx-ux*s,my-uy*s,c)+W(a,mx+ux*s,my+uy*s,x2,y2,c)+S.poly([p(-s,-s),p(-s,s),p(s,0)],{c,w:2,fill:a.C.card,close:true})+S.line(...p(s,-s),...p(s,s),{c,w:2.2});}
+  /** condensateur */
+  function cap(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,g=4*k,hw=11*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(t,n)=>[mx+ux*t-uy*n,my+uy*t+ux*n];
+    return W(a,x1,y1,...p(-g,0),c)+W(a,...p(g,0),x2,y2,c)+S.line(...p(-g,-hw),...p(-g,hw),{c,w:2.4})+S.line(...p(g,-hw),...p(g,hw),{c,w:2.4});}
+  /** flèche de tension (à côté d'un dipôle), de (x1,y1) vers (x2,y2) */
+  function volt(a,x1,y1,x2,y2,lab,o={}){const S=a.S,k=a.k,c=o.c||a.C.F;return S.arrow(x1,y1,x2,y2,{c,w:1.8})+S.text((x1+x2)/2+(o.dx??10*k),(y1+y2)/2+(o.dy??0),lab,{size:15,c,anchor:o.anchor||'start'});}
+  /** flèche de courant (référence) sur un fil */
+  function cur(a,x,y,dir,lab,o={}){const S=a.S,k=a.k,c=o.c||a.C.E,L=o.len??18*k,d=dir==='l'?[-1,0]:dir==='r'?[1,0]:dir==='u'?[0,-1]:[0,1];
+    return S.arrow(x-d[0]*L/2,y-d[1]*L/2,x+d[0]*L/2,y+d[1]*L/2,{c,w:2.4,head:9*k})+S.text(x+(o.lx??(d[1]?12*k:0)),y+(o.ly??(d[0]?-14*k:0)),lab,{size:15,c,anchor:d[1]?'start':'middle'});}
+  /** solénoïde vu de profil : spires échantillonnées, bord supérieur et inférieur */
+  function solenoid(a,x1,x2,cy,r,o={}){const S=a.S,k=a.k,c=o.c||a.C.E,n=o.turns??14;let s='';
+    if(o.fill)s+=S.rect(x1,cy-r,x2-x1,2*r,{fill:o.fill,fop:o.fop??.2});
+    for(let j=0;j<n;j++){const x=x1+(x2-x1)*(j+.5)/n,dx=(x2-x1)/n*.35;
+      s+=S.path(`M${(x-dx).toFixed(1)},${(cy+r).toFixed(1)}L${(x+dx).toFixed(1)},${(cy-r).toFixed(1)}`,{c,w:2.2,op:.9})+S.path(`M${(x+dx).toFixed(1)},${(cy-r).toFixed(1)}L${(x+dx*2.8).toFixed(1)},${(cy+r).toFixed(1)}`,{c,w:1.2,op:.35});}
+    return s;}
+  return Object.freeze({res,ind,gen,sw,diode,cap,volt,cur,solenoid,W});
+})();
+
+// @titre Bobines couplées et transformateur · EM4 · MPSI
+// @sortie ../EM4_Couplage_Transformateur/EM4_Couplage_Transformateur.html
+// @inclure EM4_physique.js
+// @inclure EM4_commun.js
+// @description Inductance mutuelle de deux bobines coaxiales et sa mesure ; circuits couplés en régime sinusoïdal forcé (Fresnel, accord, influence de k) ; transformateur idéal ; transport à haute tension.
+'use strict';
+/* =====================================================================
+   EM4 · Bobines couplées et transformateur (4 onglets)
+   Physique : EM4Physics (EM4_physique.js, ex-physique.js), équations inchangées :
+   M = ± μ₀ N₁ N₂ S₂ / l (bobine 2 intérieure), u₂ = M di₁/dt à vide ;
+   RSF : (R₁ + jωL₁) I₁ + jωM I₂ = U, jωM I₁ + Z₂ I₂ = 0 (courants entrant par les bornes pointées) ;
+   transformateur idéal : v₂ = m v₁, i₁ = m i₂ (i₂ sort par le point) ; ligne : P_J = R I², I = P/(mU).
+   Ajouts du lot 9 (calculés ici, sans toucher au modèle) :
+   - diagramme de Fresnel de la maille primaire U = R₁I₁ + jωL₁I₁ + jωMI₂ (vecteurs tournants) ;
+   - condensateur d'accord C₂ = 1/(L₂ω₀²) en série au secondaire : Z₂ = r₂ + R_ch + j(L₂ω − 1/(C₂ω)) ;
+   - puissance reçue et rendement en fonction de k, puissance reçue en fonction de f ;
+   - transformateur avec courant magnétisant (inductance primaire L₁ finie) : i₁ = m i₂ + i_µ.
+   ===================================================================== */
+const M=AnimKit.M,P=EM4Physics,K=EMK,E=EMC,MU0=P.mu0,TAU=2*Math.PI;
+const mv=s=>M.v(s);
+const st={drag:null,geo:null,gr:null};
+const sub=(a,s,b)=>a.S.v(s,b);
+
+/* ---------- modèles ---------- */
+const mutP=a=>({N1:a.p.N1,N2:a.p.N2,l:a.p.lc/100,a1:a.p.a1/100,a2:Math.min(a.p.a2,a.p.a1)/100,I:a.p.Im,f:a.p.fm,Rm:a.p.Rm,sign:a.p.sgM});
+const trP=a=>({L1:a.p.L1*1e-3,L2:a.p.L2*1e-3,R1:a.p.R1,r2:a.p.r2,Rload:a.p.Rl,U:a.p.U,f:a.p.ft,k:a.p.kc,open:a.p.open2,sign:a.p.sgT,cap:a.p.cap,f0:a.p.ft});
+const idP=a=>({N1:a.p.Np,N2:a.p.Ns,U:a.p.Ut,f:a.p.fi,Rload:a.p.Rt,open:a.p.open3,S:4e-4,mag:a.p.mag,Lm:a.p.Lm});
+const lnP=a=>({m:a.p.mL,P:a.p.PL*1000,Rline:a.p.RL,U:1000});
+/** phaseurs des circuits couplés, avec condensateur d'accord facultatif au secondaire */
+function phasors(p,f=p.f){
+  const w=TAU*f,Mu=p.sign*p.k*Math.sqrt(p.L1*p.L2),C2=p.cap?1/(p.L2*(TAU*p.f0)**2):Infinity;
+  const Z1=P.C(p.R1,w*p.L1),Z2=P.C(p.r2+p.Rload,w*p.L2-(p.cap?1/(C2*w):0)),U=P.C(p.U);
+  const refl=p.open?P.C():P.div(P.C(w*w*Mu*Mu),Z2),Zin=P.add(Z1,refl),I1=P.div(U,Zin);
+  const I2=p.open?P.C():P.div(P.mul(P.C(0,-w*Mu),I1),Z2),V2=p.open?P.mul(P.C(0,w*Mu),I1):P.scale(I2,-p.Rload);
+  const Pin=p.U*I1.re,Pload=p.Rload*P.abs(I2)**2,Ploss=p.R1*P.abs(I1)**2+p.r2*P.abs(I2)**2;
+  return {w,M:Mu,C2,I1,I2,V2,U,Zin,Pin,Pload,Ploss,eta:Pin>1e-20?Pload/Pin:0};
+}
+function coupled(p,t,z){const re=c=>P.real(c,z.w,t);return {...z,i1:re(z.I1),i2:re(z.I2),u:re(z.U),u2:re(z.V2)};}
+function ideal(p,t){const m=P.transformer(p,t),w=TAU*p.f,imu=p.mag?Math.SQRT2*p.U/(w*p.Lm)*Math.sin(w*t):0;return {...m,imu,i1:m.i1+imu,Imu:p.mag?p.U/(w*p.Lm):0};}
+const per=a=>a.tab===0?1/a.p.fm:a.tab===1?1/a.p.ft:1/a.p.fi;
+const TT=a=>2*per(a);
+
+const A=AnimKit.app({
+  code:'EM4',partie:'BleuMarine',chapitre:'EM4 Induction de Neumann',
+  titre:'Bobines couplées et transformateur',sousTitre:'Inductance mutuelle, transfert de puissance, transformateur',
+  fichier:'Couplage_Transformateur',
+  onglets:['Mesurer M','Transmettre la puissance','Transformateur idéal','Transport à haute tension'],
+  temps:a=>a.tab<3,pas:.05,
+  curseur:{max:a=>TT(a),get:a=>a.t,set:(a,v)=>{a.t=v}},
+  panneaux:[{id:'scene',poids:2.5,ratioTel:.95},{id:'graphe',poids:1.5,ratioTel:.95}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Sections égales (k = 1)',onglets:[0],valeurs:{a2:2,a1:2}},
+      {label:'Bobine intérieure fine',onglets:[0],valeurs:{a1:2,a2:1}},
+      {label:'Deux circuits couplés',onglets:[1],valeurs:{L1:50,L2:20,R1:2,r2:.5,Rl:10,U:6,ft:50,kc:.75,open2:false,sgT:1,cap:false}},
+      {label:'Secondaire ouvert',onglets:[1],valeurs:{open2:true}},
+      {label:'Faible couplage',onglets:[1],valeurs:{kc:.15,open2:false}},
+      {label:'Couplage nul',onglets:[1],valeurs:{kc:0,open2:false}},
+      {label:'Recharge du cours',titre:'L₁ = L₂ = 10 µH, k = 0.50, f = 140 kHz, R₂ = 5.0 Ω, amplitude de i₁ = 2.0 A',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,sgT:1,cap:false},action:a=>{const z=phasors({...trP(a),U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
+      {label:'Recharge avec accord',titre:'Même station, condensateur C₂ d\'accord au secondaire',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,sgT:1,cap:true},action:a=>{const z=phasors({...trP(a),cap:false,U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
+      {label:'Abaisseur : m = ½',onglets:[2],valeurs:{Np:600,Ns:300,open3:false}},
+      {label:'Élévateur : m = 2',onglets:[2],valeurs:{Np:600,Ns:1200,open3:false}},
+      {label:'Isolement : m = 1',onglets:[2],valeurs:{Np:600,Ns:600,open3:false}},
+      {label:'À vide',onglets:[2],valeurs:{open3:true}},
+      {label:'Sans élévation',onglets:[3],valeurs:{mL:1}},
+      {label:'Tension × 10',onglets:[3],valeurs:{mL:10}}],items:[]},
+    {titre:'Deux bobines longues coaxiales',onglets:[0],items:[
+      {id:'N1',label:`Spires ${M.v('N','1')} (extérieure)`,min:100,max:2000,step:50,value:800,unit:''},
+      {id:'N2',label:`Spires ${M.v('N','2')} (intérieure)`,min:100,max:2000,step:50,value:400,unit:''},
+      {id:'lc',label:`Longueur commune ${mv('l')}`,min:10,max:40,step:.5,value:20,unit:'cm'},
+      {id:'a1',label:`Rayon ${M.v('a','1')}`,min:.5,max:2.5,step:.05,value:2,unit:'cm'},
+      {id:'a2',label:`Rayon ${M.v('a','2')} ≤ ${M.v('a','1')}`,min:.3,max:2.5,step:.05,value:1,unit:'cm'},
+      {type:'boutons',items:[{label:'Inverser le repère 2',action:a=>{a.set('sgM',-a.p.sgM)}}]}]},
+    {titre:'Mesure à vide',onglets:[0],items:[
+      {id:'Im',label:`Amplitude de ${M.v('i','1')}`,min:.01,max:.5,step:.01,value:.15,unit:'A'},
+      {id:'fm',label:`Fréquence ${mv('f')}`,min:20,max:10000,step:10,value:2000,unit:'Hz'},
+      {id:'Rm',label:`Résistance de mesure ${M.v('R','m')}`,min:10,max:200,step:10,value:100,unit:'Ω'},
+      {type:'note',html:'Oscilloscope idéal : <i class="m">i</i><sub>2</sub> = 0. Voie 1 : <i class="m">u</i><sub>R</sub> = <i class="m">R</i><sub>m</sub><i class="m">i</i><sub>1</sub> ; voie 2 : <i class="m">u</i><sub>2</sub> = <i class="m">M</i> d<i class="m">i</i><sub>1</sub>/d<i class="m">t</i>.'}]},
+    {titre:'Couplage et alimentation',onglets:[1],items:[
+      {id:'kc',label:`Coefficient de couplage ${mv('k')}`,min:0,max:.99,step:.01,value:.75,unit:''},
+      {id:'U',label:`Tension efficace ${mv('U')}`,min:.1,max:24,step:.001,value:6,unit:'V',dec:2},
+      {id:'ft',label:`Fréquence ${mv('f')}`,min:10,max:200000,step:10,value:50,unit:'Hz'},
+      {id:'L1',label:`Inductance ${M.v('L','1')}`,min:.005,max:100,step:.005,value:50,unit:'mH'},
+      {id:'L2',label:`Inductance ${M.v('L','2')}`,min:.005,max:100,step:.005,value:20,unit:'mH'},
+      {type:'boutons',items:[{label:'Inverser le repère 2',action:a=>{a.set('sgT',-a.p.sgT)}}]},
+      {type:'note',html:'Glisser la bobine 2 règle <i class="m">k</i> (position schématique, sans loi de distance).'}]},
+    {titre:'Secondaire',onglets:[1],items:[
+      {id:'open2',type:'check',label:'Secondaire ouvert',value:false},
+      {id:'Rl',label:`Charge ${M.v('R','ch')}`,min:.1,max:100,step:.1,value:10,unit:'Ω'},
+      {id:'R1',label:`Résistance primaire ${M.v('R','1')}`,min:.1,max:20,step:.1,value:2,unit:'Ω'},
+      {id:'r2',label:`Résistance du bobinage ${M.v('r','2')}`,min:.1,max:20,step:.1,value:.5,unit:'Ω'},
+      {id:'cap',type:'check',label:`Condensateur d'accord ${M.v('C','2')} (résonance à la fréquence choisie)`,value:false},
+      {type:'note',html:'<i class="m">R</i><sub>2</sub> = <i class="m">r</i><sub>2</sub> + <i class="m">R</i><sub>ch</sub> est la résistance totale du cours. Le générateur impose la tension : le secondaire agit sur <i class="m">i</i><sub>1</sub>.'}]},
+    {titre:'Enroulements et source',onglets:[2],items:[
+      {id:'Np',label:`Spires primaires ${M.v('N','1')}`,min:200,max:2000,step:50,value:600,unit:''},
+      {id:'Ns',label:`Spires secondaires ${M.v('N','2')}`,min:100,max:3000,step:50,value:300,unit:''},
+      {id:'Ut',label:`Tension efficace ${M.v('V','1')}`,min:1,max:24,step:.5,value:12,unit:'V'},
+      {id:'fi',label:`Fréquence ${mv('f')}`,min:20,max:1000,step:10,value:50,unit:'Hz'},
+      {id:'Rt',label:`Charge ${M.v('R','ch')}`,min:1,max:100,step:1,value:12,unit:'Ω',si:a=>!a.p.open3},
+      {id:'open3',type:'check',label:'Secondaire à vide',value:false},
+      {id:'mag',type:'check',label:'Courant magnétisant (inductance primaire finie)',value:false},
+      {id:'Lm',label:`Inductance primaire ${M.v('L','1')}`,min:.2,max:5,step:.1,value:1.2,unit:'H',si:a=>a.p.mag},
+      {type:'note',html:a=>a.p.mag?'Hors du modèle idéal : <i class="m">i</i><sub>1</sub> = <i class="m">m i</i><sub>2</sub> + <i class="m">i</i><sub>µ</sub>, avec <i class="m">i</i><sub>µ</sub> en quadrature retard sur <i class="m">v</i><sub>1</sub> ; sa puissance moyenne est nulle.':'Transformateur idéal : pertes, fuites et courant magnétisant négligés ; section du noyau 4 cm².'}]},
+    {titre:'Ligne de transport',onglets:[3],items:[
+      {id:'mL',label:`Facteur d'élévation ${mv('m')}`,min:1,max:20,step:.1,value:10,unit:''},
+      {id:'PL',label:'Puissance injectée',min:10,max:500,step:10,value:100,unit:'kW'},
+      {id:'RL',label:`Résistance de la ligne ${M.v('R','ligne')}`,min:.1,max:2,step:.1,value:1,unit:'Ω'},
+      {type:'note',html:'Deux transformateurs idéaux encadrent une ligne résistive (aller et retour). Tension de départ 1 kV, facteur de puissance 1. Glisser sur le graphe pour choisir <i class="m">m</i>.'}]},
+    {titre:'Graphe',onglets:[1],items:[
+      {id:'gt',type:'select',label:'Représentation',options:[['temps','Signaux en fonction du temps'],['fresnel','Diagramme de Fresnel (maille primaire)'],['pk','Puissance reçue et rendement selon k'],['pf','Puissance reçue selon f (accord)']],value:'temps'}]},
+    {titre:'Affichage',onglets:[0,1,2],items:[
+      {id:'futur',type:'check',label:'Montrer toute l\'évolution (prévision)',value:false}]}
+  ],
+  aide:{
+    voit:'Onglet 1 : deux bobines longues coaxiales, la bobine 2 à l\'intérieur de la bobine 1, et le montage de mesure de M. Onglet 2 : deux circuits couplés en régime sinusoïdal forcé (station de recharge sans fil). Onglet 3 : un transformateur à noyau de fer fermé. Onglet 4 : une ligne de transport encadrée par deux transformateurs.',
+    faire:'<ul><li>Glisser le point de la bobine intérieure (onglet 1) ou la bobine 2 (onglet 2).</li><li>Inverser le repère 2 : <i class="m">M</i> change de signe, les grandeurs physiques non.</li><li>Onglet 2 : afficher le diagramme de Fresnel, la puissance reçue selon <i class="m">k</i>, ou l\'effet d\'un condensateur d\'accord.</li><li>Onglet 3 : passer à vide, ajouter le courant magnétisant.</li><li>Onglet 4 : glisser sur le graphe pour faire varier <i class="m">m</i>.</li></ul>',
+    modele:'Bobines longues sans effet de bord. Circuits couplés en régime sinusoïdal permanent (phaseurs efficaces), flèches de courant et de tension : références algébriques du cours, les valeurs instantanées sont dans les mesures. Transformateur idéal : pertes, fuites et saturation négligées ; l\'option « courant magnétisant » ajoute seulement une inductance primaire finie. Ligne : purement résistive, puissance injectée fixée. Les signaux rapides sont fortement ralentis à l\'écran ; l\'axe des graphes donne le temps physique.',
+    cours:'EM4 : inductance mutuelle et théorème de Neumann, bobines en influence totale (<i class="m">M</i>² = <i class="m">L</i><sub>1</sub><i class="m">L</i><sub>2</sub><i class="m">S</i><sub>2</sub>/<i class="m">S</i><sub>1</sub>), mesure de <i class="m">M</i> (TD), circuits couplés et étude en RSF, énergie ½<i class="m">L</i><sub>1</sub><i class="m">i</i><sub>1</sub>² + ½<i class="m">L</i><sub>2</sub><i class="m">i</i><sub>2</sub>² + <i class="m">M i</i><sub>1</sub><i class="m">i</i><sub>2</sub>, application « station de recharge sans fil », transformateur idéal (<i class="m">v</i><sub>2</sub>/<i class="m">v</i><sub>1</sub> = <i class="m">N</i><sub>2</sub>/<i class="m">N</i><sub>1</sub> = <i class="m">m</i>, <i class="m">i</i><sub>2</sub>/<i class="m">i</i><sub>1</sub> = 1/<i class="m">m</i>), transport sous haute tension. Lien OS5 : résonance.'
+  },
+  init(a){a.p.sgM=1;a.p.sgT=1;},
+  change(a,id){if(['futur','gt'].includes(id))return;if(id==='a1'&&a.p.a2>a.p.a1)a.set('a2',a.p.a1,{silent:true});if(id==='a2'&&a.p.a2>a.p.a1)a.set('a2',a.p.a1,{silent:true});a.t=0;},
+  onglet(a){a.play(false);a.t=0;},
+  reset(a){a.t=0;},
+  step(a,dt){const T=TT(a);a.t+=dt*per(a)/4;if(a.t>=T)a.t-=T;},
+  draw(a){[drawMut,drawTr,drawId,drawLine][a.tab](a);}
+});
+
+/* ---------- outils ---------- */
+function solenoidSide(a,x1,x2,cy,r,c,n){return E.solenoid(a,x1,x2,cy,r,{c,turns:n});}
+function g2(a,b,o1,o2){const s1=K.tplot(a,{...o1,box:b[0]}),s2=K.tplot(a,{...o2,box:b[1]});return s1.svg+s2.svg;}
+function timeAxis(a){const T=TT(a),u=K.unit(T,'s');return {T,u,tf:u.f};}
+
+/* ---------- 1. mesurer M ---------- */
+function drawMut(a){
+  const Pn=a.panels.scene,S=a.S,C=a.C,k=a.k,f=a.fmt,w=Pn.w,h=Pn.h,p=mutP(a),m=P.coaxial(p,a.t),stack=a.narrow;
+  const zl=stack?{x:0,y:0,w,h:h*.5}:{x:0,y:0,w:w*.55,h},zr=stack?{x:0,y:h*.5,w,h:h*.5}:{x:w*.55,y:0,w:w*.45,h};
+  let s='';
+  const Lpx=(zl.w-70*k)*p.l/.40,cx=zl.x+zl.w*.5,cy=zl.y+zl.h*.48,R1=Math.min(zl.h*.27,70*k)*p.a1/.025,R2=R1*p.a2/p.a1,x1=cx-Lpx/2,x2=cx+Lpx/2;
+  s+=S.rect(x1,cy-R2,Lpx,2*R2,{fill:C.v,fop:.12});
+  s+=solenoidSide(a,x1,x2,cy,R1,C.E,Math.max(6,Math.min(30,Math.round(p.N1/60))))+solenoidSide(a,x1+6*k,x2-6*k,cy,R2,C.v,Math.max(5,Math.min(26,Math.round(p.N2/60))));
+  const Bamp=MU0*p.N1*p.I/p.l,Lb=.8*Lpx*m.B/Bamp;
+  if(Math.abs(Lb)>3){s+=S.arrow(cx-Lb/2,cy,cx+Lb/2,cy,{c:C.B,w:3.2})+K.vt(a,cx+Math.abs(Lb)/2+6*k,cy-10*k,'B','1',{c:C.B,size:15});}
+  const nx=x2+16*k,sg=p.sign;s+=S.arrow(nx+(sg>0?0:30*k),cy,nx+(sg>0?30*k:0),cy,{c:C.ink,w:2})+K.vt(a,nx+8*k,cy+22*k,'n','2',{c:C.ink,size:15});
+  s+=S.circle(cx,cy-R2,7*k,{fill:C.card,c:C.v,w:2.4});st.geo={a2:[cx,cy-R2]};
+  s+=S.text(zl.x+10*k,10*k,`Bobines coaxiales · ${S.v('l')} = ${f.sig(p.l*100,3)} cm`,{base:'top',size:14,c:C.ink});
+  s+=S.text(cx,Math.min(zl.y+zl.h-14*k,cy+R1+28*k),`${S.v('M')} = ± ${S.r('μ₀')} ${sub(a,'N','1')}${sub(a,'N','2')}${sub(a,'S','2')} / ${S.v('l')}`,{anchor:'middle',size:14,c:C.ink2});
+  // montage de mesure
+  const xl=zr.x+44*k,xc=zr.x+zr.w*.46,xr=zr.x+zr.w*.74,yt=zr.y+56*k,yb=Math.max(yt+70*k,zr.y+zr.h-54*k),ym=(yt+yb)/2;
+  s+=S.text(zr.x+12*k,zr.y+10*k,'Mesure à vide',{base:'top',size:14,c:C.ink});
+  s+=E.W(a,xl,yt,xl,ym-15*k)+E.W(a,xl,ym+15*k,xl,yb)+E.gen(a,xl,ym,{type:'~'})+E.res(a,xl,yt,xc,yt)+S.text((xl+xc)/2,yt-18*k,sub(a,'R','m'),{anchor:'middle',size:15});
+  s+=E.ind(a,xc,yt,xc,yb,{c:C.E})+S.text(xc-14*k,ym,'1',{anchor:'end',size:14,c:C.E})+E.W(a,xl,yb,xc,yb);
+  s+=E.ind(a,xr,yt,xr,yb,{c:C.v})+S.text(xr-14*k,ym,'2',{anchor:'end',size:14,c:C.v})+E.W(a,xr,yt,xr+26*k,yt)+E.W(a,xr,yb,xr+26*k,yb)+S.circle(xr+26*k,yt,3*k,{fill:C.card,c:C.ink})+S.circle(xr+26*k,yb,3*k,{fill:C.card,c:C.ink});
+  s+=E.volt(a,xr+40*k,sg>0?yb-6*k:yt+6*k,xr+40*k,sg>0?yt+6*k:yb-6*k,sub(a,'u','2'),{c:C.F,dx:6*k});
+  s+=E.volt(a,xc-4*k,yt+16*k,xl+14*k,yt+16*k,sub(a,'u','R'),{c:C.E,dx:-20*k,dy:14*k});
+  s+=E.cur(a,(xl+xc)/2,yb,'l',sub(a,'i','1'),{c:C.E,ly:16*k});
+  s+=S.text((zr.x+zr.x+zr.w)/2,zr.y+zr.h-16*k,`voie 1 : ${sub(a,'u','R')} · voie 2 : ${sub(a,'u','2')} (${sub(a,'i','2')} = 0)`,{anchor:'middle',size:13,c:C.ink2});
+  if(!stack)s+=S.line(zr.x,12*k,zr.x,h-12*k,{c:C.rule,w:1});
+  a.svg('scene',s);
+  const {T,u,tf}=timeAxis(a),b=K.split(a.panels.graphe,2,6*k);
+  a.svg('graphe',g2(a,b,{T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'u','R')} (V)`,series:[{f:x=>P.coaxial(p,x/tf).uR,c:C.E}],id:'m1'},
+    {T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'u','2')} (${K.unit(m.U2,'V').u})`,series:[{f:x=>P.coaxial(p,x/tf).u2*K.unit(m.U2,'V').f,c:C.F}],id:'m2'}));
+  const uM=K.unit(m.M,'H');
+  a.metrics([{label:`Inductance mutuelle ${mv('M')}`,value:f.sig(m.M*uM.f,3),unit:uM.u,hint:p.sign>0?'repères concordants':'repère 2 inversé'},
+    {label:`Couplage ${mv('k')} = ${M.frac('|'+mv('M')+'|',M.sqrt(M.v('L','1')+M.v('L','2')))}`,value:f.sig(m.k,3),unit:'',hint:`= ${M.v('a','2')}/${M.v('a','1')}`},
+    {label:`Amplitude de ${M.v('u','2')}`,value:f.sig(m.U2*K.unit(m.U2,'V').f,3),unit:K.unit(m.U2,'V').u,hint:`${M.v('u','R')} : ${f.sig(m.UR,3)} V`},
+    {label:`|${mv('M')}| = ${M.frac(M.v('R','m')+M.v('U','2'),'2π'+mv('f')+M.v('U','R'))}`,value:f.sig(p.Rm*m.U2/(m.w*m.UR)*uM.f,3),unit:uM.u,hint:'déduit des amplitudes'}]);
+  a.insight(Math.abs(m.k-1)<1e-6?'Sections égales : influence totale, <i class="m">M</i> = √(<i class="m">L</i><sub>1</sub><i class="m">L</i><sub>2</sub>) et <i class="m">k</i> = 1.':'À vide, aucun courant ne circule dans la bobine 2, mais une tension apparaît : le flux de <b>B</b><sub>1</sub> varie. <i class="m">u</i><sub>2</sub> est en quadrature avec <i class="m">u</i><sub>R</sub>.',['À vide, aucun courant ne circule dans la bobine 2, mais une tension apparaît : le flux de <b>B</b><sub>1</sub> varie. <i class="m">u</i><sub>2</sub> est en quadrature avec <i class="m">u</i><sub>R</sub>.']);
+  a.clock(`${mv('t')} = ${f.sig(a.t*u.f,3)} ${u.u}`);
+  a.legend([{c:C.E,label:'bobine 1, courant'},{c:C.v,label:'bobine 2'},{c:C.B,label:'champ de la bobine 1'},{c:C.F,label:'tension u₂'}]);
+}
+
+/* ---------- 2. circuits couplés ---------- */
+function drawTr(a){
+  const Pn=a.panels.scene,S=a.S,C=a.C,k=a.k,f=a.fmt,w=Pn.w,h=Pn.h,p=trP(a),z=phasors(p),m=coupled(p,a.t,z);
+  const span=Math.min(w-20*k,980*k),left=(w-span)/2,mid=left+span*.5,gap=span*(.12+.16*(1-p.k));
+  const x1=mid-gap/2,x2=mid+gap/2,xl=left+30*k,xr=left+span-56*k,yt=Math.max(80*k,h*.5-Math.min(h*.3,110*k)),yb=h*.5+Math.min(h*.32,120*k),ym=(yt+yb)/2;
+  let s=S.text(10*k,10*k,`Régime sinusoïdal forcé · ${S.v('f')} = ${f.sig(p.f,3)} Hz · ${S.v('M')} = ${f.sig(z.M*K.unit(z.M||1,'H').f,3)} ${K.unit(z.M||1,'H').u}`,{base:'top',size:14,c:C.ink});
+  s+=S.text((xl+x1)/2,yt-34*k,'Primaire',{anchor:'middle',size:14,c:C.E})+S.text((x2+xr)/2,yt-34*k,'Secondaire',{anchor:'middle',size:14,c:C.v});
+  s+=E.W(a,xl,yt,xl,ym-15*k)+E.W(a,xl,ym+15*k,xl,yb)+E.gen(a,xl,ym,{type:'~'})+E.volt(a,xl+28*k,ym+20*k,xl+28*k,ym-20*k,sub(a,'u','e'),{c:C.B,dx:6*k});
+  s+=E.res(a,xl,yt,x1,yt)+S.text((xl+x1)/2,yt-16*k,sub(a,'R','1'),{anchor:'middle',size:15})+E.ind(a,x1,yt,x1,yb,{c:C.E,side:-1,len:(yb-yt)*.6})+E.W(a,xl,yb,x1,yb);
+  s+=S.text(x1-12*k,yb+18*k,sub(a,'L','1'),{anchor:'end',size:15,c:C.E});
+  // secondaire : r₂, (C₂), charge
+  const xc=(x2+xr)/2;
+  s+=E.ind(a,x2,yt,x2,yb,{c:C.v,side:1,len:(yb-yt)*.6})+S.text(x2+12*k,yb+18*k,sub(a,'L','2'),{size:15,c:C.v});
+  if(p.cap){s+=E.res(a,x2,yt,xc,yt,{len:28*k})+E.cap(a,xc,yt,xr,yt)+S.text(x2+(xc-x2)/2,yt-16*k,sub(a,'r','2'),{anchor:'middle',size:15})+S.text((xc+xr)/2,yt-18*k,sub(a,'C','2'),{anchor:'middle',size:15,c:C.cInk});}
+  else s+=E.res(a,x2,yt,xr,yt)+S.text(xc,yt-16*k,sub(a,'r','2'),{anchor:'middle',size:15});
+  s+=E.W(a,x2,yb,xr,yb);
+  if(p.open){s+=E.W(a,xr,yt,xr,ym-16*k)+E.W(a,xr,ym+16*k,xr,yb)+S.circle(xr,ym-16*k,3*k,{fill:C.card,c:C.ink})+S.circle(xr,ym+16*k,3*k,{fill:C.card,c:C.ink})+S.text(xr+10*k,ym,'à vide',{size:13,c:C.ink2});}
+  else s+=E.res(a,xr,yt,xr,yb,{c:C.v})+S.text(xr+12*k,ym+24*k,sub(a,'R','ch'),{size:15,c:C.v});
+  s+=E.volt(a,xr-26*k,p.sign>0?ym+20*k:ym-20*k,xr-26*k,p.sign>0?ym-20*k:ym+20*k,sub(a,'u','2'),{c:C.F,dx:-10*k,anchor:'end'});
+  // points et couplage
+  s+=S.circle(x1+10*k,yt+(yb-yt)*.18,3.2*k,{fill:C.ink})+S.circle(x2-10*k,p.sign>0?yt+(yb-yt)*.18:yb-(yb-yt)*.18,3.2*k,{fill:C.ink});
+  if(p.k>0)for(const sg of [-1,1])s+=S.path(`M${x1+14*k},${ym+sg*10*k}C${mid-10*k},${ym+sg*40*k} ${mid+10*k},${ym+sg*40*k} ${x2-14*k},${ym+sg*10*k}`,{c:C.B,w:1.4,op:.2+.7*p.k});
+  s+=S.text(mid,ym,`${S.v('k')} = ${f.fix(p.k,2)}`,{anchor:'middle',size:15,c:C.ink});
+  // références des courants
+  s+=E.cur(a,(xl+x1)/2,yb,'l',sub(a,'i','1'),{c:C.E,ly:18*k});
+  s+=E.cur(a,(x2+xr)/2,yb,p.sign>0?'r':'l',sub(a,'i','2'),{c:C.v,ly:18*k});
+  st.geo={x2,yt,yb,span};
+  a.svg('scene',s);
+  graphTr(a,p,z,m);
+  const uI=K.unit(Math.max(P.abs(z.I1),1e-9),'A'),uI2=K.unit(Math.max(P.abs(z.I2),P.abs(z.I1)*1e-3,1e-9),'A'),uP=K.unit(Math.max(z.Pload,1e-12),'W');
+  a.metrics([{label:`Courant ${M.v('i','1')}`,value:f.sig(m.i1*uI.f,3),unit:uI.u,hint:`${M.v('I','1')} efficace ${f.sig(P.abs(z.I1)*uI.f,3)} ${uI.u}`},
+    {label:`Courant ${M.v('i','2')}`,value:f.sig(m.i2*uI2.f,3),unit:uI2.u,hint:`amplitude ${f.sig(Math.SQRT2*P.abs(z.I2)*uI2.f,3)} ${uI2.u}`},
+    {label:`Puissance reçue ${M.v('P','ch')}`,value:f.sig(z.Pload*uP.f,3),unit:uP.u,hint:p.cap?`${M.v('C','2')} = ${f.sig(z.C2*K.unit(z.C2,'F').f,3)} ${K.unit(z.C2,'F').u}`:'valeur moyenne'},
+    {label:`Rendement η`,value:f.sig(100*z.eta,3),unit:'%',hint:`pertes ${f.sig(z.Ploss*uP.f,3)} ${uP.u}`}]);
+  a.insight(p.open?'Secondaire ouvert : <i class="m">i</i><sub>2</sub> = 0, aucune puissance transmise, mais une tension <i class="m">u</i><sub>2</sub> = <i class="m">M</i> d<i class="m">i</i><sub>1</sub>/d<i class="m">t</i> existe.':
+    p.k===0?'Sans couplage, les deux circuits sont indépendants : rien n\'est transmis.':
+    p.cap?'Le condensateur d\'accord compense <i class="m">L</i><sub>2</sub>ω : le courant secondaire, donc la puissance reçue, sont bien plus grands à la fréquence de résonance.':
+    'Le courant secondaire réagit sur le primaire : à tension imposée, <i class="m">i</i><sub>1</sub> dépend de la charge et de <i class="m">k</i>.',['Le condensateur d\'accord compense <i class="m">L</i><sub>2</sub>ω : le courant secondaire, donc la puissance reçue, sont bien plus grands à la fréquence de résonance.']);
+  const T=TT(a),u=K.unit(T,'s');a.clock(`${mv('t')} = ${f.sig(a.t*u.f,3)} ${u.u}`);
+  a.legend([{c:C.E,label:'primaire'},{c:C.v,label:'secondaire'},{c:C.B,label:'tension source'},{c:C.F,label:'tension de sortie'},a.p.gt==='fresnel'&&{c:C.ink2,label:'R₁I₁, jL₁ωI₁, jMωI₂'}]);
+}
+function graphTr(a,p,z,m){
+  const Pn=a.panels.graphe,S=a.S,C=a.C,k=a.k,f=a.fmt,b=K.split(Pn,2,6*k);
+  if(a.p.gt==='fresnel'){
+    const ph=z.w*a.t,rot=c=>({re:c.re*Math.cos(ph)-c.im*Math.sin(ph),im:c.re*Math.sin(ph)+c.im*Math.cos(ph)});
+    const A1=rot(P.scale(z.I1,p.R1)),A2=rot(P.mul(P.C(0,z.w*p.L1),z.I1)),A3=rot(P.mul(P.C(0,z.w*z.M),z.I2)),U=rot(z.U),I1=rot(z.I1),I2=rot(z.I2);
+    const pts=[[0,0],[A1.re,A1.im],[A1.re+A2.re,A1.im+A2.im],[U.re,U.im]];
+    const R=Math.max(...pts.map(q=>Math.hypot(...q)),Math.abs(A2.re)+Math.abs(A2.im),1e-12)*1.08,cx=Pn.w/2,cy=Pn.h/2,sc=Math.min(Pn.w,Pn.h)*.46/R;
+    const X=q=>[cx+q[0]*sc,cy-q[1]*sc];let s=S.line(cx-Pn.w*.46,cy,cx+Pn.w*.46,cy,{c:C.grid,w:1})+S.line(cx,cy-Pn.h*.46,cx,cy+Pn.h*.46,{c:C.grid,w:1});
+    s+=S.text(10*k,10*k,'Maille primaire : '+S.v('U')+' = '+sub(a,'R','1')+sub(a,'I','1')+' + j'+sub(a,'L','1')+'ω'+sub(a,'I','1')+' + j'+S.v('M')+'ω'+sub(a,'I','2'),{base:'top',size:13,c:C.ink});
+    const seg=(A,B,c,lab,w=2.6,sd=1)=>{const p1=X(A),p2=X(B),L=Math.hypot(p2[0]-p1[0],p2[1]-p1[1])||1,nx=-(p2[1]-p1[1])/L*sd,ny=(p2[0]-p1[0])/L*sd;return S.arrow(p1[0],p1[1],p2[0],p2[1],{c,w})+(lab&&L>14*k?S.text((p1[0]+p2[0])/2+nx*14*k,(p1[1]+p2[1])/2+ny*14*k,lab,{size:14,c,anchor:'middle'}):'');};
+    s+=seg(pts[0],pts[1],C.ink2,sub(a,'R','1')+sub(a,'I','1'))+seg(pts[1],pts[2],C.E,'j'+sub(a,'L','1')+'ω'+sub(a,'I','1'))+seg(pts[2],pts[3],C.v,'j'+S.v('M')+'ω'+sub(a,'I','2'))+seg(pts[0],pts[3],C.B,S.v('U'),3,-1);
+    const Imax=Math.max(P.abs(z.I1),P.abs(z.I2),1e-15),si=R*.55/Imax;
+    s+=seg([0,0],[I1.re*si,I1.im*si],C.E,sub(a,'I','1'),1.6)+seg([0,0],[I2.re*si,I2.im*si],C.v,sub(a,'I','2'),1.6);
+    s+=S.text(Pn.w-8*k,Pn.h-10*k,'vecteurs tournants · courants à une autre échelle',{anchor:'end',size:13,c:C.ink2});
+    a.svg('graphe',s);return;
+  }
+  if(a.p.gt==='pk'){
+    const ks=Array.from({length:100},(_,j)=>j/100),zz=ks.map(kk=>phasors({...p,k:kk})),uP=K.unit(Math.max(...zz.map(q=>q.Pload),1e-12),'W');
+    a.svg('graphe',g2(a,b,{xmin:0,T:.99,t:p.k,futur:true,xlab:S.v('k'),ylab:`${sub(a,'P','ch')} (${uP.u})`,series:[{f:kk=>phasors({...p,k:kk}).Pload*uP.f,c:C.v}],id:'k1'},
+      {xmin:0,T:.99,t:p.k,futur:true,xlab:S.v('k'),ylab:'η (%)',series:[{f:kk=>100*phasors({...p,k:kk}).eta,c:C.cInk}],id:'k2'}));return;
+  }
+  if(a.p.gt==='pf'){
+    const f0=p.f,F1=.3*f0,F2=2*f0,uf=K.unit(F2,'Hz'),pc={...p,cap:true,f0},pn={...p,cap:false},uP=K.unit(Math.max(phasors(pc).Pload,phasors(pn).Pload,1e-12),'W');
+    const r=K.tplot(a,{box:{x:0,y:0,w:Pn.w,h:Pn.h},xmin:F1*uf.f,T:F2*uf.f,t:f0*uf.f,futur:true,xlab:`${S.v('f')} (${uf.u})`,ylab:`${sub(a,'P','ch')} (${uP.u})`,
+      series:[{f:x=>phasors(pn,x/uf.f).Pload*uP.f,c:C.ink2,dash:true},{f:x=>phasors(pc,x/uf.f).Pload*uP.f,c:C.v}],id:'f1'});
+    a.svg('graphe',r.svg+S.text(Pn.w-10*k,22*k,`avec ${sub(a,'C','2')} accordé à ${f.sig(f0*uf.f,3)} ${uf.u} · tirets : sans`,{anchor:'end',size:13,c:C.ink2}));return;
+  }
+  const {T,u,tf}=timeAxis(a),uI=K.unit(Math.max(P.abs(z.I1),P.abs(z.I2))*1.42,'A'),uU=K.unit(Math.max(p.U,P.abs(z.V2))*1.42,'V');
+  a.svg('graphe',g2(a,b,{T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'i','1')}, ${sub(a,'i','2')} (${uI.u})`,series:[{f:x=>coupled(p,x/tf,z).i1*uI.f,c:C.E},{f:x=>coupled(p,x/tf,z).i2*uI.f,c:C.v,dash:true}],id:'t1'},
+    {T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'u','e')}, ${sub(a,'u','2')} (${uU.u})`,series:[{f:x=>coupled(p,x/tf,z).u*uU.f,c:C.B},{f:x=>coupled(p,x/tf,z).u2*uU.f,c:C.F,dash:true}],id:'t2'}));
+}
+
+/* ---------- 3. transformateur ---------- */
+function drawId(a){
+  const Pn=a.panels.scene,S=a.S,C=a.C,k=a.k,f=a.fmt,w=Pn.w,h=Pn.h,p=idP(a),m=ideal(p,a.t),dark=C.dark;
+  const Wc=Math.min(w-230*k,420*k),Hc=Math.min(h-120*k,270*k),cx=w/2,cy=h/2+12*k,x=cx-Wc/2,y=cy-Hc/2,d=Math.max(22*k,Math.min(44*k,Hc*.18));
+  const face=dark?'#5a6b78':'#c6d0d8',edge=dark?'#2b3d4b':'#758593',copper=dark?'#e3a062':'#b8722f';
+  let s=S.path(`M${x},${y}h${Wc}v${Hc}h${-Wc}Z M${x+d},${y+d}v${Hc-2*d}h${Wc-2*d}v${-(Hc-2*d)}Z`,{fill:face,c:edge,w:1.4}).replace('fill-opacity','data-x');
+  s=s.replace('<path ','<path fill-rule="evenodd" ');
+  // flux canalisé : lignes dans le fer, flèches proportionnelles à Φ
+  const Phm=Math.SQRT2*p.U/(TAU*p.f*p.N1),fr=m.phi/Phm;
+  for(const q of [.3,.5,.7]){const v=d*q;s+=S.path(`M${x+v},${y+v}h${Wc-2*v}v${Hc-2*v}h${-(Wc-2*v)}Z`,{c:C.B,w:1.6,op:.15+.75*Math.abs(fr)});}
+  if(Math.abs(fr)>.02){const L=34*k*fr,v=d/2;
+    s+=S.arrow(cx+L/2,y+v,cx-L/2,y+v,{c:C.B,w:2.6})+S.arrow(cx-L/2,y+Hc-v,cx+L/2,y+Hc-v,{c:C.B,w:2.6})+S.arrow(x+v,cy-L/2,x+v,cy+L/2,{c:C.B,w:2.6})+S.arrow(x+Wc-v,cy+L/2,x+Wc-v,cy-L/2,{c:C.B,w:2.6});}
+  s+=S.text(cx,y-14*k,'Noyau de fer · flux commun Φ',{anchor:'middle',size:14,c:C.ink});
+  // enroulements
+  const coil=(xc,n,c)=>{let t='';const turns=Math.max(3,Math.min(10,Math.round(n/150))),hh=Hc*.56,y0=cy-hh/2;for(let j=0;j<turns;j++){const yy=y0+hh*(j+.5)/turns;t+=S.line(xc-d/2-7*k,yy-4*k,xc+d/2+7*k,yy+4*k,{c,w:4});}return {t,y0,y1:y0+hh};};
+  const cl=coil(x+d/2,p.N1,copper),cr=coil(x+Wc-d/2,p.N2,copper);s+=cl.t+cr.t;
+  s+=S.text(x+d/2,y+Hc+16*k,`${sub(a,'N','1')} = ${f.fix(p.N1,0)}`,{anchor:'middle',size:14,c:C.E})+S.text(x+Wc-d/2,y+Hc+16*k,`${sub(a,'N','2')} = ${f.fix(p.N2,0)}`,{anchor:'middle',size:14,c:C.v});
+  // circuits extérieurs
+  const xg=x-80*k,xs=x+Wc+80*k,ya=cl.y0,yb=cl.y1;
+  s+=E.W(a,x-7*k,ya,xg,ya)+E.W(a,x-7*k,yb,xg,yb)+E.W(a,xg,ya,xg,cy-15*k)+E.W(a,xg,cy+15*k,xg,yb)+E.gen(a,xg,cy,{type:'~'})+E.volt(a,xg+28*k,cy+18*k,xg+28*k,cy-18*k,sub(a,'v','1'),{c:C.E,dx:6*k});
+  s+=E.W(a,x+Wc+7*k,ya,xs,ya)+E.W(a,x+Wc+7*k,yb,xs,yb);
+  if(p.open)s+=E.W(a,xs,ya,xs,cy-14*k)+E.W(a,xs,cy+14*k,xs,yb)+S.circle(xs,cy-14*k,3*k,{fill:C.card,c:C.ink})+S.circle(xs,cy+14*k,3*k,{fill:C.card,c:C.ink})+S.text(xs+8*k,cy,'à vide',{size:13,c:C.ink2});
+  else s+=E.res(a,xs,ya,xs,yb,{c:C.v})+S.text(xs+12*k,cy+26*k,sub(a,'R','ch'),{size:15,c:C.v});
+  s+=E.volt(a,xs-26*k,cy+18*k,xs-26*k,cy-18*k,sub(a,'v','2'),{c:C.v,dx:-8*k,anchor:'end'});
+  s+=S.circle(x-12*k,ya-8*k,3.2*k,{fill:C.ink})+S.circle(x+Wc+12*k,ya-8*k,3.2*k,{fill:C.ink});
+  s+=E.cur(a,(xg+x)/2,ya,'r',sub(a,'i','1'),{c:C.E,ly:-14*k})+E.cur(a,(x+Wc+xs)/2,ya,'r',sub(a,'i','2'),{c:C.v,ly:-14*k});
+  s+=S.text(10*k,10*k,`${S.v('m')} = ${M?sub(a,'N','2')+'/'+sub(a,'N','1'):''} = ${f.sig(m.m,3)} · ${m.m>1?'élévateur':m.m<1?'abaisseur':'isolement'}`,{base:'top',size:14,c:C.ink});
+  a.svg('scene',s);
+  const {T,u,tf}=timeAxis(a),b=K.split(a.panels.graphe,2,6*k),uI=K.unit(Math.max(Math.SQRT2*Math.max(m.I1,m.I2)+Math.SQRT2*m.Imu,1e-6),'A');
+  const ser=[{f:x=>ideal(p,x/tf).i1*uI.f,c:C.E},{f:x=>ideal(p,x/tf).i2*uI.f,c:C.v,dash:true}];if(p.mag)ser.push({f:x=>ideal(p,x/tf).imu*uI.f,c:C.ink2,w:1.4});
+  a.svg('graphe',g2(a,b,{T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'v','1')}, ${sub(a,'v','2')} (V)`,series:[{f:x=>ideal(p,x/tf).v1,c:C.E},{f:x=>ideal(p,x/tf).v2,c:C.v,dash:true}],id:'i1'},
+    {T:T*tf,t:a.t*tf,futur:a.p.futur,sym:true,xlab:`${S.v('t')} (${u.u})`,ylab:`${sub(a,'i','1')}, ${sub(a,'i','2')} (${uI.u})`,series:ser,id:'i2'}));
+  a.metrics([{label:`Tension ${M.v('v','1')}`,value:f.sig(m.v1,3),unit:'V',hint:`efficace ${f.sig(m.V1,3)} V`},
+    {label:`Tension ${M.v('v','2')} = ${mv('m')}${M.v('v','1')}`,value:f.sig(m.v2,3),unit:'V',hint:`efficace ${f.sig(m.V2,3)} V`},
+    {label:`Courant ${M.v('i','1')}`,value:f.sig(m.i1,3),unit:'A',hint:p.mag?`${M.v('I','µ')} efficace ${f.sig(m.Imu,3)} A`:`= ${mv('m')}${M.v('i','2')}`},
+    {label:'Puissance moyenne transmise',value:f.sig(m.P,3),unit:'W',hint:`${mv('B')} max ${f.sig(Phm/p.S,3)} T`}]);
+  a.insight(p.open&&!p.mag?'À vide, le transformateur idéal ne consomme aucun courant, mais la tension secondaire est présente.':p.open?'À vide, le primaire absorbe le courant magnétisant, en quadrature avec <i class="m">v</i><sub>1</sub> : puissance moyenne nulle.':
+    m.m>1?'Élévateur de tension, donc abaisseur de courant : <i class="m">v</i><sub>1</sub><i class="m">i</i><sub>1</sub> = <i class="m">v</i><sub>2</sub><i class="m">i</i><sub>2</sub> à chaque instant.':'Abaisseur de tension, donc élévateur de courant : <i class="m">v</i><sub>1</sub><i class="m">i</i><sub>1</sub> = <i class="m">v</i><sub>2</sub><i class="m">i</i><sub>2</sub> à chaque instant (modèle idéal).',['À vide, le primaire absorbe le courant magnétisant, en quadrature avec <i class="m">v</i><sub>1</sub> : puissance moyenne nulle.']);
+  a.clock(`${mv('t')} = ${f.sig(a.t*u.f,3)} ${u.u}`);
+  a.legend([{c:C.E,label:'primaire'},{c:C.v,label:'secondaire'},{c:C.B,label:'flux dans le fer'},p.mag&&{c:C.ink2,label:'courant magnétisant'}]);
+}
+
+/* ---------- 4. transport ---------- */
+function drawLine(a){
+  const Pn=a.panels.scene,S=a.S,C=a.C,k=a.k,f=a.fmt,w=Pn.w,h=Pn.h,p=lnP(a),m=P.line(p),m1=P.line(p,1);
+  const stack=a.narrow,bw=stack?w-40*k:(w-80*k)/3,bh=stack?(h-90*k)/3:Math.min(200*k,h-110*k);
+  let s=S.text(10*k,10*k,'Même puissance injectée · deux transformateurs idéaux · ligne résistive',{base:'top',size:14,c:C.ink});
+  const items=[['Injection',`${f.sig(p.P/1000,3)} kW`,`${S.v('U')} = ${f.sig(p.U,3)} V`,C.E],['Transport',`${f.sig(m.Uline/1000,3)} kV`,`${S.v('I')} = ${f.sig(m.I,3)} A`,C.B],['Réception',`${f.sig(m.Preceived/1000,3)} kW`,`${S.v('U')} = ${f.sig(m.Ureceived,3)} V`,C.v]];
+  const pos=items.map((_,j)=>stack?[20*k,40*k+j*(bh+10*k)]:[20*k+j*(bw+20*k),(h-bh)/2]);
+  items.forEach((it,j)=>{const [x0,y0]=pos[j];s+=S.rect(x0,y0,bw,bh,{fill:C.cSoft,c:C.rule,rx:8*k})+S.text(x0+12*k,y0+12*k,it[0],{base:'top',size:14,c:C.ink2})+S.text(x0+12*k,y0+bh*.48,it[1],{size:22,c:it[3],weight:600})+S.text(x0+12*k,y0+bh-18*k,it[2],{size:15,c:C.ink});});
+  // courant dans la ligne : épaisseur et flèche proportionnelles à I
+  const L=60*k*m.I/m1.I;
+  if(!stack){const xa=pos[1][0]+bw*.55,ya=pos[1][1]+bh*.72;s+=S.arrow(xa,ya,xa+Math.max(L,1),ya,{c:C.E,w:1+5*m.I/m1.I});}
+  s+=S.text(w/2,h-14*k,`Pertes Joule ${f.sig(m.Pjoule/1000,3)} kW · sans élévation ${f.sig(m1.Pjoule/1000,3)} kW : divisées par ${S.v('m')}${S.sup('2')} = ${f.sig(p.m*p.m,3)}`,{anchor:'middle',size:14,c:C.F});
+  a.svg('scene',s);
+  const b=K.split(a.panels.graphe,2,6*k);
+  const gA={xmin:1,T:20,t:p.m,futur:true,xlab:S.v('m')};
+  const r1=K.tplot(a,{...gA,box:b[0],ylab:`${sub(a,'P','J')} (kW)`,series:[{f:x=>P.line(p,x).Pjoule/1000,c:C.F}],id:'l1'});
+  const r2=K.tplot(a,{...gA,box:b[1],ylab:`${S.v('I')} (A)`,series:[{f:x=>P.line(p,x).I,c:C.E}],id:'l2'});
+  st.gr=r1.G;a.svg('graphe',r1.svg+r2.svg);
+  a.metrics([{label:'Tension de transport',value:f.sig(m.Uline/1000,3),unit:'kV',hint:'efficace'},
+    {label:`Courant ${mv('I')} = ${M.frac(mv('P'),mv('m')+mv('U'))}`,value:f.sig(m.I,3),unit:'A',hint:''},
+    {label:`Pertes ${M.v('R','ligne')}${mv('I')}<sup>2</sup>`,value:f.sig(m.Pjoule/1000,3),unit:'kW',hint:`${f.sig(100*m.Pjoule/p.P,3)} % de la puissance`},
+    {label:'Rendement de la liaison',value:f.sig(100*m.eta,3),unit:'%',hint:''}]);
+  a.insight('À puissance transportée fixée, multiplier la tension par <i class="m">m</i> divise le courant par <i class="m">m</i> et les pertes Joule par <i class="m">m</i>² : d\'où le transport sous 225 kV ou 400 kV.');
+  a.legend([{c:C.E,label:'courant'},{c:C.F,label:'pertes Joule'},{c:C.B,label:'transport'},{c:C.v,label:'réception'}]);
+}
+
+/* ---------- interactions ---------- */
+A.drag('scene',{
+  hit:(x,y)=>{const g=st.geo,k=A.k;if(!g)return false;if(A.tab===0)return !!g.a2&&Math.hypot(x-g.a2[0],y-g.a2[1])<20*k;if(A.tab===1)return g.x2!==undefined&&Math.abs(x-g.x2)<22*k&&y>g.yt&&y<g.yb;return false;},
+  start(x,y){st.drag=A.tab===0?{y,v:A.p.a2}:{x,v:A.p.kc};},
+  move(x,y){const d=st.drag;if(!d)return;if(A.tab===0)A.p.a2=Math.round(Math.max(.3,Math.min(A.p.a1,d.v-(y-d.y)*.012))*20)/20;else A.p.kc=Math.round(Math.max(0,Math.min(.99,d.v-(x-d.x)/(st.geo.span*.16)))*100)/100;A.t=0;A.refresh();},
+  end(){st.drag=null;}
+});
+A.drag('graphe',{
+  hit:()=>A.tab===3,
+  start(x){this.move(x)},
+  move(x){if(!st.gr)return;A.p.mL=Math.round(Math.max(1,Math.min(20,st.gr.xv(x)))*10)/10;A.refresh();}
+});
+
+</script>
+</body>
+</html>

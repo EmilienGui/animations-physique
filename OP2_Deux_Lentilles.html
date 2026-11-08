@@ -1,17 +1,720 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Atelier autonome d’optique géométrique · OP2 · MPSI · E. Guillaume"><title>Associer deux lentilles · OP2</title><style>:root{color-scheme:light;--bg:#f0f5f3;--paper:#fff;--ink:#193634;--muted:#536e6a;--line:#ccdcd6;--accent:#3e8b89;--strong:#276b69;--soft:#e6f2ed;--ray:#b15d14;--red:#c43d55;--blue:#2869b5;--violet:#854db0}
-:root[data-theme=dark]{color-scheme:dark;--bg:#0d1c20;--paper:#14292e;--ink:#ecf6f1;--muted:#b1cbc4;--line:#365253;--accent:#80c8bc;--strong:#9ad5cc;--soft:#203e40;--ray:#ffc17a;--red:#ff889e;--blue:#8ebfff;--violet:#cda4f4}
-*{box-sizing:border-box}body{margin:0;border-top:4px solid var(--accent);background:var(--bg);color:var(--ink);font:16px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{min-height:40px;padding:7px 11px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:6px;white-space:nowrap}button:hover{border-color:var(--accent);background:var(--soft)}button[aria-pressed=true],.active{background:var(--strong);color:var(--paper);border-color:var(--strong)}:root[data-theme=dark] button[aria-pressed=true]{color:#102e2a}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}[hidden]{display:none!important}.shell{max-width:2100px;margin:auto;height:calc(100dvh - 4px);min-height:600px;display:flex;flex-direction:column;gap:10px;padding:13px 19px 10px}.header{display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{flex:1;min-width:250px}.eyebrow{font-size:12px;letter-spacing:.12em;color:var(--strong);text-transform:uppercase;font-weight:bold}h1{font-size:28px;line-height:1.15;font-weight:500;letter-spacing:-.02em;margin:4px 0}.actions{display:flex;flex-wrap:wrap;gap:6px}.actions button{font-size:14px}#fullscreen{width:40px;padding:0;font-size:23px}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tabs button{flex:1;font-size:17px;text-align:left;padding:9px 13px;white-space:normal}.tabs span{font-size:12px;opacity:.7;margin-right:7px}.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 294px;gap:13px}.main{display:flex;flex-direction:column;min-height:0;min-width:0;gap:9px}.scene-card{display:flex;flex-direction:column;flex:1;min-height:280px;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 4px 20px #17382c08}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--line)}.tools{display:flex;gap:5px;align-items:center;flex-wrap:wrap}.toolbar button{font-size:14px;min-height:34px;padding:5px 9px}.zoom button{font-size:20px}.zoom #fit{font-size:14px}#viewport{flex:1;min-height:0;position:relative}canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.metric{padding:0 0 0 13px;border-left:1px solid var(--line)}.metric:first-child{border:0;padding-left:0}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:30px;letter-spacing:-.03em;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.message{font-size:17px;line-height:1.4;min-height:24px;color:var(--strong);margin:0}.hint{font-size:12px;color:var(--muted);margin:0}.aside{min-height:0;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;scrollbar-width:thin}.section{padding:14px;border-bottom:1px solid var(--line)}.section:last-child{border:0}.section h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--strong);margin:0 0 12px}.field{margin:10px 0 13px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:3px}.field-head label{font-size:14px}.field-head output{font-size:14px;font-variant-numeric:tabular-nums}.field-head input{width:74px;padding:4px 5px;text-align:right}.num-unit{white-space:nowrap;font-size:12px}input[type=number],select{border:1px solid var(--line);border-radius:4px;color:var(--ink);background:var(--bg)}input[type=range]{width:100%;height:20px;accent-color:var(--strong)}select{padding:8px;width:100%;font-size:14px}.check{display:flex;gap:8px;align-items:center;font-size:14px;margin:9px 0}.check input{width:17px;height:17px;accent-color:var(--strong)}.row{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}.row button{font-size:13px;flex:1;white-space:normal;min-height:34px}.formula{font:20px/1.7 Georgia,serif;margin:6px 0}.note{font-size:13px;color:var(--muted);line-height:1.5;margin:8px 0}.foot{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}dialog{max-width:780px;width:calc(100% - 30px);max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:var(--paper);padding:26px;font:17px/1.6 Arial}dialog::backdrop{background:#051c2499}dialog h2{font-weight:500;margin:0 0 12px}dialog .close{float:right}#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--strong);color:var(--paper);padding:9px 17px;border-radius:7px;z-index:10}#toast:empty{display:none}.projection .aside,.projection .foot,.projection .eyebrow,.projection .hint{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px;gap:9px}.projection .metric-label{font-size:20px}.projection .metric-value{font-size:40px}.projection .message{font-size:21px}.projection .tabs button{font-size:20px}.projection h1{font-size:27px}.projection .toolbar button{font-size:17px}
-@media(max-width:1250px){.shell{padding:10px 12px;gap:8px}.workspace{grid-template-columns:minmax(0,1fr) 270px;gap:10px}h1{font-size:25px}.actions button{padding:7px 9px}.metric-value{font-size:27px}.message{font-size:16px}.tabs button{font-size:16px}.toolbar{padding:6px}.section{padding:12px}.foot{display:none}}
-@media(max-width:850px){.shell{height:auto;min-height:100dvh}.workspace{grid-template-columns:1fr;flex:none}.scene-card{height:520px;flex:none}.aside{overflow:visible;display:grid;grid-template-columns:1fr 1fr}.section{border-right:1px solid var(--line)}.actions{width:100%}.brand{min-width:0}.tabs button{min-width:160px}.projection .scene-card{height:65dvh;min-height:380px}.projection .shell{height:auto}.projection .metric-value{font-size:30px}.projection .message{font-size:17px}}
-@media(max-width:520px){.shell{padding:9px}.aside{grid-template-columns:1fr}.tabs button{font-size:14px;min-width:130px}.tabs span{display:none}.metric-label{font-size:12px}.metric-value{font-size:23px}.metrics{gap:6px}.metric{padding-left:8px}.scene-card{height:560px}.actions button{font-size:13px}h1{font-size:24px}.toolbar button{font-size:12px}.projection .metric-label{font-size:13px}.projection .metric-value{font-size:25px}}
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Doublet de lentilles minces, lunettes de Galilée et astronomique, microscope : image intermédiaire, grandissement, grossissement, puissance.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Associer deux lentilles · OP2 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-.photo-view .metrics,.photo-view #message,.photo-view #hint,.photo-view .foot{display:none}
-</style></head>
-<body><main class="shell"><header class="header"><div class="brand"><div class="eyebrow">OP2 · Formation d’images · MPSI</div><h1 id="title">Associer deux lentilles</h1></div><div class="actions"><button id="results" aria-pressed="true">Masquer les résultats</button><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter la scène et les résultats en PNG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran">⛶</button></div></header>
-<nav id="tabs" class="tabs" aria-label="Vues de l’atelier"></nav><div class="workspace"><section class="main" aria-label="Expérience"><div class="scene-card"><div class="toolbar"><div class="tools"><button id="step">Construction : complète</button><button id="play" aria-pressed="false">Animer</button><button id="reset">Réinitialiser</button></div><div class="tools zoom"><button id="zoom-out" aria-label="Réduire le zoom">−</button><button id="fit">Cadrer</button><button id="zoom-in" aria-label="Agrandir le zoom">+</button></div></div><div id="viewport"><canvas id="scene" role="img" aria-label="Associer deux lentilles : scène interactive"></canvas></div></div><div id="metrics" class="metrics" aria-live="off"></div><p id="message" class="message" role="status"></p><p id="hint" class="hint"></p></section><aside id="controls" class="aside" aria-label="Réglages de l’atelier"></aside></div><footer class="foot"><span>E. Guillaume · MPSI · OP2</span><span>Hors connexion · Optique géométrique · Hypothèses dans Aide</span></footer></main>
-<dialog id="about"><button id="close-help" class="close">Fermer</button><h2 id="help-title"></h2><div id="help-body"></div></dialog><div id="toast" role="status"></div>
-<script id="optics-model">/* OP2 · moteur partagé. Distances en cm, sauf fonctions explicitement en mm ou m. */
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* OP2 · moteur partagé. Distances en cm, sauf fonctions explicitement en mm ou m. */
 window.Optics = (() => {
 'use strict';
 const eps=1e-9, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -40,95 +743,318 @@ function eyePower(P,cyl,axis){const a=axis*Math.PI/180,c=Math.cos(a),s=Math.sin(
 function eyeRay(y,z,u,L,K,B=0){const my=Number.isFinite(u)?(y-B)/u:0,mz=Number.isFinite(u)?z/u:0;return{my:my-K[0]*y-K[1]*z,mz:mz-K[1]*y-K[2]*z,Y:y+L*(my-K[0]*y-K[1]*z),Z:z+L*(mz-K[1]*y-K[2]*z)};}
 return{eps,clamp,cameraRay,add,mul,dot,unit,thin,mat,prop,lens,doublet,refract,sag,surface,thick,at,bestPlane,focusPlanes,spot,bundle,index,chromatic,photo,depth,bessel,autoRay,eyePower,eyeRay};
 })();
-</script><script id="photo-assets"></script><script id="interface">/* Images géométriques calculées pixel par pixel, sans filtre Canvas/CSS. */
-window.RasterOptics=(()=>{
- function target(kind='mire',size=192,flipped=false){
-  const canvas=document.createElement('canvas');canvas.width=canvas.height=size;const c=canvas.getContext('2d');
-  c.fillStyle='#fff';c.fillRect(0,0,size,size);c.fillStyle='#111';c.strokeStyle='#111';
-  if(kind==='F'){c.save();if(flipped){c.translate(size,size);c.rotate(Math.PI);}c.beginPath();c.rect(size*.3,size*.16,size*.12,size*.68);c.rect(size*.3,size*.16,size*.43,size*.12);c.rect(size*.3,size*.43,size*.34,size*.12);c.fill();c.restore();}
-  else{const cx=size/2,cy=size/2;c.lineWidth=2.5;for(let j=0;j<24;j++){const a=j*Math.PI/12;c.beginPath();c.moveTo(cx+size*.07*Math.cos(a),cy+size*.07*Math.sin(a));c.lineTo(cx+size*.38*Math.cos(a),cy+size*.38*Math.sin(a));c.stroke();}c.lineWidth=2;c.beginPath();c.arc(cx,cy,size*.42,0,Math.PI*2);c.stroke();}
-  const data=c.getImageData(0,0,size,size).data,ink=[];for(let j=0;j<size;j++)for(let i=0;i<size;i++){const a=1-data[(j*size+i)*4]/255;if(a>.001)ink.push([i,j,a]);}
-  return{canvas,size,ink};
- }
- function disk(diameter,count=128){const out=[],gold=Math.PI*(3-Math.sqrt(5));for(let j=0;j<count/2;j++){const r=diameter/2*Math.sqrt((j+.5)/(count/2)),a=j*gold,dx=r*Math.cos(a),dy=r*Math.sin(a);out.push([dx,dy],[-dx,-dy]);}return out;}
- function convolve(source,offsets){
-  const size=source.size,out=document.createElement('canvas');out.width=out.height=size;const c=out.getContext('2d'),sum=new Float32Array(size*size);
-  for(const [dx,dy]of offsets){if(Math.abs(dx)>size*1.5||Math.abs(dy)>size*1.5)continue;const ix=Math.floor(dx),iy=Math.floor(dy),fx=dx-ix,fy=dy-iy,w=[(1-fx)*(1-fy),fx*(1-fy),(1-fx)*fy,fx*fy];for(const [x,y,a]of source.ink){const xx=x+ix,yy=y+iy;if(xx>=0&&xx+1<size&&yy>=0&&yy+1<size){const k=yy*size+xx;sum[k]+=a*w[0];sum[k+1]+=a*w[1];sum[k+size]+=a*w[2];sum[k+size+1]+=a*w[3];}}}
-  const img=c.createImageData(size,size),n=offsets.length;for(let j=0;j<sum.length;j++){const v=Math.max(0,Math.min(255,255*(1-sum[j]/n)));img.data[j*4]=img.data[j*4+1]=img.data[j*4+2]=v;img.data[j*4+3]=255;}c.putImageData(img,0,0);return out;
- }
- function box(data,w,h,r,horizontal){const out=new Uint8ClampedArray(data.length),len=horizontal?w:h,lines=horizontal?h:w,step=horizontal?4:w*4,half=2*r+1;for(let line=0;line<lines;line++){const base=horizontal?line*w*4:line*4;let sr=0,sg=0,sb=0;for(let j=-r;j<=r;j++){const k=base+Math.max(0,Math.min(len-1,j))*step;sr+=data[k];sg+=data[k+1];sb+=data[k+2];}for(let j=0;j<len;j++){const k=base+j*step;out[k]=sr/half;out[k+1]=sg/half;out[k+2]=sb/half;out[k+3]=255;const a=base+Math.max(0,j-r)*step,b=base+Math.min(len-1,j+r+1)*step;sr+=data[b]-data[a];sg+=data[b+1]-data[a+1];sb+=data[b+2]-data[a+2];}}return out;}
- function blur(data,w,h,r,passes=3){r=Math.max(0,Math.round(r));if(!r)return data;let out=data;for(let i=0;i<passes;i++){out=box(out,w,h,r,true);out=box(out,w,h,r,false);}return out;}
- function colorize(source,background,foreground){const out=document.createElement('canvas');out.width=source.width;out.height=source.height;const c=out.getContext('2d'),img=source.getContext('2d').getImageData(0,0,out.width,out.height),bg=[1,3,5].map(i=>parseInt(background.slice(i,i+2),16)),fg=[1,3,5].map(i=>parseInt(foreground.slice(i,i+2),16));for(let j=0;j<img.data.length;j+=4){const a=1-img.data[j]/255;for(let k=0;k<3;k++)img.data[j+k]=bg[k]+a*(fg[k]-bg[k]);img.data[j+3]=255;}c.putImageData(img,0,0);return out;}
- return{target,disk,convolve,box,blur,colorize};
+
+/* =====================================================================
+   OP2 · outils de dessin communs aux animations du chapitre (AnimKit)
+   Repère : axe optique horizontal orienté dans le sens de la lumière incidente
+   (vers la droite), ordonnées vers le haut. Échelles longitudinale et
+   transversale indépendantes, comme dans les schémas du cours.
+   La physique (lentilles minces, matrices paraxiales, lentille épaisse) est
+   dans ../_Sources_Ateliers/optics.js (moteur d'origine, inchangé).
+   ===================================================================== */
+window.OP2=(()=>{
+'use strict';
+const DEG=Math.PI/180;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+/** distance algébrique surlignée (HTML) */
+const bar=s=>`<span class="m" style="text-decoration:overline;text-decoration-thickness:.06em">${s}</span>`;
+/** couleurs des rayons : comme les schémas TikZ du cours (rouge, bleu, turquoise) */
+function couleurs(a){const C=a.C;return{
+  r:[C.F,C.B,C.dark?'#4fd1c5':'#13827c'],
+  obj:C.ink, img:C.dark?'#c39bff':'#7a3fc0', lens:C.cInk, foc:C.ink2, plan:C.dark?'#c39bff':'#7a3fc0'}}
+
+/** repère monde → pixels dans un rectangle, échelles x et y indépendantes, zoom du panneau */
+function repere(P,{xmin,xmax,ymax,x0=0,y0=0,w=P.w,h=P.h,mx=18,my=16,cy=null}){
+  const z=P.zoom||1, xc=(xmin+xmax)/2, hw=(xmax-xmin)/2/z;
+  const sx=(w-2*mx)/(2*hw), sy=(h/2-my)/(ymax/z);
+  const X0=x0+w/2, Y0=cy===null?y0+h/2:cy;
+  return{X:x=>X0+(x-xc)*sx, Y:y=>Y0-y*sy, x:px=>xc+(px-X0)/sx, y:py=>(Y0-py)/sy, sx, sy,
+    xmin:xc-hw, xmax:xc+hw, ymax:ymax/z, left:x0, right:x0+w, top:y0, bottom:y0+h};
+}
+
+/** poignées déplaçables (une liste par panneau, refaite à chaque dessin) */
+const handles={};
+function poignee(a,pid,x,y,move,o={}){
+  (handles[pid]=handles[pid]||[]).push({x,y,move});
+  const k=a.k, c=o.c||a.C.cInk;
+  return a.S.circle(x,y,9*k,{fill:a.C.card,c,w:2,op:.95})+a.S.circle(x,y,2.6*k,{fill:c});
+}
+function activerGlisser(A,pid,extra){
+  let cur=null;
+  A.drag(pid,{
+    hit:(x,y)=>{const L=handles[pid]||[];const r=24*A.k;return L.some(h=>Math.hypot(h.x-x,h.y-y)<r)||(extra&&extra.hit&&extra.hit(x,y))},
+    start(x,y){const L=handles[pid]||[];let best=null,d=24*A.k;for(const h of L){const e=Math.hypot(h.x-x,h.y-y);if(e<d){d=e;best=h}}
+      cur=best?best.move:(extra&&extra.start?extra.start(x,y):null); if(extra&&extra.debut)extra.debut()},
+    move(x,y){if(cur)cur(x,y)},
+    end(){cur=null; if(extra&&extra.fin)extra.fin()}
+  });
+}
+function vider(pid){handles[pid]=[]}
+
+/* ---------- dessin ---------- */
+/** axe optique Δ, orienté */
+function axe(a,G,o={}){
+  const S=a.S, k=a.k, y=G.Y(0), x1=o.x1??G.left+4*k, x2=o.x2??G.right-6*k;
+  return S.arrow(x1,y,x2,y,{c:a.C.ink2,w:1.1,dash:`${7*k} ${5*k}`,head:9*k})+
+    S.text(x2-4*k,y-10*k,S.r('Δ'),{anchor:'end',base:'bottom',size:16,c:a.C.ink2,math:true});
+}
+/** symbole de lentille mince (convergente : flèches vers l'extérieur ; divergente : vers l'intérieur) */
+function lentille(a,x,f,yt,yb,label,o={}){
+  const S=a.S,k=a.k,c=o.c||couleurs(a).lens,w=o.w??2.6; let s='';
+  const hl=11*k, hw=7.5*k;
+  if(f>0){s+=S.arrow(x,(yt+yb)/2,x,yt,{c,w,head:hl})+S.arrow(x,(yt+yb)/2,x,yb,{c,w,head:hl})}
+  else{s+=S.line(x,yt,x,yb,{c,w});
+    s+=S.path(`M${x-hw},${yt-hl*.8}L${x},${yt}L${x+hw},${yt-hl*.8}`,{c,w:w*.85});
+    s+=S.path(`M${x-hw},${yb+hl*.8}L${x},${yb}L${x+hw},${yb+hl*.8}`,{c,w:w*.85})}
+  if(label)s+=S.text(x+8*k,yt+4*k,label,{base:'top',size:o.size??17,c,math:true});
+  return s;
+}
+/** graduation et nom d'un point de l'axe (F, F′, O…) */
+function pointAxe(a,G,x,label,o={}){
+  const S=a.S,k=a.k,X=G.X(x),Y=G.Y(0),c=o.c||a.C.ink2;
+  if(X<G.left+4||X>G.right-4)return'';
+  return S.line(X,Y-5*k,X,Y+5*k,{c,w:1.6})+S.text(X+(o.dx||0)*k,Y+(o.dy??9)*k,label,{anchor:o.anchor||'middle',base:o.base||'top',size:o.size??15,c,math:true});
+}
+/** objet ou image transverse AB (flèche), pointillée si virtuelle */
+function fleche(a,G,x,y,c,o={}){
+  const S=a.S,k=a.k,X=G.X(x),Ya=G.Y(0),Yb=G.Y(y);let s='';
+  if(Math.abs(Yb-Ya)<2)return '';
+  s+=S.arrow(X,Ya,X,Yb,{c,w:o.w??2.6,dash:o.virtuel?`${6*k} ${4*k}`:undefined,head:11*k});
+  if(o.B)s+=S.text(X+8*k,Yb+(y>=0?-2:2)*k,o.B,{base:y>=0?'bottom':'top',size:16,c,math:true});
+  if(o.A)s+=S.text(X+(o.dxA??-7)*k,Ya+(y>=0?8:-8)*k,o.A,{anchor:'end',base:y>=0?'top':'bottom',size:15,c,math:true});
+  return s;
+}
+/** rayon lumineux : polyligne + flèches au milieu des segments assez longs + point mobile (lecture) */
+let phase=0;
+function rayon(a,pts,c,o={}){
+  const S=a.S,k=a.k; if(pts.length<2)return'';
+  const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  if(o.dash)return S.path(d,{c,w:o.w??1.3,dash:`${6*k} ${5*k}`,op:o.op??.85});
+  let s=S.path(d,{c,w:o.w??2,op:o.op});
+  if(o.fleches!==false)for(let i=0;i<pts.length-1;i++){const[p,q]=[pts[i],pts[i+1]],L=Math.hypot(q[0]-p[0],q[1]-p[1]);if(L>46*k)s+=pointe(a,p,q,c,o.w??2)}
+  if(phase>0&&o.lumiere!==false){
+    const ls=pts.slice(1).map((p,i)=>Math.hypot(p[0]-pts[i][0],p[1]-pts[i][1])), tot=ls.reduce((u,v)=>u+v,0);
+    if(tot>1){const pas=Math.max(120*k,tot/4);for(let v0=(phase*90*k)%pas;v0<tot;v0+=pas){let v=v0,j=0;while(j<ls.length-1&&v>ls[j])v-=ls[j++];const u=v/ls[j],P=pts[j],Q=pts[j+1];
+      s+=S.circle(P[0]+u*(Q[0]-P[0]),P[1]+u*(Q[1]-P[1]),3.6*k,{fill:c})}}}
+  return s;
+}
+function pointe(a,p,q,c,w){const k=a.k,t=.55,mx=p[0]+(q[0]-p[0])*t,my=p[1]+(q[1]-p[1])*t,an=Math.atan2(q[1]-p[1],q[0]-p[0]),hl=(6+w*1.5)*k;
+  return a.S.path(`M${(mx+hl*.55*Math.cos(an)).toFixed(1)},${(my+hl*.55*Math.sin(an)).toFixed(1)}L${(mx-hl*.45*Math.cos(an)-hl*.42*Math.sin(an)).toFixed(1)},${(my-hl*.45*Math.sin(an)+hl*.42*Math.cos(an)).toFixed(1)}L${(mx-hl*.45*Math.cos(an)+hl*.42*Math.sin(an)).toFixed(1)},${(my-hl*.45*Math.sin(an)-hl*.42*Math.cos(an)).toFixed(1)}Z`,{c:'none',fill:c})}
+/** prolonge une droite (point, pente en px) jusqu'au bord gauche ou droit du repère */
+function bord(G,x,y,pente,versDroite){const X=versDroite?G.right:G.left;return[X,y+pente*(X-x)]}
+/** lettre F (objet de la focométrie) en coordonnées pixel : pied en (X,Y), hauteur H (signée : négative = renversée) */
+function lettreF(a,X,Y,H,c,o={}){
+  const S=a.S, h=Math.abs(H), sg=H>=0?1:-1, w=h*.55, e=Math.max(2.5*a.k,h*.14);
+  const R=(x,y,ww,hh)=>{const xs=X+sg*x, ys=Y-sg*y;return S.rect(Math.min(xs,xs+sg*ww),Math.min(ys,ys-sg*hh),Math.abs(ww),Math.abs(hh),{fill:c,op:o.op})};
+  return R(-e/2,0,e,h)+R(-e/2,h-e,w,e)+R(-e/2,h*.56,w*.8,e);
+}
+return{DEG,clamp,bar,couleurs,repere,poignee,activerGlisser,vider,axe,lentille,pointAxe,fleche,rayon,bord,lettreF,
+  get phase(){return phase},set phase(v){phase=v}};
 })();
 
-/* Interface et dessin en pixels CSS : les légendes ne suivent pas le zoom géométrique. */
+// @titre Associer deux lentilles · OP2 · MPSI
+// @sortie ../OP2_Deux_Lentilles/OP2_Deux_Lentilles.html
+// @inclure ../_Sources_Ateliers/optics.js
+// @inclure OP2_commun.js
+// @description Doublet de lentilles minces, lunettes de Galilée et astronomique, microscope : image intermédiaire, grandissement, grossissement, puissance.
 'use strict';
-const O=window.Optics,$=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)];
-const fmt=(n,d=1)=>Number.isFinite(n)?(Math.abs(n)<.5*10**(-d)?0:n).toLocaleString('fr-FR',{maximumFractionDigits:d,minimumFractionDigits:d}):'∞';
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let app,zoom=1,reveal=3,running=false,phase=0,results=true,lastTime=0,W=900,H=500,handles=[],drag=null,needs=true;
-const canvas=$('#scene'),ctx=canvas.getContext('2d');
-function color(n){return getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim()||n;}
-const themedRasterCache=new WeakMap();
-function themedImage(source){const bg=color('bg'),fg=color('ink'),key=bg+'|'+fg,old=themedRasterCache.get(source);if(old?.key===key)return old.canvas;const canvas=window.RasterOptics.colorize(source,bg,fg);themedRasterCache.set(source,{key,canvas});return canvas;}
-function range(key,label,min,max,step=1,unit=''){const v=app.s[key],shown=Number(v.toFixed((String(step).split('.')[1]||'').length));return `<div class="field"><div class="field-head"><label for="r-${key}">${label}</label><span class="num-unit"><input id="n-${key}" type="number" data-number="${key}" aria-label="${esc(label)}" min="${min}" max="${max}" step="${step}" value="${shown}"> ${unit}</span></div><input id="r-${key}" type="range" data-key="${key}" aria-label="${esc(label)}" min="${min}" max="${max}" step="${step}" value="${v}"></div>`;}
-function select(key,label,items){return `<div class="field"><label for="s-${key}" class="note">${label}</label><select id="s-${key}" data-select="${key}">${items.map(([v,t])=>`<option value="${v}" ${app.s[key]==v?'selected':''}>${t}</option>`).join('')}</select></div>`;}
-function check(key,label){return `<label class="check"><input type="checkbox" data-check="${key}" ${app.s[key]?'checked':''}>${label}</label>`;}
-const section=(t,body)=>`<section class="section"><h2>${t}</h2>${body}</section>`,note=t=>`<p class="note">${t}</p>`,formula=t=>`<div class="formula result-only" ${results?'':'hidden'}>${t}</div>`;
-function buttons(items){return `<div class="row">${items.map(([id,t])=>`<button data-action="${id}">${t}</button>`).join('')}</div>`;}
-function controls(){ $('#controls').innerHTML=app.controls();$$('[data-key]').forEach(el=>el.oninput=()=>change(el.dataset.key,+el.value));$$('[data-number]').forEach(el=>el.onchange=()=>{const v=Number(el.value);if(Number.isFinite(v))change(el.dataset.number,O.clamp(v,+el.min,+el.max));else controls();});$$('[data-select]').forEach(el=>el.onchange=()=>{app.s[el.dataset.select]=el.value;app.change?.(el.dataset.select);controls();needs=true;});$$('[data-check]').forEach(el=>el.onchange=()=>{app.s[el.dataset.check]=el.checked;app.change?.(el.dataset.check);controls();needs=true;});$$('[data-action]').forEach(el=>el.onclick=()=>{app.action(el.dataset.action);controls();needs=true;});}
-function change(key,v){app.s[key]=v;const a=$(`[data-key="${key}"]`),b=$(`[data-number="${key}"]`);if(a)a.value=v;if(b)b.value=Number(v.toFixed((String(b.step).split('.')[1]||'').length));app.change?.(key);needs=true;}
-function metrics(items,msg,hint=''){ $('#metrics').innerHTML=items.map(([k,v])=>`<div class="metric"><div class="metric-label">${k}</div><div class="metric-value">${results?v:'—'}</div></div>`).join('');$('#message').textContent=msg;$('#hint').textContent=hint||'Glisser les points cerclés · Espace : lecture/pause · R : réinitialiser · F : plein écran';}
-function line(a,b,c='ink',dash=false,width=1.7){ctx.beginPath();ctx.strokeStyle=color(c);ctx.lineWidth=width;ctx.setLineDash(dash?[6,5]:[]);ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();ctx.setLineDash([]);}
-function path(pts,c='ink',dash=false,width=1.7){if(!pts.length)return;ctx.beginPath();ctx.strokeStyle=color(c);ctx.lineWidth=width;ctx.setLineDash(dash?[6,5]:[]);ctx.moveTo(...pts[0]);for(const p of pts.slice(1))ctx.lineTo(...p);ctx.stroke();ctx.setLineDash([]);}
-function text(t,x,y,c='ink',size=17,align='left'){if(document.body.classList.contains('projection'))size*=1.2;ctx.font=`${size}px Arial,Helvetica,sans-serif`;ctx.fillStyle=color(c);ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(t,x,y);}
-function dot(p,r=4,c='accent'){ctx.beginPath();ctx.arc(...p,r,0,Math.PI*2);ctx.fillStyle=color(c);ctx.fill();}
-function arrow(a,b,c='ink',dash=false,width=2){line(a,b,c,dash,width);const ang=Math.atan2(b[1]-a[1],b[0]-a[0]),s=7;path([[b[0]-s*Math.cos(ang-.48),b[1]-s*Math.sin(ang-.48)],b,[b[0]-s*Math.cos(ang+.48),b[1]-s*Math.sin(ang+.48)]],c,false,width);}
-function ray(pts,c='ray',dash=false){path(pts,c,dash,2);if(pts.length>1&&!dash){const i=Math.floor((pts.length-1)*.55),a=pts[i],b=pts[i+1],mid=[a[0]+.58*(b[0]-a[0]),a[1]+.58*(b[1]-a[1])];arrow([mid[0]-.08*(b[0]-a[0]),mid[1]-.08*(b[1]-a[1])],mid,c,false,1.7);if(running){let t=(phase*.35)%1,ls=pts.slice(1).map((p,i)=>Math.hypot(p[0]-pts[i][0],p[1]-pts[i][1])),v=t*ls.reduce((s,x)=>s+x,0),j=0;while(j<ls.length-1&&v>ls[j])v-=ls[j++];const u=v/ls[j];if(Number.isFinite(u))dot([pts[j][0]+u*(pts[j+1][0]-pts[j][0]),pts[j][1]+u*(pts[j+1][1]-pts[j][1])],3.4,c);}}}
-function panel(x,y,w,h,title){ctx.fillStyle=color('bg');ctx.fillRect(x,y,w,h);ctx.strokeStyle=color('line');ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);if(title)text(title,x+13,y+21,'muted',14);return{x,y,w,h};}
-function wrap(t,x,y,max,size=16,c='muted'){const words=t.split(' ');let a='';for(const word of words){ctx.font=`${size}px Arial`;if(ctx.measureText(a+' '+word).width>max&&a){text(a,x,y,c,size);a=word;y+=size*1.45;}else a+=(a?' ':'')+word;}text(a,x,y,c,size);return y+size*1.45;}
-function world(xmin,xmax,ymax,rect={x:0,y:0,w:W,h:H}){const center=(xmin+xmax)/2,scale=rect.w/(xmax-xmin)*zoom,sy=Math.min(rect.h/(2*ymax),scale*3)*zoom,cy=rect.y+rect.h*.51;return {p:(x,y)=>[rect.x+rect.w/2+(x-center)*scale,cy-y*sy],inv:(x,y)=>[center+(x-rect.x-rect.w/2)/scale,(cy-y)/sy],scale,sy,rect};}
-function axis(g,xmin,xmax){arrow(g.p(xmin,0),g.p(xmax,0),'line',true,1.2);text('Δ',...g.p(xmax,0).map((v,i)=>v+(i?19:-12)),'muted',16);}
-function lensDraw(g,x,f,h=4,label='L',foci=true){const a=g.p(x,-h),b=g.p(x,h);line(a,b,'blue',false,2.8);for(const [p,s]of [[a,1],[b,-1]]){const side=f>0?-s:s;path([[p[0]-7,p[1]+side*10],p,[p[0]+7,p[1]+side*10]],'blue',false,2.4);}text(label,b[0]+10,b[1]-13,'blue',18);dot(g.p(x,0),2,'blue');if(!foci)return;const idx=label.includes('L₁')?'₁':label.includes('L₂')?'₂':'';for(const [v,n]of [[x-f,'F'+idx],[x+f,'F′'+idx]]){const p=g.p(v,0);line([p[0],p[1]-4],[p[0],p[1]+4],'muted');if(p[0]>8&&p[0]<W-8)text(n,p[0],p[1]+22,'muted',16,'center');}}
-function objectDraw(g,x,y,label='B',c='red',virtual=false,base=true){const a=g.p(x,0),b=g.p(x,y);arrow(a,b,c,virtual,2.5);text(label,b[0]+8,b[1]+(y>=0?-13:13),c,19);if(base)text(label==='B'?'A':label.replace('B','A'),a[0]-8,a[1]+23,c,16,'right');}
-function handle(p,move,label){ctx.beginPath();ctx.arc(...p,8,0,2*Math.PI);ctx.fillStyle=color('paper');ctx.fill();ctx.strokeStyle=color('accent');ctx.lineWidth=2;ctx.stroke();dot(p,2,'accent');handles.push({p,move,label});}
-function draw(){needs=false;handles=[];ctx.clearRect(0,0,W,H);ctx.fillStyle=color('paper');ctx.fillRect(0,0,W,H);ctx.save();app.draw();ctx.restore();}
-function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);W=Math.max(1,r.width);H=Math.max(1,r.height);canvas.width=Math.round(W*d);canvas.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0);needs=true;}
-function switchTab(i){app.tab=i;reveal=3;running=false;$('#play').textContent='Animer';app.enter?.();configureTools();$$('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.tab===i));zoom=1;controls();needs=true;}
-function configureTools(){document.body.classList.toggle('photo-view',app.id==='OP2_Oeil_Photo'&&app.tab===1);$('#play').hidden=app.id==='OP2_Oeil_Photo'&&app.tab===1;$('#step').hidden=app.id==='OP2_Oeil_Photo'&&app.tab===1;$('#play').title=app.id==='OP2_Banc_Focometrie'?'Balayer la position de la lentille':'Animer les repères et le sujet mobile';app.configureTools?.();}
-function boot(a){app=a;window.OP2={model:O,app,get size(){return[W,H]},get handles(){return handles},draw,change,switchTab};$('#title').textContent=app.title;document.title=app.title+' · OP2 · MPSI';$('#tabs').innerHTML=app.tabs.map((t,i)=>`<button data-tab="${i}" aria-pressed="${i===0}"><span>0${i+1}</span>${t}</button>`).join('');$$('[data-tab]').forEach(b=>b.onclick=()=>switchTab(+b.dataset.tab));$('#help-title').textContent=app.title;$('#help-body').innerHTML=app.help;app.tab=0;app.enter?.();configureTools();controls();new ResizeObserver(resize).observe($('#viewport'));resize();requestAnimationFrame(tick);}
-function tick(t){const dt=Math.min(.05,(t-lastTime)/1000||0);lastTime=t;if(running){phase+=dt;app.update?.(dt);needs=true;}if(needs)draw();requestAnimationFrame(tick);}
-canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect(),p=[e.clientX-r.left,e.clientY-r.top];drag=handles.find(h=>Math.hypot(h.p[0]-p[0],h.p[1]-p[1])<18);if(!drag&&app.dragStart)drag=app.dragStart(p);if(drag){canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';}});
-canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect(),p=[e.clientX-r.left,e.clientY-r.top];if(drag){drag.move(p);controls();needs=true;}else canvas.style.cursor=handles.some(h=>Math.hypot(h.p[0]-p[0],h.p[1]-p[1])<18)?'grab':'default';});
-canvas.addEventListener('pointerup',()=>{drag=null;canvas.style.cursor='default';});canvas.addEventListener('pointercancel',()=>drag=null);
-$('#theme').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('#theme').textContent=dark?'Clair':'Sombre';$('#theme').setAttribute('aria-pressed',dark);needs=true;};
-$('#help').onclick=()=>$('#about').showModal();$('#close-help').onclick=()=>$('#about').close();
-$('#projection').onclick=()=>{const p=document.body.classList.toggle('projection');$('#projection').textContent=p?'Réglages':'Projection';$('#projection').setAttribute('aria-pressed',p);setTimeout(resize,0);};
-$('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('Le navigateur a refusé le plein écran.');}};
-document.addEventListener('fullscreenchange',()=>$('#fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran'));
-$('#results').onclick=()=>{results=!results;$('#results').textContent=results?'Masquer les résultats':'Résultats';$('#results').setAttribute('aria-pressed',results);controls();needs=true;};
-$('#step').onclick=()=>{reveal=(reveal+1)%4;$('#step').textContent=['Construction : départ','Construction : rayon 1','Construction : rayon 2','Construction : complète'][reveal];needs=true;};
-$('#play').onclick=()=>{running=!running;$('#play').textContent=running?'Pause':'Animer';$('#play').setAttribute('aria-pressed',running);needs=true;};
-$('#reset').onclick=()=>{app.reset();configureTools();zoom=1;reveal=3;running=false;phase=0;$('#play').textContent='Animer';$('#step').textContent='Construction : complète';controls();needs=true;};
-$('#zoom-in').onclick=()=>{zoom=Math.min(2.5,zoom*1.2);needs=true;};$('#zoom-out').onclick=()=>{zoom=Math.max(.45,zoom/1.2);needs=true;};$('#fit').onclick=()=>{zoom=1;app.fit?.();needs=true;};
-function toast(t){$('#toast').textContent=t;setTimeout(()=>$('#toast').textContent='',3000);}
-$('#export').onclick=()=>{draw();const out=document.createElement('canvas');out.width=canvas.width;out.height=canvas.height+140;const c=out.getContext('2d');c.fillStyle=color('paper');c.fillRect(0,0,out.width,out.height);c.drawImage(canvas,0,0);c.fillStyle=color('ink');c.font='26px Arial';c.fillText(app.title+' · '+app.tabs[app.tab],22,canvas.height+38);c.font='18px Arial';const ss=$$('.metric').map(m=>m.innerText.replace('\n',' : ')).join('  ·  ');c.fillText(ss,22,canvas.height+75);c.font='16px Arial';c.fillText($('#message').textContent,22,canvas.height+110);out.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=app.id+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Image PNG exportée.');});};
-document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||$('#about').open)return;if(e.code==='Space'){e.preventDefault();$('#play').click();}if(e.key.toLowerCase()==='r')$('#reset').click();if(e.key.toLowerCase()==='f')$('#fullscreen').click();});
-</script><script id="application">const base={infinity:false,f1:10,f2:8,e:28,p:-25,b:1.5,alpha:.35,intermediate:true,aux:true};
-boot({id:'OP2_Deux_Lentilles',title:'Associer deux lentilles',tabs:['Doublet libre','Lunette de Galilée','Lunette astronomique','Microscope'],s:{...base},enter(){const sets=[base,{...base,f1:60,f2:-5,e:55,alpha:.35},{...base,f1:40,f2:8,e:48,alpha:.7},{...base,f1:2,f2:4,e:14,p:-2.5,b:.3}];this.s={...sets[this.tab]};},reset(){this.enter();},controls(){const s=this.s,t=this.tab;return section(t===0?'Les deux lentilles':'Réglage de l’instrument',range('f1','Focale de l’objectif f′₁',t===3?1:4,t===3?6:80,t===3?.1:1,'cm')+range('f2','Focale de l’oculaire f′₂',t===1?-20:1,t===1?-1:25,.5,'cm')+range('e','Séparation O₁O₂',t===3?6:5,t===3?30:110,.5,'cm')+(t===0?check('infinity','Objet à l’infini'):'')+(t===1||t===2||(t===0&&s.infinity)?range('alpha','Angle d’entrée α',.05,1.5,.05,'°'):range('p','Position objet O₁A',t===3?-10:-80,-.5,t===3?.02:.5,'cm')+range('b','Hauteur AB',.05,t===3?1:4,.05,'cm'))+buttons(t===0?[['swap','Permuter les focales'],['afocal','Réglage afocal']]:t===3?[['relax','Image finale à l’infini']]:[['afocal','Régler afocal'],['defocus','Dérégler l’oculaire']]))+section('Construction',check('intermediate','Image intermédiaire et plans focaux')+check('aux','Afficher les rayons auxiliaires')+note('Glisser les deux lentilles et, pour un objet à distance finie, le sommet B. La construction peut être révélée progressivement.'))+section('Grandeurs utiles',formula(t===1||t===2?'G = α′/α = −f′₁/f′₂<br>Afocal : F′₁ = F₂':t===3?'P = α′/AB = γ₁/f′₂<br>G<sub>c</sub> = P dₘ ; dₘ = 0,25 m':'γ = γ₁γ₂<br>C<sub>eq</sub> = C₁ + C₂ − e C₁C₂')+note(t===3?'Puissance intrinsèque P en m⁻¹ (angles en radians), au réglage donnant l’image finale à l’infini. Grossissement commercial algébrique pour une référence à 25 cm.':t===0?'C₁, C₂ et C_eq en dioptries, e en mètres dans cette formule. La vergence équivalente n’est pas un grossissement.':'Une lunette afocale a une vergence équivalente nulle et un grossissement angulaire généralement différent de 1.'));
-},change(k){if(this.tab===0&&k==='f2'&&Math.abs(this.s.f2)<.5)this.s.f2=.5;},action(a){const s=this.s;if(a==='swap')[s.f1,s.f2]=[s.f2,s.f1];if(a==='afocal'){s.e=s.f1+s.f2;if(this.tab===0)s.infinity=true;}if(a==='defocus')s.e+=3;if(a==='relax'){const q1=s.e-s.f2;s.p=s.f1*q1/(s.f1-q1);}},
-draw(){const s=this.s,t=this.tab,telescope=t===1||t===2,footer=telescope?58:0;this.instrumentDiagramRect={x:0,y:0,w:W,h:H-footer};ctx.save();ctx.beginPath();ctx.rect(0,0,W,H-footer);ctx.clip();const infinite=t===1||t===2||(t===0&&s.infinity),m=O.doublet(infinite?Infinity:s.p,s.f1,s.f2,s.e),q1=infinite?s.f1:m.q1,finalX=s.e+m.q,y1=infinite?s.f1*Math.tan(s.alpha*Math.PI/180):O.thin(s.p,s.f1).g*s.b;let xmin=infinite?-s.f1*.45:Math.max(-100,s.p-5),xmax=Math.max(s.e+10,Math.min(150,s.e+(Number.isFinite(m.q)&&!infinite?Math.max(0,m.q)+9:s.f1*.5)));if(!infinite&&Number.isFinite(q1))xmax=Math.max(xmax,Math.min(150,q1+6));if(t===0&&infinite&&Number.isFinite(m.q)){xmax=Math.max(xmax,Math.min(150,finalX+9));xmin=Math.min(xmin,Math.max(-150,finalX-9));}const g=world(xmin,xmax,t===3?2.5:t===0&&infinite?3:6,{x:0,y:25,w:W,h:H-80-footer});axis(g,xmin,xmax);lensDraw(g,0,s.f1,t===3?1.8:t===0&&infinite?2.2:4,W<650?'L₁':'L₁ · objectif',false);lensDraw(g,s.e,s.f2,t===3?1.8:t===0&&infinite?2.2:4,W<650?'L₂':'L₂ · oculaire',false);text('O₁',...g.p(0,0).map((v,i)=>v+(i?42:-6)),'blue',16);text('O₂',...g.p(s.e,0).map((v,i)=>v+(i?42:-6)),'blue',16);
-const focusGroups=[];for(const [x,label]of [[-s.f1,'F₁'],[s.f1,'F′₁'],[s.e-s.f2,'F₂'],[s.e+s.f2,'F′₂']]){let item=focusGroups.find(q=>Math.abs(q.x-x)<1e-6);if(item)item.labels.push(label);else focusGroups.push({x,labels:[label]});}for(const q of focusGroups){const point=g.p(q.x,0);if(point[0]>10&&point[0]<W-15)text((Math.abs(q.x-q1)<1e-6&&s.intermediate?'A₁ = ':'')+q.labels.join(' = '),point[0],point[1]+(q.labels.length>1?61:23),'muted',q.labels.length>1?15:16,'center');}if(!infinite)objectDraw(g,s.p,s.b,'B','red');else text('Objet à l’infini · α = '+fmt(s.alpha,2)+'°',15,22,'red',17);
-if(s.intermediate&&Number.isFinite(q1)&&Math.abs(q1)<180&&reveal>0){line(g.p(q1,-5),g.p(q1,5),'violet',true,1);objectDraw(g,q1,y1,'B₁','violet',q1>s.e||q1<0,false);text(q1>s.e?'Objet virtuel pour L₂':'Objet réel pour L₂',g.p(q1,y1)[0],telescope?H-footer-18:H-51,'violet',15,'center');}
-const hs=t===3?[-.9,0,.9]:t===0&&infinite?[-.8,0,.8]:[-2.6,0,2.6];if(reveal)hs.slice(0,reveal).forEach((h,i)=>{const inc=infinite?Math.tan(s.alpha*Math.PI/180):(h-s.b)/(-s.p),out1=inc-h/s.f1,y2=h+s.e*out1,out2=out1-y2/s.f2,c=['ray','blue','red'][i],start=infinite?g.p(xmin,h+inc*xmin):g.p(s.p,s.b);const pts=[start,g.p(0,h)];if(reveal>1)pts.push(g.p(s.e,y2));if(reveal>2)pts.push(g.p(xmax,y2+(xmax-s.e)*out2));ray(pts,c);if(s.intermediate&&q1>s.e&&reveal>1)ray([g.p(s.e,y2),g.p(q1,y1)],c,true);if(s.aux&&reveal>2&&!infinite&&Number.isFinite(m.q)&&m.q<0)ray([g.p(s.e,y2),g.p(finalX,m.g*s.b)],c,true);});
-if((!infinite||t===0)&&Number.isFinite(m.q)&&Math.abs(finalX)<180&&reveal===3)objectDraw(g,finalX,infinite?m.heightPerAngle*Math.tan(s.alpha*Math.PI/180):m.g*s.b,'B′','accent',m.q<0);
-handle(g.p(0,t===3?-1.8:t===0&&infinite?-2.2:-4),p=>{const x=g.inv(...p)[0],newE=s.e-x;s.p-=x;s.e=O.clamp(newE,6,110);},'L₁');handle(g.p(s.e,t===3?-1.8:t===0&&infinite?-2.2:-4),p=>s.e=O.clamp(g.inv(...p)[0],t===3?6:5,t===3?30:110),'L₂');if(!infinite)handle(g.p(s.p,s.b),p=>{const z=g.inv(...p);s.p=O.clamp(z[0],t===3?-10:-80,-.5);s.b=O.clamp(z[1],.05,t===3?1:4);},'Objet');
-if(t===1||t===2){const af=Math.abs(s.e-s.f1-s.f2)<.0001,G=-s.f1/s.f2;metrics([['Grossissement G',af?fmt(G,2):'non afocal'],['Angle de sortie α′',af?fmt(G*s.alpha,2)+' °':'faisceau divergent'],['Vergence équivalente',fmt(m.vergence,3)+' δ']],af?`Réglage afocal ; image ${G>0?'droite':'renversée'}. Le grossissement compare deux angles.`:'Les rayons sortants ne sont plus parallèles : rétablir F′₁ = F₂.','Modèle paraxial · angles algébriques · ouvertures supposées non limitantes · échelles distinctes');if(Math.abs(G*s.alpha)>12)text('Angle de sortie : limite de Gauss',15,H-footer-23,'red',15);}
-else if(t===3){const relaxed=Math.abs(q1-(s.e-s.f2))<1e-6,g1=O.thin(s.p,s.f1).g,P=g1/(s.f2/100),Gc=P*.25;metrics([['Grandissement objectif γ₁',fmt(g1,2)],['Puissance intrinsèque P',relaxed?fmt(P,1)+' m⁻¹':'régler à l’infini'],['Grossissement commercial',relaxed?fmt(Gc,2):'régler à l’infini']],relaxed?'L’image intermédiaire est dans le plan focal objet de l’oculaire ; l’œil emmétrope observe sans accommoder.':'Régler la position de l’objet pour placer l’image intermédiaire dans le plan focal objet de l’oculaire.','P = α′/AB, α′ en radians et AB en mètres · Gc = P × 0,25 m · conventions algébriques');}
-else if(infinite){metrics([['Image intermédiaire O₁A₁',fmt(s.f1,2)+' cm'],['Image finale O₂A′',Number.isFinite(m.q)?fmt(m.q,2)+' cm':'∞'],[m.afocal?'Grossissement angulaire G':'Hauteur image A′B′',m.afocal?fmt(m.G,2):fmt(m.heightPerAngle*Math.tan(s.alpha*Math.PI/180)*10,2)+' mm']],m.afocal?'Doublet afocal : l’objet et l’image sont à l’infini.':'Un faisceau incident parallèle donne une image finale '+(m.q>=0?'réelle':'virtuelle')+'. Le grandissement transversal n’est pas défini pour cet objet à l’infini.','α règle la direction du faisceau incident · constructions dans les conditions de Gauss');}
-else metrics([['Image intermédiaire O₁A₁',fmt(q1,2)+' cm'],['Grandissement total γ',Number.isFinite(m.g)?fmt(m.g,2):'image à l’infini'],['Vergence équivalente',fmt(m.vergence,3)+' δ']],Number.isFinite(m.q)?`L’image finale est ${m.q>0?'réelle':'virtuelle'} pour L₂ ; γ relie les tailles transversales.`:'Image finale à l’infini : le grandissement transversal final n’est pas défini.','Deux lentilles minces séparées · matrice paraxiale exacte dans ce modèle · échelles distinctes');ctx.restore();if(telescope)this.orientation(m.afocal,m.G);},
-orientation(afocal,G){const y=H-55,h=55;ctx.fillStyle=color('bg');ctx.fillRect(0,y,W,h);line([0,y],[W,y],'line',false,1);const compact=W<650,cx=compact?65:215,cy=y+28;const glyph=(x,inverted,c)=>{ctx.save();ctx.translate(x,cy);if(inverted)ctx.rotate(Math.PI);ctx.fillStyle=color(c);ctx.fillRect(-9,-14,5,28);ctx.fillRect(-9,-14,21,5);ctx.fillRect(-9,-2,16,5);ctx.restore();};text(compact?'Objet':'Orientation de l’image',16,cy,'muted',compact?12:14);glyph(cx,false,'muted');arrow([cx+27,cy],[cx+67,cy],'muted',false,1.3);if(afocal)glyph(cx+99,G<0,'accent');else text('?',cx+99,cy,'muted',26,'center');text(afocal?(G>0?'Image droite':'Image renversée'):'Réglage non afocal',cx+130,cy,afocal?'accent':'muted',compact?15:18);this.orientationRect={x:0,y,w:W,h};},
-help:`<p><b>Une seule méthode.</b> L₁ donne A₁B₁ ; cette image est l’objet de L₂. Les traits interrompus entre L₂ et une image que L₁ aurait formée seule indiquent une construction auxiliaire : cette image peut être interceptée avant sa formation.</p><p><b>Trois notions distinctes.</b> Le grandissement transversal γ = A′B′/AB est sans dimension et concerne des plans conjugués à distance finie. Le grossissement angulaire G = α′/α compare des angles. La puissance intrinsèque du microscope réglé à l’infini est P = α′/AB = γ₁/f′₂ en m⁻¹. Son grossissement commercial vaut P × 0,25 m, avec une observation de référence au punctum proximum conventionnel de 25 cm. Les signes traduisent l’orientation de l’image.</p><p>La vergence équivalente d’un doublet est C_eq = C₁ + C₂ − e C₁C₂, avec e en mètres. Elle concerne sa focale effective et ses plans principaux, qui ne sont généralement pas confondus avec les centres des lentilles. Une lunette afocale a C_eq = 0 mais G ≠ 0. Pour une lunette, P = α′/AB n’est pas pertinent pour l’objet à l’infini.</p><p><b>Lunettes.</b> F′₁ = F₂ ; e = f′₁ + f′₂ ; G = −f′₁/f′₂. Galilée : oculaire divergent, image droite et image de L₁ seule située après L₂. Astronomique : oculaire convergent, image renversée et image intermédiaire réelle entre les deux lentilles.</p><p><b>Limites.</b> Lentilles idéales, optique paraxiale, diaphragmes et champ non limitants. Les ouvertures dessinées sont symboliques. Un avertissement signale les angles de sortie trop grands pour l’interprétation paraxiale. Les rayons qui sortent du champ sont tronqués. Échelles transversale et longitudinale différentes.</p>`
+/* =====================================================================
+   OP2 · Associer deux lentilles
+   Physique : Optics.doublet (../_Sources_Ateliers/optics.js, moteur d'origine
+   inchangé) : matrices de transfert paraxiales exactes de deux lentilles minces.
+   Méthode du cours : 𝓛1 donne A1B1, objet pour 𝓛2. Lunettes afocales : F′1 = F2,
+   G = α′/α = −f′1/f′2. Microscope réglé à l'infini : P = α′/AB = γ1/f′2,
+   grossissement commercial P × 0.25 m. Vergence V = V1 + V2 − e V1 V2.
+   ===================================================================== */
+const O=window.Optics, K=window.OP2, M=AnimKit.M, bar=K.bar, DEG=Math.PI/180;
+const st={gel:null};
+const sig=(x,n=3)=>A.fmt.sig(x,n), fix=(x,d)=>A.fmt.fix(x,d);
+const L1=`𝓛<sub>1</sub>`, L2=`𝓛<sub>2</sub>`;
+/* paramètres de l'onglet courant (chaque onglet garde ses propres réglages) */
+const PRE=['d_','g_','a_','m_'];
+function P(a){const q=PRE[a.tab],p=a.p,g=n=>p[q+n];
+  const inf=a.tab===1||a.tab===2||(a.tab===0&&p.d_inf);
+  return{f1:g('f1'),f2:g('f2'),e:g('e'),p:g('p'),b:g('b'),alpha:g('alpha'),inf};}
+const setP=(a,n,v)=>a.set(PRE[a.tab]+n,v);
+const rg=(id,label,min,max,step,value,unit,onglet,o={})=>({id,label,min,max,step,value,unit,dec:o.dec,onglets:[onglet],si:o.si});
+const lf1=`Focale de l'objectif ${M.v('f')}′<sub>1</sub>`, lf2=`Focale de l'oculaire ${M.v('f')}′<sub>2</sub>`, le=`Distance ${M.v('e')} = ${bar('O<sub>1</sub>O<sub>2</sub>')}`, la='Angle d\'entrée α', lp=`Position ${bar('O<sub>1</sub>A')}`, lb=`Hauteur ${bar('AB')}`;
+
+const A=AnimKit.app({
+  code:'OP2', partie:'TurquoiseLagon', chapitre:'OP2 Formation des images',
+  titre:'Associer deux lentilles', sousTitre:'Doublet, lunettes et microscope : l\'image donnée par la première lentille sert d\'objet à la seconde',
+  onglets:['Doublet libre','Lunette de Galilée','Lunette astronomique','Microscope'],
+  temps:false,
+  panneaux:[{id:'scene',zoom:true,ratioTel:1}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Permuter les focales',onglets:[0],action:a=>{const{f1,f2}=P(a);if(f2>0){setP(a,'f1',f2);setP(a,'f2',f1)}else a.toast('Permutation possible avec deux lentilles convergentes')}},
+      {label:'Réglage afocal',onglets:[0,1,2],action:a=>{const{f1,f2}=P(a);setP(a,'e',+(f1+f2).toFixed(1));if(a.tab===0)a.set('d_inf',true)}},
+      {label:'Dérégler l\'oculaire',onglets:[1,2],action:a=>setP(a,'e',+(P(a).e+3).toFixed(1))},
+      {label:'Image finale à l\'infini',onglets:[3],action:a=>{const{f1,f2,e}=P(a),q1=e-f2;if(q1<=f1){a.toast('Éloigner les lentilles : l\'image intermédiaire doit être après F′₁');return}setP(a,'p',+(f1*q1/(f1-q1)).toFixed(3))}}]},
+    {titre:'Les deux lentilles',items:[
+      rg('d_f1',`Focale ${M.v('f')}′<sub>1</sub>`,2,80,.5,10,'cm',0,{dec:1}),
+      rg('d_f2',`Focale ${M.v('f')}′<sub>2</sub>`,-25,25,.5,8,'cm',0,{dec:1}),
+      rg('d_e',le,2,110,.5,28,'cm',0,{dec:1}),
+      rg('g_f1',lf1,20,100,1,60,'cm',1),
+      rg('g_f2',lf2,-20,-1,.5,-5,'cm',1,{dec:1}),
+      rg('g_e',le,5,110,.5,55,'cm',1,{dec:1}),
+      rg('a_f1',lf1,10,100,1,40,'cm',2),
+      rg('a_f2',lf2,1,25,.5,8,'cm',2,{dec:1}),
+      rg('a_e',le,10,125,.5,48,'cm',2,{dec:1}),
+      rg('m_f1',lf1,.5,6,.1,2,'cm',3,{dec:1}),
+      rg('m_f2',lf2,1,8,.1,4,'cm',3,{dec:1}),
+      rg('m_e',le,6,30,.1,14,'cm',3,{dec:1}),
+      {type:'note',html:'Glisser les lentilles et le point B dans la scène.'}]},
+    {titre:'L\'objet',items:[
+      {id:'d_inf',type:'check',label:'Objet à l\'infini',value:false,onglets:[0]},
+      rg('d_alpha',la,.05,3,.05,.5,'°',0,{dec:2,si:a=>a.p.d_inf}),
+      rg('d_p',lp,-80,-.5,.5,-25,'cm',0,{dec:1,si:a=>!a.p.d_inf}),
+      rg('d_b',lb,.1,4,.05,1.5,'cm',0,{dec:2,si:a=>!a.p.d_inf}),
+      rg('g_alpha',la,.05,1.5,.05,.35,'°',1,{dec:2}),
+      rg('a_alpha',la,.05,1.5,.05,.7,'°',2,{dec:2}),
+      rg('m_p',lp,-10,-.5,.01,-2.5,'cm',3,{dec:2}),
+      rg('m_b',lb,.05,1,.01,.3,'cm',3,{dec:2})]},
+    {titre:'Affichage',items:[
+      {id:'nr',type:'seg',label:'Étapes de la construction (touche C)',options:[[0,'Départ'],[1,'Par 𝓛₁'],[2,'Par 𝓛₂'],[3,'Complète']],value:0},
+      {id:'inter',type:'check',label:'Image intermédiaire et foyers',value:true},
+      {id:'prol',type:'check',label:'Prolongements (pointillés)',value:true},
+      {id:'res',type:'check',label:'Résultats : grandissement, grossissement (masqués au départ)',value:false}]}
+  ],
+  aide:{
+    voit:'Deux lentilles minces '+L1+' et '+L2+' de même axe. Trois rayons issus de B (ou d\'un objet à l\'infini) traversent le système ; l\'image intermédiaire A<sub>1</sub>B<sub>1</sub> donnée par '+L1+' est en violet, l\'image finale A′B′ en vert. Pour les lunettes, un bandeau compare l\'orientation de l\'objet et de l\'image.',
+    faire:'<ul><li>Glisser les lentilles et le point B ; régler les focales et la distance <i class="m">e</i>.</li><li>Lunettes : « Réglage afocal » place F′<sub>1</sub> sur F<sub>2</sub>, « Dérégler l\'oculaire » rompt ce réglage.</li><li>Microscope : « Image finale à l\'infini » place A<sub>1</sub>B<sub>1</sub> dans le plan focal objet de l\'oculaire.</li><li>Construire pas à pas (touche <kbd>C</kbd>) : d\'abord l\'image par '+L1+', puis par '+L2+'.</li><li>Faire prévoir, puis cocher « Résultats ».</li></ul>',
+    modele:'Lentilles minces idéales dans les conditions de Gauss, ouvertures et champ non limitants (les ouvertures dessinées sont symboliques). Calcul par matrices de transfert paraxiales, exact dans ce modèle. Grandissement transversal '+M.v('γ')+' = '+M.frac(bar('A′B′'),bar('AB'))+' = '+M.v('γ','1')+M.v('γ','2')+' ; grossissement '+M.v('G')+' = '+M.frac('α′','α')+' ; puissance du microscope '+M.v('P')+' = '+M.frac('α′',bar('AB'))+' = '+M.frac(M.v('γ','1'),M.v('f')+'′<sub>2</sub>')+' (m<sup>−1</sup>), grossissement commercial '+M.v('P')+' × 0.25 m ; vergence '+M.v('V')+' = '+M.v('V','1')+' + '+M.v('V','2')+' − '+M.v('e')+M.v('V','1')+M.v('V','2')+' (δ). Angles algébriques ; échelles longitudinale et transversale différentes.',
+    cours:'OP2 Formation des images, « Systèmes optiques complexes » : système à plusieurs lentilles (images intermédiaires successives) et lunette de Galilée afocale, '+M.v('G')+' = '+M.frac('α′','α')+' = −'+M.frac(M.v('f')+'′<sub>1</sub>',M.v('f')+'′<sub>2</sub>')+'. Lunette astronomique et microscope : prolongements de travaux dirigés.',
+    touches:'<kbd>C</kbd> étape suivante de la construction'
+  },
+  touches:{c:a=>a.set('nr',(a.p.nr+1)%4)},
+  change(a,id,v){if(id==='d_f2'&&Math.abs(v)<.5)a.set('d_f2',v<0?-.5:.5,{silent:true})},
+  reset(){K.phase=0},
+  onglet(a){a.set('nr',0)},
+  step(a,dt){K.phase+=dt;a.t+=dt},
+  draw(a){dessin(a)}
 });
-</script></body></html>
+
+function cadre(a,q){
+  const{f1,f2,e,p,inf}=q, t=a.tab, m=O.doublet(inf?Infinity:p,f1,f2,e), q1=inf?f1:m.q1, xf=e+m.q;
+  let xmin=inf?-Math.max(f1*.35,6):Math.max(-100,p-.12*(e-p)), xmax=Math.max(e+Math.max(Math.abs(f2)*1.3,.15*e),(!inf&&Number.isFinite(m.q))?Math.min(150,xf+.12*e):e);
+  if(Number.isFinite(q1)&&Math.abs(q1)<150){xmin=Math.min(xmin,q1-.05*e);xmax=Math.max(xmax,q1+.08*e)}
+  if(t===0&&inf&&Number.isFinite(m.q)&&Math.abs(xf)<150){xmax=Math.max(xmax,xf+.12*e);xmin=Math.min(xmin,xf-.12*e)}
+  return{xmin,xmax};
+}
+function dessin(a){
+  const Pn=a.panels.scene, S=a.S, C=a.C, k=a.k, cc=K.couleurs(a), q=P(a), t=a.tab, nr=a.p.nr, tel=t===1||t===2;
+  const{f1,f2,e,p,b,alpha,inf}=q, ta=Math.tan(alpha*DEG);
+  K.vider('scene');
+  const m=O.doublet(inf?Infinity:p,f1,f2,e), q1=inf?f1:m.q1, g1=inf?NaN:O.thin(p,f1).g, y1=inf?f1*ta:g1*b, xf=e+m.q;
+  const yf=inf?m.heightPerAngle*ta:m.g*b;
+  const band=tel?48*k:0, fr=st.gel||cadre(a,q);
+  // échelle transversale : rayons d'ouverture et images visibles
+  let ymax=t===3?.8:inf?(t===0?1.2:3):3;
+  if(!inf)ymax=Math.max(ymax,b*1.3);
+  if(Number.isFinite(y1)&&Math.abs(q1)<150)ymax=Math.max(ymax,Math.min(Math.abs(y1)*1.2,ymax*4));
+  if(nr===3&&Number.isFinite(yf)&&Math.abs(xf)<150&&!(tel&&m.afocal))ymax=Math.max(ymax,Math.min(Math.abs(yf)*1.15,ymax*3));
+  /* rayons : de préférence ceux qui traversent les deux montures dessinées ; sinon le cadre s'agrandit */
+  const Lh=.8*.86*ymax, cA=inf?1-e/f1:1-e/p-e/f1, cB=inf?e*ta:e*b/p; // hauteur sur 𝓛2 : y2 = cA h + cB
+  let lo=-Lh,hi=Lh; if(Math.abs(cA)>1e-9){const u=(-Lh-cB)/cA,v=(Lh-cB)/cA;lo=Math.max(lo,Math.min(u,v));hi=Math.min(hi,Math.max(u,v))}
+  const hs=hi>lo?[hi-.08*(hi-lo),(lo+hi)/2,lo+.08*(hi-lo)]:[Lh*.7,0,-Lh*.7];
+  ymax=Math.max(ymax,...hs.map(h=>Math.abs(cA*h+cB)/(.86*.92)));
+  const G=K.repere(Pn,{...fr,ymax,h:Pn.h-band,my:22*k});
+  const X=G.X, Y=G.Y, pt=(x,y)=>[X(x),Y(y)], XL=G.x(G.left), XR=G.x(G.right);
+  let s=K.axe(a,G);
+  const yl=ymax*.86;
+  s+=K.lentille(a,X(0),f1,Y(yl),Y(-yl),'𝓛<tspan font-size="72%" dy="0.42em">1</tspan>');
+  s+=K.lentille(a,X(e),f2,Y(yl),Y(-yl),'𝓛<tspan font-size="72%" dy="0.42em">2</tspan>');
+  s+=S.text(X(0)-5*k,Y(0)+6*k,S.v('O','1'),{anchor:'end',base:'top',size:14,c:C.ink2,math:true})+S.text(X(e)-5*k,Y(0)+6*k,S.v('O','2'),{anchor:'end',base:'top',size:14,c:C.ink2,math:true});
+  if(a.p.inter){
+    const grp=[];for(const[x,l]of[[-f1,['F','1']],[f1,['F′','1']],[e-f2,['F','2']],[e+f2,['F′','2']]]){const g=grp.find(z=>Math.abs(z.x-x)<1e-6);if(g)g.l.push(l);else grp.push({x,l:[l]})}
+    for(const g of grp)s+=K.pointAxe(a,G,g.x,g.l.map(l=>S.v(l[0],l[1])).join(' = '),{dy:g.l.length>1?24:9,size:14});
+  }
+  // objet
+  if(!inf)s+=K.fleche(a,G,p,b,cc.obj,{A:S.v('A'),B:S.v('B')});
+  else s+=S.text(G.left+8*k,G.top+8*k,`objet à l'infini, α = ${fix(alpha,2)}°`,{base:'top',size:14,c:C.ink});
+  // rayons
+  const cols=cc.r;
+  if(nr>=1)hs.forEach((h,i)=>{
+    const inc=inf?ta:(h-b)/(-p), o1=inc-h/f1, y2=h+e*o1, o2=o1-y2/f2, c=cols[i];
+    const pts=[inf?pt(XL,h+inc*XL):pt(p,b),pt(0,h)];
+    pts.push(nr>=2?pt(e,y2):pt(e,y2));
+    if(nr>=2)pts.push(pt(XR,y2+(XR-e)*o2));
+    s+=K.rayon(a,pts,c);
+    if(a.p.prol){
+      if(a.p.inter&&Number.isFinite(q1)&&q1>e)s+=K.rayon(a,[pt(e,y2),pt(q1,y1)],c,{dash:true});
+      if(a.p.inter&&Number.isFinite(q1)&&q1<0)s+=K.rayon(a,[pt(0,h),pt(q1,y1)],c,{dash:true});
+      if(nr===3&&Number.isFinite(m.q)&&m.q<0&&Math.abs(xf)<150)s+=K.rayon(a,[pt(e,y2),pt(xf,yf)],c,{dash:true});
+    }});
+  // image intermédiaire
+  if(a.p.inter&&nr>=1&&Number.isFinite(q1)&&Math.abs(q1)<150){
+    s+=S.line(X(q1),Y(ymax*.95),X(q1),Y(-ymax*.95),{c:cc.plan,w:1,dash:`${4*k} ${4*k}`,op:.7});
+    s+=K.fleche(a,G,q1,y1,cc.plan,{virtuel:q1>e||q1<0,B:S.v('B','1'),w:2.2});
+    s+=S.text(X(q1),Y(-ymax*.97),q1>e?`objet virtuel pour 𝓛${'₂'}`:q1<0?'image virtuelle de 𝓛₁':`objet réel pour 𝓛₂`,{anchor:'middle',base:'bottom',size:13,c:cc.plan});
+  }
+  // image finale
+  if(nr===3&&Number.isFinite(m.q)&&Math.abs(xf)<150&&!(tel&&m.afocal))s+=K.fleche(a,G,xf,yf,C.v,{virtuel:m.q<0,B:S.v('B′'),A:S.v('A′')});
+  // angles α, α′ des lunettes
+  if(tel&&nr>=2){const o1=ta, y2=e*o1, o2=o1-y2/f2;
+    s+=angle(a,X(0),Y(0),Math.atan2(-(Y(ta*10)-Y(0)),X(10)-X(0)),'α',C.ink,36*k);
+    if(nr===3&&(m.afocal||Math.abs(o2)<1)){const xa=e+.45*(XR-e),xe=X(xa),ye=Y(y2+o2*(xa-e)),L=Math.min(90*k,G.right-xe-10*k);
+      s+=S.line(xe,ye,xe+L,ye,{c:C.ink2,w:1,dash:`${4*k} ${3*k}`});
+      s+=angle(a,xe,ye,Math.atan2(-(Y(y2+o2*(xa-e+10))-ye),X(xa+10)-xe),'α′',C.ink,L*.8)}}
+  // poignées
+  const hy=Y(-yl)+0*k;
+  s+=K.poignee(a,'scene',X(0),hy,(px)=>{const x=G.x(px);const ne=K.clamp(e-x,2,130);if(!inf)setP(a,'p',+(p-(e-ne)).toFixed(2));setP(a,'e',+ne.toFixed(1))});
+  s+=K.poignee(a,'scene',X(e),hy,(px)=>setP(a,'e',+G.x(px).toFixed(1)));
+  if(!inf)s+=K.poignee(a,'scene',X(p),Y(b),(px,py)=>{setP(a,'p',+Math.min(-.05,G.x(px)).toFixed(2));setP(a,'b',+Math.max(.05,G.y(py)).toFixed(2))});
+  if(tel)s+=orientation(a,Pn,band,m);
+  a.svg('scene',s);
+  mesures(a,q,m,q1,g1);
+  if(nr<3&&t===0)a.insight('Construire d\'abord l\'image A<sub>1</sub>B<sub>1</sub> donnée par 𝓛<sub>1</sub>, puis son image par 𝓛<sub>2</sub> (touche C). Prévoir la nature de l\'image finale.');
+  a.legend([{c:cc.r[0],label:'Rayons'},a.p.inter?{c:cc.plan,label:'Image intermédiaire A₁B₁'}:null,nr===3&&!(tel&&m.afocal)?{c:C.v,label:'Image finale A′B′'}:null,a.p.prol?{c:C.ink2,dash:true,label:'Prolongements'}:null]);
+  a.clock('');
+}
+function angle(a,x,y,th,lab,c,r){
+  const S=a.S,k=a.k;if(Math.abs(th)<.004)return'';
+  return S.arc(x,y,r,0,th,{c,w:1.3,arrow:true})+S.text(x+(r+10*k)*Math.cos(th/2),y-(r+10*k)*Math.sin(th/2),lab,{anchor:'start',size:16,c,math:true});
+}
+function orientation(a,Pn,band,m){
+  const S=a.S,C=a.C,k=a.k,y0=Pn.h-band,cy=y0+band/2,hF=26*k;let s=S.line(0,y0,Pn.w,y0,{c:C.rule,w:1,raw:true});
+  const etroit=Pn.w<560;
+  if(!etroit)s+=S.text(14*k,cy,'Orientation :',{size:14,c:C.ink2,halo:false});
+  const x1=etroit?20*k:130*k; s+=K.lettreF(a,x1,cy+hF/2,hF,C.ink)+S.text(x1+20*k,cy,'objet',{size:13,halo:false});
+  s+=S.arrow(x1+64*k,cy,x1+(etroit?90:110)*k,cy,{c:C.ink2,w:1.4});
+  const x2=x1+(etroit?110:135)*k;
+  if(m.afocal){const inv=m.G<0;s+=K.lettreF(a,x2+(inv?12*k:0),inv?cy-hF/2:cy+hF/2,inv?-hF:hF,C.v)+S.text(x2+26*k,cy,inv?'image renversée':'image droite',{size:15,c:C.v,halo:false,weight:600})}
+  else s+=S.text(x2,cy,etroit?'non afocal':'réglage non afocal : image à distance finie',{size:14,c:C.ink2,halo:false});
+  return s;
+}
+function mesures(a,q,m,q1,g1){
+  const{f1,f2,e,alpha,inf}=q, t=a.tab, R=a.p.res, h=(v,u='')=>R?{value:v,unit:u}:{value:'?'};
+  if(t===1||t===2){const af=Math.abs(e-f1-f2)<1e-4, G=-f1/f2;
+    a.metrics([{label:`Grossissement ${M.v('G')} = ${M.frac('α′','α')}`,...(af?h(sig(G,3)):{value:'non afocal'})},
+      {label:'Angle de sortie α′',...(af?h(fix(G*alpha,2),'°'):{value:'—'})},
+      {label:`Vergence ${M.v('V')}`,value:sig(m.vergence,3),unit:'δ'}]);
+    a.insight(af?`Réglage afocal (F′<sub>1</sub> = F<sub>2</sub>) : un faisceau parallèle ressort parallèle. ${R?`${M.v('G')} = −${M.frac(M.v('f')+'′<sub>1</sub>',M.v('f')+'′<sub>2</sub>')} = ${sig(G,3)} : image ${G>0?'droite':'renversée'}.`:'Prévoir le signe et la valeur du grossissement.'}`
+      :'Les rayons ne ressortent plus parallèles : l\'œil devrait accommoder. Rétablir F′<sub>1</sub> = F<sub>2</sub>.');
+    if(Math.abs(-f1/f2*alpha)>15)a.insight('Angle de sortie trop grand pour les conditions de Gauss : réduire α.');
+  }else if(t===3){const relax=Math.abs(q1-(e-f2))<1e-3, Pw=g1/(f2/100), Gc=Pw*.25;
+    a.metrics([{label:`Grandissement de l'objectif ${M.v('γ','1')}`,...h(sig(g1,3))},
+      {label:`Puissance ${M.v('P')} = ${M.frac(M.v('γ','1'),M.v('f')+'′<sub>2</sub>')}`,...(relax?h(sig(Pw,3),'m<sup>−1</sup>'):{value:'—',hint:'régler à l\'infini'})},
+      {label:'Grossissement commercial',...(relax?h(sig(Gc,3)):{value:'—'})}]);
+    a.insight(relax?'L\'image intermédiaire A<sub>1</sub>B<sub>1</sub> est dans le plan focal objet de l\'oculaire : l\'image finale est à l\'infini, l\'œil observe sans accommoder.':'Régler la position de l\'objet pour placer A<sub>1</sub>B<sub>1</sub> dans le plan focal objet F<sub>2</sub> de l\'oculaire.');
+  }else if(inf){
+    a.metrics([{label:`Image intermédiaire ${bar('O<sub>1</sub>A<sub>1</sub>')}`,value:sig(f1,3),unit:'cm'},
+      {label:`Image finale ${bar('O<sub>2</sub>A′')}`,...(Number.isFinite(m.q)?h(sig(m.q,3),'cm'):{value:'∞'})},
+      m.afocal?{label:`Grossissement ${M.v('G')}`,...h(sig(m.G,3))}:{label:`Vergence ${M.v('V')}`,value:sig(m.vergence,3),unit:'δ'}]);
+    a.insight(m.afocal?'Doublet afocal : objet et image à l\'infini.':`Un faisceau parallèle converge d'abord en F′<sub>1</sub> ; cette image sert d'objet à 𝓛<sub>2</sub>, qui en donne une image ${m.q>=0?'réelle':'virtuelle'}.`);
+  }else{
+    a.metrics([{label:`Image intermédiaire ${bar('O<sub>1</sub>A<sub>1</sub>')}`,...(Number.isFinite(q1)?h(sig(q1,3),'cm'):{value:'∞'})},
+      {label:`Grandissement ${M.v('γ')} = ${M.v('γ','1')}${M.v('γ','2')}`,...(Number.isFinite(m.g)?h(sig(m.g,3)):{value:'non défini'})},
+      {label:`Vergence ${M.v('V')}`,value:sig(m.vergence,3),unit:'δ'}]);
+    a.insight(!Number.isFinite(m.q)?'Image finale à l\'infini : le grandissement transversal n\'est pas défini.':`𝓛<sub>1</sub> donne A<sub>1</sub>B<sub>1</sub> ; ${q1>e?'cette image, située après 𝓛<sub>2</sub>, est un objet virtuel pour 𝓛<sub>2</sub>':'cette image sert d\'objet réel à 𝓛<sub>2</sub>'}, qui en donne une image finale ${m.q>0?'réelle':'virtuelle'}.`);
+  }
+}
+K.activerGlisser(A,'scene',{debut(){st.gel=cadre(A,P(A))},fin(){st.gel=null;A.render()}});
+
+</script>
+</body>
+</html>

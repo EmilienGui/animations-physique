@@ -1,117 +1,751 @@
 <!doctype html>
-<html lang="fr" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Un réacteur particulaire pour explorer la cinétique chimique en MPSI : ordres, grand excès, température et exploitation d'un suivi simulé."><title>TC3 · Cinétique chimique</title><style>:root{color-scheme:light;--bg:#eef3ef;--paper:#fff;--ink:#172c28;--muted:#576c64;--line:#d0dfd5;--accent:#008060;--wash:#e6f3eb;--a:#2565be;--b:#bd5128;--c:#008060;--d:#9250b6;--grid:#e1e9e4}
-[data-theme=dark]{color-scheme:dark;--bg:#101c20;--paper:#182a2e;--ink:#edf5f0;--muted:#b6ccc0;--line:#3a5354;--accent:#72d8ac;--wash:#233f38;--a:#8abaff;--b:#ffb18a;--c:#72d8ac;--d:#d7aff7;--grid:#324a4b}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;border-top:5px solid var(--accent);background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button,select,input[type=number]{border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:7px 10px}button{min-height:36px;font-weight:550}button:hover{border-color:var(--accent);background:var(--wash)}button[aria-pressed=true]{color:var(--accent);border-color:var(--accent);background:var(--wash)}button.primary{color:white;background:#007454;border-color:#007454}[data-theme=dark] button.primary{color:#10251b;background:var(--accent);border-color:var(--accent)}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input[type=range]{width:100%;accent-color:var(--accent);height:23px;cursor:pointer;margin:5px 0}input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;flex:none}.shell{height:calc(100dvh - 5px);max-width:2200px;margin:auto;padding:14px 20px 10px;display:flex;flex-direction:column;gap:10px}.header{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:12px}.chapter{background:var(--accent);color:var(--paper);padding:10px;border-radius:10px;font-weight:750;font-size:17px}.eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{font-size:28px;line-height:1.15;margin:2px 0 0;font-weight:600;letter-spacing:-.5px}.tools{display:flex;gap:6px}.tools button{font-size:15px}.modes{display:flex;gap:7px;flex-wrap:wrap}.modes button{font-size:16px;background:transparent}.layout{display:grid;grid-template-columns:258px minmax(0,1fr);gap:16px;flex:1;min-height:0}.settings{border:1px solid var(--line);border-radius:13px;background:var(--paper);overflow-y:auto;scrollbar-width:thin;min-height:0}.setting-section{padding:16px;border-bottom:1px solid var(--line)}.setting-section:last-child{border:0}.settings h2{font-size:20px;margin:4px 0 13px;font-weight:550}.field-label{font-size:15px;display:flex;justify-content:space-between;gap:5px;margin:15px 0 3px}.field-label span{font-size:13px;color:var(--muted);white-space:nowrap}.number-row{display:flex;align-items:center;gap:8px}.number-row input[type=range]{min-width:30px;flex:1}.number-row input[type=number]{width:82px;flex:none;font-size:16px;padding:5px 6px}.hint{color:var(--muted);font-size:13px;line-height:1.5;margin:9px 0 0}.order-buttons{display:flex;gap:6px;margin:7px 0}.order-buttons button{flex:1;font-size:20px}.wide{width:100%;margin-top:16px}.presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.presets button{font-size:13px;padding:6px 8px;min-height:32px}.check{display:flex;align-items:center;gap:7px;font-size:14px;margin:10px 0}.content{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}.reactionbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex:none}.formula{font:25px/1.25 Georgia,serif}.reactionmeta{font-size:13px;color:var(--muted);margin-top:4px}.transport{display:flex;align-items:center;gap:5px;flex:none}.transport button,.transport select{font-size:14px;min-height:36px;padding:6px 8px}.transport select{width:65px}.scenes{display:grid;grid-template-columns:1.12fr 1fr;gap:12px;flex:1;min-height:260px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:13px;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;box-shadow:0 6px 24px #103b2410}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px 7px;min-height:45px}.panelhead h2{font-size:18px;margin:0;font-weight:600}.panelhead>span{font-size:12px;color:var(--muted)}.panelhead button{font-size:13px;padding:5px 8px;min-height:32px}.vessels{display:flex;flex:1;min-height:0;gap:3px}.vessel{flex:1;min-width:0;display:flex;flex-direction:column;position:relative;overflow:hidden}.vessel+.vessel{border-left:1px solid var(--line)}.vessel-label{padding:1px 12px 3px;font-size:16px;color:var(--muted);min-height:28px}.vessel canvas{width:100%;height:100%;display:block;min-height:100px;flex:1;touch-action:none;cursor:grab}.vessel canvas:active{cursor:grabbing}.counters{display:flex;flex-wrap:wrap;gap:8px;padding:7px 12px;min-height:39px}.counters span{font-size:15px;font-weight:600;white-space:nowrap}.panelfoot{display:flex;justify-content:space-between;align-items:center;gap:5px;padding:6px 12px 10px;min-height:44px;color:var(--muted);font-size:11px}.zoomtools{display:flex;gap:4px;flex:none}.zoomtools button{font-size:13px;min-height:30px;padding:3px 7px}.graphwrap{flex:1;min-height:150px;position:relative}.graphwrap canvas{display:block;width:100%;height:100%;touch-action:none}.plot-caption{font-size:13px;padding:0 14px;color:var(--muted);min-height:22px}.plot-legend{display:flex;gap:10px;flex-wrap:wrap;padding:2px 13px 6px;font-size:13px}.plot-legend span{display:flex;gap:5px;align-items:center}.plot-legend i{width:20px;border-top:3px solid var(--color);height:0}.plot-legend i.dashed{border-top-style:dashed}#sensor{display:flex;gap:10px;align-items:center;padding:0 14px;font-size:13px;color:var(--muted)}.timeline{display:flex;gap:14px;align-items:center;flex:none}.timeline label{font-size:18px;min-width:105px;font-variant-numeric:tabular-nums}.timeline input{flex:1;min-width:40px}.timeline button{font-size:13px;min-height:30px;padding:3px 8px}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;flex:none}.metric{border-right:1px solid var(--line);padding-right:8px;min-width:0}.metric:last-child{border:0}.metric .label{font-size:14px;color:var(--muted)}.metric .value{font-size:30px;line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.metric .unit{font-size:12px;color:var(--muted)}.status{border-left:3px solid var(--accent);padding-left:11px;flex:none;font-size:14px;min-height:44px}.status strong{display:block;color:var(--accent);font-weight:600}.status span{color:var(--muted);font-size:13px}.footer{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);flex:none}.projection .settings,.projection .eyebrow,.projection .chapter,.projection .reactionmeta,.projection .footer{display:none}.projection .layout{grid-template-columns:1fr}.projection .shell{max-width:none;padding:10px 16px}.projection .formula{font-size:30px}.projection .panelhead h2{font-size:24px}.projection .vessel-label{font-size:22px;min-height:34px}.projection .counters span{font-size:22px}.projection .plot-legend{font-size:20px}.projection .metric .label{font-size:20px}.projection .metric .value{font-size:40px}.projection .metric .unit{font-size:16px}.projection .status{font-size:20px;min-height:30px}.projection .status span{display:none}.projection .timeline label{font-size:23px;min-width:130px}.projection .plot-caption{font-size:18px;min-height:26px}.projection .modes button{font-size:19px}.projection .reactor-panel .panelfoot>span{display:none}.projection .panelfoot{font-size:14px}.projection .panelhead>span{display:none}.projection .transport button,.projection .transport select{font-size:17px}.projection .panelhead button{font-size:17px}.projection .zoomtools{margin-left:auto}.projection .zoomtools button{font-size:17px}dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);padding:26px}dialog::backdrop{background:#071e2299}dialog h2{font-size:28px;font-weight:550;margin:0 0 15px}dialog p,dialog li{font-size:17px;line-height:1.6}dialog select{width:100%}dialog a{color:var(--accent)}dialog .check{font-size:17px}.dialog-close{display:flex;justify-content:flex-end;margin-top:24px}.dialog-actions{display:flex;gap:7px;flex-wrap:wrap}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10;max-width:calc(100% - 30px);padding:12px 20px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);box-shadow:0 8px 32px #0002;font-size:16px}.toast:empty{display:none}
-@media(max-width:1300px){.shell{padding:12px;gap:9px}.layout{grid-template-columns:232px minmax(0,1fr);gap:12px}.setting-section{padding:14px}.scenes{grid-template-columns:1.05fr 1fr;gap:10px}.panelhead{padding:10px 11px 5px}.panelhead>span{display:none}.formula{font-size:23px}.reactionbar{flex-wrap:wrap}.transport{margin-left:auto}.panelfoot>span{font-size:11px}.metric .value{font-size:29px}}
-.projection .plot-caption{display:none}.projection .plot-panel .panelfoot{min-height:36px;padding-top:3px;padding-bottom:7px}.projection .plot-panel .panelfoot>span{display:none}.projection .plot-panel .panelfoot>button{margin-left:auto}
-@media(min-width:1001px) and (max-height:800px){.shell{gap:8px;padding:10px}.brand .eyebrow,.reactionmeta,.footer,.status span{display:none}.chapter{padding:8px}.header{min-height:40px}.content{gap:8px}.status{min-height:24px}.reactor-panel .panelfoot{display:none}.plot-caption{font-size:12px;min-height:18px}.projection .reactionbar{min-height:40px}.projection .reactor-panel .panelfoot{display:none}}
-@media(max-width:1000px){h1{font-size:25px}.tools button{font-size:14px;padding:6px 8px}.layout{grid-template-columns:210px minmax(0,1fr)}.setting-section{padding:12px}.scenes{grid-template-columns:1fr}.reactor-panel{min-height:300px}.plot-panel{min-height:310px}.shell{height:auto;min-height:100dvh}.settings{max-height:calc(100dvh - 145px);position:sticky;top:10px}.projection .scenes{grid-template-columns:1.1fr 1fr}.projection .reactor-panel,.projection .plot-panel{min-height:380px}}
-@media(max-width:760px){.shell{height:auto;padding:10px;gap:10px}.header{align-items:flex-start;flex-wrap:wrap}.brand .chapter{display:none}.eyebrow{font-size:10px}h1{font-size:26px}.tools{flex-wrap:wrap}.modes{gap:5px}.modes button{font-size:14px;padding:6px 8px}.layout{display:flex;flex-direction:column}.settings{position:static;max-height:none;order:2;display:grid;grid-template-columns:1fr 1fr}.setting-section:first-child{grid-row:span 2;border-right:1px solid var(--line)}.content{order:1}.scenes,.projection .scenes{display:flex;flex-direction:column}.reactor-panel{height:390px;flex:none}.plot-panel{height:380px;flex:none}.reactionbar{gap:7px}.reactionmeta{font-size:12px}.transport{margin-left:0;flex-wrap:wrap}.formula{font-size:24px}.vessel-label{font-size:15px}.counters span{font-size:14px}.metric .label{font-size:13px}.metric .value{font-size:27px}.metric .unit{font-size:12px}.status{font-size:14px}.status span{font-size:12px}.footer{flex-wrap:wrap}.projection .shell{padding:10px}.projection .formula{font-size:25px}.projection .reactor-panel{height:430px;min-height:0}.projection .plot-panel{height:400px;min-height:0}.projection .panelhead h2{font-size:21px}.projection .vessel-label{font-size:17px}.projection .counters span{font-size:17px}.projection .plot-legend{font-size:17px}.projection .metric .label{font-size:14px}.projection .metric .value{font-size:29px}.projection .metric .unit{font-size:13px}.projection .modes button{font-size:15px}.projection .status{font-size:17px}.projection .timeline label{font-size:19px;min-width:105px}.vessels.dual .vessel-label{font-size:14px}.vessels.dual .counters{gap:5px;padding:6px}.vessels.dual .counters span{font-size:13px}.projection .vessels.dual .vessel-label{font-size:16px}}
-@media(max-width:440px){.settings{display:block}.setting-section:first-child{border-right:0}.header .tools button{font-size:13px}.readouts{gap:8px}.metric .value{font-size:23px}.metric .label{font-size:12px}.metric .unit{font-size:11px}.timeline{gap:7px}.timeline label{font-size:16px;min-width:94px}.panelfoot{padding-left:9px;padding-right:9px}.panelfoot>span{max-width:165px}.projection .metric .value{font-size:25px}.projection .metric .label{font-size:12px}.projection .metric .unit{font-size:11px}}
-@media print{.settings,.tools,.modes,.transport,.timeline,.footer{display:none}.shell{height:auto}.layout{display:block}.scenes{height:550px}}
-</style><!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Cinétique chimique : échantillon de particules (simulation de Gillespie), ordres 0, 1 et 2, mélange stœchiométrique ou en excès, température et loi d&#x27;Arrhenius, temps de demi-réaction et vitesses initiales.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Cinétique chimique · TC3 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* TC3 : réacteur à gauche ; suivi et exploitation empilés à droite (écran large). Téléphone : empilement du kit. */
+@media (min-width:641px){
+  .ak-panels{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
+  .ak-panel[data-id=reactor]{grid-column:1;grid-row:1/3}
+  .ak-panel[data-id=suivi]{grid-column:2;grid-row:1}
+  .ak-panel[data-id=analyse]{grid-column:2;grid-row:2;border-top:1px solid var(--rule)}
+  .ak-panels:has(.ak-panel[data-id=analyse][hidden]) .ak-panel[data-id=suivi]{grid-row:1/3}
+  .ak-panel+.ak-panel{border-left:0}
+  .ak-panel[data-id=suivi],.ak-panel[data-id=analyse]{border-left:1px solid var(--rule)}
+}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
-<body><main class="shell">
-<header class="header"><div class="brand"><span class="chapter">TC3</span><div><div class="eyebrow">Transformations chimiques · MPSI</div><h1>Cinétique chimique</h1></div></div><div class="tools"><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran">⛶</button></div></header>
-<nav class="modes" aria-label="Situations à explorer"><button data-mode="orders" aria-pressed="true">Ordres 0, 1 et 2</button><button data-mode="mixture" aria-pressed="false">Mélange et grand excès</button><button data-mode="temperature" aria-pressed="false">Température</button></nav>
-<div class="layout"><aside id="settings" class="settings" aria-label="Préparer l’expérience">
-<div class="setting-section"><div class="eyebrow">01 / Préparer</div><h2 id="settingTitle">Une loi de vitesse</h2>
-<div id="orderGroup"><label for="order">Ordre du modèle</label><div class="order-buttons" role="group" aria-label="Ordre du modèle"><button data-order="0">0</button><button data-order="1" aria-pressed="true">1</button><button data-order="2">2</button></div></div>
-<label class="field-label" for="nA">Quantité initiale de A <span>mmol</span></label><div class="number-row"><input id="nA" type="range" min=".04" max=".24" step=".01" value=".12"><input id="nA-number" type="number" min=".04" max=".24" step=".01" value=".12" aria-label="Quantité initiale de A en mmol"></div>
-<label class="field-label" for="volume">Volume du réacteur <span>L</span></label><div class="number-row"><input id="volume" type="range" min=".06" max=".24" step=".01" value=".12"><input id="volume-number" type="number" min=".06" max=".24" step=".01" value=".12" aria-label="Volume du réacteur en litres"></div>
-<div id="mixtureGroup" hidden><label class="field-label" for="ratio">Rapport [B]₀ / [A]₀</label><div class="number-row"><input id="ratio" type="range" min=".5" max="20" step=".5" value="1"><input id="ratio-number" type="number" min=".5" max="20" step=".5" value="1" aria-label="Rapport initial B sur A"></div><p class="hint">1 : mélange stœchiométrique.<br>20 : B en grand excès.</p></div>
-<div id="kGroup"><label class="field-label" for="rate">Constante cinétique <span id="kUnit">s⁻¹</span></label><div class="number-row"><input id="rate" type="range" min=".01" max=".12" step=".005" value=".035"><input id="rate-number" type="number" min=".01" max=".12" step=".005" value=".035" aria-label="Constante cinétique"></div></div>
-<div id="temperatureGroup" hidden>
-<label class="field-label" for="t1">Expérience 1 · T₁ <span>K</span></label><div class="number-row"><input id="t1" type="range" min="273.15" max="353.15" step="1" value="298.15"><input id="t1-number" type="number" min="273.15" max="353.15" step="1" value="298.15" aria-label="Température T1 en kelvins"></div>
-<label class="field-label" for="t2">Expérience 2 · T₂ <span>K</span></label><div class="number-row"><input id="t2" type="range" min="273.15" max="353.15" step="1" value="318.15"><input id="t2-number" type="number" min="273.15" max="353.15" step="1" value="318.15" aria-label="Température T2 en kelvins"></div>
-<label class="field-label" for="ea">Énergie d’activation <span>kJ/mol</span></label><div class="number-row"><input id="ea" type="range" min="10" max="100" step="1" value="50"><input id="ea-number" type="number" min="10" max="100" step="1" value="50" aria-label="Énergie d’activation en kJ par mole"></div><p class="hint">k(298,15 K) = 0,035 s⁻¹.<br>Deux expériences isothermes.</p><button id="fast">Cadrer la plus rapide</button></div>
-<button id="prepare" class="primary wide">Préparer le mélange</button><p id="dirty" class="hint" role="status">Mélange prêt.</p></div>
-<div class="setting-section"><div class="eyebrow">02 / Explorer</div><div id="presets" class="presets"></div></div>
-<div class="setting-section"><div class="eyebrow">03 / Représenter</div><label class="check"><input type="checkbox" id="theory" checked>Loi continue de référence</label><label class="check"><input type="checkbox" id="halos" checked>Halos de réaction</label><label class="check"><input type="checkbox" id="names">Noms sur les objets</label><p class="hint">Glisser un objet pour le déplacer. Les rencontres dessinées ne déterminent pas la loi cinétique.</p><p class="hint" id="packetInfo"></p></div>
-</aside>
-<section class="content" aria-label="Réacteur et suivi cinétique">
-<div class="reactionbar"><div><div class="formula" id="formula"></div><div class="reactionmeta" id="reactionmeta"></div></div><div class="transport"><button id="play" class="primary">▶ Démarrer</button><button id="step" title="Avancer d’un événement">Un événement</button><button id="reset" aria-label="Rejouer le même échantillon" title="Rejouer le même échantillon">↺</button><select id="speed" aria-label="Vitesse de lecture"><option value=".25">×¼</option><option value=".5">×½</option><option value="1" selected>×1</option><option value="2">×2</option></select></div></div>
-<div class="scenes" id="scenes">
-<section class="panel reactor-panel"><header class="panelhead"><h2>Le réacteur</h2><div class="zoomtools"><button id="zoomOut" aria-label="Dézoomer les réacteurs">−</button><button id="zoomIn" aria-label="Zoomer les réacteurs">+</button><button id="fit">Cadrer</button></div></header><div class="vessels" id="vessels"><div class="vessel"><div class="vessel-label" id="reactorLabel1"></div><canvas id="reactor1" tabindex="0" role="img" aria-label="Échantillon particulaire du réacteur 1"></canvas><div class="counters" id="counts1"></div></div><div class="vessel" id="vessel2" hidden><div class="vessel-label" id="reactorLabel2"></div><canvas id="reactor2" tabindex="0" role="img" aria-label="Échantillon particulaire du réacteur 2"></canvas><div class="counters" id="counts2"></div></div></div><footer class="panelfoot"><span id="reactorFoot">Une réaction transforme des objets identifiés.</span></footer></section>
-<section class="panel plot-panel"><header class="panelhead"><h2 id="plotHeading">Le suivi cinétique</h2><button id="analyse" aria-label="Choisir l’exploitation du suivi">Exploiter le suivi</button></header><div class="plot-caption" id="plotCaption"></div><div id="sensor" hidden><svg width="100" height="45" viewBox="0 0 100 45" role="img" aria-label="Cuve spectrophotométrique"><path d="M1 24H25" stroke="var(--b)" stroke-width="5"/><rect id="solution" x="28" y="7" width="40" height="34" fill="var(--a)" fill-opacity=".5"/><path d="M28 4V41H68V4" fill="none" stroke="var(--muted)" stroke-width="2"/><path id="outBeam" d="M72 24H99" stroke="var(--b)" stroke-width="3"/></svg><span id="sensorText"></span></div><div class="graphwrap" id="graphWrap"><canvas id="graph" tabindex="0" role="img" aria-label="Courbes construites à partir des événements simulés"></canvas></div><div class="plot-legend" id="plotLegend"></div><footer class="panelfoot"><span id="plotFoot">Trait plein : événements · pointillés : modèle continu</span><button id="fresh" title="Simuler une nouvelle réalisation avec les mêmes paramètres">Nouvel essai</button></footer></section>
-</div>
-<div class="timeline"><label for="timeline" id="timeLabel">t = 0 s</label><input type="range" id="timeline" min="0" max="1000" step="1" value="0" aria-label="Instant dans la simulation"><button id="whole" hidden>Tout le suivi</button></div>
-<div class="readouts" id="readouts"></div><div class="status"><strong id="statusTitle"></strong><span id="statusText"></span></div>
-<footer class="footer"><span>E. Guillaume · MPSI · TC3</span><span>Simulation d’un échantillon · temps physique en secondes</span></footer>
-</section></div></main>
-<dialog id="analysisDialog"><h2>Exploiter le même suivi</h2><p>Le réacteur et les mesures correspondent aux mêmes événements. Choisir une représentation du graphique.</p>
-<label class="field-label" for="view">Représentation</label><select id="view"><option value="raw">Concentrations au cours du temps</option><option value="integral">Tester un ordre · méthode intégrale</option><option value="differential">Estimer un ordre · méthode différentielle</option><option value="arrhenius">Température · graphique d’Arrhenius</option></select>
-<div id="integralOptions"><label class="field-label" for="hypothesis">Hypothèse testée</label><select id="hypothesis"><option value="0">Ordre 0 · [A]</option><option value="1" selected>Ordre 1 · ln([A]/cᵣₑf)</option><option value="2">Ordre 2 · 1/[A]</option></select><label class="check"><input id="residuals" type="checkbox">Afficher les résidus de l’ajustement</label></div>
-<label class="check" id="absorbanceOption"><input id="absorbance" type="checkbox">Suivi spectrophotométrique de A</label><label class="check" id="tangentOption"><input id="tangent" type="checkbox">Tangente au modèle continu à l’instant courant</label>
-<div id="noiseOptions"><label class="field-label" for="noise">Bruit instrumental ajouté <output id="noiseValue">0 % de [A]₀</output></label><input id="noise" type="range" min="0" max="3" step=".1" value="0"><p class="hint">La simulation fluctue déjà du fait du nombre fini d’objets. Ce réglage ajoute un bruit de mesure distinct.</p></div>
-<div id="arrheniusOptions"><p>Les constantes sont estimées par ajustement de suivis particulaires isothermes.</p><div class="dialog-actions"><button id="record">Relever k(T₁), k(T₂)</button><button id="series">Simuler une série de 7 T</button><button id="clearSeries">Effacer la série</button></div><p class="hint" id="seriesInfo"></p></div>
-<div class="dialog-close"><button id="closeAnalysis" class="primary">Afficher ce graphique</button></div></dialog>
-<dialog id="about"><h2>Un réacteur pour explorer TC3</h2><div id="helpBody"><p><strong>Observer une transformation.</strong> Le réacteur contient des objets représentatifs d’un échantillon homogène. Chaque objet libre représente un lot de même quantité de matière ; un dimère conserve deux unités. Les réactions changent des objets identifiés, et les concentrations en trait plein sont calculées à partir des populations obtenues. Les courbes ne pilotent pas les événements.</p>
-<p><strong>Préparer.</strong> Choisir la situation, modifier les quantités, le volume ou les paramètres cinétiques, puis cliquer sur « Préparer le mélange ». Les curseurs préparent un nouveau départ ; ils ne modifient pas une expérience déjà en cours. La géométrie du réacteur illustre le volume : à zoom fixé, son aire dessinée est proportionnelle à V. Cette vue plane n’est pas une représentation moléculaire à l’échelle réelle.</p>
-<p><strong>Un modèle stochastique homogène.</strong> Les événements suivent la méthode directe de Gillespie. L’attente est exponentielle, avec une fréquence qui dépend de la population courante. Si h est la concentration d’un objet libre, les fréquences sont : k/h pour l’ordre zéro tant qu’il reste A ; k N<sub>A</sub> pour l’ordre 1 ; k h N<sub>A</sub>(N<sub>A</sub>−1) pour 2 A → A₂ ; k h N<sub>A</sub>N<sub>B</sub> pour A + B → AB. Les unités de k sont celles des lois macroscopiques affichées. Le terme N<sub>A</sub>(N<sub>A</sub>−1) tient compte du nombre fini de paires ; la loi continue v = k[A]² est sa limite macroscopique.</p>
-<p><strong>Une limite importante.</strong> L’ordre est une propriété de la loi de vitesse sur un domaine donné ; il ne détermine pas un mécanisme. Les déplacements, rapprochements, halos et formes sont des conventions graphiques. Les rencontres géométriques ne déterminent pas les événements du modèle homogène. Les halos ne représentent pas une émission lumineuse. A et P sont des espèces abstraites ; A → P conserve ici une unité chimique schématique.</p>
-<p><strong>Ordre zéro.</strong> A → P est ici un modèle effectif à fréquence totale moyenne constante jusqu’à l’épuisement de A. Il ne décrit pas une collision élémentaire, ni le détail d’une catalyse. La loi continue [A] = [A]₀ − kt est arrêtée à zéro. Un petit échantillon présente une durée d’épuisement fluctuante.</p>
-<p><strong>Ordre 2 et stœchiométrie.</strong> Pour 2 A → A₂, v = k[A]² et −d[A]/dt = 2v : le facteur 2 est conservé dans la solution continue et dans les événements, qui consomment deux objets A. Le temps de demi-réaction continu vaut 1/(2k[A]₀). Pour A + B → AB, la loi choisie est v = k[A][B], d’ordre partiel 1 en chaque réactif.</p>
-<p><strong>Grand excès.</strong> À [B]₀ = [A]₀, les concentrations restent égales et v = k[A]². En grand excès de B, v ≈ k_app[A], avec k_app = k[B]₀. La courbe violette représente cette approximation ; la référence en petits pointillés correspond à la solution complète. Le graphique normalise A par [A]₀, B par [B]₀ et AB par [A]₀ afin de rendre visible la faible variation relative de B. L’écart affiché est celui des deux modèles continus, rapporté à [A]₀ ; il est distinct des fluctuations de l’échantillon. Aucun seuil universel ne définit un grand excès suffisant.</p>
-<p><strong>Température.</strong> Les deux expériences restent chacune isothermes, avec la même préparation et une loi d’ordre 1. La loi d’Arrhenius utilise R = 8,314462618 J·K⁻¹·mol⁻¹, Eₐ constant et k(298,15 K) = 0,035 s⁻¹. Modifier Eₐ conserve cette référence et ajuste donc implicitement le facteur préexponentiel ; ce réglage ne représente pas une catalyse. L’agitation dessinée varie comme √T mais reste sans échelle de vitesse réelle. Elle n’est pas proportionnelle à k. À température égale, les deux réalisations fluctuent indépendamment autour de la même loi.</p>
-<p><strong>Arrhenius à partir de suivis.</strong> « Relever k(T₁), k(T₂) » ajuste ln([A]/c_ref) en fonction du temps sur les populations simulées, puis ajoute les constantes estimées. Au moins 20 % de A doit avoir réagi et les concentrations supérieures à 10 % de [A]₀ sont exploitées. L’échantillonnage est limité à l’intervalle utile avant 90 % de conversion. « Simuler une série de 7 T » effectue réellement sept trajectoires particulaires indépendantes puis les ajuste ; les points ne sont pas directement les valeurs théoriques de k. La pente de ln(k estimé/k_ref) en fonction de 1/T donne −Eₐ/R. La dispersion de l’estimation reste visible.</p>
-<p><strong>Exploiter le même suivi.</strong> Les méthodes intégrale et différentielle utilisent 33 mesures prises sur l’historique courant. Le bruit instrumental, additif et reproductible, est indépendant des fluctuations intrinsèques de l’échantillon. Pour la méthode intégrale, les concentrations supérieures à 3 % de [A]₀ sont exploitées. La dérivation utilise des différences centrées sur six intervalles ; les concentrations ou vitesses non positives sont exclues des logarithmes. Les fluctuations peuvent fortement affecter la pente estimée. Un ajustement affine indique une compatibilité à examiner, et ne prouve pas un ordre universel. Les références sont c_ref = 1 mmol/L et v_ref = 1 mmol·L⁻¹·s⁻¹ ; les logarithmes ont des arguments sans dimension.</p>
-<p><strong>Spectrophotométrie.</strong> Seule A absorbe après correction du blanc : absorbance = εℓ[A], avec εℓ = 0,80 L/mmol. Iₛ/Iₑ = 10<sup>−absorbance</sup>. La cuve et l’épaisseur du faisceau illustrent l’atténuation, sans reproduire une couleur réelle. Beer-Lambert est supposée valide sur la plage utilisée. Le bruit instrumental est ajouté au signal échantillonné, sans modifier les réactions.</p>
-<p><strong>Objets représentatifs et conservation.</strong> La taille de l’échantillon est limitée à 240 objets A seuls, ou 420 objets libres au total dans un mélange. En grand excès, la quantité par objet augmente : lire la valeur indiquée dans les réglages. Les quantités initiales sont représentées avec un nombre pair de A ; B est arrondi au nombre entier d’objets le plus proche. Les quantités réellement représentées servent aux calculs. Les bilans de A et de B sont conservés exactement dans l’échantillon. Les fluctuations visibles sont celles de ce petit échantillon représentatif, pas celles d’un réacteur réel contenant des milliards de milliards de molécules.</p>
-<p><strong>Commandes.</strong> Démarrer, mettre en pause, avancer d’un événement ou déplacer la ligne du temps. ↺ rejoue la même réalisation ; « Nouvel essai » tire une nouvelle trajectoire. Le temps physique est affiché en secondes. La fenêtre temporelle complète est parcourue en 22 secondes à vitesse ×1 ; les mouvements visuels ont une échelle indépendante. « Cadrer la plus rapide » adapte cette fenêtre aux températures très différentes ; « Tout le suivi » rétablit la durée commune. +, − et Cadrer agissent sur les réacteurs. Espace : lecture/pause ; R : retour au début. Les flèches gauche/droite déplacent le repère lorsque le graphique a le focus. Image exporte ensemble réacteur, graphique et paramètres en PNG.</p>
-<p>Conception originale pour E. Guillaume · MPSI. Référence locale : animation TC1 « Équilibres en mouvement ». Inspiration fonctionnelle : <a href="https://phyzik.store/animations/cinetique.html" target="_blank" rel="noopener">Phyzik — Cinétique chimique, T. Roy</a>. Aucun code ni ressource distante n’est nécessaire au fonctionnement.</p>
-</div><div class="dialog-close"><button id="closeHelp" class="primary">Revenir au réacteur</button></div></dialog><div id="toast" class="toast" role="status"></div>
-<script>/* Simulation markovienne d'un échantillon homogène : méthode directe
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* TC3 · Cinétique chimique : simulation markovienne (méthode directe de Gillespie), d'origine.
+   Modifications du lot 18 : (1) window.Kinetics → const Kinetics ; (2) proposition D : paramètre p.dimer1 (2 A → A₂ avec v = k[A], ν = 2, ordre 1) :
+   t½ = ln2/(2k), [A] = [A]₀ exp(−2kt), k estimé = −pente/2. Le reste est inchangé. Unités internes : n en mmol, V en L, c en mmol·L⁻¹, t en s. */
+/* Simulation markovienne d'un échantillon homogène : méthode directe
    de Gillespie. Les objets sont des lots, pas des molécules à l'échelle réelle.
    n en mmol, V en L, c en mmol/L et t en secondes. */
 'use strict';
-window.Kinetics=(()=>{
+const Kinetics=(()=>{
  const R=8.314462618,packet=.001;
  const random=seed=>{let a=seed>>>0;return ()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296}};
  const arrhenius=(T,Ea,kref)=>kref*Math.exp(Ea*1000/R*(1/298.15-1/T));
- function spec(mode,q){return mode==='mixture'?{name:'A + B → AB',names:['A','B','AB'],nu:[-1,-1,1],order:2}:q===2?{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:2}:{name:'A → P',names:['A','P'],nu:[-1,1],order:q}}
+ function spec(mode,q,dimer1){if(dimer1&&mode!=='mixture'&&q===1)return{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:1};return mode==='mixture'?{name:'A + B → AB',names:['A','B','AB'],nu:[-1,-1,1],order:2}:q===2?{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:2}:{name:'A → P',names:['A','P'],nu:[-1,1],order:q}}
  function prepare(p,seed=1631){
   p={...p,q:p.mode==='temperature'?1:p.q};
-  const reaction=spec(p.mode,p.q),mixture=p.mode==='mixture';
+  const reaction=spec(p.mode,p.q,p.dimer1),mixture=p.mode==='mixture';
   const limit=mixture?Math.floor(420/(1+p.ratio)):240;
   const N=Math.max(10,2*Math.floor(Math.min(Math.round(p.nA/packet),limit)/2));
   const quantum=p.nA/N,B=mixture?Math.round(N*p.ratio):0,initial=mixture?[N,B,0]:[N,0];
   const c0=N*quantum/p.V,b0=B*quantum/p.V,q=mixture?2:p.q;
   const k=p.mode==='temperature'?arrhenius(p.T,p.Ea,p.kref):p.k;
-  const half=mixture?null:q===0?c0/(2*k):q===1?Math.log(2)/k:1/(2*k*c0);
+  const half=mixture?null:q===0?c0/(2*k):q===1?Math.log(2)/(k*(reaction.nu[0]===-2?2:1)):1/(2*k*c0);
   const duration=mixture?10/(k*(c0+b0)):q===0?c0/k*1.15:half*(q===2?5:4);
   const run={p:{...p},reaction,q,k,N,B,quantum,c0,b0,initial,seed,duration,half,events:[],initialActors:[]};
   let id=0;for(let s=0;s<initial.length;s++)for(let i=0;i<initial[s];i++)run.initialActors.push({id:id++,s});
@@ -141,8 +775,8 @@ window.Kinetics=(()=>{
    const d=b0-c0;let a;if(d===0)a=c0/(1+k*c0*t);else if(d>0){const z=d*k*t;a=d*c0*Math.exp(-z)/(d-c0*Math.expm1(-z))}else{const z=-d*k*t;a=-d*c0/(-d-b0*Math.expm1(-z))}
    const x=Math.max(0,Math.min(c0,b0,c0-a));return[c0-x,b0-x,x];
   }
-  const c=run.q===0?Math.max(0,c0-k*t):run.q===1?c0*Math.exp(-k*t):c0/(1+2*k*c0*t);
-  return[c,(c0-c)/(run.q===2?2:1)];
+  const c=run.q===0?Math.max(0,c0-k*t):run.q===1?c0*Math.exp(-k*t*(run.reaction.nu[0]===-2?2:1)):c0/(1+2*k*c0*t);
+  return[c,(c0-c)/(run.q===2||run.reaction.nu[0]===-2?2:1)];
  }
  function trace(run,t){const result=[[0,...run.initial.map(n=>n*run.quantum/run.p.V)]];for(const e of run.events){if(e.t>t)break;result.push([e.t,...e.counts.map(n=>n*run.quantum/run.p.V)])}if(result.at(-1)[0]<t)result.push([t,...values(run,t)]);return result}
  function observedHalf(run){const e=run.events.find(e=>e.counts[0]<=run.N/2);return e?e.t:null}
@@ -151,259 +785,468 @@ window.Kinetics=(()=>{
  function estimateK(run,t){ // Ajustement intégral de la population suivie, sans bruit instrumental ajouté.
   const ninety=run.events.find(e=>e.counts[0]<=run.N*.1);if(ninety)t=Math.min(t,ninety.t);
   const rows=measurements(run,t).filter(r=>r.c>run.c0*.1),fitResult=fit(rows.map(r=>[r.t,Math.log(r.c/run.c0)]));
-  if(!fitResult||run.N-countsAt(run,t)[0]<Math.max(8,.2*run.N)||fitResult.slope>=0)return null;return -fitResult.slope;
+  if(!fitResult||run.N-countsAt(run,t)[0]<Math.max(8,.2*run.N)||fitResult.slope>=0)return null;return -fitResult.slope/(run.reaction.nu[0]===-2?2:1);
  }
  return Object.freeze({R,random,spec,prepare,propensity,countsAt,values,theory,trace,observedHalf,fit,measurements,estimateK,arrhenius});
 })();
-</script><script>(()=>{
+
+// @titre Cinétique chimique · TC3 · MPSI
+// @sortie ../TC3_Cinetique_Chimique/TC3_Cinetique_Chimique.html
+// @inclure TC3_Cinetique_Chimique_physique.js
+// @style TC3_Cinetique_Chimique.css
+// @description Cinétique chimique : échantillon de particules (simulation de Gillespie), ordres 0, 1 et 2, mélange stœchiométrique ou en excès, température et loi d'Arrhenius, temps de demi-réaction et vitesses initiales.
 'use strict';
-const M=window.Kinetics,$=id=>document.getElementById(id),colors=['a','b','c'];
-const L=window.Lab={mode:'orders',q:1,time:0,end:1,running:false,zoom:1,seed:1631,runs:[],stages:[],view:'raw',temperatureData:[],labels:[],noise:0,noiseSeed:0};
-const fmt=(x,d=2)=>Number.isFinite(x)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(x)<1e-12?0:x):'—';
-const sig=x=>!Number.isFinite(x)?'—':Math.abs(x)>0&&(Math.abs(x)<.001||Math.abs(x)>9999)?x.toExponential(2).replace('.',','):fmt(x,Math.abs(x)<1?4:2);
-const units=q=>q===0?'mmol·L⁻¹·s⁻¹':q===1?'s⁻¹':'L·mmol⁻¹·s⁻¹';
-let palette={},lastFrame=0,drag=null,dirty=false,hover=null,toastTimer;
-function updatePalette(){const css=getComputedStyle(document.documentElement);for(const key of ['bg','paper','ink','muted','line','accent','wash','a','b','c','d','grid'])palette[key]=css.getPropertyValue('--'+key).trim()}
-function toast(text){$('toast').textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3400)}
-function setRunning(value){L.running=value;$('play').textContent=value?'❚❚ Pause':L.time>0?'▶ Reprendre':'▶ Démarrer';$('play').setAttribute('aria-pressed',value)}
-function readParameters(){return{mode:L.mode,q:L.q,nA:+$('nA-number').value,V:+$('volume-number').value,ratio:+$('ratio-number').value,k:+$('rate-number').value,T:+$('t1-number').value,T2:+$('t2-number').value,Ea:+$('ea-number').value,kref:.035}}
-function valid(p){return p.nA>=.04&&p.nA<=.24&&p.V>=.06&&p.V<=.24&&p.ratio>=.5&&p.ratio<=20&&p.k>=.01&&p.k<=.12&&p.T>=273.15&&p.T<=353.15&&p.T2>=273.15&&p.T2<=353.15&&p.Ea>=10&&p.Ea<=100}
+/* =====================================================================
+   TC3 · Cinétique chimique (5 onglets)
+   1 Ordres (dont 2 A → A₂ d'ordre 1) · 2 Mélange A + B · 3 Température · 4 Demi-réaction · 5 Vitesses initiales
+   Physique : Kinetics (TC3_Cinetique_Chimique_physique.js) = simulation.js d'origine, à deux changements près :
+   const au lieu de window, et l'option dimer1 (2 A → A₂ avec v = k[A], ν = 2).
+   Unités : le modèle est invariant d'échelle ; les quantités sont désormais en mol, les volumes en L, les concentrations
+   en mol·L⁻¹ (mêmes nombres et mêmes durées qu'avant, où l'on écrivait mmol).
+   Lot 18 : sur AnimKit ; réacteurs en SVG ; réglages appliqués immédiatement ; curseur temporel exact (retour en arrière
+   par rejeu des événements) ; axes fixes ; modèle continu, t½ théorique et tangente masqués au départ ;
+   propositions B (t½ en fonction de [A]₀), C (vitesses initiales, log-log), D (2 A → A₂, ordre ≠ ν).
+   ===================================================================== */
+const KN=Kinetics,fm=AnimKit.fmt,Mh=AnimKit.M;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const subT=t=>`<tspan font-size="72%" dy="0.3em">${t}</tspan><tspan dy="-0.3em">​</tspan>`;
+const uS=s=>String(s).replace(/[₀-₉]/g,d=>subT(d.charCodeAt(0)-8320));
+const uH=s=>String(s).replace(/[₀-₉]/g,d=>'<sub>'+(d.charCodeAt(0)-8320)+'</sub>');
+const sv=(a,s)=>uS(String(s).replace(/<sup>(.*?)<\/sup>/g,(_,e)=>a.S.sup(e)));
+const UQ=['mol·L<sup>−1</sup>·s<sup>−1</sup>','s<sup>−1</sup>','L·mol<sup>−1</sup>·s<sup>−1</sup>'];
+const LOI={a1:{q:1},a0:{q:0},a2:{q:2},d1:{q:1,d:true}};
+const GRID=[.04,.07,.12,.18,.24];
+const st={runs:[],stages:[],time:0,end:1,fullEnd:1,seed:1631,tab:-1,drag:null,data:{2:[],3:[],4:[]},fp:'',myst:1,G:{}};
+
+/* ---------- paramètres ---------- */
+const lawQ=(a,t)=>{const v=a.p['loi'+t];return v==='m'?st.myst:+v};
+function params(a){
+  const t=a.tab,p=a.p,g=k=>p[k+t],base={ratio:1,T:298.15,T2:318.15,Ea:50,kref:.035};
+  if(t===0){const l=LOI[p.loi0];return{...base,mode:'orders',q:l.q,dimer1:!!l.d,nA:p.nA0,V:p.V0,k:p.k0}}
+  if(t===1)return{...base,mode:'mixture',q:2,nA:p.nA1,V:p.V1,ratio:p.ratio1,k:p.k1};
+  if(t===2)return{...base,mode:'temperature',q:1,nA:p.nA2,V:p.V2,k:.035,T:p.Ta2,T2:p.Tb2,Ea:p.Ea2};
+  return{...base,mode:'orders',q:lawQ(a,t),nA:g('nA'),V:g('V'),k:g('k')};
+}
+const nuA=r=>r.reaction.nu[0]===-2?2:1;
+function lawText(a,r){
+  const t=a.tab;if(t>=3&&a.p['loi'+t]==='m'&&!a.p['rev'+t])return'loi de vitesse à déterminer';
+  return r.p.mode==='mixture'?'v = k [A][B]':r.q===0?'v = k':r.q===1?'v = k [A]':'v = k [A]²';
+}
+
+/* ---------- acteurs et événements (animation des particules) ---------- */
 function actor(s,id,rng,x,y){return{id,s,x:x??(.06+.88*rng()),y:y??(.07+.86*rng()),vx:(rng()-.5)*.35,vy:(rng()-.5)*.35,angle:rng()*Math.PI*2,spin:(rng()-.5)*1.5,born:2}}
-function createStage(run){const rng=M.random(run.seed+777),n=run.initialActors.length,cols=Math.ceil(Math.sqrt(n)),rows=Math.ceil(n/cols),positions=Array.from({length:n},(_,i)=>({x:.04+.92*((i%cols)+.2+.6*rng())/cols,y:.04+.92*(Math.floor(i/cols)+.2+.6*rng())/rows}));for(let i=positions.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[positions[i],positions[j]]=[positions[j],positions[i]]}return{run,actors:new Map(run.initialActors.map((a,i)=>[a.id,actor(a.s,a.id,rng,positions[i].x,positions[i].y)])),index:0,effects:[],rng,canvas:null}}
-function fire(stage,event,effect=true){
- const consumed=event.participants.map(id=>stage.actors.get(id)).filter(Boolean),x=consumed.reduce((s,a)=>s+a.x,0)/consumed.length,y=consumed.reduce((s,a)=>s+a.y,0)/consumed.length;
- for(const id of event.participants)stage.actors.delete(id);
- for(const a of event.products){const p=actor(a.s,a.id,stage.rng,x,y);p.born=effect?0:2;stage.actors.set(a.id,p)}
- if(effect&&$('halos').checked){stage.effects.push({x,y,age:0,ghosts:consumed.map(a=>({...a}))});if(stage.effects.length>36)stage.effects.shift()}
- stage.index++;
+function createStage(run){
+  const rng=KN.random(run.seed+777),n=run.initialActors.length,cols=Math.ceil(Math.sqrt(n)),rows=Math.ceil(n/cols);
+  const pos=Array.from({length:n},(_,i)=>({x:.04+.92*((i%cols)+.2+.6*rng())/cols,y:.04+.92*(Math.floor(i/cols)+.2+.6*rng())/rows}));
+  for(let i=pos.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[pos[i],pos[j]]=[pos[j],pos[i]]}
+  return{run,actors:new Map(run.initialActors.map((q,i)=>[q.id,actor(q.s,q.id,rng,pos[i].x,pos[i].y)])),index:0,effects:[],rng};
 }
-function syncActors(t,effects=true){for(const stage of L.stages){while(stage.index<stage.run.events.length&&stage.run.events[stage.index].t<=t)fire(stage,stage.run.events[stage.index],effects)}}
-function prepare(newSeed=false){const p=readParameters();if(!valid(p)){toast('Vérifier les valeurs : utiliser les bornes indiquées dans les champs.');return}
- setRunning(false);if(newSeed)L.seed+=101;
- const fingerprint=p.mode==='temperature'?'T:'+p.Ea:'other';if(L.fingerprint!==fingerprint)L.temperatureData=[];L.fingerprint=fingerprint;
- L.runs=[M.prepare(p,L.seed)];if(p.mode==='temperature')L.runs.push(M.prepare({...p,T:p.T2},L.seed+9127));
- L.end=Math.max(...L.runs.map(r=>r.duration));L.fullEnd=L.end;L.time=0;L.stages=L.runs.map(createStage);L.zoom=1;hover=null;dirty=false;
- $('dirty').textContent='Mélange prêt : démarrer pour observer.';updateMode();updateReaction();resize();draw();
+function fire(stage,ev,effect){
+  const used=ev.participants.map(id=>stage.actors.get(id)).filter(Boolean);
+  const x=used.reduce((s,q)=>s+q.x,0)/used.length,y=used.reduce((s,q)=>s+q.y,0)/used.length;
+  for(const id of ev.participants)stage.actors.delete(id);
+  for(const q of ev.products){const p=actor(q.s,q.id,stage.rng,x,y);p.born=effect?0:2;stage.actors.set(q.id,p)}
+  if(effect){stage.effects.push({x,y,age:0,ghosts:used.map(q=>({...q}))});if(stage.effects.length>36)stage.effects.shift()}
+  stage.index++;
 }
-function setMode(mode){L.mode=mode;L.view='raw';$('view').value='raw';$('absorbance').checked=false;$('residuals').checked=false;$('noise').value=0;L.noise=0;setRunning(false);prepare();updateAnalysis()}
-function seek(t){setRunning(false);const target=Math.max(0,Math.min(L.end,t));if(target<L.time){L.stages=L.runs.map(createStage);drag=null}syncActors(target,false);for(const s of L.stages)s.effects=[];L.time=target;draw()}
-function advance(dt){const target=Math.min(L.end,L.time+dt);syncActors(target,true);L.time=target;if(L.time>=L.end)setRunning(false);draw()}
-function step(){setRunning(false);const next=L.runs.flatMap(r=>r.events.filter(e=>e.t>L.time+1e-10).slice(0,1)).sort((a,b)=>a.t-b.t)[0];if(!next||next.t>L.end){toast('Plus d’événement dans cette fenêtre temporelle.');return}syncActors(next.t,true);L.time=next.t;move(.12);draw()}
-Object.assign(L,{prepare,seek,advance,step,draw,setMode,setRunning,readParameters});
-function updateReaction(){const r=L.runs[0],p=r.p;const law=p.mode==='mixture'?'v = k [A][B]':r.q===0?'v = k':r.q===1?'v = k [A]':'v = k [A]²';$('formula').textContent=r.reaction.name+'   ·   '+law;
- $('reactionmeta').textContent=p.mode==='temperature'?'Ordre 1 · même préparation · températures constantes dans chaque réacteur':`[A]₀ = ${fmt(r.c0)} mmol/L · V = ${fmt(p.V)} L · k = ${sig(r.k)} ${units(r.q)}`;
- $('packetInfo').textContent=`Échantillon : ${r.initial.reduce((s,n)=>s+n,0)} objets au départ. Un objet libre représente ${sig(r.quantum)} mmol. Un dimère en conserve deux unités.`;
- $('reactorLabel1').textContent=p.mode==='temperature'?'T₁ = '+fmt(p.T)+' K':'V = '+fmt(p.V)+' L · [A]₀ = '+fmt(r.c0)+' mmol/L';
- $('reactorLabel2').textContent=p.mode==='temperature'?'T₂ = '+fmt(L.runs[1].p.T)+' K':'';
- $('reactorFoot').textContent=r.q===0&&p.mode!=='mixture'?'Ordre zéro : fréquence totale constante jusqu’à épuisement.':'Les événements changent les objets et construisent les courbes.';
+function sync(t,effect){for(const s of st.stages)while(s.index<s.run.events.length&&s.run.events[s.index].t<=t)fire(s,s.run.events[s.index],effect)}
+function seek(a,t){
+  const target=clamp(t,0,st.end);
+  if(target<st.time){st.stages=st.runs.map(createStage);st.drag=null}
+  sync(target,false);for(const s of st.stages)s.effects=[];st.time=target;
 }
-const presets={orders:[['one','Premier ordre'],['zero','Ordre zéro'],['two','Deuxième ordre'],['dilute','Diluer ×2'],['double','Doubler A']],mixture:[['stoich','Stœchiométrique'],['excess2','Excès ×2'],['excess20','Excès ×20'],['blim','B limitant']],temperature:[['twenty','Écart de 20 K'],['same','Même température'],['ten','+10 K'],['strong','Forte sensibilité']]};
-function field(id,value){$(id).value=value;$(id+'-number').value=value}
-function preset(id){for(const[key,value]of Object.entries({nA:.12,volume:.12,ratio:1,rate:.035,t1:298.15,t2:318.15,ea:50}))field(key,value);
- if(id==='zero')L.q=0;if(id==='one')L.q=1;if(id==='two')L.q=2;if(id==='dilute')field('volume',.24);if(id==='double')field('nA',.24);if(id==='excess2')field('ratio',2);if(id==='excess20')field('ratio',20);if(id==='blim')field('ratio',.5);if(id==='same')field('t2',298.15);if(id==='ten')field('t2',308.15);if(id==='strong'){field('ea',100);field('t2',328.15)}L.seed+=101;L.view='raw';$('view').value='raw';prepare();updateAnalysis()}
-function updateMode(){for(const b of document.querySelectorAll('[data-mode]'))b.setAttribute('aria-pressed',b.dataset.mode===L.mode);for(const b of document.querySelectorAll('[data-order]'))b.setAttribute('aria-pressed',+b.dataset.order===L.q);
- $('orderGroup').hidden=L.mode!=='orders';$('mixtureGroup').hidden=L.mode!=='mixture';$('kGroup').hidden=L.mode==='temperature';$('temperatureGroup').hidden=L.mode!=='temperature';$('settingTitle').textContent=L.mode==='orders'?'Une loi de vitesse':L.mode==='mixture'?'Les proportions initiales':'Deux températures';$('kUnit').textContent=units(L.mode==='mixture'?2:L.q);
- $('vessel2').hidden=L.mode!=='temperature';$('vessels').classList.toggle('dual',L.mode==='temperature');
- $('presets').replaceChildren();for(const[id,text]of presets[L.mode]){const b=document.createElement('button');b.textContent=text;b.dataset.preset=id;b.onclick=()=>preset(id);$('presets').append(b)}
- $('view').querySelector('[value=arrhenius]').disabled=L.mode!=='temperature';
+function advance(a,dt){
+  const target=Math.min(st.end,st.time+dt);sync(target,a.p.halos);st.time=target;
+  if(st.time>=st.end)a.play(false);
 }
-function fitCanvas(canvas){const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);if(r.width<1||r.height<1)return;const w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}canvas.getContext('2d').setTransform(dpr,0,0,dpr,0,0)}
-function resize(){for(const id of ['reactor1','reactor2','graph'])fitCanvas($(id));draw()}
-function vesselGeometry(canvas){const r=canvas.getBoundingClientRect(),scale=L.runs[0].p.V/.24,margin=14,bw=(r.width-2*margin)*scale*L.zoom,bh=(r.height-2*margin)*L.zoom;return{w:r.width,h:r.height,bw,bh,x:r.width/2-bw/2,y:r.height/2-bh/2}}
-function point(actor,box){return{x:box.x+box.bw*actor.x,y:box.y+box.bh*actor.y}}
-function move(dt){for(const stage of L.stages){const mobility=Math.sqrt((stage.run.p.mode==='temperature'?stage.run.p.T:298.15)/298.15);
- for(const a of stage.actors.values()){a.born+=dt;if(drag?.actor===a)continue;a.x+=a.vx*dt*mobility;a.y+=a.vy*dt*mobility;a.angle+=a.spin*dt;if(a.x<.035||a.x>.965){a.x=Math.max(.035,Math.min(.965,a.x));a.vx*=-1}if(a.y<.045||a.y>.955){a.y=Math.max(.045,Math.min(.955,a.y));a.vy*=-1}}
- for(const e of stage.effects)e.age+=dt;stage.effects=stage.effects.filter(e=>e.age<.65);
- }}
-function circle(ctx,x,y,r,fill,stroke=null){ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
-function molecule(ctx,a,pos,stage,alpha=1){const projection=document.body.classList.contains('projection'),dual=L.mode==='temperature',density=Math.min(1,Math.sqrt(160/stage.run.initialActors.length)),radius=(dual?4.8:6.2)*(projection?1.2:1)*Math.min(1.5,L.zoom)*density,product=a.s===stage.run.reaction.names.length-1,paired=product&&(stage.run.q===2||stage.run.p.mode==='mixture');
- ctx.save();ctx.globalAlpha=alpha;ctx.translate(pos.x,pos.y);ctx.rotate(a.angle);
- if(paired){ctx.strokeStyle=palette.c;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-radius*.9,0);ctx.lineTo(radius*.9,0);ctx.stroke();circle(ctx,-radius*.85,0,radius,palette.a,palette.paper);circle(ctx,radius*.85,0,radius,stage.run.p.mode==='mixture'?palette.b:palette.a,palette.paper);ctx.strokeStyle=palette.c;ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(0,0,radius*2.1,radius*1.35,0,0,2*Math.PI);ctx.stroke()}
- else{const color=product?palette.c:colors[a.s]&&palette[colors[a.s]]||palette.a;circle(ctx,0,0,radius,color,palette.paper);circle(ctx,-radius*.22,-radius*.26,radius*.28,'#ffffff55');if(product){ctx.strokeStyle=palette.paper;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,radius*.5,0,2*Math.PI);ctx.stroke()}}
- if($('names').checked){ctx.rotate(-a.angle);ctx.font='bold '+(projection?16:13)+'px Arial';ctx.textAlign='center';ctx.fillStyle=palette.ink;ctx.strokeStyle=palette.paper;ctx.lineWidth=3;const text=stage.run.reaction.names[a.s];ctx.strokeText(text,0,-radius*(paired?1.9:1.6));ctx.fillText(text,0,-radius*(paired?1.9:1.6))}ctx.restore();
+function move(a,dt){
+  for(const s of st.stages){
+    const mob=Math.sqrt((s.run.p.mode==='temperature'?s.run.p.T:298.15)/298.15);
+    for(const q of s.actors.values()){
+      q.born+=dt;if(st.drag===q)continue;
+      q.x+=q.vx*dt*mob;q.y+=q.vy*dt*mob;q.angle+=q.spin*dt;
+      if(q.x<.035||q.x>.965){q.x=clamp(q.x,.035,.965);q.vx*=-1}
+      if(q.y<.045||q.y>.955){q.y=clamp(q.y,.045,.955);q.vy*=-1}
+    }
+    for(const e of s.effects)e.age+=dt;
+    s.effects=s.effects.filter(e=>e.age<.65);
+  }
 }
-function drawReactor(i){const stage=L.stages[i],canvas=$('reactor'+(i+1));if(!stage||canvas.parentElement.hidden)return;const ctx=canvas.getContext('2d'),box=vesselGeometry(canvas),{w,h}=box;if(w<1||h<1)return;
- ctx.clearRect(0,0,w,h);ctx.fillStyle=palette.paper;ctx.fillRect(0,0,w,h);
- ctx.save();ctx.beginPath();ctx.rect(2,2,w-4,h-4);ctx.clip();ctx.beginPath();ctx.roundRect(box.x,box.y,box.bw,box.bh,15);ctx.fillStyle=palette.wash;ctx.fill();
- if(L.mode==='temperature'){const warm=(stage.run.p.T-273.15)/80;ctx.fillStyle=`rgba(211,93,32,${.02+warm*.12})`;ctx.fill();ctx.strokeStyle=i===0?palette.a:palette.b}else ctx.strokeStyle=palette.line;ctx.lineWidth=2;ctx.stroke();
- for(const e of stage.effects){const center=point(e,box),u=Math.min(1,e.age/.22);if(e.age<.22)for(const old of e.ghosts){const pos=point({x:old.x+(e.x-old.x)*u,y:old.y+(e.y-old.y)*u},box);molecule(ctx,old,pos,stage,1-u)}}
- for(const a of stage.actors.values())molecule(ctx,a,point(a,box),stage,Math.min(1,a.born/.18));
- if($('halos').checked)for(const e of stage.effects){const p=point(e,box),t=e.age/.65;ctx.globalAlpha=(1-t)*.8;ctx.strokeStyle=palette.c;ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,7+t*25,0,2*Math.PI);ctx.stroke()}ctx.restore();
- const counts=M.countsAt(stage.run,L.time);$('counts'+(i+1)).replaceChildren();counts.forEach((n,s)=>{const span=document.createElement('span');span.style.color=palette[s===counts.length-1?'c':colors[s]];span.textContent=stage.run.reaction.names[s]+' : '+n;$('counts'+(i+1)).append(span)});
- canvas.setAttribute('aria-label','Réacteur '+(i+1)+' : '+counts.map((n,s)=>n+' objets '+stage.run.reaction.names[s]).join(', '));
+
+/* ---------- préparation d'un essai ---------- */
+function prepare(a,newSeed){
+  const t=a.tab,P=params(a);if(newSeed)st.seed+=101;
+  st.runs=[KN.prepare(P,st.seed)];
+  if(t===2)st.runs.push(KN.prepare({...P,T:P.T2},st.seed+9127));
+  const fp=t===2?'T'+P.Ea:t>=3?`${t}|${P.q}|${P.k}|${P.V}`:'';
+  if(fp!==st.fp){st.fp=fp;st.data={2:[],3:[],4:[]}}
+  st.end=Math.max(...st.runs.map(r=>r.duration));st.fullEnd=st.end;st.time=0;
+  st.stages=st.runs.map(createStage);st.drag=null;st.tab=t;
+  a.refresh();a.render();
 }
-function setMetrics(items){$('readouts').replaceChildren();for(const item of items){const box=document.createElement('div');box.className='metric';for(const[key,text]of Object.entries(item)){const div=document.createElement('div');div.className=key;div.textContent=text;box.append(div)}$('readouts').append(box)}}
-function legend(items){$('plotLegend').replaceChildren();for(const item of items){const span=document.createElement('span'),i=document.createElement('i');i.style.setProperty('--color',palette[item.color]);if(item.dash)i.className='dashed';span.append(i,document.createTextNode(item.text));$('plotLegend').append(span)}}
-function bounds(points){const ys=points.map(p=>p[1]).filter(Number.isFinite);if(!ys.length)return{ymin:0,ymax:1};const lo=Math.min(...ys),hi=Math.max(...ys),pad=(hi-lo||Math.abs(hi)||1)*.15;return{ymin:lo-pad,ymax:hi+pad}}
-function drawPlot(options){
- const {series=[],dots=[],xmin=0,xmax=L.end,ymin=0,ymax=1,ylabel='',xlabel='t (s)',cursor=null,message='',half=null,zero=false}=options;
- const canvas=$('graph'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),W=rect.width,H=rect.height,projection=document.body.classList.contains('projection');
- if(W<1||H<1)return;ctx.clearRect(0,0,W,H);ctx.fillStyle=palette.paper;ctx.fillRect(0,0,W,H);
- const font=projection?(W<430?18:23):(W<360?15:18),tick=projection?(W<430?15:20):(W<360?13:15),left=projection?75:65,right=14,top=font+24,bottom=tick*2+22,pw=Math.max(30,W-left-right),ph=Math.max(30,H-top-bottom),xhi=xmax>xmin?xmax:xmin+1,yhi=ymax>ymin?ymax:ymin+1;
- const X=x=>left+(x-xmin)/(xhi-xmin)*pw,Y=y=>top+ph-(y-ymin)/(yhi-ymin)*ph;
- L.chart={X,Y,xmin,xmax:xhi,left,top,pw,ph,W,H};L.labels=[];
- const text=(value,x,y,size=tick,align='left',color=palette.muted)=>{ctx.font=size+'px Arial';ctx.textAlign=align;ctx.fillStyle=color;ctx.fillText(value,x,y);const b=ctx.measureText(value),width=b.width;L.labels.push({text:value,x:x-(align==='right'?width:align==='center'?width/2:0),y:y-(b.actualBoundingBoxAscent||size),w:width,h:(b.actualBoundingBoxAscent||size)+(b.actualBoundingBoxDescent||3)})};
- const nx=W<480?2:4,precision=Math.min(8,Math.max(0,Math.ceil(-Math.log10((xhi-xmin)/nx))+1));
- ctx.lineWidth=1;for(let j=0;j<=nx;j++){const x=xmin+(xhi-xmin)*j/nx;ctx.strokeStyle=palette.grid;ctx.beginPath();ctx.moveTo(X(x),top);ctx.lineTo(X(x),top+ph);ctx.stroke();text(fmt(x,precision),X(x),top+ph+tick+8,tick,j===0?'left':j===nx?'right':'center')}
- const yprecision=Math.min(7,Math.max(0,Math.ceil(-Math.log10((yhi-ymin)/4))+1));
- for(let j=0;j<=4;j++){const y=ymin+(yhi-ymin)*j/4;ctx.strokeStyle=palette.grid;ctx.beginPath();ctx.moveTo(left,Y(y));ctx.lineTo(left+pw,Y(y));ctx.stroke();const label=Math.abs(y)>0&&Math.abs(y)<.001?y.toExponential(1).replace('.',','):fmt(y,yprecision);text(label,left-8,Y(y)+tick*.35,tick,'right')}
- text(ylabel,10,font+4,font,'left',palette.ink);text(xlabel,W-right,H-7,font,'right',palette.ink);
- ctx.save();ctx.beginPath();ctx.rect(left,top,pw,ph);ctx.clip();
- const curve=s=>{ctx.strokeStyle=palette[s.color||'a'];ctx.lineWidth=s.width||2.7;ctx.setLineDash(s.dash||[]);ctx.beginPath();let started=false;for(const[x,y]of s.points){if(!Number.isFinite(x)||!Number.isFinite(y)){started=false;continue}if(started)ctx.lineTo(X(x),Y(y));else{ctx.moveTo(X(x),Y(y));started=true}}ctx.stroke();ctx.setLineDash([])};
- if(zero&&ymin<0&&yhi>0)curve({color:'muted',width:1,dash:[4,5],points:[[xmin,0],[xhi,0]]});
- for(const s of series)curve(s);
- for(const d of dots){if(!d.point.every(Number.isFinite))continue;circle(ctx,X(d.point[0]),Y(d.point[1]),d.r||3.6,palette[d.color||'a'],palette.paper)}
- if(half!==null&&half<=xhi){curve({color:'d',width:1.5,dash:[3,5],points:[[half,ymin],[half,yhi]]})}
- if(cursor!==null&&cursor<=xhi&&cursor>=xmin){curve({color:'muted',width:1,dash:[3,5],points:[[cursor,ymin],[cursor,yhi]]})}
- ctx.restore();if(message)text(message,left+pw/2,top+ph*.5,Math.min(font,Math.max(12,pw/24)),'center',palette.muted);
+
+/* ---------- relevés (températures, t½, vitesses initiales) ---------- */
+function v0Of(run){
+  const e=run.events.find(q=>q.counts[0]<=Math.round(run.N*.75));if(!e)return null;
+  return (run.N-e.counts[0])*run.quantum/run.p.V/e.t;
 }
-const lineSamples=(fn,end=L.end,n=240)=>Array.from({length:n+1},(_,j)=>{const t=j/n*end;return[t,fn(t)]});
-function stepTrace(run,idx,factor=1){const rows=M.trace(run,Math.min(L.time,L.end)),points=[];for(let i=0;i<rows.length;i++){if(i)points.push([rows[i][0],rows[i-1][idx+1]*factor]);points.push([rows[i][0],rows[i][idx+1]*factor])}return points}
-function rawPlot(){const r=L.runs[0],mix=L.mode==='mixture',temp=L.mode==='temperature',abs=$('absorbance').checked&&!mix&&!temp,factor=abs?.8:1,series=[],items=[];let ymax=r.c0*1.15;
- $('sensor').hidden=!abs;
- if(temp){for(let i=0;i<2;i++){const run=L.runs[i];series.push({color:i===0?'a':'b',points:stepTrace(run,0)});if($('theory').checked)series.push({color:i===0?'a':'b',dash:[3,6],width:1.6,points:lineSamples(t=>M.theory(run,t)[0])});items.push({text:'T'+(i===0?'₁':'₂')+' = '+fmt(run.p.T)+' K',color:i===0?'a':'b'})}}
- else for(let i=0;i<r.initial.length;i++){const normal=mix?1/(i===1?r.b0:r.c0):factor;if(abs&&i>0)continue;const color=i===r.initial.length-1?'c':colors[i];series.push({color,points:stepTrace(r,i,normal)});if($('theory').checked)series.push({color,dash:[3,6],width:1.6,points:lineSamples(t=>M.theory(r,t)[i]*normal)});items.push({text:r.reaction.names[i],color});if(mix)ymax=1.15}
- if(mix&&$('theory').checked){series.push({color:'d',dash:[8,5],width:2,points:lineSamples(t=>Math.exp(-r.k*r.b0*t))});items.push({text:'A si B constant',color:'d',dash:true})}
- if(abs){ymax*=factor;const c=M.values(r,L.time)[0],transmission=10**(-.8*c);$('solution').setAttribute('fill-opacity',.08+.7*(1-transmission));$('outBeam').setAttribute('stroke-width',1+5*transmission);$('sensorText').textContent='Iₛ/Iₑ = '+fmt(transmission,2)}
- if($('tangent').checked&&!mix&&!temp){const c=M.theory(r,L.time)[0],derivative=r.q===0?(c>0?-r.k:0):r.q===1?-r.k*c:-2*r.k*c*c;series.push({color:'b',dash:[8,4],width:1.8,points:[[0,(c-derivative*L.time)*factor],[L.end,(c+derivative*(L.end-L.time))*factor]]});items.push({text:'Tangente (modèle)',color:'b',dash:true})}
- let dots=[];if(L.noise>0&&!temp){const normal=mix?1/r.c0:factor;dots=M.measurements(r,L.time,L.noise).map(row=>({point:[row.t,row.c*normal],color:'a',r:2.8}))}
- const half=!mix&&!temp&&$('theory').checked?r.half:null;
- drawPlot({series,dots,ymin:L.noise>0&&!temp?-3*L.noise/100*(mix?1:r.c0*factor):0,ymax,ylabel:mix?'Concentrations normalisées':abs?'Absorbance (sans unité)':temp?'[A] (mmol·L⁻¹)':'Concentrations (mmol·L⁻¹)',cursor:L.time,half,message:L.time===0?'Démarrer pour construire le suivi':''});
- legend(items);$('plotHeading').textContent=abs?'Le signal mesuré':'Le suivi cinétique';$('plotCaption').textContent=mix?'[A]/[A]₀ · [B]/[B]₀ · [AB]/[A]₀':temp?'Même horloge physique dans les deux réacteurs':'Composition issue des événements · référence continue en pointillés';
- $('plotFoot').textContent=half!==null?'Trait vertical violet : t½ du modèle continu':'Trait plein : événements · pointillés : modèle continu';
+function storeArr(T,k){
+  const arr=st.data[2],ex=arr.find(d=>Math.abs(d.T-T)<.001);
+  if(ex){ex.k=(ex.k*ex.n+k)/(ex.n+1);ex.n++}else arr.push({T,k,n:1});
+  arr.sort((x,y)=>x.T-y.T);
 }
-function analysisPlot(){const r=L.runs[0],rows=M.measurements(r,L.time,L.noise),hyp=+$('hypothesis').value,nu=r.q===2&&L.mode!=='mixture'?2:1;
- $('sensor').hidden=true;
- if(L.view==='integral'){
-  const pts=rows.filter(row=>row.c>r.c0*.03).map(row=>[row.t,hyp===0?row.c:hyp===1?Math.log(row.c):1/row.c]),fit=M.fit(pts),res=$('residuals').checked,shown=res&&fit?fit.residuals:pts,series=fit&&!res?[{color:'c',dash:[8,5],points:[[0,fit.intercept],[L.time,fit.intercept+fit.slope*L.time]]}]:[];
-  drawPlot({xmax:Math.max(L.time,L.end*.1),...bounds(shown),ylabel:res?'Résidu : mesure − droite':['[A] (mmol·L⁻¹)','ln([A] / cᵣₑf)','1/[A] (L·mmol⁻¹)'][hyp],series,dots:shown.map(point=>({point,color:'a'})),zero:res,message:pts.length<2?'Avancer pour obtenir des points':''});
-  legend([{text:res?'Résidus':'Mesures de l’échantillon',color:'a'},...fit&&!res?[{text:'Droite ajustée',color:'c',dash:true}]:[]]);
-  const kapp=fit?(hyp===2?fit.slope:-fit.slope)/nu:NaN;
-  setMetrics([{label:'Hypothèse testée',value:'Ordre '+hyp,unit:'examen de la linéarité'},{label:'Pente ajustée',value:sig(fit?.slope),unit:'unités du graphique / s'},{label:'k déduit si modèle valide',value:sig(kapp),unit:units(hyp)}]);
-  $('plotHeading').textContent='Tester un ordre';$('plotCaption').textContent=res?'Rechercher une courbure systématique des résidus':'Même échantillon · changer l’hypothèse dans « Exploiter »';$('plotFoot').textContent='Fluctuations de l’échantillon + bruit instrumental éventuel';
- }else if(L.view==='differential'){
-  const stride=3,derived=[];for(let i=stride;i<rows.length-stride;i++){const v=-(rows[i+stride].c-rows[i-stride].c)/(rows[i+stride].t-rows[i-stride].t)/nu;if(v>0&&rows[i].c>0)derived.push([Math.log(rows[i].c),Math.log(v)])}
-  const fit=M.fit(derived),xs=derived.map(p=>p[0]),xmin=xs.length?Math.min(...xs)-.1:-2,xmax=xs.length?Math.max(...xs)+.1:.1,series=fit?[{color:'c',dash:[8,5],points:[[xmin,fit.intercept+fit.slope*xmin],[xmax,fit.intercept+fit.slope*xmax]]}]:[];
-  drawPlot({xmin,xmax,...bounds(derived),xlabel:'ln([A] / cᵣₑf)',ylabel:'ln(v / vᵣₑf)',series,dots:derived.map(point=>({point,color:'a'})),message:derived.length<2?'Avancer pour estimer des vitesses':''});legend([{text:'Différences centrées',color:'a'},...fit?[{text:'Droite ajustée',color:'c',dash:true}]:[]]);
-  setMetrics([{label:'Pente ajustée',value:sig(fit?.slope),unit:'estimation à discuter'},{label:'Vitesses positives exploitées',value:derived.length+' / 27',unit:'fenêtre de 6 intervalles'},{label:'Bruit instrumental',value:fmt(L.noise,1)+' %',unit:'de [A]₀'}]);$('plotHeading').textContent='Estimer un ordre';$('plotCaption').textContent='La dérivation amplifie les fluctuations et le bruit de mesure';$('plotFoot').textContent='Les valeurs non positives sont exclues des logarithmes';
- }else{
-  const pts=L.temperatureData.map(d=>[1/d.T,Math.log(d.k/.035)]),fit=M.fit(pts),xs=pts.map(p=>p[0]),xmin=xs.length?Math.min(...xs):1/338.15,xmax=xs.length?Math.max(...xs):1/278.15,pad=Math.max((xmax-xmin)*.08,.00002),series=fit?[{color:'c',dash:[8,5],points:[[xmin-pad,fit.intercept+fit.slope*(xmin-pad)],[xmax+pad,fit.intercept+fit.slope*(xmax+pad)]]}]:[];
-  drawPlot({xmin:xmin-pad,xmax:xmax+pad,...bounds(pts),xlabel:'1/T (K⁻¹)',ylabel:'ln(k estimé / kᵣₑf)',series,dots:pts.map(point=>({point,color:'a',r:4.5})),message:pts.length<2?'Relever des k à plusieurs températures':''});legend([{text:'k ajustés sur des suivis particulaires',color:'a'},...fit?[{text:'Droite ajustée',color:'c',dash:true}]:[]]);
-  setMetrics([{label:'Températures distinctes',value:pts.length,unit:'constantes simulées'},{label:'Pente ajustée',value:sig(fit?.slope),unit:'K'},{label:'Eₐ déduit = −R × pente',value:sig(fit?-fit.slope*M.R/1000:NaN),unit:'kJ·mol⁻¹'}]);$('plotHeading').textContent='La loi d’Arrhenius';$('plotCaption').textContent='Chaque point provient d’un suivi isotherme simulé puis ajusté';$('plotFoot').textContent='kᵣₑf = 0,035 s⁻¹ ; les points peuvent fluctuer autour de la droite';
- }
+function relever(a){
+  const t=a.tab;
+  if(t===2){
+    const est=st.runs.map(r=>KN.estimateK(r,st.time));
+    if(est.some(k=>k===null)){a.toast('Avancer davantage : au moins 20 % de A doit avoir réagi dans chaque réacteur.');return}
+    st.runs.forEach((r,i)=>storeArr(r.p.T,est[i]));a.toast('Constantes estimées ajoutées au graphique.');a.refresh();a.render();return;
+  }
+  const r=st.runs[0],arr=st.data[t],val=t===3?KN.observedHalf(r):v0Of(r);
+  if(val===null){a.toast('Mesure impossible sur ce suivi.');return}
+  if(arr.some(d=>d.seed===r.seed&&Math.abs(d.c0-r.c0)<1e-9)){a.toast('Ce suivi est déjà relevé : « Nouvel essai » pour en simuler un autre.');return}
+  arr.push({c0:r.c0,y:val,seed:r.seed});if(arr.length>40)arr.shift();
+  a.toast(t===3?'t½ relevé sur ce suivi.':'Vitesse initiale relevée sur ce suivi.');a.refresh();a.render();
 }
-function rawMetrics(){const r=L.runs[0],values=M.values(r,L.time),half=M.observedHalf(r),reached=half!==null&&half<=L.time;
- if(L.mode==='temperature'){const r2=L.runs[1],h2=M.observedHalf(r2);setMetrics([{label:'t½ observé · T₁',value:reached?fmt(half,1):'—',unit:'s · modèle : '+fmt(r.half,1)+' s'},{label:'t½ observé · T₂',value:h2!==null&&h2<=L.time?fmt(h2,1):'—',unit:'s · modèle : '+fmt(r2.half,1)+' s'},{label:'Rapport k(T₂) / k(T₁)',value:fmt(r2.k/r.k,2),unit:'paramètres du modèle'}])}
- else if(L.mode==='mixture'){const theo=M.theory(r,L.time),approx=r.c0*Math.exp(-r.k*r.b0*L.time);setMetrics([{label:'Diminution de [B]',value:fmt((r.b0-values[1])/r.b0*100,1)+' %',unit:'variation relative depuis t = 0'},{label:'k_app = k [B]₀',value:sig(r.k*r.b0),unit:'s⁻¹ · si B ≈ B₀'},{label:'Écart de l’approximation',value:fmt(Math.abs(theo[0]-approx)/r.c0*100,2)+' %',unit:'écart des modèles / [A]₀'}])}
- else setMetrics([{label:'Concentration [A]',value:fmt(values[0],3),unit:'mmol·L⁻¹'},{label:'Réactions dans l’échantillon',value:L.stages[0].index,unit:'événements effectivement réalisés'},{label:'t½ observé',value:reached?fmt(half,1):'—',unit:'s · modèle : '+fmt(r.half,1)+' s'}]);
+function serie(a){
+  const t=a.tab,P=params(a);
+  if(t===2){
+    st.data[2]=[];
+    for(let i=0;i<7;i++){const T=278.15+10*i,run=KN.prepare({...P,T},st.seed+1234+i*331),k=KN.estimateK(run,Math.log(4)/run.k);if(k!==null)storeArr(T,k)}
+    a.toast('Sept suivis indépendants simulés et ajustés.');
+  }else{
+    st.data[t]=[];
+    GRID.forEach((nA,i)=>{const run=KN.prepare({...P,nA},st.seed+500+i*331),val=t===3?KN.observedHalf(run):v0Of(run);if(val!==null)st.data[t].push({c0:run.c0,y:val,seed:run.seed})});
+    a.toast('Cinq suivis indépendants simulés (volume et k inchangés).');
+  }
+  a.refresh();a.render();
 }
-function status(){const r=L.runs[0];let title,text;
- if(L.time===0){title='Prévoir, puis observer';text='Démarrer : les réactions feront évoluer les populations et construiront les courbes.'}
- else if(L.mode==='mixture'){title=r.p.ratio===1?'En proportions stœchiométriques, A et B diminuent ensemble':r.p.ratio>=10?'B varie peu : tester le pseudo-premier ordre':r.p.ratio<1?'B est limitant : A subsiste à la fin':'Un excès modéré peut être insuffisant';text='Comparer la variation relative de B et l’écart à l’approximation ; aucun seuil universel de grand excès.'}
- else if(L.mode==='temperature'){title=Math.abs(r.p.T-L.runs[1].p.T)<.001?'Même température : même loi, deux réalisations fluctuantes':'La réaction à plus haute température évolue plus rapidement en moyenne';text='Les deux réacteurs sont isothermes. La mobilité dessinée est schématique et n’est pas proportionnelle à k.'}
- else{title=r.q===0?'Ordre zéro : un débit moyen d’événements constant':r.q===1?'Ordre 1 : la fréquence diminue avec la population de A':'Ordre 2 : la fréquence dépend du nombre de paires disponibles';text=r.q===0?'Modèle effectif ; l’ordre zéro ne décrit pas une collision élémentaire.':r.q===1?'La décroissance est exponentielle en moyenne ; un échantillon fini présente des fluctuations.':'Chaque événement consomme deux A et crée un dimère A₂ : −d[A]/dt = 2 v.'}
- if(L.view==='differential')text='Une pente ajustée sur ces données fluctuantes ne suffit pas à prouver un ordre. Les arguments des logarithmes sont sans dimension.';
- $('statusTitle').textContent=title;$('statusText').textContent=text;
+function effacer(a){st.data[a.tab]=[];a.refresh();a.render()}
+
+/* ---------- réglages ---------- */
+const kNote=()=>({type:'note',html:a=>{const r=st.runs[0];return r?`<small>Loi de vitesse : <b>${uH(lawText(a,r))}</b> · <i class="m">k</i> en ${UQ[r.p.mode==='mixture'?2:r.q]}</small>`:''}});
+const bAct=(label,fn)=>({label,action:fn});
+function cfgTab(t,o){
+  const isN=t>=3,id=k=>k+t;
+  const grp=[];
+  const pre=(label,valeurs,seed)=>({label,valeurs,action:seed?a=>{st.seed+=101;prepare(a)}:undefined});
+  const std=(over={})=>({['nA'+t]:.12,['V'+t]:.12,['k'+t]:.035,...over});
+  if(t===0){
+    grp.push({titre:'Une loi de vitesse',onglets:[0],
+      presets:[pre('Premier ordre',{...std(),loi0:'a1'},1),pre('Ordre zéro',{...std(),loi0:'a0'},1),pre('Deuxième ordre',{...std(),loi0:'a2'},1),pre('2 A → A₂ d\'ordre 1',{...std(),loi0:'d1'},1),pre('Diluer ×2',{...std({V0:.24}),loi0:'a1'},1),pre('Doubler A',{...std({nA0:.24}),loi0:'a1'},1)],
+      items:[{id:'loi0',type:'select',label:'Réaction et loi',value:'a1',options:[['a1','A → P · ordre 1'],['a0','A → P · ordre 0'],['a2','2 A → A₂ · ordre 2'],['d1','2 A → A₂ · ordre 1']]},kNote()]});
+  }
+  if(t===1){
+    grp.push({titre:'Les proportions initiales',onglets:[1],
+      presets:[pre('Stœchiométrique',{...std(),ratio1:1},1),pre('Excès ×2',{...std(),ratio1:2},1),pre('Excès ×20',{...std(),ratio1:20},1),pre('B limitant',{...std(),ratio1:.5},1)],
+      items:[{id:'ratio1',label:'[B]₀ / [A]₀',min:.5,max:20,log:true,step:.01,dec:2,value:1},kNote()]});
+  }
+  if(t===2){
+    grp.push({titre:'Deux températures',onglets:[2],
+      presets:[pre('Écart de 20 K',{nA2:.12,V2:.12,Ta2:298.15,Tb2:318.15,Ea2:50},1),pre('Même température',{nA2:.12,V2:.12,Ta2:298.15,Tb2:298.15,Ea2:50},1),pre('+10 K',{nA2:.12,V2:.12,Ta2:298.15,Tb2:308.15,Ea2:50},1),pre('Forte sensibilité',{nA2:.12,V2:.12,Ta2:298.15,Tb2:328.15,Ea2:100},1)],
+      items:[
+        {id:'Ta2',label:'Température du réacteur 1',min:273.15,max:353.15,step:.5,dec:2,value:298.15,unit:'K'},
+        {id:'Tb2',label:'Température du réacteur 2',min:273.15,max:353.15,step:.5,dec:2,value:318.15,unit:'K'},
+        {id:'Ea2',label:'Énergie d\'activation',min:10,max:100,step:1,dec:0,value:50,unit:'kJ·mol⁻¹'},
+        {type:'note',html:'Réaction d\'ordre 1 : <i class="m">k</i> (298.15 K) = 0.035 s<sup>−1</sup>, <i class="m">k</i>(<i class="m">T</i>) suit la loi d\'Arrhenius.'}]});
+  }
+  if(isN){
+    grp.push({titre:t===3?'Temps de demi-réaction':'Vitesses initiales',onglets:[t],
+      presets:[pre('Ordre mystère',{...std(),['loi'+t]:'m'},1),pre('Ordre 1',{...std(),['loi'+t]:'1'},1),pre('Ordre 0',{...std(),['loi'+t]:'0'},1),pre('Ordre 2',{...std(),['loi'+t]:'2'},1)],
+      items:[
+        {id:id('loi'),type:'select',label:'Réaction A → P',value:'m',options:[['m','d\'ordre mystère'],['0','d\'ordre 0'],['1','d\'ordre 1'],['2','d\'ordre 2']]},
+        {id:id('rev'),type:'check',label:'Révéler l\'ordre et la loi',value:false,si:a=>a.p['loi'+t]==='m'},
+        {type:'boutons',items:[
+          bAct('Relever ce suivi',relever),bAct('Série de 5 suivis',serie),bAct('Effacer les points',effacer),
+          bAct('Nouvel ordre mystère',a=>{st.myst=(st.myst+1+Math.floor(Math.random()*2))%3;a.set('loi'+t,'m',{silent:true});a.set('rev'+t,false,{silent:true});prepare(a,true)})]},
+        {type:'note',html:t===3?'Le relevé donne la durée <i class="m">t</i><sub>½</sub> observée pour la valeur courante de [A]₀. Faire varier [A]₀ (quantité ou volume) puis relever ; ou lancer la série.':'Le relevé donne la vitesse moyenne de disparition de A pendant la consommation des 25 premiers % de A. Faire varier [A]₀ puis relever ; ou lancer la série.'},kNote(),
+        {id:id('log'),type:'seg',label:'Échelle du graphe',value:'lin',options:[['lin','Linéaire'],['log','Logarithmique']]}]});
+  }
+  if(t<=2||isN){
+    grp.push({titre:'Le mélange initial',onglets:[t],items:[
+      {id:'nA'+t,label:'Quantité de A',min:.04,max:.24,step:.005,dec:3,value:.12,unit:'mol'},
+      {id:'V'+t,label:'Volume',min:.06,max:.24,step:.005,dec:3,value:.12,unit:'L'},
+      ...(t===2?[]:[{id:'k'+t,label:'Constante de vitesse k',min:.01,max:.12,step:.001,dec:3,value:.035,unit:''}]),
+      {type:'note',html:a=>{const r=st.runs[0];return r?`[A]₀ = <b>${fm.fix(r.c0,2)}</b> mol·L<sup>−1</sup>${r.p.mode==='mixture'?` · [B]₀ = <b>${fm.fix(r.b0,2)}</b> mol·L<sup>−1</sup>`:''}`:''}},
+      {type:'boutons',items:[bAct('Nouvel essai',a=>prepare(a,true))]}]});
+  }
+  return grp;
 }
-function draw(){if(!L.runs.length)return;drawReactor(0);drawReactor(1);if(L.view==='raw'){rawPlot();rawMetrics()}else analysisPlot();status();$('timeline').value=Math.min(1000,L.time/L.end*1000);$('timeLabel').textContent='t = '+fmt(L.time,1)+' s';$('whole').hidden=Math.abs(L.end-L.fullEnd)<1e-8;const playText=L.running?'❚❚ Pause':L.time>0?'▶ Reprendre':'▶ Démarrer';if($('play').textContent!==playText)$('play').textContent=playText;if(!dirty)$('dirty').textContent=L.time>0?'Paramètres appliqués à l’essai courant.':'Mélange prêt : démarrer pour observer.'}
-function updateAnalysis(){const view=$('view').value;if(view==='arrhenius'&&L.mode!=='temperature')$('view').value='raw';L.view=$('view').value;$('integralOptions').hidden=L.view!=='integral';$('arrheniusOptions').hidden=L.view!=='arrhenius';$('noiseOptions').hidden=L.view==='arrhenius';$('absorbanceOption').hidden=L.view!=='raw'||L.mode!=='orders';$('tangentOption').hidden=L.view!=='raw'||L.mode!=='orders';$('noiseValue').textContent=fmt(L.noise,1)+' % de [A]₀';$('seriesInfo').textContent=L.temperatureData.length?L.temperatureData.map(d=>fmt(d.T,1)+' K : '+sig(d.k)+' s⁻¹').join(' · '):'Aucune constante relevée. Avancer dans le suivi ou simuler une série.';draw()}
-function storeMeasurement(T,k){const existing=L.temperatureData.find(d=>Math.abs(d.T-T)<.001);if(existing){existing.k=(existing.k*existing.count+k)/(existing.count+1);existing.count++}else L.temperatureData.push({T,k,count:1});L.temperatureData.sort((a,b)=>a.T-b.T)}
-function record(){if(L.mode!=='temperature')return;const estimates=L.runs.map(r=>M.estimateK(r,L.time));if(estimates.some(k=>k===null)){toast('Avancer davantage : au moins 20 % de A doit avoir réagi dans chaque réacteur.');return}L.runs.forEach((r,i)=>storeMeasurement(r.p.T,estimates[i]));updateAnalysis();toast('Deux suivis exploités ; constantes estimées ajoutées au graphique.')}
-function series(){if(L.mode!=='temperature')return;const base=L.runs[0].p;L.temperatureData=[];for(let i=0;i<7;i++){const T=278.15+10*i,run=M.prepare({...base,T},L.seed+1234+i*331),t=Math.log(4)/run.k,k=M.estimateK(run,t);if(k!==null)storeMeasurement(T,k)}updateAnalysis();toast('Sept suivis particulaires indépendants ont été simulés et ajustés.')}
-function exportImage(){draw();const out=document.createElement('canvas'),W=1800,H=1120;out.width=W;out.height=H;const c=out.getContext('2d');c.fillStyle=palette.paper;c.fillRect(0,0,W,H);c.fillStyle=palette.accent;c.font='bold 30px Arial';c.fillText('TC3 · Cinétique chimique',30,45);c.fillStyle=palette.ink;c.font='27px Georgia';c.fillText($('formula').textContent,30,88);c.fillStyle=palette.muted;c.font='18px Arial';c.fillText($('reactionmeta').textContent,30,123);
- const temp=L.mode==='temperature',leftW=850,sceneH=650,top=178;
- const fitImage=(image,x,y,w,h)=>{const scale=Math.min(w/image.width,h/image.height),iw=image.width*scale,ih=image.height*scale;c.drawImage(image,x+(w-iw)/2,y+(h-ih)/2,iw,ih)};
- if(temp){for(let i=0;i<2;i++){c.fillStyle=i===0?palette.a:palette.b;c.font='22px Arial';c.fillText($('reactorLabel'+(i+1)).textContent,30+i*425,163);fitImage($('reactor'+(i+1)),30+i*425,top,405,sceneH);c.font='19px Arial';c.fillText($('counts'+(i+1)).textContent,30+i*425,top+sceneH)}}else{fitImage($('reactor1'),30,top,leftW,sceneH);c.fillStyle=palette.ink;c.font='20px Arial';c.fillText($('counts1').textContent,30,top+sceneH)}
- c.fillStyle=palette.ink;c.font='22px Arial';c.fillText($('plotHeading').textContent,920,163);fitImage($('graph'),920,top,850,sceneH);c.font='20px Arial';let y=870;const wrap=(text)=>{let line='';for(const word of text.split(' ')){if(c.measureText(line+word).width>W-60){c.fillText(line,30,y);y+=28;line=''}line+=word+' '}if(line){c.fillText(line,30,y);y+=28}};
- wrap([...$('plotLegend').querySelectorAll('span')].map(s=>s.textContent).join(' · '));wrap('t = '+fmt(L.time,2)+' s · '+$('statusTitle').textContent);c.fillStyle=palette.muted;c.font='17px Arial';wrap($('packetInfo').textContent);wrap('nA₀ = '+fmt(L.runs[0].p.nA)+' mmol ; V = '+fmt(L.runs[0].p.V)+' L ; k = '+sig(L.runs[0].k)+' '+units(L.runs[0].q)+' ; réalisation '+L.seed);wrap('Événements stochastiques · mouvements et halos schématiques · E. Guillaume, MPSI');const a=document.createElement('a');a.download='TC3_Cinetique_'+L.mode+'_'+L.view+'.png';a.href=out.toDataURL('image/png');a.click();toast('Réacteur et graphique exportés ensemble.')}
-for(const id of ['nA','volume','ratio','rate','t1','t2','ea']){const range=$(id),number=$(id+'-number');range.oninput=()=>{number.value=range.value;dirty=true;$('dirty').textContent='Réglages modifiés : préparer le mélange pour les appliquer.'};number.onchange=()=>{let value=+number.value;if(!Number.isFinite(value))value=+range.value;value=Math.max(+number.min,Math.min(+number.max,value));number.value=value;range.value=value;dirty=true;$('dirty').textContent='Réglages modifiés : préparer le mélange pour les appliquer.'}}
-for(const b of document.querySelectorAll('[data-mode]'))b.onclick=()=>setMode(b.dataset.mode);
-for(const b of document.querySelectorAll('[data-order]'))b.onclick=()=>{L.q=+b.dataset.order;L.view='raw';$('view').value='raw';L.seed+=101;prepare()};
-$('prepare').onclick=()=>prepare(true);$('fresh').onclick=()=>{if(dirty){toast('Préparer d’abord les réglages modifiés.');return}prepare(true)};$('reset').onclick=()=>{L.stages=L.runs.map(createStage);seek(0)};$('step').onclick=step;
-$('play').onclick=()=>{if(L.time>=L.end)seek(0);setRunning(!L.running)};
-$('timeline').oninput=()=>seek(+$('timeline').value/1000*L.end);
-$('fast').onclick=()=>{if(L.mode!=='temperature')return;setRunning(false);L.end=4*Math.log(2)/Math.max(...L.runs.map(r=>r.k));seek(0);toast('Fenêtre adaptée à quatre demi-réactions de l’expérience rapide.')};$('whole').onclick=()=>{L.end=L.fullEnd;draw()};
-$('theme').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';$('theme').setAttribute('aria-pressed',dark);updatePalette();draw()};
-$('projection').onclick=()=>{const on=document.body.classList.toggle('projection');$('projection').textContent=on?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',on);requestAnimationFrame(resize)};
-$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{toast('Le plein écran est indisponible dans ce navigateur.')}};
-$('zoomIn').onclick=()=>{L.zoom=Math.min(2.5,L.zoom*1.2);draw()};$('zoomOut').onclick=()=>{L.zoom=Math.max(.6,L.zoom/1.2);draw()};$('fit').onclick=()=>{L.zoom=1;draw()};
-for(const id of ['theory','halos','names','absorbance','tangent','residuals'])$(id).onchange=draw;
-$('analyse').onclick=()=>{setRunning(false);updateAnalysis();$('analysisDialog').showModal()};$('view').onchange=updateAnalysis;$('hypothesis').onchange=draw;
-$('noise').oninput=()=>{L.noise=+$('noise').value;updateAnalysis()};$('closeAnalysis').onclick=()=>{$('analysisDialog').close();resize()};$('record').onclick=record;$('series').onclick=series;$('clearSeries').onclick=()=>{L.temperatureData=[];updateAnalysis()};
-$('help').onclick=()=>{setRunning(false);$('about').showModal()};$('closeHelp').onclick=()=>$('about').close();$('export').onclick=exportImage;
-for(let i=0;i<2;i++){const canvas=$('reactor'+(i+1));canvas.addEventListener('wheel',e=>{e.preventDefault();L.zoom=Math.max(.6,Math.min(2.5,L.zoom*Math.exp(-e.deltaY*.001)));draw()},{passive:false});
- canvas.addEventListener('pointerdown',e=>{const stage=L.stages[i];if(!stage)return;const rect=canvas.getBoundingClientRect(),box=vesselGeometry(canvas);let nearest=null,distance=28;for(const a of stage.actors.values()){const pos=point(a,box),d=Math.hypot(pos.x-e.clientX+rect.left,pos.y-e.clientY+rect.top);if(d<distance){nearest=a;distance=d}}if(nearest){drag={actor:nearest,stage};canvas.setPointerCapture(e.pointerId)}});
- canvas.addEventListener('pointermove',e=>{if(!drag||drag.stage!==L.stages[i]||!drag.stage.actors.has(drag.actor.id))return;const rect=canvas.getBoundingClientRect(),box=vesselGeometry(canvas);drag.actor.x=Math.max(.035,Math.min(.965,(e.clientX-rect.left-box.x)/box.bw));drag.actor.y=Math.max(.045,Math.min(.955,(e.clientY-rect.top-box.y)/box.bh));draw()});canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+const REGL=[].concat(cfgTab(0),cfgTab(1),cfgTab(2),cfgTab(3),cfgTab(4));
+REGL.push({titre:'Exploiter les données',onglets:[0,1,2],items:[
+  {id:'expl',type:'check',label:'Afficher l\'exploitation',value:false},
+  {id:'vue',type:'select',label:'Méthode',value:'int',options:[['int','Intégrale : linéariser'],['dif','Différentielle : ln v = f (ln [A])']],onglets:[0,1],si:a=>!!a.p.expl},
+  {id:'vue2',type:'select',label:'Méthode',value:'int',options:[['int','Intégrale : linéariser'],['dif','Différentielle : ln v = f (ln [A])'],['arr','Arrhenius : ln k = f (1/T)']],onglets:[2],si:a=>!!a.p.expl},
+  {id:'hyp',type:'select',label:'Ordre testé',value:'1',options:[['0','Ordre 0 : [A]'],['1','Ordre 1 : ln([A]/[A]₀)'],['2','Ordre 2 : 1/[A]']],si:a=>!!a.p.expl&&(a.tab<2?a.p.vue:a.p.vue2)==='int'},
+  {id:'resid',type:'check',label:'Afficher les résidus',value:false,si:a=>!!a.p.expl&&(a.tab<2?a.p.vue:a.p.vue2)==='int'},
+  {id:'bruit',label:'Bruit de mesure',min:0,max:5,step:.5,dec:1,value:0,unit:'% de [A]₀',si:a=>!!a.p.expl&&(a.tab<2?a.p.vue:a.p.vue2)!=='arr'},
+  {type:'boutons',items:[bAct('Relever k aux deux températures',relever),bAct('Série de 7 suivis',serie),bAct('Effacer',effacer)],onglets:[2],si:a=>!!a.p.expl&&a.p.vue2==='arr'},
+  {type:'note',html:'Chaque point d\'Arrhenius provient d\'un suivi isotherme ajusté. Avancer d\'abord dans le suivi pour « Relever ».',onglets:[2],si:a=>!!a.p.expl&&a.p.vue2==='arr'}]});
+REGL.push({titre:'Affichages',items:[
+  {id:'halos',type:'check',label:'Halos de réaction',value:true},
+  {id:'names',type:'check',label:'Noms des espèces sur les objets',value:false},
+  {id:'theo',type:'check',label:'Modèle continu et t½ théorique (prévision)',value:false},
+  {id:'tang',type:'check',label:'Tangente à l\'instant courant (modèle)',value:false,onglets:[0]},
+  {id:'abs',type:'check',label:'Mesure par absorbance',value:false,onglets:[0]}]});
+
+/* ---------- application ---------- */
+const A=AnimKit.app({
+  code:'TC3',partie:'VertEmeraude',chapitre:'TC3 Cinétique chimique',
+  titre:'Cinétique chimique',sousTitre:'Échantillon de particules et suivi de la composition',
+  fichier:'Cinetique_Chimique',
+  onglets:['Ordres','Mélange A + B','Température','Demi-réaction','Vitesses initiales'],
+  temps:true,pas:1/24,
+  curseur:{max:()=>st.end,get:()=>st.time,set:(a,v)=>seek(a,v)},
+  panneaux:[
+    {id:'reactor',poids:2.2,ratioTel:.85},
+    {id:'suivi',titre:'Suivi cinétique',poids:1.35,ratioTel:.7},
+    {id:'analyse',titre:'Exploitation',poids:1.35,ratioTel:.7,si:a=>a.tab>=3||!!a.p.expl}
+  ],
+  reglages:REGL,
+  aide:{
+    voit:'Un <b>échantillon de particules</b> : chaque objet représente un lot égal de matière ; les événements (halos) transforment les objets et construisent les courbes du suivi. Dessous : la composition en fonction du temps, puis l\'exploitation (linéarisation, vitesse, Arrhenius, <i class="m">t</i><sub>½</sub> ou <i class="m">v</i><sub>0</sub> en fonction de [A]<sub>0</sub>).',
+    faire:'<ul><li>Choisir l\'<b>onglet</b> et la situation : les réglages s\'appliquent aussitôt. <b>Nouvel essai</b> simule une autre réalisation du hasard.</li><li>Le <b>curseur de temps</b> est exact : revenir en arrière rejoue les événements. Presser sur le suivi pour placer l\'instant ; <b>Lecture</b> repart de l\'instant placé.</li><li><b>Pas</b> : jusqu\'au prochain événement.</li><li>Glisser un objet pour le déplacer (le mouvement est schématique).</li><li>Le <b>modèle continu</b>, le <i class="m">t</i><sub>½</sub> théorique et la tangente sont masqués au départ : les prévoir avant de les afficher.</li><li><b>Demi-réaction</b> et <b>Vitesses initiales</b> : relever plusieurs suivis pour des [A]<sub>0</sub> différents, lire la pente en échelle logarithmique et en déduire l\'ordre.</li></ul>',
+    modele:'Simulation markovienne d\'un échantillon homogène (méthode directe de Gillespie) : les objets sont des lots, pas des molécules à l\'échelle réelle ; un échantillon fini fluctue autour du modèle continu. Quantités en mol, volume en L, concentrations en mol·L<sup>−1</sup>. Dans l\'onglet <b>Ordres</b>, 2 A → A<sub>2</sub> peut être d\'ordre 2 (<i class="m">v</i> = <i class="m">k</i>[A]²) ou d\'ordre 1 (<i class="m">v</i> = <i class="m">k</i>[A]) : <b>l\'ordre n\'est pas le coefficient stœchiométrique</b>, et −d[A]/d<i class="m">t</i> = 2 <i class="m">v</i>. L\'ordre zéro est un modèle effectif. L\'absorbance suppose la loi de Beer-Lambert avec ε<i class="m">l</i> = 0.8 L·mol<sup>−1</sup>. La mobilité des objets est schématique. Les vitesses initiales sont des vitesses moyennes sur les 25 premiers % de consommation de A.',
+    cours:'TC3 : vitesse volumique de réaction, ordre, lois de vitesse intégrées (ordres 0, 1 et 2), temps de demi-réaction, dégénérescence de l\'ordre (excès d\'un réactif), loi d\'Arrhenius.'
+  },
+  change(a,id,v){
+    const m=/^(loi|nA|V|k|ratio|Ta|Tb|Ea)(\d)$/.exec(id);
+    if(id==='loi3'||id==='loi4'){if(v==='m')st.myst=Math.floor(Math.random()*3)}
+    if(m&&+m[2]===a.tab)prepare(a);
+  },
+  init(a){if(!st.runs.length)prepare(a)},
+  onglet(a){a.play(false);prepare(a)},
+  reset(a){a.play(false);if(!st.runs.length){prepare(a);return}st.stages=st.runs.map(createStage);st.time=0;st.drag=null},
+  peutLire(a){if(!st.runs.length)return false;if(st.time>=st.end-1e-9)seek(a,0);return true},
+  step(a,dt){
+    if(!st.runs.length)return;
+    if(!a.running){
+      const next=st.runs.flatMap(r=>r.events.filter(e=>e.t>st.time+1e-10).slice(0,1)).sort((x,y)=>x.t-y.t)[0];
+      if(!next||next.t>st.end){a.toast('Plus d\'événement dans cette fenêtre.');return}
+      sync(next.t,a.p.halos);st.time=next.t;move(a,.12);return;
+    }
+    move(a,dt);advance(a,dt*st.end/22);
+  },
+  draw(a){
+    if(!st.runs.length||st.tab!==a.tab)prepare(a);
+    if(!st.runs.length)return;
+    drawReactor(a);drawSuivi(a);const extra=drawAnalyse(a);info(a,extra);
+  }
+});
+
+/* ---------- réacteurs ---------- */
+function geom(a,i){
+  const P=a.panels.reactor,n=st.runs.length,abs=a.tab===0&&a.p.abs,mx=abs?56:12,top=36*a.k,bot=34*a.k;
+  const gw=(P.w-2*mx)/n,cx=mx+gw*(i+.5),sc=.55+.45*st.runs[i].p.V/.24,bw=Math.max(70,(gw-18)*sc),bh=Math.max(60,P.h-top-bot);
+  return{x:cx-bw/2,y:top,bw,bh,cx,gw};
 }
-const graph=$('graph');graph.addEventListener('pointerdown',e=>{if(L.view!=='raw')return;const rect=graph.getBoundingClientRect(),c=L.chart;seek(Math.max(0,Math.min(1,(e.clientX-rect.left-c.left)/c.pw))*L.end);graph.setPointerCapture(e.pointerId)});graph.addEventListener('pointermove',e=>{if(L.view==='raw'&&graph.hasPointerCapture(e.pointerId)){const rect=graph.getBoundingClientRect(),c=L.chart;seek(Math.max(0,Math.min(1,(e.clientX-rect.left-c.left)/c.pw))*L.end)}});
-graph.addEventListener('keydown',e=>{if(L.view==='raw'&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();seek(L.time+(e.key==='ArrowRight'?1:-1)*L.end/100)}});
-document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea,button')||$('about').open||$('analysisDialog').open)return;if(e.code==='Space'){e.preventDefault();$('play').click()}if(e.key.toLowerCase()==='r')$('reset').click();if(e.key==='Escape'&&document.body.classList.contains('projection'))$('projection').click()});
-new ResizeObserver(resize).observe($('vessels'));new ResizeObserver(resize).observe($('graphWrap'));window.addEventListener('resize',resize);
-function frame(now){const dt=Math.min(.05,(now-lastFrame)/1000||0);lastFrame=now;if(L.running){const rate=+$('speed').value;move(dt*rate);advance(dt*rate*L.end/22)}requestAnimationFrame(frame)}
-updatePalette();for(const id of ['nA','volume','ratio','rate','t1','t2','ea'])field(id,+$(id+'-number').value);if(matchMedia('(prefers-reduced-motion: reduce)').matches)$('halos').checked=false;prepare();updateAnalysis();requestAnimationFrame(frame);
-})();
-</script><!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
-})();
+const pt=(q,b)=>[b.x+b.bw*q.x,b.y+b.bh*q.y];
+function colOf(C,run,s){return s===run.reaction.names.length-1?C.v:s===0?C.B:C.E}
+function mol(a,run,s,x,y,ang,alpha){
+  const C=a.C,S=a.S,k=a.k,dual=st.runs.length>1,dens=Math.min(1,Math.sqrt(160/run.initialActors.length));
+  const r=(dual?4.8:6.2)*dens*k/1.15,last=run.reaction.names.length-1,prod=s===last;
+  const paired=prod&&run.reaction.nu.filter(v=>v<0).reduce((u,v)=>u-v,0)===2,mix=run.p.mode==='mixture',col=colOf(C,run,s);
+  const edge=C.dark?'#12232c':'#ffffff';
+  let o=`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(ang*180/Math.PI).toFixed(0)})" opacity="${alpha.toFixed(2)}">`;
+  if(paired){
+    o+=`<line x1="${(-r*.9).toFixed(1)}" y1="0" x2="${(r*.9).toFixed(1)}" y2="0" stroke="${C.v}" stroke-width="${(3*k/1.15).toFixed(1)}"/>`;
+    o+=`<circle cx="${(-r*.85).toFixed(1)}" cy="0" r="${r.toFixed(1)}" fill="${C.B}" stroke="${edge}" stroke-width="1"/><circle cx="${(r*.85).toFixed(1)}" cy="0" r="${r.toFixed(1)}" fill="${mix?C.E:C.B}" stroke="${edge}" stroke-width="1"/>`;
+    o+=`<ellipse cx="0" cy="0" rx="${(r*2.1).toFixed(1)}" ry="${(r*1.35).toFixed(1)}" fill="none" stroke="${C.v}" stroke-width="${(1.5*k/1.15).toFixed(1)}"/>`;
+  }else{
+    o+=`<circle r="${r.toFixed(1)}" fill="${col}" stroke="${edge}" stroke-width="1"/>`;
+    if(prod)o+=`<circle r="${(r*.5).toFixed(1)}" fill="none" stroke="${edge}" stroke-width="1.2"/>`;
+  }
+  o+='</g>';
+  if(a.p.names)o+=a.S.text(x,y-r*(paired?2.1:1.7),uS(run.reaction.names[s]),{anchor:'middle',size:13,c:C.ink,weight:600});
+  return o;
+}
+function drawReactor(a){
+  const P=a.panels.reactor,S=a.S,C=a.C,k=a.k,n=st.runs.length;let o='';
+  const abs=a.tab===0&&a.p.abs;
+  for(let i=0;i<n;i++){
+    const stage=st.stages[i],run=stage.run,b=geom(a,i);
+    let fill=C.cSoft,fop=.45,stroke=C.rule;
+    if(a.tab===2){fill=C.F;fop=.04+.12*(run.p.T-273.15)/80;stroke=i===0?C.B:C.F}
+    o+=S.rect(b.x,b.y,b.bw,b.bh,{fill,fop,c:stroke,w:a.tab===2?2.5:1.5,rx:14});
+    const head=a.tab===2?`T${i===0?'₁':'₂'} = ${fm.fix(run.p.T,2)} K`:`V = ${fm.fix(run.p.V,2)} L · [A]₀ = ${fm.fix(run.c0,2)} mol·L<sup>−1</sup>`;
+    o+=S.text(b.cx,b.y-12*k,sv(a,head),{anchor:'middle',size:14,c:a.tab===2?(i===0?C.B:C.F):C.ink,weight:600});
+    for(const e of stage.effects)if(e.age<.22){const u=Math.min(1,e.age/.22);for(const g of e.ghosts){const q=pt({x:g.x+(e.x-g.x)*u,y:g.y+(e.y-g.y)*u},b);o+=mol(a,run,g.s,q[0],q[1],g.angle,1-u)}}
+    for(const q of stage.actors.values()){const p=pt(q,b);o+=mol(a,run,q.s,p[0],p[1],q.angle,Math.min(1,q.born/.18))}
+    if(a.p.halos)for(const e of stage.effects){const p=pt(e,b),u=e.age/.65;o+=S.circle(p[0],p[1],(7+u*25)*k,{c:C.v,w:2,op:(1-u)*.8})}
+    const cn=KN.countsAt(run,st.time),sp=b.gw/(cn.length+0);
+    cn.forEach((v,s)=>{o+=S.text(b.cx-b.gw/2+sp*(s+.5),b.y+b.bh+20*k,sv(a,run.reaction.names[s]+' : '+v),{anchor:'middle',size:13.5,c:colOf(C,run,s),weight:600})});
+  }
+  if(abs){
+    const b=geom(a,0),run=st.runs[0],cc=KN.values(run,st.time)[0],Tr=Math.pow(10,-.8*cc),my=b.y+b.bh/2;
+    o+=S.rect(4,my-20,26,40,{fill:C.card,c:C.ink2,w:1.5,rx:4})+S.text(17,my-30,'Lampe',{anchor:'middle',size:13,c:C.ink2,halo:false});
+    o+=S.line(30,my,b.x,my,{c:C.E,w:3})+S.line(b.x,my,b.x+b.bw,my,{c:C.E,w:3,op:.35+.6*Tr});
+    o+=S.line(b.x+b.bw,my,P.w-34,my,{c:C.E,w:1+5*Tr})+S.rect(P.w-34,my-20,26,40,{fill:C.card,c:C.ink2,w:1.5,rx:4})+S.text(P.w-21,my-30,'Détecteur',{anchor:'middle',size:13,c:C.ink2,halo:false});
+    o+=S.text(P.w-21,my+36*k,'T = '+fm.fix(Tr,2),{anchor:'middle',size:13,c:C.ink2});
+  }
+  a.svg('reactor',o);
+}
+
+/* ---------- graphes ---------- */
+function plot(a,id,o){
+  const P=a.panels[id],S=a.S,k=a.k,C=a.C;
+  const G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:o.xmin,xmax:o.xmax,ymin:o.ymin,ymax:o.ymax,xlab:o.xlab,ylab:o.ylab,padB:36*k});
+  st.G[id]=G;
+  let s=G.svg+S.clip('tc3-'+id,G);
+  for(const q of o.vlines||[])s+=S.line(G.X(q.x),G.y0,G.X(q.x),G.y0+G.h,{c:q.c,w:q.w||1.3,dash:`${4*k} ${4*k}`,op:q.op});
+  for(const q of o.series||[])s+=S.curve(q.pts,G,{c:q.c,w:q.w||2.6,dash:q.dash,op:q.op});
+  let d='';
+  for(const q of o.dots||[])if(Number.isFinite(q.p[0])&&Number.isFinite(q.p[1]))d+=S.circle(G.X(q.p[0]),G.Y(q.p[1]),(q.r||3.8)*k,{fill:q.c,c:C.card,w:1});
+  s+=`<g clip-path="url(#tc3-${id})">${d}</g>`;
+  if(o.msg)s+=S.text(G.x0+G.w/2,G.y0+G.h*.5,o.msg,{anchor:'middle',size:14,c:C.ink2});
+  a.svg(id,s);return G;
+}
+const stepPts=(run,idx,f=1)=>{const rows=KN.trace(run,st.time),out=[];for(let i=0;i<rows.length;i++){if(i)out.push([rows[i][0],rows[i-1][idx+1]*f]);out.push([rows[i][0],rows[i][idx+1]*f])}return out};
+const sample=(fn,n=200)=>Array.from({length:n+1},(_,j)=>{const t=j/n*st.end;return[t,fn(t)]});
+function drawSuivi(a){
+  const t=a.tab,C=a.C,k=a.k,r=st.runs[0],mix=r.p.mode==='mixture',temp=t===2,abs=t===0&&a.p.abs,f=abs?.8:1,series=[],vl=[],leg=[];
+  const noise=a.p.expl&&t<2?a.p.bruit:0,ymax=(mix?1.12:r.c0*1.12*f);
+  const cols=[C.B,C.E,C.v];
+  if(temp){
+    st.runs.forEach((run,i)=>{const c=i===0?C.B:C.F;series.push({pts:stepPts(run,0),c});if(a.p.theo){series.push({pts:sample(x=>KN.theory(run,x)[0]),c,dash:`${3*k} ${6*k}`,w:1.6});vl.push({x:run.half,c,op:.7})}leg.push({c,label:'T'+(i===0?'<sub>1</sub>':'<sub>2</sub>')+' = '+fm.fix(run.p.T,2)+' K'})});
+  }else{
+    for(let i=0;i<r.initial.length;i++){
+      if(abs&&i>0)continue;
+      const nrm=mix?1/(i===1?r.b0:r.c0):f,c=i===r.initial.length-1?C.v:cols[i];
+      series.push({pts:stepPts(r,i,nrm),c});
+      if(a.p.theo)series.push({pts:sample(x=>KN.theory(r,x)[i]*nrm),c,dash:`${3*k} ${6*k}`,w:1.6});
+      leg.push({c,label:uH(abs?'Absorbance':r.reaction.names[i])});
+    }
+    if(mix&&a.p.theo){series.push({pts:sample(x=>Math.exp(-r.k*r.b0*x)),c:C.F,dash:`${8*k} ${5*k}`,w:2});leg.push({c:C.F,label:'A si [B] constant',dash:true})}
+    if(!mix&&a.p.theo)vl.push({x:r.half,c:C.F,op:.8});
+    if(t===0&&a.p.tang&&!mix){
+      const c=KN.theory(r,st.time)[0],der=r.q===0?(c>0?-r.k:0):r.q===1?-r.k*nuA(r)*c:-2*r.k*c*c;
+      series.push({pts:[[0,(c-der*st.time)*f],[st.end,(c+der*(st.end-st.time))*f]],c:C.B,dash:`${8*k} ${4*k}`,w:1.8});leg.push({c:C.B,label:'Tangente (modèle)',dash:true});
+    }
+    if(t>=3){const h=KN.observedHalf(r);if(t===3&&h!==null&&h<=st.time)vl.push({x:h,c:C.F,op:.9})}
+  }
+  vl.push({x:st.time,c:C.ink2,op:.8});
+  let dots=[];
+  if(noise>0&&!temp){const nrm=mix?1/r.c0:f;dots=KN.measurements(r,st.time,noise).map(q=>({p:[q.t,q.c*nrm],c:cols[0],r:2.8}))}
+  const ylab=mix?'concentrations normalisées':abs?'absorbance (sans unité)':'concentration (mol·L<sup>−1</sup>)';
+  plot(a,'suivi',{xmin:0,xmax:st.end,ymin:noise>0&&!temp?-3*noise/100*(mix?1:r.c0*f):0,ymax,xlab:'t (s)',ylab:sv(a,ylab),series,vlines:vl,dots,msg:st.time===0?'Lecture ou curseur pour construire le suivi':''});
+  st.leg=leg;
+}
+function bnd(pts,pad=.12){const ys=pts.map(p=>p[1]).filter(Number.isFinite);if(!ys.length)return[0,1];const lo=Math.min(...ys),hi=Math.max(...ys),d=(hi-lo)||Math.abs(hi)||1;return[lo-d*pad,hi+d*pad]}
+const lnc=x=>Math.log(x);
+function drawAnalyse(a){
+  const t=a.tab,P=a.panels.analyse;st.leg2=[];if(P.el.hidden)return[];
+  const C=a.C,k=a.k,r=st.runs[0],tl=P.head;
+  if(t>=3)return drawSerie(a);
+  const view=t<2?a.p.vue:a.p.vue2,rows=KN.measurements(r,st.end,a.p.bruit),vis=q=>q.t<=st.time+1e-9,nu=nuA(r),mix=r.p.mode==='mixture';
+  const un=h=>UQ[h];
+  if(view==='int'){
+    const hyp=+a.p.hyp,f=c=>hyp===0?c:hyp===1?Math.log(c/r.c0):1/c,all=rows.filter(q=>q.c>r.c0*.03).map(q=>[q.t,f(q.c)]),pts=all.filter(q=>q[0]<=st.time+1e-9);
+    const fitAll=KN.fit(all),fit=KN.fit(pts),res=a.p.resid;
+    let ymin,ymax,ylab;
+    if(res){const rr=fitAll?fitAll.residuals.map(q=>Math.abs(q[1])):[1],m=Math.max(...rr,1e-9)*1.3;ymin=-m;ymax=m;ylab='résidu : mesure − droite'}
+    else{[ymin,ymax]=bnd(all);ylab=['[A] (mol·L<sup>−1</sup>)','ln([A] / [A]₀)','1 / [A] (L·mol<sup>−1</sup>)'][hyp]}
+    const shown=res?(fit?fit.residuals:[]):pts;
+    plot(a,'analyse',{xmin:0,xmax:st.end,ymin,ymax,xlab:'t (s)',ylab:sv(a,ylab),
+      series:fit&&!res?[{pts:[[0,fit.intercept],[st.time,fit.intercept+fit.slope*st.time]],c:C.F,dash:`${8*k} ${5*k}`}]:(res?[{pts:[[0,0],[st.end,0]],c:C.ink2,w:1,dash:`${4*k} ${5*k}`}]:[]),
+      vlines:[{x:st.time,c:C.ink2,op:.8}],dots:shown.map(p=>({p,c:C.B})),msg:pts.length<2?'Avancer pour obtenir des points':''});
+    if(tl)tl.textContent='Tester un ordre : linéarisation';
+    st.leg2=[{c:C.B,label:res?'Résidus':'Mesures de l\'échantillon'},...(fit&&!res?[{c:C.F,label:'Droite ajustée',dash:true}]:[])];
+    const kapp=fit?(hyp===2?fit.slope:-fit.slope)/nu:NaN;
+    return[{label:'Ordre testé',value:String(hyp),unit:'examen de la linéarité'},{label:'Pente ajustée',value:fm.sig(fit?fit.slope:NaN,3),unit:'unités du graphique / s'},{label:'<i class="m">k</i> déduit si le modèle est valide',value:fm.sig(kapp,3),unit:un(hyp)}];
+  }
+  if(view==='dif'){
+    const stride=3,all=[];
+    for(let i=stride;i<rows.length-stride;i++){const v=-(rows[i+stride].c-rows[i-stride].c)/(rows[i+stride].t-rows[i-stride].t)/nu;if(v>0&&rows[i].c>0)all.push({x:lnc(rows[i].c),y:lnc(v),t:rows[i+stride].t})}
+    const pts=all.filter(q=>q.t<=st.time+1e-9).map(q=>[q.x,q.y]),pa=all.map(q=>[q.x,q.y]),fit=KN.fit(pts);
+    const[xlo,xhi]=bnd(pa,.08),[ylo,yhi]=bnd(pa,.15);
+    plot(a,'analyse',{xmin:Math.min(xlo,lnc(r.c0)-3.7),xmax:Math.max(xhi,lnc(r.c0)+.15),ymin:ylo,ymax:yhi,xlab:'ln([A] / c°)',ylab:'ln(v / v°)',
+      series:fit?[{pts:[[xlo-1,fit.intercept+fit.slope*(xlo-1)],[xhi+1,fit.intercept+fit.slope*(xhi+1)]],c:C.F,dash:`${8*k} ${5*k}`}]:[],
+      dots:pts.map(p=>({p,c:C.B})),msg:pts.length<2?'Avancer pour estimer des vitesses':''});
+    if(tl)tl.textContent='Estimer un ordre : méthode différentielle';
+    st.leg2=[{c:C.B,label:'Différences centrées'},...(fit?[{c:C.F,label:'Droite ajustée',dash:true}]:[])];
+    return[{label:'Pente ajustée',value:fm.sig(fit?fit.slope:NaN,3),unit:'estimation de l\'ordre, à discuter'},{label:'Vitesses positives exploitées',value:pts.length+' / '+pa.length,unit:'fenêtre de 6 intervalles'},{label:'Bruit de mesure',value:fm.fix(a.p.bruit,1)+' %',unit:'de [A]<sub>0</sub>'}];
+  }
+  /* Arrhenius */
+  const arr=st.data[2],pts=arr.map(d=>[1/d.T,Math.log(d.k/.035)]),fit=KN.fit(pts),Ea=r.p.Ea,R=KN.R;
+  const yl=T=>Ea*1000/R*(1/298.15-1/T),ya=yl(273.15),yb=yl(353.15),xmin=1/353.15-.00004,xmax=1/273.15+.00004;
+  const ylo=Math.min(ya,yb)-.5,yhi=Math.max(ya,yb)+.5,ser=[];
+  if(fit)ser.push({pts:[[xmin,fit.intercept+fit.slope*xmin],[xmax,fit.intercept+fit.slope*xmax]],c:C.F,dash:`${8*k} ${5*k}`});
+  if(a.p.theo)ser.push({pts:[[xmin,yl(1/xmin)],[xmax,yl(1/xmax)]],c:C.v,w:1.8,dash:`${3*k} ${5*k}`});
+  plot(a,'analyse',{xmin,xmax,ymin:ylo,ymax:yhi,xlab:'1 / T (K⁻¹)',ylab:'ln(k / k_réf)',series:ser,dots:pts.map(p=>({p,c:C.B,r:4.6})),msg:pts.length<2?'Relever des k à plusieurs températures':''});
+  if(tl)tl.textContent='La loi d\'Arrhenius';
+  st.leg2=([{c:C.B,label:'k ajustés sur des suivis simulés'},...(fit?[{c:C.F,label:'Droite ajustée',dash:true}]:[]),...(a.p.theo?[{c:C.v,label:'Loi d\'Arrhenius du modèle',dash:true}]:[])]);
+  return[{label:'Températures distinctes',value:String(pts.length),unit:'constantes simulées'},{label:'Pente ajustée',value:fm.sig(fit?fit.slope:NaN,3),unit:'K'},{label:'<i class="m">E</i><sub>a</sub> déduit = −<i class="m">R</i> × pente',value:fm.sig(fit?-fit.slope*R/1000:NaN,3),unit:'kJ·mol<sup>−1</sup>'}];
+}
+/* onglets 4 et 5 : t½ et v0 en fonction de [A]0 (propositions B et C) */
+function drawSerie(a){
+  const t=a.tab,C=a.C,k=a.k,r=st.runs[0],P=r.p,data=st.data[t],q=r.q,kk=P.k,V=P.V,cmin=GRID[0]/V,cmax=GRID[4]/V,log=a.p['log'+t]==='log';
+  const th=t===3?c=>q===0?c/(2*kk):q===1?Math.LN2/kk:1/(2*kk*c):c=>q===0?kk:q===1?kk*c:2*kk*c*c;
+  const lin=[1.25*Math.max(th(cmin),th(cmax)),0];
+  const pts=data.map(d=>[d.c0,d.y]);
+  const lp=data.map(d=>[lnc(d.c0),lnc(d.y)]),fit=data.length>=2&&new Set(data.map(d=>d.c0.toFixed(6))).size>=2?KN.fit(lp):null;
+  const lthA=lnc(th(cmin)),lthB=lnc(th(cmax)),ylo=Math.min(lthA,lthB)-.7,yhi=Math.max(lthA,lthB)+.7;
+  const yl=t===3?'t½ (s)':'v₀ (mol·L<sup>−1</sup>·s<sup>−1</sup>)',leg=[{c:C.B,label:t===3?'t<sub>½</sub> observé':'v<sub>0</sub> observé'}];
+  const ser=[],vl=[{x:log?lnc(r.c0):r.c0,c:C.ink2,op:.8}];
+  let G;
+  if(!log){
+    if(a.p.theo){ser.push({pts:Array.from({length:101},(_,j)=>{const c=cmin*.8+(cmax*1.1-cmin*.8)*j/100;return[c,th(c)]}),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:'Modèle continu',dash:true})}
+    G=plot(a,'analyse',{xmin:0,xmax:cmax*1.12,ymin:0,ymax:lin[0],xlab:'[A]₀ (mol·L⁻¹)',ylab:sv(a,yl),series:ser,vlines:vl,dots:pts.map(p=>({p,c:C.B,r:4.4})),msg:data.length?'':'Relever des suivis pour construire le graphe'});
+  }else{
+    if(fit){ser.push({pts:[[lnc(cmin)-.4,fit.intercept+fit.slope*(lnc(cmin)-.4)],[lnc(cmax)+.4,fit.intercept+fit.slope*(lnc(cmax)+.4)]],c:C.F,dash:`${8*k} ${5*k}`});leg.push({c:C.F,label:'Droite ajustée',dash:true})}
+    if(a.p.theo){const n=t===3?1-q:q;ser.push({pts:[[lnc(cmin)-.4,lthA+n*(-.4)],[lnc(cmax)+.4,lthB+n*.4]].map(([x,y])=>[x,y]),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:'Modèle continu',dash:true})}
+    G=plot(a,'analyse',{xmin:lnc(cmin)-.4,xmax:lnc(cmax)+.4,ymin:ylo,ymax:yhi,xlab:'ln([A]₀ / c°)',ylab:t===3?'ln(t½ / t°)':'ln(v₀ / v°)',series:ser,vlines:vl,dots:lp.map(p=>({p,c:C.B,r:4.4})),msg:data.length<2?'Relever au moins deux suivis':''});
+  }
+  a.panels.analyse.head&&(a.panels.analyse.head.textContent=t===3?'Temps de demi-réaction en fonction de [A]₀':'Vitesse initiale en fonction de [A]₀');
+  st.leg2=leg;
+  const slope=fit?fit.slope:NaN,ordre=t===3?1-slope:slope,rev=a.p['loi'+t]!=='m'||a.p['rev'+t];
+  return[
+    {label:'Points relevés',value:String(data.length),unit:t===3?'valeurs de t½':'valeurs de v₀'},
+    {label:'Pente en échelle logarithmique',value:fm.sig(slope,3),unit:t===3?'= 1 − n':'= n'},
+    {label:'Ordre déduit <i class="m">n</i>',value:Number.isFinite(ordre)?fm.fix(ordre,2):'—',unit:'à arrondir à un entier',hint:rev?'ordre du modèle : '+q:undefined}
+  ];
+}
+
+/* ---------- mesures et horloge ---------- */
+function info(a,extra){
+  const t=a.tab,r=st.runs[0],Mv=Mh.v,vals=KN.values(r,st.time),half=KN.observedHalf(r),reached=half!==null&&half<=st.time+1e-9,arr=[];
+  if(t===0||t>=3){
+    const hint=a.p.theo&&r.half!==null?`modèle continu : ${fm.fix(r.half,1)} s`:undefined;
+    arr.push({label:'Concentration [A]',value:fm.fix(vals[0],3),unit:'mol·L<sup>−1</sup>'});
+    arr.push({label:'Événements réalisés',value:String(st.stages[0].index),unit:'réactions dans l\'échantillon'});
+    if(t<3)arr.push({label:`${Mv('t','½')} observé`,value:reached?fm.fix(half,1):'—',unit:'s',hint});
+  }else if(t===1){
+    arr.push({label:'Diminution de [B]',value:fm.fix((r.b0-vals[1])/r.b0*100,1),unit:'% depuis t = 0'});
+    arr.push({label:'Diminution de [A]',value:fm.fix((r.c0-vals[0])/r.c0*100,1),unit:'% depuis t = 0'});
+    if(a.p.theo){const th=KN.theory(r,st.time),ap=r.c0*Math.exp(-r.k*r.b0*st.time);arr.push({label:`Écart de l'approximation ${Mv('k')}[B]₀`,value:fm.fix(Math.abs(th[0]-ap)/r.c0*100,2),unit:'% de [A]₀',hint:`k[B]₀ = ${fm.sig(r.k*r.b0,3)} s⁻¹`})}
+  }else{
+    const r2=st.runs[1],h2=KN.observedHalf(r2);
+    arr.push({label:`${Mv('t','½')} observé · ${Mv('T','1')}`,value:reached?fm.fix(half,1):'—',unit:'s'});
+    arr.push({label:`${Mv('t','½')} observé · ${Mv('T','2')}`,value:h2!==null&&h2<=st.time+1e-9?fm.fix(h2,1):'—',unit:'s'});
+    if(a.p.theo)arr.push({label:`Rapport ${Mv('k')}(T₂) / ${Mv('k')}(T₁)`,value:fm.fix(r2.k/r.k,2),unit:'modèle'});
+  }
+  a.metrics(arr.concat(extra||[]));a.legend((st.leg||[]).concat(st.leg2||[]));
+  a.clock(`t = ${fm.fix(st.time,1)} s`);
+}
+
+/* ---------- interactions : objets, instant ---------- */
+function pick(a,x,y){
+  let best=null,bd=22*a.k;
+  st.stages.forEach((s,i)=>{const b=geom(a,i);for(const q of s.actors.values()){const p=pt(q,b),d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;best={q,b,s}}}});
+  return best;
+}
+A.drag('reactor',{
+  hit:(x,y)=>st.runs.length>0&&!!pick(A,x,y),
+  start:(x,y)=>{const h=pick(A,x,y);st.drag=h?h.q:null;st.dragBox=h?h.b:null},
+  move:(x,y)=>{const q=st.drag,b=st.dragBox;if(!q||!b)return;q.x=clamp((x-b.x)/b.bw,.035,.965);q.y=clamp((y-b.y)/b.bh,.045,.955)},
+  end:()=>{st.drag=null}
+});
+A.drag('suivi',{
+  hit:(x,y)=>{const G=st.G.suivi;return !!G&&x>=G.x0&&x<=G.x0+G.w&&y>=G.y0&&y<=G.y0+G.h},
+  start:(x)=>{A.play(false);seek(A,st.G.suivi.xv(x))},
+  move:(x)=>{seek(A,st.G.suivi.xv(x))},
+  end:()=>{}
+});
+
 </script>
-<!-- CPGE_MENU_SCRIPT_END -->
-</body></html>
+</body>
+</html>

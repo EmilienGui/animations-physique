@@ -1,109 +1,721 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Fibres optiques à saut et à gradient d’indice : guidage, acceptance et transmission d’impulsions. Animation autonome pour MPSI OP1.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Guidage par réflexion totale, cône d&#x27;acceptance, fibres à saut et à gradient d&#x27;indice, dispersion intermodale d&#x27;une impulsion.">
+<meta name="generator" content="AnimKit · E. Guillaume">
 <title>Fibres optiques · OP1 · MPSI</title>
 <style>
-:root{color-scheme:light;--paper:#f2f5f3;--surface:#fff;--ink:#152b2a;--muted:#506762;--line:#ccdcd6;--accent:#2b6160;--soft:#e8f2ef;--ray:#b12d45;--blue:#2059bf;--gold:#956209;--purple:#8144ad;--green:#247452;--shadow:0 5px 25px #173c360b}
-:root[data-theme=dark]{color-scheme:dark;--paper:#101c20;--surface:#18292d;--ink:#edf6f3;--muted:#b7cdc8;--line:#3b5558;--accent:#96d6ce;--soft:#253e42;--ray:#ff9bac;--blue:#89b9ff;--gold:#f4cf7b;--purple:#cfafff;--green:#91dbb6;--shadow:0 5px 25px #0002}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif;border-top:5px solid #3e8b89}button,input,select{font:inherit}button,select{cursor:pointer}button{color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;min-height:40px;padding:7px 12px}button:hover{background:var(--soft);border-color:var(--accent)}button[aria-pressed=true],button.active,.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--accent);outline-offset:3px}input,select{accent-color:var(--accent)}button:disabled{opacity:.45;cursor:default}.primary:hover{background:var(--accent);color:var(--surface)}[hidden]{display:none!important}
-.shell{height:calc(100dvh - 5px);max-width:2000px;margin:auto;padding:13px 20px 9px;display:flex;flex-direction:column;gap:10px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:14px}.eyebrow{font-size:13px;letter-spacing:.11em;font-weight:bold;color:var(--accent);text-transform:uppercase;margin-bottom:3px}h1{font-size:30px;letter-spacing:-.025em;line-height:1.1;font-weight:500;margin:0}.header-actions{display:flex;gap:6px}.header-actions button{font-size:16px}.steps{display:flex;gap:7px;align-items:center}.steps button{font-size:18px}.step-no{font-size:13px;opacity:.8;margin-right:8px}.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:16px}.experiment{min-width:0;min-height:0;display:flex;flex-direction:column;gap:9px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.segmented{display:flex;gap:4px;align-items:center}.toolbar button,.toolbar select{font-size:16px;min-height:36px;padding:5px 9px}.view-select{border:1px solid var(--line);border-radius:5px;color:var(--ink);background:var(--surface);max-width:220px}.scene-card{position:relative;flex:1;min-height:290px;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}#scene{display:block;width:100%;height:100%;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}#scene .halo{paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;flex:none}.metric{border-left:1px solid var(--line);padding-left:18px}.metric:first-child{border:0;padding-left:0}.metric-label{font-size:17px;color:var(--muted)}.metric-value{font-size:34px;line-height:1.2;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.metric-note{font-size:14px;color:var(--muted)}.caption{min-height:48px;font-size:17px;color:var(--muted);margin:0}.caption strong{color:var(--accent);font-weight:500}.transport{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.transport button,.transport select{font-size:16px;padding:5px 9px;min-height:36px}.transport select{color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px}.time-readout{font-size:16px;color:var(--muted);margin-left:auto}.controls{background:var(--surface);border:1px solid var(--line);border-radius:9px;overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}.control-section{padding:16px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-label{margin:0 0 10px;color:var(--accent);font-size:14px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em}.field{margin-top:13px}.field:first-of-type{margin-top:0}.field-head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:17px}.field-head label{flex:1}.number{width:83px;font-size:17px;text-align:right;padding:6px 4px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}input[type=range]{width:100%;height:20px;margin:8px 0 0;cursor:pointer}input[type=checkbox]{width:18px;height:18px;margin:0}.checks{display:grid;gap:10px}.checks label{display:flex;gap:9px;align-items:center;font-size:17px}.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.presets button{font-size:15px;padding:6px 8px;min-height:34px}.note{font-size:14px;color:var(--muted);margin:9px 0 0}.formula{font:21px/1.65 Georgia,'Times New Roman',serif;margin:7px 0}.formula small{font-size:17px}details>summary{cursor:pointer;color:var(--accent);font-size:17px}details[open]>summary{margin-bottom:12px}.footer{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
-.projection .controls,.projection .footer,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{max-width:none;padding:9px 15px;gap:8px}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:21px}.projection .metric-note{font-size:16px}.projection .caption{font-size:20px;min-height:30px}.projection .steps button{font-size:20px}.projection .toolbar button,.projection .toolbar select,.projection .transport button{font-size:18px}.projection .scene-card{min-height:290px}
-dialog{width:min(850px,calc(100% - 28px));max-height:86dvh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:27px}dialog::backdrop{background:#071c2299}dialog h2{font-size:28px;font-weight:500;margin:0 0 17px}dialog p,dialog li{font-size:18px;line-height:1.6;color:var(--muted)}dialog a{color:var(--accent)}.close-row{display:flex;justify-content:flex-end}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--surface);border:1px solid var(--line);padding:12px 18px;border-radius:6px;font-size:17px;z-index:5}.toast:empty{display:none}
-@media(max-width:1150px){.shell{padding:10px 12px}.workspace{gap:10px;grid-template-columns:minmax(0,1fr) 280px}.header-actions .optional{display:none}h1{font-size:28px}.metric-value{font-size:30px}.metrics{gap:10px}.metric{padding-left:10px}.steps button{font-size:17px}.step-no{display:none}.footer{display:none}}
-@media(max-width:780px){.shell{height:auto;min-height:calc(100dvh - 5px)}.masthead{flex-wrap:wrap;gap:10px}.header-actions{margin-left:auto}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.steps button{font-size:16px;padding:6px}.workspace{display:flex;flex-direction:column}.experiment{min-height:0}.scene-card{height:520px;flex:none}.controls{overflow:visible}.metrics{gap:7px}.metric-label{font-size:15px}.metric-value{font-size:28px}.metric-note{font-size:13px}.caption{min-height:0}.toolbar{gap:6px}.toolbar .segmented{flex-wrap:wrap}.projection .shell{min-height:calc(100dvh - 5px)}.projection .scene-card{height:540px}.projection .metric-value{font-size:30px}.projection .metric-label{font-size:17px}.projection .steps button{font-size:16px}.time-readout{margin-left:0}h1{font-size:27px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
-</style>
-<!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
 <body>
-<main class="shell">
-<header class="masthead"><div><div class="eyebrow">MPSI · OP1 — Propagation de la lumière</div><h1>Fibres optiques</h1></div><div class="header-actions"><button id="theme" aria-pressed="false">☾ Sombre</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" class="optional">Plein écran</button><button id="export">Image</button><button id="help" aria-label="Utilisation et hypothèses">?</button></div></header>
-<nav class="steps" aria-label="Expériences"><button data-step="guide" class="active" aria-pressed="true"><span class="step-no">01</span>Guider un rayon</button><button data-step="compare" aria-pressed="false"><span class="step-no">02</span>Comparer les fibres</button><button data-step="signal" aria-pressed="false"><span class="step-no">03</span>Transmettre un signal</button></nav>
-<div class="workspace">
-<section class="experiment" aria-label="Expérience interactive">
-<div class="toolbar"><div class="segmented" id="fibre-choices"><button data-kind="step" aria-pressed="true">Saut d’indice</button><button data-kind="graded" aria-pressed="false">Gradient d’indice</button></div><div id="compare-label" class="note" hidden>Même faisceau · mêmes indices aux extrémités du profil</div><div class="segmented" id="view-tools"><select id="view" class="view-select" aria-label="Vue de la fibre"><option value="local">Coupe · angles fidèles</option><option value="overview">Segment · vue d’ensemble</option><option value="structure">Structure en perspective</option></select><button id="zoom-out" aria-label="Dézoomer">−</button><button id="zoom-in" aria-label="Zoomer">+</button><button id="fit">Cadrer</button></div></div>
-<div class="scene-card"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Propagation de la lumière dans une fibre optique" tabindex="0"></svg></div>
-<div class="transport"><button id="play" class="primary">❚❚ Pause</button><button id="restart">↺ Recommencer</button><select id="speed" aria-label="Vitesse d’animation"><option value=".5">Ralenti × ½</option><option value="1" selected>Vitesse × 1</option><option value="2">Vitesse × 2</option></select><button id="arrivals" hidden>Voir les arrivées</button><label id="two-wrap" hidden><input type="checkbox" id="two"> Deux impulsions</label><span id="clock" class="time-readout"></span></div>
-<div class="metrics"><div class="metric"><div class="metric-label" id="label1"></div><div class="metric-value" id="value1"></div><div class="metric-note" id="note1"></div></div><div class="metric"><div class="metric-label" id="label2"></div><div class="metric-value" id="value2"></div><div class="metric-note" id="note2"></div></div><div class="metric"><div class="metric-label" id="label3"></div><div class="metric-value" id="value3"></div><div class="metric-note" id="note3"></div></div></div>
-<p id="caption" class="caption" role="status" aria-live="polite"></p>
-</section>
-<aside class="controls" aria-label="Réglages">
-<section class="control-section"><h2 class="section-label">Le rayon incident</h2>
-<div class="field"><div class="field-head"><label for="theta">Angle θ</label><input id="theta-number" class="number" type="number" min="-75" max="75" step=".1" value="16" aria-label="Angle d’entrée en degrés"><span>°</span></div><input id="theta" type="range" min="-75" max="75" step=".1" value="16" aria-label="Angle d’entrée"></div>
-<div class="presets"><button data-preset="guided">Guidé</button><button data-preset="limit">Rayon limite</button><button data-preset="escape">Hors acceptance</button><button data-preset="axis">Sur l’axe</button></div><p id="beam-note" class="note">Déplacer le laser dans la coupe ou utiliser les flèches du clavier.</p>
-</section>
-<section class="control-section"><h2 class="section-label">Les indices</h2>
-<div class="field"><div class="field-head"><label for="nc">Cœur · n<sub>c</sub></label><input id="nc-number" class="number" type="number" min="1.1" max="1.8" step=".001" value="1.456" aria-label="Indice au centre du cœur"></div><input id="nc" type="range" min="1.1" max="1.8" step=".001" value="1.456" aria-label="Indice du cœur"></div>
-<div class="field"><div class="field-head"><label for="ng">Gaine · n<sub>g</sub></label><input id="ng-number" class="number" type="number" min="1" max="1.8" step=".001" value="1.410" aria-label="Indice de la gaine"></div><input id="ng" type="range" min="1" max="1.8" step=".001" value="1.410" aria-label="Indice de la gaine"></div>
-<div class="presets"><button data-preset="course">Valeurs du cours</button><button data-preset="weak">Faible contraste</button><button data-preset="equal">Indices égaux</button></div><p class="note">n<sub>c</sub> ≥ n<sub>g</sub> · Teinte plus marquée = indice plus élevé.</p>
-</section>
-<section class="control-section" id="display-section"><h2 class="section-label">Faire apparaître</h2><div class="checks"><label><input type="checkbox" id="cone" checked>Cône d’acceptance</label><label><input type="checkbox" id="angles" checked>Normales et angles</label><label><input type="checkbox" id="beam">Éventail de rayons</label><label><input type="checkbox" id="probe">Sonde d’indice et de vitesse</label></div></section>
-<section class="control-section"><h2 class="section-label">La transmission</h2>
-<div class="field"><div class="field-head"><label for="length">Longueur L</label><input id="length-number" class="number" type="number" min=".01" max="5" step=".01" value="1" aria-label="Longueur en kilomètres"><span>km</span></div><input id="length" type="range" min=".01" max="5" step=".01" value="1" aria-label="Longueur de fibre"></div>
-<div class="signal-field field"><div class="field-head"><label for="width">Durée à mi-hauteur</label><input id="width-number" class="number" type="number" min="1" max="200" step="1" value="20" aria-label="Durée de l’impulsion en nanosecondes"><span>ns</span></div><input id="width" type="range" min="1" max="200" step="1" value="20" aria-label="Durée d’impulsion"></div>
-<div class="signal-field field"><div class="field-head"><label for="gap">Séparation</label><input id="gap-number" class="number" type="number" min="2" max="500" step="1" value="90" aria-label="Séparation des impulsions en nanosecondes"><span>ns</span></div><input id="gap" type="range" min="2" max="500" step="1" value="90" aria-label="Séparation des impulsions"></div>
-<p id="transmission-note" class="note">Les temps sont calculés pour L ; le dessin montre un court segment.</p>
-</section>
-<section class="control-section"><details id="advanced"><summary>Réglages avancés</summary>
-<div class="field"><div class="field-head"><label for="radius">Rayon du cœur a</label><input id="radius-number" class="number" type="number" min="5" max="100" step="1" value="25" aria-label="Rayon du cœur en micromètres"><span>µm</span></div><input id="radius" type="range" min="5" max="100" step="1" value="25" aria-label="Rayon du cœur"></div>
-<div class="field"><div class="field-head"><label for="offset">Position y₀/a</label><input id="offset-number" class="number" type="number" min="-.85" max=".85" step=".01" value="0" aria-label="Position d’injection relative au rayon"></div><input id="offset" type="range" min="-.85" max=".85" step=".01" value="0" aria-label="Position d’injection"></div>
-<div class="field"><div class="field-head"><label for="n0">Milieu d’entrée n₀</label><input id="n0-number" class="number" type="number" min="1" max="1.5" step=".01" value="1" aria-label="Indice du milieu d’entrée"></div><input id="n0" type="range" min="1" max="1.5" step=".01" value="1" aria-label="Indice extérieur"></div>
-<p class="note">Dans un gradient, l’acceptance dépend aussi de la position d’injection. Seuls les rayons méridiens sont représentés.</p>
-</details></section>
-<section class="control-section"><details><summary>Lois et modèle</summary><div class="formula">ON = √(n<sub>c</sub>² − n<sub>g</sub>²)<br>n₀ sin θ<sub>max</sub> = ON</div><p class="note">À l’axe ; ailleurs, remplacer n<sub>c</sub> par l’indice local d’entrée.</p><div class="formula">n₀ sin θ = n(y₀) sin θ′<br><small>Gradient : n²(r) = n<sub>c</sub>² − (n<sub>c</sub>² − n<sub>g</sub>²) r²/a²</small><br>τ = ∫ n ds / c</div><p class="note">Milieux non dispersifs, sans absorption. La branche transmise est seule dessinée en cas de fuite ; les coefficients de Fresnel ne sont pas calculés.</p></details><div class="presets"><button id="reset">Tout réinitialiser</button></div></section>
-</aside>
-</div>
-<footer class="footer"><span>E. Guillaume · MPSI · OP1</span><span>Modèle géométrique idéal · Hors connexion · Espace : pause · F : plein écran</span></footer>
-</main>
-<dialog id="about"><h2>Guider la lumière, transmettre un signal</h2>
-<p><strong>Trois expériences.</strong> Guider un rayon : orienter le laser, afficher les angles puis le cône d’acceptance. Comparer : les mêmes cinq angles sont injectés dans les deux fibres. Transmettre : envoyer une ou deux impulsions et observer leurs arrivées ; « Voir les arrivées » avance l’horloge jusqu’à la fenêtre de réception.</p>
-<p><strong>Manipulations.</strong> Dans la coupe, déplacer le laser ou utiliser les flèches haut/bas, avec Maj pour un pas de 5°. Les curseurs et champs numériques sont équivalents. + et − changent le segment visible ; Cadrer restaure la vue. Projection masque les réglages. Clair/Sombre adapte toute la scène et les exports. Espace : pause ; R : recommencer ; F : plein écran.</p>
-<p><strong>Échelles.</strong> La coupe locale utilise la même échelle sur les deux axes : ses angles sont fidèles. La vue d’ensemble comprime seulement z et annonce le facteur : ne pas y mesurer les angles. Ces vues montrent un court segment, dont la longueur est indiquée, et non la fibre entière de longueur L. La perspective explique seulement la structure ; l’épaisseur de gaine est conventionnelle. Les teintes codent l’indice, pas une couleur réelle ou une absorption.</p>
-<p><strong>Propagation.</strong> Fibre droite cylindrique ; rayons méridiens ; indices non dispersifs. Dans le cœur à saut d’indice, n = n<sub>c</sub>. Dans le gradient, n²(y) = n<sub>c</sub>² − (n<sub>c</sub>² − n<sub>g</sub>²)y²/a². Les trajectoires du gradient sont calculées à partir de l’invariant k = n cos θ′, sans approximation paraxiale. La vitesse locale est c/n et le temps est l’intégrale ∫ n ds/c. Les rayons guidés se courbent continûment dans le gradient, sans réflexions successives sur des couches fictives. Le rayon limite est distingué d’un rayon strictement guidé.</p>
-<p><strong>Transmission.</strong> Les cinq angles vont de 0 à θ, avec des poids égaux fixés à 1/5 par rayon injecté. Les rayons ayant quitté le cœur avant la sortie sont exclus de la réception ; un rayon axial peut être reçu même sans contraste d’indice, sans être confiné. Chaque impulsion est une gaussienne, de largeur à mi-hauteur réglable. Les courbes représentent la somme de copies retardées de cette gaussienne, sans interférences, polarisation ni calcul de modes ou de puissances de couplage. La dispersion affichée est l’écart des temps parmi les rayons reçus échantillonnés, pas nécessairement l’écart maximal de la fibre.</p>
-<p><strong>Lire les chronogrammes.</strong> Les pointillés donnent l’impulsion d’entrée décalée de τ<sub>réf</sub> = n<sub>c</sub>L/c. L’abscisse est t − τ<sub>réf</sub> et les deux fibres utilisent les mêmes échelles. La somme des poids injectés vaut 1 ; la hauteur reçue peut diminuer par étalement ou exclusion de rayons ayant quitté le cœur. Les rangées « Avancement » montrent la vraie coordonnée z/L de chaque rayon, sur des lignes séparées pour la lisibilité : ce ne sont pas des trajectoires géométriques.</p>
-<p><strong>Limites.</strong> Pas d’absorption, de courbure de fibre, de dispersion chromatique, de coefficients de Fresnel ni d’onde évanescente. Le modèle de rayons ne décrit pas le caractère monomode d’une fibre. Le profil quadratique de n² réduit fortement la dispersion dans le régime de faible contraste ; les temps ne sont pas forcés à être identiques. Le seuil théorique à saut d’indice correspond à une limite des rayons guidés.</p>
-<p>Notations et valeurs par défaut : cours OP1 d’E. Guillaume. Référence complémentaire pour le profil : <a href="https://ku.ac.bd/discipline/uploads/offered-course-material/Lecture%202_ECE%204207.pdf" target="_blank" rel="noopener noreferrer">Khulna University — Graded-Index Optical Fibers</a>. Ce lien est facultatif ; aucune ressource distante n’est chargée.</p>
-<div class="close-row"><button id="close-help" class="primary">Revenir à l’expérience</button></div></dialog>
-<div class="toast" id="toast" role="status"></div>
-<script id="physics">
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
 'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* OP1 · Fibres optiques : moteur physique d'origine (24 octobre 2026), repris sans modification.
+   Saut d'indice et gradient n² = nc² − (nc² − ng²)(y/a)², invariant k = n cos θ′, temps = ∫ n ds / c. */
 window.FibreModel = (() => {
  const C = .299792458, RAD = Math.PI/180, EPS=1e-11;
  function validate(p){
@@ -163,374 +775,332 @@ window.FibreModel = (() => {
  function signal(t,taus,width,gap,two){const sigma=width/(2*Math.sqrt(2*Math.log(2)));let value=0;for(const tau of taus){value+=Math.exp(-.5*((t-tau)/sigma)**2)/5;if(two)value+=Math.exp(-.5*((t-tau-gap)/sigma)**2)/5;}return value;}
  return Object.freeze({C,RAD,index,acceptance,ray,position,time,distanceAtTime,samples,spread,signal,validate});
 })();
-</script>
-<script>
-(() => {
+
+// @titre Fibres optiques · OP1 · MPSI
+// @sortie ../OP1_Fibres_Optiques/OP1_Fibres_Optiques.html
+// @inclure OP1_Fibres_Optiques_physique.js
+// @description Guidage par réflexion totale, cône d'acceptance, fibres à saut et à gradient d'indice, dispersion intermodale d'une impulsion.
 'use strict';
-const $=id=>document.getElementById(id),M=window.FibreModel,NS='http://www.w3.org/2000/svg';
-const defaults={nc:1.456,ng:1.410,n0:1,radius:25,offset:0,length:1,theta:16,width:20,gap:90};
-let p={...defaults},step='guide',kind='step',view='local',dark=false,zoom=1,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,elapsed=0,lastFrame=0,rate=1,dragging=false,geometry=null,toastTimer;
-let W=1000,H=450,cache={},palette={},clock=0,signalStart=0;
-const fmt=(n,d=1)=>Number.isFinite(n)?new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(n)<1e-10?0:n):'—';
-function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const key in attrs)n.setAttribute(key,attrs[key]);if(parent)parent.append(n);return n;}
-function txt(parent,x,y,text,size=20,color=palette.ink,anchor='start',extra={}){const n=el('text',{x,y,fill:color,'font-size':size*(document.body.classList.contains('projection')?1.1:1),'text-anchor':anchor,...extra},parent);n.textContent=text;return n;}
-function path(parent,points,color,width=2,attrs={}){return el('path',{d:points.map((p,i)=>(i?'L':'M')+p[0].toFixed(3)+','+p[1].toFixed(3)).join(' '),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...attrs},parent);}
-function line(parent,x1,y1,x2,y2,color=palette.line,width=1,attrs={}){return path(parent,[[x1,y1],[x2,y2]],color,width,attrs);}
-function paletteUpdate(){const css=getComputedStyle(document.documentElement);for(const k of ['ink','muted','surface','line','accent','ray','blue','gold','purple','green'])palette[k]=css.getPropertyValue('--'+k).trim();}
-function tint(n){const t=Math.max(0,Math.min(1,(n-1)/.8));return dark?'hsl(178,'+(24+24*t)+'%,'+(12+26*t)+'%)':'hsl(176,'+(27+19*t)+'%,'+(98-34*t)+'%)';}
-function colors(){return [palette.muted,palette.blue,palette.gold,palette.purple,palette.ray];}
-function notify(message){$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',2800);}
-function rebuild(){
- cache={};for(const k of ['step','graded']){const rays=M.samples(p,k,p.theta);cache[k]={selected:M.ray(p,k,p.theta),rays,received:rays.filter(r=>r.received),acc:M.acceptance(p,k),spread:M.spread(rays)};}
- cache.ref=p.nc*p.length*1000/M.C;const times=[...cache.step.received,...cache.graded.received].map(r=>r.tau-cache.ref);
- const sig=p.width/2.354820045;cache.lo=Math.min(-3.5*sig,...times.map(t=>t-3.5*sig));cache.hi=Math.max(3.5*sig,...times.map(t=>t+3.5*sig))+($('two').checked?p.gap:0);
- cache.arrival=Math.max(0,cache.ref+cache.lo);cache.end=cache.ref+cache.hi;signalStart=0;elapsed=0;clock=0;updateUI();draw();
+/* =====================================================================
+   OP1 · Fibres optiques
+   Physique : FibreModel (OP1_Fibres_Optiques_physique.js, moteur d'origine inchangé).
+   Notations du cours : θ angle d'entrée avec l'axe, θ′ angle du rayon réfracté avec l'axe,
+   i incidence sur l'interface cœur–gaine, n0 sin θmax = √(nc² − ng²), ΔTm = nc (nc/ng − 1) L/c.
+   Gradient : n²(y) = nc² − (nc² − ng²)(y/a)², invariant k = n cos θ′, temps = ∫ n ds / c.
+   ===================================================================== */
+const FM=window.FibreModel, M=AnimKit.M, RAD=Math.PI/180;
+let cache=null, cacheKey='', st={clock:0,period:1e-3,lx:null};
+const mp=a=>({nc:a.p.nc,ng:a.p.ng,n0:a.p.n0,radius:a.p.rc,offset:a.p.y0,length:a.p.L});
+const angCols=a=>[a.C.ink2,a.C.B,a.C.E,a.C.dark?'#c39bff':'#7a3fc0',a.C.F];
+
+function calc(a){
+  const key=JSON.stringify([a.p.nc,a.p.ng,a.p.n0,a.p.rc,a.p.y0,a.p.L,a.p.theta,a.p.width,a.p.gap,a.p.deux]); if(key===cacheKey)return cache;
+  const p=mp(a), c={};
+  for(const kd of['step','graded']){const rays=FM.samples(p,kd,a.p.theta);c[kd]={sel:FM.ray(p,kd,a.p.theta),rays,received:rays.filter(r=>r.received),acc:FM.acceptance(p,kd),spread:FM.spread(rays)}}
+  c.ref=p.nc*p.length*1000/FM.C;
+  const ts=[...c.step.received,...c.graded.received].map(r=>r.tau-c.ref), sig=a.p.width/2.354820045;
+  c.lo=Math.min(-3.5*sig,...ts.map(t=>t-3.5*sig)); c.hi=Math.max(3.5*sig,...ts.map(t=>t+3.5*sig))+(a.p.deux?a.p.gap:0);
+  c.arrival=Math.max(0,c.ref+c.lo); c.end=c.ref+c.hi;
+  c.dTm=p.nc*(p.nc/p.ng-1)*p.length*1000/FM.C;
+  cache=c; cacheKey=key; return c;
 }
-function syncFields(skipActive=false){for(const key of Object.keys(defaults))for(const suffix of ['','-number']){const field=$(key+suffix);if(field&&(!skipActive||field!==document.activeElement))field.value=p[key];}}
-function setMetric(i,label,value,note){$('label'+i).textContent=label;$('value'+i).textContent=value;$('note'+i).textContent=note;}
-function updateUI(){
- const c=cache[kind],r=c.selected;
- $('fibre-choices').hidden=step!=='guide';$('compare-label').hidden=step==='guide';$('view-tools').hidden=step==='signal';
- $('arrivals').hidden=step!=='signal';$('two-wrap').hidden=step!=='signal';$('display-section').hidden=step!=='guide';
- $('angles').disabled=view!=='local';$('beam').disabled=view==='structure';$('probe').disabled=view==='structure';
- document.querySelectorAll('.signal-field').forEach(n=>n.hidden=step!=='signal');
- $('beam-note').textContent=step==='guide'?'Déplacer le laser dans la coupe ou utiliser les flèches du clavier.':'Cinq angles de 0 à θ, identiques pour les deux fibres.';
- $('transmission-note').textContent=step==='signal'?'Impulsions gaussiennes · cinq rayons de poids égaux · temps en ns.':'Les temps sont calculés pour L ; le dessin montre un court segment.';
- if(step==='guide'){
-  const a=c.acc;
-  setMetric(1,'Ouverture numérique',fmt(a.on,3),Math.abs(p.offset)<1e-8?'Injection sur l’axe':'Acceptance locale en y₀');
-  setMetric(2,'Demi-angle θmax',fmt(a.angle,1)+'°',a.saturated?'Tout l’hémisphère entrant est accepté':'Depuis le milieu d’indice n₀');
-  setMetric(3,'Angle réfracté θ′',r.entered?fmt(r.thetaPrime,1)+'°':'—',r.entered?(kind==='step'?'i = '+fmt(r.incidence,1)+'° · cœur–gaine':'Mesuré depuis l’axe'):'Pas de transmission à l’entrée');
-  let title=!r.entered?'Réflexion totale à l’entrée':r.matched?'Aucun confinement par contraste d’indice':r.limiting?'Rayon limite de l’acceptance':r.guided?'Rayon guidé':'Rayon non guidé';
-  let detail=!r.entered?'Le milieu d’entrée est plus réfringent à cette incidence.':r.matched?'Une direction axiale reste rectiligne, mais aucun contraste ne la confine.':r.limiting?'Cas frontière ; la réflexion totale stricte correspond aux angles inférieurs.':kind==='graded'&&r.guided?'L’indice varie continûment : le rayon se courbe vers l’axe.':r.guided?'La réflexion totale se reproduit à chaque rencontre cœur–gaine.':'La branche transmise pénètre dans la gaine ; les réflexions partielles ne sont pas dessinées.';
-  $('caption').replaceChildren();const strong=document.createElement('strong');strong.textContent=title+'. ';$('caption').append(strong,detail);
- }else{
-  const a=cache.step.spread,b=cache.graded.spread;
-  setMetric(1,'Étalement · saut',a===null?'—':fmt(a,2)+' ns',cache.step.received.length+'/5 rayons reçus');
-  setMetric(2,'Étalement · gradient',b===null?'—':fmt(b,2)+' ns',cache.graded.received.length+'/5 rayons reçus');
-  setMetric(3,'Temps de référence',fmt(cache.ref,0)+' ns','τréf = nc L/c · L = '+fmt(p.length,2)+' km');
-  $('caption').textContent=step==='compare'?'Même faisceau injecté. L’écart des temps est calculé pour L, sur les rayons reçus parmi ceux affichés. Le gradient compense une partie du trajet plus long.':'Pointillés : entrée décalée de τréf. Courbes : somme des impulsions retardées. Les deux fibres partagent les mêmes échelles.';
- }
- $('play').textContent=playing?'❚❚ Pause':'▶ Lecture';$('play').setAttribute('aria-pressed',String(playing));
- $('view').options[2].disabled=step!=='guide';
- $('zoom-in').disabled=view==='structure';$('zoom-out').disabled=view==='structure';
- document.querySelectorAll('[data-step]').forEach(b=>{b.classList.toggle('active',b.dataset.step===step);b.setAttribute('aria-pressed',String(b.dataset.step===step));});
- document.querySelectorAll('[data-kind]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.kind===kind)));
-}
-function base(){
- $('scene').replaceChildren();el('rect',{width:W,height:H,fill:palette.surface},$('scene'));
- const defs=el('defs',{},$('scene'));el('marker',{id:'arrow',viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:5,markerHeight:5,orient:'auto'},defs).append(el('path',{d:'M0 0L10 5L0 10Z',fill:palette.muted}));
- return $('scene');
-}
-function arc(g,cx,cy,r,a,b,label,color){
- if(Math.abs(a-b)<.002)return;
- const pts=[];for(let j=0;j<=32;j++){const t=a+(b-a)*j/32;pts.push([cx+r*Math.cos(t),cy-r*Math.sin(t)]);}
- path(g,pts,color,1.8);const t=(a+b)/2;txt(g,cx+(r+22)*Math.cos(t),cy-(r+22)*Math.sin(t),label,21,color,'middle',{'class':'halo'});
-}
-function profile(g,x,cy,a,k,compact){
- const xlo=x,xhi=x+Math.max(54,Math.min(94,W*.095)),nlo=Math.max(1,p.ng-.012),nhi=p.nc+.012;
- const nx=n=>xlo+(n-nlo)/(nhi-nlo)*(xhi-xlo);
- line(g,xlo,cy-a*1.42,xlo,cy+a*1.42,palette.muted,1);
- line(g,xlo-5,cy+a*1.42,xhi+7,cy+a*1.42,palette.muted,1);
- const pts=k==='step'?[[nx(p.ng),cy-1.36*a],[nx(p.ng),cy-a],[nx(p.nc),cy-a],[nx(p.nc),cy+a],[nx(p.ng),cy+a],[nx(p.ng),cy+1.36*a]]:[];
- if(k==='graded')for(let j=0;j<=100;j++){const y=1.36-2.72*j/100;const n=Math.abs(y)>1?p.ng:M.index(p,k,y);pts.push([nx(n),cy-y*a]);}
- path(g,pts,palette.accent,2.5);
- txt(g,xlo,cy-a*1.42-(compact?2:13),'n(r)',20,palette.muted);
- if(!compact){txt(g,xlo+6,cy+7,fmt(p.nc,3),18,palette.accent);txt(g,xlo,cy+a*1.42+24,fmt(p.ng,3),17,palette.muted);}
- return xhi+28;
-}
-function fibrePanel(g,k,top,height,single){
- const compact=!single,c=cache[k],r=c.selected;
- txt(g,22,top+28,k==='step'?'Saut d’indice':'Gradient d’indice',single?24:22,palette.ink);
- if(!single&&W>700)c.rays.forEach((rr,i)=>txt(g,W-26-(4-i)*66,top+28,fmt(rr.theta,0)+'°',18,colors()[i],'end'));
- const bottomPad=single?48:30,cy=top+height*.54+6,baseA=Math.min((height-bottomPad-55)/3.1,single?92:55),a=baseA*(view==='local'?zoom:1);
- const profileX=22,profileEnd=profile(g,profileX,cy,a,k,compact),x0=Math.max(profileEnd+95,W*.27),x1=W-26,fiberW=x1-x0;
- const sx=view==='local'?a:fiberW/(120/zoom),maxU=fiberW/sx,sy=a;
- const X=u=>x0+u*sx,Y=y=>cy-y*sy;
- const clipId='clip-'+k;const defs=g.querySelector('defs');const clip=el('clipPath',{id:clipId},defs);el('rect',{x:x0,y:cy-1.43*a,width:fiberW,height:2.86*a},clip);
- el('rect',{x:x0,y:cy-1.4*a,width:fiberW,height:2.8*a,fill:tint(p.ng)},g);
- if(k==='step')el('rect',{x:x0,y:cy-a,width:fiberW,height:2*a,fill:tint(p.nc)},g);
- else for(let j=0;j<90;j++){const y=-1+j/45;el('rect',{x:x0,y:Y(y+2/90),width:fiberW,height:2*a/90+.3,fill:tint(M.index(p,k,y+1/90))},g);}
- line(g,x0,cy-1.4*a,x1,cy-1.4*a,palette.line);line(g,x0,cy+1.4*a,x1,cy+1.4*a,palette.line);
- for(const y of [-1,1])line(g,x0,Y(y),x1,Y(y),palette.accent,1.3);
- line(g,x0,cy,x1,cy,palette.muted,1,{'stroke-dasharray':'6 6',opacity:.65});
- line(g,x0,cy-1.4*a,x0,cy+1.4*a,palette.accent,2);
- if(single){txt(g,x1-8,cy-a-10,'gaine',20,palette.muted,'end');txt(g,x1-8,cy+a-12,'cœur',21,palette.ink,'end');}
- const entryY=Y(p.offset),pre=Math.min(x0-profileEnd-15,105),preScale=single?pre:45;
- if(single&&$('cone').checked){
-  const radius=Math.min(preScale,1.4*a),conePts=[[x0,entryY]];
-  for(let j=0;j<=60;j++){const angle=(-c.acc.angle+2*c.acc.angle*j/60)*M.RAD;conePts.push([x0-radius*Math.cos(angle),entryY-radius*Math.sin(angle)]);}
-  el('path',{d:conePts.map((point,i)=>(i?'L':'M')+point.join(',')).join(' ')+'Z',fill:palette.accent,opacity:.12},g);
-  for(const sign of [-1,1])line(g,x0,entryY,x0-radius*Math.cos(c.acc.angle*M.RAD),entryY+sign*radius*Math.sin(c.acc.angle*M.RAD),palette.accent,1.5,{'stroke-dasharray':'5 4'});
- }
- const theta=p.theta*M.RAD;
- const laserDist=Math.min(preScale/Math.max(.2,Math.cos(theta)),(height*.4)/Math.max(.2,Math.abs(Math.sin(theta))));
- const lx=x0-laserDist*Math.cos(theta),ly=entryY+laserDist*Math.sin(theta);
- if(single){line(g,lx,ly,x0,entryY,palette.ray,3);const laser=el('g',{'data-laser':'true',style:'cursor:grab'},g);
-  el('circle',{cx:lx,cy:ly,r:18,fill:palette.surface,stroke:palette.ray,'stroke-width':3},laser);el('circle',{cx:lx,cy:ly,r:6,fill:palette.ray},laser);
-  el('circle',{cx:lx,cy:ly,r:28,fill:'transparent'},laser);geometry={x0,entryY,lx,ly};
- }
- const rays=single?($('beam').checked?[-1,-.75,-.5,-.25,0,.25,.5,.75,1].map(f=>M.ray(p,k,p.theta*f)):[r]):c.rays;
- const clipped=el('g',{'clip-path':'url(#'+clipId+')'},g),dotLayer=el('g',{'data-dots':'true'},clipped);
- rays.forEach((rr,i)=>{
-  const col=single?(i===rays.length-1?palette.ray:palette.blue):colors()[i];
-  if(!rr.entered)return;
-  let pts=[];
-  if(!rr.graded&&rr.guided&&Math.abs(rr.s)>1e-12){
-   pts=[[x0,Y(rr.A)]];const spacing=2/Math.abs(rr.s);let u=rr.hit,j=0;
-   for(;u<maxU&&j<2000;u+=spacing,j++)pts.push([X(u),Y(Math.sign(rr.s)*(j%2===0?1:-1))]);
-   pts.push([x1,Y(M.position(rr,maxU))]);
-  }else{const n=Math.max(120,Math.ceil(maxU*(rr.w||.03)*20));for(let j=0;j<=Math.min(2500,n);j++){const u=maxU*j/Math.min(2500,n);pts.push([X(u),Y(M.position(rr,u))]);}
-   if(Number.isFinite(rr.hit)&&rr.hit<maxU&&!rr.guided&&!rr.limiting)pts.push([X(rr.hit),Y(rr.side)]),pts.sort((a,b)=>a[0]-b[0]);
+
+const A=AnimKit.app({
+  code:'OP1', partie:'TurquoiseLagon', chapitre:'OP1 Propagation de la lumière',
+  titre:'Fibres optiques', sousTitre:'Guider la lumière par réflexion totale, transmettre un signal',
+  onglets:['Guider un rayon','Comparer les fibres','Transmettre un signal'],
+  temps:true, pas:1/12,
+  curseur:{max:a=>a.tab===2?calc(a).end:st.period, get:a=>st.clock, set:(a,v)=>{st.clock=v}},
+  panneaux:[
+    {id:'fibre',titre:'Fibre',onglets:[0,1],zoom:true,ratioTel:.8},
+    {id:'signal',titre:'Avancement des rayons et signal reçu',onglets:[2],ratioTel:1.25}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Valeurs du cours',valeurs:{nc:1.456,ng:1.41,n0:1,y0:0,theta:16}},
+      {label:'Faible contraste',valeurs:{nc:1.48,ng:1.46,n0:1,y0:0},action:a=>a.set('theta',+(.85*FM.acceptance(mp(a),'graded').angle).toFixed(1))},
+      {label:'Indices égaux',action:a=>a.set('ng',a.p.nc)},
+      {label:'Guidé',onglets:[0],action:a=>{if(a.p.nc-a.p.ng<1e-6){a.set('nc',1.456);a.set('ng',1.41)}a.set('theta',+(sgn(a)*.75*FM.acceptance(mp(a),a.p.fibre).angle).toFixed(1))}},
+      {label:'Rayon limite',onglets:[0],titre:'θ = θmax exactement : i = ilim',action:a=>{const t=FM.acceptance(mp(a),a.p.fibre).angle;if(t>75){a.toast('Le seuil dépasse la plage de réglage (75°)');return}a.set('theta',sgn(a)*t)}},
+      {label:'Hors acceptance',onglets:[0],action:a=>{const t=FM.acceptance(mp(a),a.p.fibre).angle;if(t>=75){a.toast('Aucun rayon hors acceptance dans la plage de réglage');return}a.set('theta',+(sgn(a)*Math.min(75,t+8)).toFixed(1))}},
+      {label:'Sur l\'axe',onglets:[0],valeurs:{y0:0,theta:0}}]},
+    {titre:'Le rayon incident',items:[
+      {id:'fibre',type:'seg',label:'Fibre',options:[['step','Saut d\'indice'],['graded','Gradient d\'indice']],value:'step',onglets:[0]},
+      {id:'theta',label:`Angle d'entrée θ`,min:-75,max:75,step:.1,value:16,unit:'°',dec:1},
+      {type:'note',onglets:[0],html:'Glisser le laser dans la coupe pour l\'orienter.'},
+      {type:'note',onglets:[1,2],html:'Cinq angles de 0 à θ, injectés dans les deux fibres.'}]},
+    {titre:'Les indices',items:[
+      {id:'nc',label:`Cœur ${M.v('n','c')}`,min:1.3,max:1.7,step:.001,value:1.456,dec:3},
+      {id:'ng',label:`Gaine ${M.v('n','g')}`,min:1.3,max:1.7,step:.001,value:1.41,dec:3},
+      {type:'note',html:`${M.v('n','g')} ≤ ${M.v('n','c')}. Teinte plus marquée : indice plus élevé.`}]},
+    {titre:'La transmission',onglets:[1,2],items:[
+      {id:'L',label:`Longueur ${M.v('L')}`,min:.01,max:5,step:.01,value:1,unit:'km',dec:2},
+      {id:'width',label:'Durée à mi-hauteur',min:1,max:200,step:1,value:20,unit:'ns',onglets:[2]},
+      {id:'deux',type:'check',label:'Deux impulsions successives',value:false,onglets:[2]},
+      {id:'gap',label:'Séparation',min:2,max:500,step:1,value:90,unit:'ns',onglets:[2],si:a=>a.p.deux},
+      {type:'note',html:`Les temps sont calculés pour ${M.v('L')} ; le dessin ne montre qu'un court segment.`,onglets:[1]}]},
+    {titre:'Réglages avancés',items:[
+      {id:'rc',label:`Rayon du cœur ${M.v('a')}`,min:5,max:100,step:1,value:25,unit:'µm'},
+      {id:'y0',label:`Position d'entrée ${M.v('y','0')}/${M.v('a')}`,min:-.85,max:.85,step:.01,value:0,dec:2},
+      {id:'n0',label:`Milieu d'entrée ${M.v('n','0')}`,min:1,max:1.5,step:.01,value:1,dec:2},
+      {type:'note',html:'Dans un gradient, l\'acceptance dépend de la position d\'entrée. Seuls les rayons méridiens sont représentés.'}]},
+    {titre:'Affichage',items:[
+      {id:'vue',type:'seg',label:'Vue',options:[['local','Coupe fidèle'],['overview','Vue d\'ensemble'],['structure','Perspective']],value:'local',onglets:[0]},
+      {id:'vue2',type:'seg',label:'Vue',options:[['local','Coupe fidèle'],['overview','Vue d\'ensemble']],value:'overview',onglets:[1]},
+      {id:'cone',type:'check',label:'Cône d\'acceptance (masqué au départ)',value:false,onglets:[0]},
+      {id:'angles',type:'check',label:'Angles θ, θ′ et i',value:true,onglets:[0],si:a=>a.p.vue==='local'},
+      {id:'comp',label:'Compression de z',min:1,max:50,step:1,value:5,unit:'×',si:a=>(a.tab===0?a.p.vue:a.p.vue2)!=='local'},
+      {id:'eventail',type:'check',label:'Éventail de rayons de −θ à θ',value:false,onglets:[0],si:a=>a.p.vue!=='structure'},
+      {id:'plans',type:'check',label:'Rayons à θ dans six plans méridiens',value:false,onglets:[0],si:a=>a.p.vue==='structure'},
+      {id:'plan',type:'check',label:'Plan méridien du rayon',value:true,onglets:[0],si:a=>a.p.vue==='structure'},
+      {id:'sonde',type:'check',label:'Sonde d\'indice et de vitesse',value:false,onglets:[0],si:a=>a.p.vue!=='structure'},
+      {id:'res',type:'check',label:'Étalements des temps d\'arrivée (masqués au départ)',value:false,onglets:[1,2]},
+      {id:'tout',type:'check',label:'Signal reçu en entier (prévision)',value:false,onglets:[2]}]}
+  ],
+  aide:{
+    voit:'Une fibre optique : un cœur d\'indice <i class="m">n</i><sub>c</sub> entouré d\'une gaine d\'indice <i class="m">n</i><sub>g</sub> &lt; <i class="m">n</i><sub>c</sub>. Un laser injecte la lumière par la face d\'entrée depuis un milieu d\'indice <i class="m">n</i><sub>0</sub>. Les marqueurs avancent à la vitesse <i class="m">c</i>/<i class="m">n</i>.',
+    faire:'<ul><li>Guider : orienter le laser (glisser ou curseur θ), comparer « Guidé », « Rayon limite » et « Hors acceptance », puis afficher le cône d\'acceptance. En perspective, glisser pour tourner et afficher des rayons dans plusieurs plans méridiens.</li><li>Comparer : les mêmes cinq angles de 0 à θ entrent dans une fibre à saut d\'indice et dans une fibre à gradient d\'indice.</li><li>Transmettre : envoyer une ou deux impulsions, puis « Voir les arrivées » ; le curseur temporel permet de suivre les arrivées.</li><li>Cocher les résultats après avoir fait prévoir.</li></ul>',
+    modele:'Fibre droite cylindrique, rayons méridiens, milieux isotropes, non dispersifs et sans absorption. Saut d\'indice : guidage strict si <i class="m">n</i><sub>c</sub> cos θ′ &gt; <i class="m">n</i><sub>g</sub> ; temps τ = <i class="m">n</i><sub>c</sub><i class="m">L</i>/(<i class="m">c</i> cos θ′). Gradient : <i class="m">n</i><sup>2</sup>(<i class="m">y</i>) = <i class="m">n</i><sub>c</sub><sup>2</sup> − (<i class="m">n</i><sub>c</sub><sup>2</sup> − <i class="m">n</i><sub>g</sub><sup>2</sup>)(<i class="m">y</i>/<i class="m">a</i>)<sup>2</sup>, trajectoire sinusoïdale exacte déduite de l\'invariant <i class="m">k</i> = <i class="m">n</i> cos θ′, temps ∫ <i class="m">n</i> d<i class="m">s</i>/<i class="m">c</i> calculé analytiquement (pas d\'approximation paraxiale). Un rayon qui quitte le cœur n\'est suivi que dans sa branche transmise ; les coefficients de Fresnel ne sont pas calculés. Signal : somme de copies retardées d\'une gaussienne, poids 1/5 par rayon. La coupe fidèle a la même échelle sur les deux axes ; la vue d\'ensemble comprime <i class="m">z</i> d\'un facteur réglable, dehors comme dedans (ne pas y mesurer les angles) ; la perspective, à faire tourner en glissant, montre les rayons méridiens dans leurs plans avec la même compression de <i class="m">z</i> (épaisseur de gaine schématique).',
+    cours:'OP1 Propagation de la lumière, partie « Fibre optique à saut d\'indice » : réflexion totale si <i class="m">i</i> &gt; <i class="m">i</i><sub>lim</sub> avec sin <i class="m">i</i><sub>lim</sub> = <i class="m">n</i><sub>g</sub>/<i class="m">n</i><sub>c</sub>, cône d\'acceptance <i class="m">n</i><sub>0</sub> sin θ<sub>max</sub> = √(<i class="m">n</i><sub>c</sub><sup>2</sup> − <i class="m">n</i><sub>g</sub><sup>2</sup>), dispersion intermodale Δ<i class="m">T</i><sub>m</sub> = <i class="m">n</i><sub>c</sub>(<i class="m">n</i><sub>c</sub>/<i class="m">n</i><sub>g</sub> − 1)<i class="m">L</i>/<i class="m">c</i> ≈ 158 ns pour 1 km ; fibres à gradient d\'indice (pour aller plus loin).'
+  },
+  change(a,id,v){
+    if(id==='nc'&&a.p.ng>v)a.set('ng',v,{silent:true});
+    if(id==='ng'&&v>a.p.nc)a.set('nc',v,{silent:true});
+    if(['nc','ng','n0','rc','y0','L','theta','width','gap','deux','fibre','vue','vue2'].includes(id)&&!a.running)st.clock=0;
+  },
+  onglet(a){a.play(false);st.clock=0;a.panels.fibre.zoom=1},
+  peutLire(a){if(a.tab===2&&st.clock>=calc(a).end-1e-9)st.clock=0;return true},
+  reset(a){st.clock=0},
+  step(a,dt){
+    if(a.tab===2){const c=calc(a),r=st.clock<c.arrival?Math.max(c.arrival,1)/6:(c.end-c.arrival)/7;st.clock=Math.min(c.end,st.clock+dt*r);if(st.clock>=c.end)a.play(false)}
+    else st.clock=(st.clock+dt/5*st.period)%st.period;
+  },
+  init(a){
+    const b=document.createElement('button');b.className='mini';b.id='ak-arrivees';b.textContent='Voir les arrivées ▸';b.title='Place l\'horloge juste avant la fenêtre de réception';
+    b.onclick=()=>{st.clock=calc(a).arrival;a.play(true)};a.extra.append(b);
+  },
+  draw(a){
+    const c=calc(a), ex=document.getElementById('ak-arrivees'); if(ex)ex.hidden=a.tab!==2;
+    if(a.tab===2)signal(a,c); else fibres(a,c);
+    infos(a,c);
   }
-  path(clipped,pts,col,single?2.8:2.4,{opacity:single&&rays.length>1&&i!==rays.length-1?.55:1});
-  const totalT=M.time(rr,maxU),u=M.distanceAtTime(rr,clock%(cache.localPeriod||1),maxU);
-  const dot=el('circle',{cx:X(u),cy:Y(M.position(rr,u)),r:single?5.5:4.5,fill:col,stroke:palette.surface,'stroke-width':1.5,'data-dot':i},dotLayer);
-  if(clock%(cache.localPeriod||1)>totalT)dot.setAttribute('visibility','hidden');
- });
- // Angles are only drawn in the undistorted local view.
- if(single&&view==='local'&&$('angles').checked&&r.entered){
-  line(g,x0-35,entryY,x0+85,entryY,palette.muted,1,{'stroke-dasharray':'4 4'});
-  if(Math.abs(theta)>1e-3)arc(g,x0,entryY,38,Math.PI,Math.PI+theta,'θ',palette.ray);
-  if(Math.abs(r.thetaPrime)>.1)arc(g,x0,entryY,58,0,r.thetaPrime*M.RAD,'θ′',palette.ray);
-  if(k==='step'&&Number.isFinite(r.hit)&&r.hit<maxU&&Math.abs(p.theta)>1){
-   const ix=X(r.hit),iy=Y(r.side);
-   line(g,ix,iy-40,ix,iy+48,palette.muted,1.3,{'stroke-dasharray':'4 4'});
-   const sign=Math.sign(theta),normal=-sign*Math.PI/2,back=r.thetaPrime*M.RAD-sign*Math.PI;
-   arc(g,ix,iy,30,normal,back,'i',palette.ray);
-  }
- }
- if(single&&$('probe').checked&&r.entered){
-  const u=M.distanceAtTime(r,clock%(cache.localPeriod||1),maxU),y=M.position(r,u),n=Math.abs(y)>1?p.ng:M.index(p,k,y);
-  el('circle',{cx:X(u),cy:Y(y),r:8,fill:palette.surface,stroke:palette.accent,'stroke-width':2},g);
-  txt(g,22,top+height-40,'Sonde : n = '+fmt(n,3)+' · v = '+fmt(M.C/n,3)+' m/ns',20,palette.accent);
- }
- const scaleNote=view==='local'?'Angles fidèles · segment '+fmt(maxU*p.radius/1000,2)+' mm':'z comprimé ×'+fmt(sy/sx,1)+' · segment '+fmt(maxU*p.radius/1000,2)+' mm';
- txt(g,x1,top+height-10,scaleNote,single?18:17,palette.muted,'end');
- // Keep a shared physical clock for the same segment in both fibres.
- const t=M.time(c.selected.entered?c.selected:c.rays[0],maxU);
- cache.panelTimes.push(t);
-}
-function structure(g){
- txt(g,25,36,'Une fibre cylindrique, vue en perspective',24);
- const cx=W*.34,cy=H*.52,R=Math.min(H*.27,110),rx=R*.38,len=W*.46;
- el('path',{d:'M'+cx+','+(cy-R)+'L'+(cx+len)+','+(cy-R)+'A'+rx+','+R+' 0 0 1 '+(cx+len)+','+(cy+R)+'L'+cx+','+(cy+R)+'Z',fill:tint(p.ng),stroke:palette.accent,'stroke-width':1.5},g);
- el('ellipse',{cx:cx+len,cy,rx,ry:R,fill:tint(p.ng),stroke:palette.accent},g);
- el('ellipse',{cx,cy,rx,ry:R,fill:tint(p.ng),stroke:palette.accent,'stroke-width':2},g);
- const cr=R*.48;
- el('path',{d:'M'+cx+','+(cy-cr)+'L'+(cx+len)+','+(cy-cr)+'A'+rx*.48+','+cr+' 0 0 1 '+(cx+len)+','+(cy+cr)+'L'+cx+','+(cy+cr)+'Z',fill:tint(p.nc),stroke:palette.accent,'stroke-width':1.2},g);
- for(const x of [cx,cx+len]){
-  if(kind==='graded'){for(let j=50;j>=1;j--)el('ellipse',{cx:x,cy,rx:rx*.48*j/50,ry:cr*j/50,fill:tint(M.index(p,'graded',j/50))},g);}
-  else el('ellipse',{cx:x,cy,rx:rx*.48,ry:cr,fill:tint(p.nc),stroke:palette.accent},g);
- }
- const a=cache[kind].acc.angle*M.RAD,baseX=cx-W*.19,dy=Math.min(R*1.1,(cx-baseX)*Math.tan(a));
- if($('cone').checked)el('path',{d:'M'+cx+','+cy+'L'+baseX+','+(cy-dy)+'Q'+(baseX-25)+','+cy+' '+baseX+','+(cy+dy)+'Z',fill:palette.ray,opacity:.15,stroke:palette.ray,'stroke-width':2},g);
- line(g,baseX-20,cy,cx+len+30,cy,palette.muted,1,{'stroke-dasharray':'6 5'});
- txt(g,W*.56,cy-R-20,'Gaine · ng = '+fmt(p.ng,3),24,palette.accent,'middle');
- txt(g,W*.56,cy+cr+33,kind==='graded'?'Cœur · indice décroissant vers la gaine':'Cœur · nc = '+fmt(p.nc,3),23,palette.ink,'middle');
- txt(g,25,H-42,'Cône d’acceptance : θmax = '+fmt(cache[kind].acc.angle,1)+'°',22);
- txt(g,25,H-14,'Perspective illustrative · proportions et cône schématiques',18,palette.muted);
-}
-function signalScene(g){
- const narrow=W<650,left=narrow?100:145,right=W-25,span=right-left,topH=Math.min(155,H*.34);
- txt(g,22,25,'Avancement z/L — lignes séparées pour les cinq rayons',W<650?18:21,palette.muted);
- ['step','graded'].forEach((k,row)=>{
-  const y=49+row*(topH-37)/2,band=(topH-48)/2;
-  txt(g,18,y+band*.55,k==='step'?'Saut':'Gradient',20,palette.accent);
-  cache[k].rays.forEach((r,j)=>{
-   const yy=y+j*Math.max(3.5,band/6);
-   line(g,left,yy,right,yy,palette.line,1);
-   if(!r.received)return;
-   const maxU=p.length*1e9/p.radius,progress=M.distanceAtTime(r,clock,maxU)/maxU;
-   if(clock>=0&&clock<=r.tau)el('circle',{cx:left+span*progress,cy:yy,r:3.6,fill:colors()[j]},g);
-   if($('two').checked&&clock>=p.gap&&clock<=p.gap+r.tau){const pr=M.distanceAtTime(r,clock-p.gap,maxU)/maxU;el('circle',{cx:left+span*pr,cy:yy,r:3.6,fill:colors()[j],stroke:palette.surface},g);}
-  });
- });
- txt(g,left,topH+6,'0',16,palette.muted);txt(g,right,topH+6,'L',16,palette.muted,'end');
- const chartTop=topH+22,chartH=(H-chartTop-33)/2,lo=cache.lo,hi=cache.hi,X=t=>left+(t-lo)/(hi-lo)*span;
- const clockX=X(clock-cache.ref),visibleClock=clockX>=left&&clockX<=right;
- ['step','graded'].forEach((k,row)=>{
-  const top=chartTop+row*chartH,bottom=top+chartH-22,amp=chartH-40;
-  txt(g,18,top+amp*.6,k==='step'?'Saut':'Gradient',20,palette.accent);
-  line(g,left,bottom,right,bottom,palette.muted,1);
-  line(g,left,bottom-amp,right,bottom-amp,palette.line,1,{'stroke-dasharray':'3 5'});
-  txt(g,left-10,bottom+4,'0',16,palette.muted,'end');txt(g,left-10,bottom-amp+5,'1',16,palette.muted,'end');
-  for(let j=0;j<=4;j++){const t=lo+(hi-lo)*j/4,x=X(t);line(g,x,bottom,x,bottom+5,palette.muted);txt(g,x,bottom+21,fmt(t,0),16,palette.muted,'middle');}
-  const taus=cache[k].received.map(r=>r.tau-cache.ref),out=[],ref=[],N=Math.max(300,Math.min(1200,Math.ceil(span)));
-  for(let i=0;i<=N;i++){const t=lo+(hi-lo)*i/N;out.push([X(t),bottom-M.signal(t,taus,p.width,p.gap,$('two').checked)*amp]);ref.push([X(t),bottom-M.signal(t,[0,0,0,0,0],p.width,p.gap,$('two').checked)*amp]);}
-  path(g,ref,palette.muted,1.5,{'stroke-dasharray':'5 5',opacity:.75});
-  path(g,out,row===0?palette.blue:palette.ray,2.8);
-  for(const tau of taus){const x=X(tau);line(g,x,bottom,x,bottom-7,palette.accent,2);}
-  if(visibleClock)line(g,clockX,top+3,clockX,bottom,palette.gold,2,{'stroke-dasharray':'4 3'});
- });
- txt(g,W-24,H-8,'t − τréf (ns) · référence en pointillés',18,palette.muted,'end');
-}
-function draw(){
- if(!cache.step)return;
- paletteUpdate();const g=base();cache.panelTimes=[];
- if(step==='signal')signalScene(g);
- else if(view==='structure')structure(g);
- else{
-  if(step==='guide')fibrePanel(g,kind,0,H,true);
-  else{fibrePanel(g,'step',0,H/2,false);line(g,18,H/2,W-18,H/2,palette.line);fibrePanel(g,'graded',H/2,H/2,false);}
-  const ts=cache.panelTimes.filter(Number.isFinite);cache.localPeriod=Math.max(...ts,1e-8)*1.12;
- }
- updateClock();
-}
-function updateClock(){
- $('clock').textContent=step==='signal'?'t = '+fmt(clock,0)+' ns':view==='structure'?'Vue de structure': 'Temps local ralenti · '+fmt(clock%Math.max(1e-9,cache.localPeriod)*1000,2)+' ps';
-}
-function resize(){const box=$('scene').getBoundingClientRect();W=Math.max(310,box.width);H=Math.max(260,box.height);$('scene').setAttribute('viewBox','0 0 '+W+' '+H);draw();}
-function restart(){elapsed=0;clock=0;signalStart=0;draw();}
-function input(key,value,editing=false){
- let n=Number(value);if(!Number.isFinite(n))return;
- const ranges={nc:[1.1,1.8],ng:[1,1.8],n0:[1,1.5],radius:[5,100],offset:[-.85,.85],length:[.01,5],theta:[-75,75],width:[1,200],gap:[2,500]};
- n=Math.max(ranges[key][0],Math.min(ranges[key][1],n));p[key]=n;
- if(key==='nc'&&p.ng>p.nc)p.ng=p.nc;if(key==='ng'&&p.ng>p.nc)p.nc=p.ng;
- syncFields(editing);rebuild();
-}
-for(const key of Object.keys(defaults))for(const suffix of ['','-number']){
- const field=$(key+suffix);
- field.addEventListener('input',event=>{
-  if(field.value==='')return;
-  const n=Number(field.value);
-  if(field.type==='number'&&(n<Number(field.min)||n>Number(field.max)))return;
-  input(key,field.value,true);
- });
- field.addEventListener('change',()=>{if(field.value==='')syncFields();else input(key,field.value);});
-}
-document.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{
- step=b.dataset.step;
- if(step==='compare'&&view!=='overview'){view='overview';$('view').value=view;zoom=1;}
- if(step==='guide'&&view==='structure')view='local',$('view').value=view;
- restart();rebuild();
-}));
-document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;restart();updateUI();draw();}));
-$('view').addEventListener('change',()=>{view=$('view').value;zoom=1;restart();updateUI();draw();});
-$('zoom-in').addEventListener('click',()=>{zoom=Math.min(2.2,zoom*1.25);draw();});
-$('zoom-out').addEventListener('click',()=>{zoom=Math.max(.3,zoom/1.25);draw();});
-$('fit').addEventListener('click',()=>{zoom=1;draw();});
-document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
- const name=b.dataset.preset,acc=M.acceptance(p,step==='guide'?kind:'graded').angle,sign=p.theta<0?-1:1;
- if(name==='course'){p={...p,nc:1.456,ng:1.410,n0:1,offset:0,theta:16};}
- if(name==='weak'){p={...p,nc:1.480,ng:1.460,n0:1,offset:0};p.theta=.85*M.acceptance(p,'graded').angle;}
- if(name==='equal'){p.ng=p.nc;}
- if(name==='guided'){if(p.nc-p.ng<1e-6){p.nc=1.456;p.ng=1.410;}p.theta=sign*.75*M.acceptance(p,step==='guide'?kind:'graded').angle;}
- if(name==='limit'){if(acc>75){notify('Le seuil dépasse la plage de manipulation (75°).');return;}p.theta=sign*acc;}
- if(name==='escape'){if(acc>=75){notify('Aucun rayon hors acceptance dans la plage de manipulation.');return;}p.theta=sign*Math.min(75,acc+8);}
- if(name==='axis'){p.offset=0;p.theta=0;}
- syncFields();rebuild();
-}));
-['cone','angles','beam','probe'].forEach(id=>$(id).addEventListener('change',draw));
-$('two').addEventListener('change',rebuild);
-$('play').addEventListener('click',()=>{playing=!playing;updateUI();});
-$('restart').addEventListener('click',restart);
-$('speed').addEventListener('change',()=>rate=Number($('speed').value));
-$('arrivals').addEventListener('click',()=>{signalStart=cache.arrival;elapsed=0;clock=signalStart;playing=true;updateUI();draw();});
-$('reset').addEventListener('click',()=>{p={...defaults};kind='step';step='guide';view='local';$('view').value=view;zoom=1;$('two').checked=false;$('cone').checked=true;$('angles').checked=true;$('beam').checked=false;$('probe').checked=false;syncFields();rebuild();});
-function theme(value){dark=value;document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'☀ Clair':'☾ Sombre';$('theme').setAttribute('aria-pressed',String(dark));try{localStorage.setItem('cpge-fibres-theme',dark?'dark':'light');}catch{}draw();}
-$('theme').addEventListener('click',()=>theme(!dark));
-$('projection').addEventListener('click',()=>{const on=document.body.classList.toggle('projection');$('projection').textContent=on?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(on));requestAnimationFrame(resize);});
-async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{notify('Utiliser le mode plein écran du navigateur.');}}
-$('fullscreen').addEventListener('click',fullscreen);
-$('help').addEventListener('click',()=>$('about').showModal());$('close-help').addEventListener('click',()=>$('about').close());
-$('export').addEventListener('click',()=>{
- const copy=$('scene').cloneNode(true),height=H+100;copy.setAttribute('height',height);copy.setAttribute('width',W);copy.setAttribute('viewBox','0 0 '+W+' '+height);
- const bg=el('rect',{x:0,y:H,width:W,height:100,fill:palette.surface},copy);
- txt(copy,22,H+30,'OP1 · '+(step==='guide'?(kind==='step'?'Fibre à saut d’indice':'Fibre à gradient d’indice'):step==='compare'?'Comparer les fibres':'Transmettre un signal'),22,palette.ink);
- txt(copy,22,H+57,'nc = '+fmt(p.nc,3)+' · ng = '+fmt(p.ng,3)+' · n₀ = '+fmt(p.n0,2)+' · θ = '+fmt(p.theta,2)+'° · a = '+fmt(p.radius,0)+' µm · L = '+fmt(p.length,2)+' km',17,palette.muted);
- txt(copy,22,H+83,step==='signal'?'Largeur = '+fmt(p.width,0)+' ns · séparation = '+fmt(p.gap,0)+' ns · t = '+fmt(clock,0)+' ns':'y₀/a = '+fmt(p.offset,2)+' · temps et épaisseurs selon le modèle idéal',17,palette.muted);
- copy.querySelectorAll('.halo').forEach(n=>n.setAttribute('style','paint-order:stroke;stroke:'+palette.surface+';stroke-width:5px;stroke-linejoin:round'));
- const style=el('style',{},copy);style.textContent='text{font-family:Arial,Helvetica,sans-serif}';
- const xml=new XMLSerializer().serializeToString(copy),url=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml;charset=utf-8'})),a=document.createElement('a');
- a.href=url;a.download='OP1_Fibres_'+step+'_'+(dark?'sombre':'clair')+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);notify('Schéma SVG enregistré avec ses paramètres.');
 });
-$('scene').addEventListener('pointerdown',e=>{if(step==='guide'&&view==='local'&&geometry){const box=$('scene').getBoundingClientRect(),x=e.clientX-box.left,y=e.clientY-box.top;if(Math.hypot(x-geometry.lx,y-geometry.ly)<36){dragging=true;$('scene').setPointerCapture(e.pointerId);}}});
-$('scene').addEventListener('pointermove',e=>{if(!dragging||!geometry)return;const box=$('scene').getBoundingClientRect(),x=e.clientX-box.left,y=e.clientY-box.top;input('theta',Math.round(Math.atan2(y-geometry.entryY,Math.max(12,geometry.x0-x))/M.RAD*10)/10);});
-$('scene').addEventListener('pointerup',()=>dragging=false);$('scene').addEventListener('pointercancel',()=>dragging=false);
-$('scene').addEventListener('keydown',e=>{if(step!=='guide')return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();input('theta',p.theta+(['ArrowUp','ArrowRight'].includes(e.key)?1:-1)*(e.shiftKey?5:1));}});
-document.addEventListener('keydown',e=>{if(/INPUT|SELECT|BUTTON|TEXTAREA/.test(e.target.tagName)||$('about').open)return;if(e.code==='Space'){e.preventDefault();playing=!playing;updateUI();}if(e.key.toLowerCase()==='r')restart();if(e.key.toLowerCase()==='f')fullscreen();});
-function animate(now){
- const dt=lastFrame?Math.min((now-lastFrame)/1000,.05):0;lastFrame=now;
- if(playing){elapsed+=dt*rate;if(step==='signal'){
-   const initial=Math.max(0,cache.arrival);
-   if(signalStart>0)clock=signalStart+elapsed/7*(cache.end-signalStart);
-   else if(elapsed<=6)clock=elapsed/6*initial;
-   else clock=initial+(elapsed-6)/7*(cache.end-initial);
-   if(clock>=cache.end){clock=cache.end;playing=false;updateUI();}
-  }else clock=elapsed/5*(cache.localPeriod||.001);
-  draw();
- }
- requestAnimationFrame(animate);
+function sgn(a){return a.p.theta<0?-1:1}
+const vueDe=a=>a.tab===0?a.p.vue:a.p.vue2;
+
+/* ===================== textes ===================== */
+function infos(a,c){
+  const f=a.fmt, v=M.v, deg=x=>f.fix(x,1);
+  if(a.tab===0){const kd=a.p.fibre, r=c[kd].sel, ac=c[kd].acc, cone=a.p.cone, step=kd==='step';
+    const met=[
+      {label:'Angle réfracté θ′',value:r.entered?deg(r.thetaPrime):'—',unit:r.entered?'°':'',hint:r.entered?'mesuré depuis l\'axe':'pas de transmission à l\'entrée'},
+      step?{label:`Incidence cœur–gaine ${v('i')}`,value:r.entered&&Math.abs(a.p.theta)>.05?deg(r.incidence):'—',unit:r.entered&&Math.abs(a.p.theta)>.05?'°':'',hint:cone?`${v('i','lim')} = ${deg(Math.asin(Math.min(1,a.p.ng/a.p.nc))/RAD)}°`:''}
+          :{label:'Indice à l\'entrée',value:f.fix(r.n,3),hint:'n(y<sub>0</sub>)'},
+      {label:'Demi-angle d\'acceptance θ<sub>max</sub>',value:cone?deg(ac.angle):'?',unit:cone?'°':'',hint:cone?`ouverture numérique ${f.fix(ac.on,3)}`:'cocher le cône'}];
+    if(a.p.sonde&&r.entered&&a.p.vue!=='structure'){const y=FM.position(r,st.u||0),n=Math.abs(y)>1?a.p.ng:FM.index(mp(a),kd,y);met.push({label:'Sonde : indice local',value:f.fix(n,3),hint:`v = ${f.sig(2.99792458/n,3)} × 10<sup>8</sup> m·s<sup>−1</sup>`})}
+    a.metrics(met);
+    const t=!r.entered?'Réflexion totale à l\'entrée : le milieu d\'entrée est plus réfringent à cette incidence.':r.matched?'Indices égaux : aucun confinement, un rayon incliné sort du cœur.':r.limiting?'Rayon limite : i = i<sub>lim</sub>, cas frontière de la réflexion totale.':r.guided?(step?'Rayon guidé : la réflexion totale se reproduit à chaque rencontre cœur–gaine.':'Rayon guidé : l\'indice varie continûment, le rayon se courbe vers l\'axe.'):'Rayon non guidé : il pénètre dans la gaine (réflexions partielles non dessinées).';
+    a.insight(t);
+    const L=[{c:a.C.F,label:'rayon du laser'},a.p.eventail&&a.p.vue!=='structure'?{c:a.C.B,label:'éventail de −θ à θ'}:null,a.p.plans&&a.p.vue==='structure'?{c:a.C.B,label:'même θ, autres plans méridiens'}:null,cone?{c:a.C.c,label:'cône d\'acceptance'}:null];
+    a.legend(L);
+    a.panels.fibre.head.textContent=a.p.vue==='structure'?(step?'Fibre à saut d\'indice':'Fibre à gradient d\'indice')+' en perspective':(step?'Fibre à saut d\'indice':'Fibre à gradient d\'indice')+(a.p.vue==='local'?' · coupe aux angles fidèles':' · vue d\'ensemble, z comprimé');
+    a.clock(`t = ${f.fix(st.clock*1000,2)} ps`);
+  }else{
+    const s1=c.step.spread,s2=c.graded.spread,res=a.p.res;
+    a.metrics([
+      {label:'Étalement · saut d\'indice',value:res?(s1===null?'—':f.sig(s1,3)):'?',unit:res&&s1!==null?'ns':'',hint:`${c.step.received.length}/5 rayons reçus`},
+      {label:'Étalement · gradient d\'indice',value:res?(s2===null?'—':f.sig(s2,3)):'?',unit:res&&s2!==null?'ns':'',hint:`${c.graded.received.length}/5 rayons reçus`},
+      {label:`Temps de référence τ<sub>réf</sub> = ${M.frac(v('n','c')+v('L'),v('c'))}`,value:f.sig(c.ref,3),unit:'ns',hint:res?`Δ${v('T')}<sub>m</sub> du cours : ${f.sig(c.dTm,3)} ns`:`${v('L')} = ${f.fix(a.p.L,2)} km`}]);
+    a.insight(a.tab===1?(res?'Même faisceau, même longueur : le gradient d\'indice réduit fortement l\'écart des temps d\'arrivée (les rayons qui s\'écartent de l\'axe vont plus vite).':'Les rayons inclinés parcourent un trajet plus long : arrivent-ils en retard dans les deux fibres ?')
+                        :(res?'Les rayons arrivent à des instants différents : l\'impulsion reçue s\'élargit. Deux impulsions trop rapprochées se confondent, ce qui limite le débit.':'Que devient une impulsion brève après la traversée de la fibre ? Peut-on distinguer deux impulsions rapprochées ?'));
+    const cols=angCols(a);a.legend(c.step.rays.map((r,j)=>({c:cols[j],label:`θ = ${f.fix(r.theta,1)}°`})));
+    a.panels.fibre.head.textContent=a.p.vue2==='local'?'Coupe aux angles fidèles':'Vue d\'ensemble, z comprimé';
+    a.clock(a.tab===2?`t = ${f.fix(st.clock,0)} ns`:`t = ${f.fix(st.clock*1000,2)} ps`);
+  }
 }
-try{dark=localStorage.getItem('cpge-fibres-theme')==='dark';}catch{}
-syncFields();rebuild();theme(dark);new ResizeObserver(resize).observe($('scene').parentElement);resize();requestAnimationFrame(animate);
-window.FibreApp=Object.freeze({getState:()=>({p:{...p},step,kind,view,dark,playing,clock,zoom,width:W,height:H}),getResults:()=>({step:cache.step,graded:cache.graded,ref:cache.ref}),refresh:resize});
-})();
+
+/* ===================== dessin des fibres ===================== */
+function teinte(a,n){const t=Math.max(0,Math.min(1,(n-1.3)/.4));return a.C.dark?`hsl(178,${24+24*t}%,${13+22*t}%)`:`hsl(176,${27+19*t}%,${96-30*t}%)`}
+function profil(a,x,cy,R,kd,compact){
+  const S=a.S,C=a.C,k=a.k,p=a.p, w=Math.max(46*k,Math.min(86*k,a.panels.fibre.w*.085)), nlo=Math.max(1,p.ng-.012), nhi=p.nc+.012;
+  const nx=n=>x+(n-nlo)/Math.max(1e-6,nhi-nlo)*w;
+  let s=S.line(x,cy-R*1.42,x,cy+R*1.42,{c:C.ink2,w:1})+S.line(x-4*k,cy+R*1.42,x+w+6*k,cy+R*1.42,{c:C.ink2,w:1});
+  const pts=[];
+  if(kd==='step')pts.push([nx(p.ng),cy-1.36*R],[nx(p.ng),cy-R],[nx(p.nc),cy-R],[nx(p.nc),cy+R],[nx(p.ng),cy+R],[nx(p.ng),cy+1.36*R]);
+  else for(let j=0;j<=100;j++){const y=1.36-2.72*j/100;pts.push([nx(Math.abs(y)>1?p.ng:FM.index(mp(a),kd,y)),cy-y*R])}
+  s+=S.poly(pts,{c:C.c,w:2.4});
+  s+=S.text(x+w+6*k,cy+R*1.42,S.v('n'),{size:14,base:'top'})+S.text(x+3*k,cy-R*1.42-4*k,S.v('r'),{size:14,base:'bottom'});
+  return{svg:s,end:x+w+18*k};
+}
+function fibres(a,c){
+  const P=a.panels.fibre,W=P.w,H=P.h,S=a.S,C=a.C,k=a.k; let s='', times=[];
+  if(a.tab===0&&a.p.vue==='structure')s+=structure(a,c,times);
+  else if(a.tab===0)s+=fibre(a,c,a.p.fibre,0,H,true,times);
+  else{s+=fibre(a,c,'step',0,H/2,false,times)+S.line(10*k,H/2,W-10*k,H/2,{c:C.rule,w:1})+fibre(a,c,'graded',H/2,H/2,false,times)}
+  const ts=times.filter(Number.isFinite);st.period=Math.max(...ts,1e-8)*1.12;
+  a.svg('fibre',s);
+}
+function fibre(a,c,kd,top,height,single,times){
+  const P=a.panels.fibre,W=P.w,S=a.S,C=a.C,k=a.k,p=a.p,f=a.fmt, vue=vueDe(a), local=vue==='local', zoom=Math.min(2.2,P.zoom), ck=c[kd], r=ck.sel;
+  const cy=top+height*.5+(single?0:6*k), baseA=Math.min((height-(single?40:30)*k-22*k)/2.9,(single?95:60)*k), R=baseA*(local?zoom:1);
+  let s='';
+  if(!single)s+=S.text(12*k,top+8*k,kd==='step'?'Saut d\'indice':'Gradient d\'indice',{base:'top',size:15,c:C.ink,weight:600});
+  const pr=profil(a,12*k,cy,R,kd,!single); s+=pr.svg;
+  const x0=Math.max(pr.end+(single?96:30)*k,W*.24), x1=W-12*k, fw=x1-x0;
+  const sx=local?R:R*P.zoom/a.p.comp, maxU=fw/sx, sy=R, X=u=>x0+u*sx, Y=y=>cy-y*sy;
+  const clip='cl_'+kd+'_'+(single?1:2);
+  s+=`<defs><clipPath id="${clip}"><rect x="${x0}" y="${cy-1.43*R}" width="${fw}" height="${2.86*R}"/></clipPath></defs>`;
+  s+=S.rect(x0,cy-1.4*R,fw,2.8*R,{fill:teinte(a,p.ng)});
+  if(kd==='step')s+=S.rect(x0,cy-R,fw,2*R,{fill:teinte(a,p.nc)});
+  else for(let j=0;j<60;j++){const y=-1+j/30;s+=S.rect(x0,Y(y+1/30),fw,R/30+.5,{fill:teinte(a,FM.index(mp(a),kd,y+1/60))})}
+  s+=S.line(x0,cy-1.4*R,x1,cy-1.4*R,{c:C.rule,w:1})+S.line(x0,cy+1.4*R,x1,cy+1.4*R,{c:C.rule,w:1});
+  for(const y of[-1,1])s+=S.line(x0,Y(y),x1,Y(y),{c:C.c,w:1.3});
+  s+=S.line(x0,cy,x1,cy,{c:C.ink2,w:1,dash:`${6*k} ${6*k}`,op:.6})+S.line(x0,cy-1.4*R,x0,cy+1.4*R,{c:C.c,w:2});
+  if(single)s+=S.text(x1,cy-1.4*R-4*k,`gaine · ${S.v('n','g')} = ${f.fix(p.ng,3)}`,{anchor:'end',base:'bottom',size:14})+S.text(x0,cy+1.4*R+5*k,kd==='step'?`cœur · ${S.v('n','c')} = ${f.fix(p.nc,3)}`:`cœur · ${S.v('n')} de ${f.fix(p.nc,3)} (axe) à ${f.fix(p.ng,3)}`,{base:'top',size:14,c:C.ink});
+  /* même compression de z à l'extérieur qu'à l'intérieur : pente apparente = (sy/sx) tan(angle) */
+  const q=sy/sx, app=t=>Math.atan(q*Math.tan(t));
+  const eY=Y(p.y0), pre=Math.min(x0-pr.end-44*k,105*k), th=app(p.theta*RAD);
+  if(single&&a.p.cone){const rr=Math.min(pre,1.4*R),t=app(ck.acc.angle*RAD),pts=[[x0,eY]];for(let j=0;j<=40;j++){const g=-t+2*t*j/40;pts.push([x0-rr*Math.cos(g),eY-rr*Math.sin(g)])}
+    s+=S.poly(pts,{close:true,fill:C.c,fop:.16,c:'none'});for(const sg of[-1,1])s+=S.line(x0,eY,x0-rr*Math.cos(t),eY+sg*rr*Math.sin(t),{c:C.c,w:1.5,dash:`${5*k} ${4*k}`})}
+  if(single){const d=Math.min(pre/Math.max(.2,Math.cos(th)),(height*.42-36*k)/Math.max(.2,Math.abs(Math.sin(th)))),lx=x0-d*Math.cos(th),ly=eY+d*Math.sin(th);
+    s+=S.line(lx,ly,x0,eY,{c:C.F,w:2.8});
+    const an=Math.atan2(eY-ly,x0-lx)*180/Math.PI,Lz=34*k,Wz=12*k;
+    s+=`<g transform="translate(${lx.toFixed(1)},${ly.toFixed(1)}) rotate(${an.toFixed(2)})"><rect x="${(-Lz).toFixed(1)}" y="${(-Wz/2).toFixed(1)}" width="${Lz.toFixed(1)}" height="${Wz.toFixed(1)}" rx="${(2*k).toFixed(1)}" fill="${C.card}" stroke="${C.ink}" stroke-width="${1.4*k}"/><rect x="${(-Lz*.25).toFixed(1)}" y="${(-Wz/2).toFixed(1)}" width="${(Lz*.25).toFixed(1)}" height="${Wz.toFixed(1)}" fill="${C.F}" opacity=".85"/></g>`;
+    st.lx=a.tab===0?{lx,ly,x0,eY,q}:null}
+  // rayons
+  const cols=angCols(a), rays=single?(a.p.eventail?[-1,-.75,-.5,-.25,0,.25,.5,.75,1].map(g=>FM.ray(mp(a),kd,p.theta*g)):[r]):ck.rays;
+  let g='',dots='';
+  rays.forEach((rr,i)=>{
+    const col=single?(rr.theta===p.theta?C.F:C.B):cols[i]; if(!rr.entered)return;
+    let pts=[];
+    if(!rr.graded&&rr.guided&&Math.abs(rr.s)>1e-12){pts=[[x0,Y(rr.A)]];const sp=2/Math.abs(rr.s);let u=rr.hit,j=0;for(;u<maxU&&j<2000;u+=sp,j++)pts.push([X(u),Y(Math.sign(rr.s)*(j%2===0?1:-1))]);pts.push([x1,Y(FM.position(rr,maxU))])}
+    else{const n=Math.min(2500,Math.max(120,Math.ceil(maxU*(rr.w||.03)*20)));for(let j=0;j<=n;j++){const u=maxU*j/n;pts.push([X(u),Y(FM.position(rr,u))])}
+      if(Number.isFinite(rr.hit)&&rr.hit<maxU&&!rr.guided&&!rr.limiting){pts.push([X(rr.hit),Y(rr.side)]);pts.sort((u,v)=>u[0]-v[0])}}
+    g+=S.poly(pts,{c:col,w:single?2.6:2.2,op:single&&rays.length>1&&rr.theta!==p.theta?.55:1});
+    const T=FM.time(rr,maxU); times.push(T);
+    if(st.clock<=T){const u=FM.distanceAtTime(rr,st.clock,maxU);if(single&&rr===r)st.u=u;dots+=S.circle(X(u),Y(FM.position(rr,u)),(single?5:4.2)*k,{fill:col,c:C.card,w:1.2})}
+  });
+  s+=`<g clip-path="url(#${clip})">${g}${dots}</g>`;
+  // angles (coupe fidèle seulement)
+  if(single&&local&&a.p.angles&&r.entered){
+    const lab=(cx,cy0,rad,t,txt)=>S.text(cx+rad*Math.cos(t),cy0-rad*Math.sin(t),txt,{anchor:'middle',size:16,c:C.cInk});
+    s+=S.line(x0-38*k,eY,x0+90*k,eY,{c:C.ink2,w:1,dash:`${4*k} ${4*k}`});
+    if(Math.abs(th)>1e-3)s+=S.arc(x0,eY,36*k,Math.PI,Math.PI+th,{c:C.cInk,w:1.6})+lab(x0,eY,54*k,Math.PI+th/2,'θ');
+    if(Math.abs(r.thetaPrime)>.1)s+=S.arc(x0,eY,62*k,0,r.thetaPrime*RAD,{c:C.cInk,w:1.6})+lab(x0,eY,80*k,r.thetaPrime*RAD/2,'θ′');
+    if(kd==='step'&&Number.isFinite(r.hit)&&r.hit<maxU&&Math.abs(p.theta)>1){
+      const ix=X(r.hit),iy=Y(r.side),sg=Math.sign(th),nrm=-sg*Math.PI/2,back=r.thetaPrime*RAD-sg*Math.PI;
+      s+=S.line(ix,iy-44*k,ix,iy+44*k,{c:C.ink2,w:1.2,dash:`${4*k} ${4*k}`});
+      s+=S.arc(ix,iy,30*k,nrm,back,{c:C.cInk,w:1.6})+lab(ix,iy,46*k,(nrm+back)/2,S.v('i'))}}
+  if(single&&a.p.sonde&&r.entered){const u=st.u||0,y=FM.position(r,u);s+=S.circle(X(u),Y(y),9*k,{c:C.c,w:2.2})}
+  const seg=f.sig(maxU*p.rc/1000,3);
+  s+=S.text(x1,top+height-6*k,local?`angles fidèles · segment de ${seg} mm`:`z comprimé × ${f.sig(sy/sx,2)} · segment de ${seg} mm`,{anchor:'end',base:'bottom',size:13});
+  return s;
+}
+let cam={yaw:.55,pitch:.3};
+/** points (u, y) d'un rayon dans son plan méridien, u = z/a de 0 à maxU */
+function rayPts(rr,maxU){
+  const pts=[];
+  if(!rr.graded&&rr.guided&&Math.abs(rr.s)>1e-12){pts.push([0,rr.A]);const sp=2/Math.abs(rr.s);let u=rr.hit,j=0;for(;u<maxU&&j<4000;u+=sp,j++)pts.push([u,Math.sign(rr.s)*(j%2===0?1:-1)]);pts.push([maxU,FM.position(rr,maxU)])}
+  else{const n=Math.min(3000,Math.max(160,Math.ceil(maxU*(rr.w||.03)*20)));for(let j=0;j<=n;j++){const u=maxU*j/n;pts.push([u,FM.position(rr,u)])}
+    if(Number.isFinite(rr.hit)&&rr.hit<maxU&&!rr.guided&&!rr.limiting){pts.push([rr.hit,rr.side]);pts.sort((u,v)=>u[0]-v[0])}}
+  return pts;
+}
+/* perspective : x vers l'observateur, y vers le haut, z le long de l'axe ; z comprimé du facteur choisi (dehors comme dedans) */
+function structure(a,c,times){
+  const P=a.panels.fibre,W=P.w,H=P.h,S=a.S,C=a.C,k=a.k,p=a.p,kd=p.fibre,f=a.fmt,ck=c[kd],r=ck.sel;
+  const comp=p.comp, RG=1.45, Lm=7, zin=-2.4;
+  const cyw=Math.cos(cam.yaw),syw=Math.sin(cam.yaw),cp=Math.cos(cam.pitch),sp=Math.sin(cam.pitch);
+  const rot=([x,y,z])=>{const z1=z*cyw-x*syw,x1=z*syw+x*cyw;return[z1,y*cp-x1*sp]};
+  const B=[];for(const z of[zin,Lm])for(const x of[-RG,RG])for(const y of[-RG,RG])B.push(rot([x,y,z]));
+  const bx=B.map(q=>q[0]),by=B.map(q=>q[1]),lo=[Math.min(...bx),Math.min(...by)],hi=[Math.max(...bx),Math.max(...by)];
+  const sc=Math.min((W-30*k)/(hi[0]-lo[0]),(H-56*k)/(hi[1]-lo[1]))*P.zoom, ox=W/2-sc*(lo[0]+hi[0])/2, oy=H/2+sc*(lo[1]+hi[1])/2;
+  const Pp=v=>{const q=rot(v);return[ox+sc*q[0],oy-sc*q[1]]};
+  const ring=(rad,z,n=72)=>Array.from({length:n+1},(_,j)=>{const t=2*Math.PI*j/n;return[rad*Math.sin(t),rad*Math.cos(t),z]});
+  const cyl=(rad,z0,z1,fill,fop,stroke)=>{
+    const A0=Pp([0,0,z0]),A1=Pp([0,0,z1]),dx=A1[0]-A0[0],dy=A1[1]-A0[1],L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+    const R0=ring(rad,z0);let tmax=0,tmin=0,vmax=-1e9,vmin=1e9;R0.forEach((v,j)=>{const q=Pp(v),o=(q[0]-A0[0])*nx+(q[1]-A0[1])*ny;if(o>vmax){vmax=o;tmax=j}if(o<vmin){vmin=o;tmin=j}});
+    const R1=ring(rad,z1);let s='';
+    s+=S.poly([Pp(R0[tmax]),Pp(R1[tmax]),Pp(R1[tmin]),Pp(R0[tmin])],{close:true,fill,fop,c:'none'});
+    s+=S.line(...Pp(R0[tmax]),...Pp(R1[tmax]),{c:stroke,w:1.3})+S.line(...Pp(R0[tmin]),...Pp(R1[tmin]),{c:stroke,w:1.3});
+    s+=S.poly(R1.map(Pp),{c:stroke,w:1.1})+S.poly(R0.map(Pp),{c:stroke,w:1.3});
+    return s};
+  let s='';
+  s+=cyl(RG,0,Lm,teinte(a,p.ng),.55,C.c);
+  s+=cyl(1,0,Lm,teinte(a,p.nc),.6,C.c);
+  // face d'entrée : gaine puis cœur (anneaux d'indice pour le gradient)
+  s+=S.poly(ring(RG,0).map(Pp),{close:true,fill:teinte(a,p.ng),fop:.9,c:C.c,w:1.3});
+  if(kd==='graded')for(let j=12;j>=1;j--)s+=S.poly(ring(j/12,0,48).map(Pp),{close:true,fill:teinte(a,FM.index(mp(a),'graded',(j-.5)/12)),c:'none'});
+  else s+=S.poly(ring(1,0).map(Pp),{close:true,fill:teinte(a,p.nc),c:'none'});
+  s+=S.poly(ring(1,0).map(Pp),{c:C.c,w:1.4});
+  s+=S.line(...Pp([0,0,zin]),...Pp([0,0,Lm+.4]),{c:C.ink2,w:1,dash:`${6*k} ${5*k}`,op:.8});
+  // cône d'acceptance (même compression de z)
+  if(p.cone){const t=Math.tan(ck.acc.angle*RAD)*comp,zc=-Math.min(-zin*.9,1.9/Math.max(t,1e-6)),rho=-zc*t,base=ring(rho,zc,48),ap=Pp([0,p.y0,0]);
+    s+=S.poly(base.map(Pp),{close:true,fill:C.c,fop:.12,c:C.c,w:1.2,dash:`${5*k} ${4*k}`});
+    for(let j=0;j<48;j+=4)s+=S.line(...ap,...Pp(base[j]),{c:C.c,w:1,op:.55})}
+  // plan méridien du rayon principal
+  if(p.plan)s+=S.poly([[0,-RG,zin],[0,RG,zin],[0,RG,Lm],[0,-RG,Lm]].map(Pp),{close:true,fill:C.F,fop:.07,c:C.F,w:1,dash:`${5*k} ${4*k}`,op:.7});
+  // rayons
+  const maxU=Lm*comp, th=p.theta*RAD, phis=p.plans?[0,60,120,180,240,300]:[0];
+  let g='',dots='';
+  phis.forEach((ph,j)=>{
+    const e=[Math.sin(ph*RAD),Math.cos(ph*RAD)], col=j===0?C.F:C.B, W3=(y,z)=>[y*e[0],y*e[1],z];
+    const zs=-Math.min(-zin,1.9/Math.max(1e-6,comp*Math.abs(Math.tan(th)))), ys=p.y0+Math.tan(th)*zs*comp;
+    const A0=Pp(W3(ys,zs));g+=S.line(...A0,...Pp(W3(p.y0,0)),{c:col,w:j===0?2.6:1.8});
+    if(j===0)g+=S.circle(A0[0],A0[1],4*k,{fill:col});
+    if(!r.entered)return;
+    const pts=rayPts(r,maxU);let path=[];for(const[u,y]of pts){if(Math.abs(y)>RG+.6)break;path.push(Pp(W3(y,u/comp)))}
+    g+=S.poly(path,{c:col,w:j===0?2.6:1.8,op:j===0?1:.85});
+    const T=FM.time(r,maxU);times.push(T);
+    if(st.clock<=T){const u=FM.distanceAtTime(r,st.clock,maxU),y=FM.position(r,u);if(Math.abs(y)<=RG+.6){const q=Pp(W3(y,u/comp));dots+=S.circle(q[0],q[1],4.5*k,{fill:col,c:C.card,w:1.2})}}
+  });
+  s+=g+dots;
+  const tg=Pp([0,RG,Lm*.8]),tc=Pp([0,-RG,Lm*.8]);
+  s+=S.text(tg[0],tg[1]-6*k,`gaine · ${S.v('n','g')} = ${f.fix(p.ng,3)}`,{anchor:'middle',base:'bottom',size:14,c:C.cInk});
+  s+=S.text(tc[0],tc[1]+6*k,kd==='graded'?`cœur · ${S.v('n')} de ${f.fix(p.nc,3)} à ${f.fix(p.ng,3)}`:`cœur · ${S.v('n','c')} = ${f.fix(p.nc,3)}`,{anchor:'middle',base:'top',size:14,c:C.ink});
+  s+=S.text(10*k,8*k,'glisser pour tourner',{base:'top',size:13});
+  s+=S.text(W-10*k,H-8*k,`z comprimé × ${f.sig(comp,2)} · rayons méridiens · gaine schématique`,{anchor:'end',base:'bottom',size:13});
+  st.lx=null;
+  return s;
+}
+
+/* ===================== signal transmis ===================== */
+function signal(a,c){
+  const P=a.panels.signal,W=P.w,H=P.h,S=a.S,C=a.C,k=a.k,p=a.p,f=a.fmt,cols=angCols(a),clock=st.clock;
+  const left=Math.min(96*k,W*.2),right=W-14*k,span=right-left,topH=Math.min(150*k,H*.32);
+  let s=S.text(10*k,6*k,`avancement de chaque rayon le long de la fibre, de 0 à ${S.v('L')} (une ligne par rayon)`,{base:'top',size:14});
+  const maxU=p.L*1e9/p.rc;
+  ['step','graded'].forEach((kd,row)=>{
+    const y=28*k+row*(topH-24*k)/2, band=(topH-40*k)/2;
+    s+=S.text(10*k,y+band*.4,kd==='step'?'Saut':'Gradient',{size:14,c:C.cInk});
+    c[kd].rays.forEach((r,j)=>{const yy=y+j*Math.max(3.5*k,band/5.5);s+=S.line(left,yy,right,yy,{c:C.rule,w:1});if(!r.received)return;
+      if(clock<=r.tau)s+=S.circle(left+span*FM.distanceAtTime(r,clock,maxU)/maxU,yy,3.6*k,{fill:cols[j]});
+      if(p.deux&&clock>=p.gap&&clock<=p.gap+r.tau)s+=S.circle(left+span*FM.distanceAtTime(r,clock-p.gap,maxU)/maxU,yy,3.6*k,{fill:cols[j],c:C.card,w:1})});
+  });
+  s+=S.text(left,topH+2*k,'0',{size:13,anchor:'middle',base:'top'})+S.text(right,topH+2*k,S.v('L'),{size:13,anchor:'middle',base:'top'});
+  const ct=topH+20*k, ch=(H-ct-30*k)/2, lo=c.lo, hi=c.hi, X=t=>left+(t-lo)/(hi-lo)*span, cx=X(clock-c.ref), visible=cx>=left&&cx<=right;
+  ['step','graded'].forEach((kd,row)=>{
+    const tp=ct+row*ch, bot=tp+ch-20*k, amp=ch-34*k;
+    s+=S.text(10*k,tp+amp*.5,kd==='step'?'Saut':'Gradient',{size:14,c:C.cInk});
+    s+=S.line(left,bot,right,bot,{c:C.ink2,w:1})+S.line(left,bot-amp,right,bot-amp,{c:C.rule,w:1,dash:`${3*k} ${5*k}`});
+    s+=S.text(left-6*k,bot,'0',{anchor:'end',size:13})+S.text(left-6*k,bot-amp,'1',{anchor:'end',size:13});
+    for(const t of AnimKit.ticks(lo,hi,Math.max(3,Math.round(span/(70*k))))){const x=X(t);s+=S.line(x,bot,x,bot+4*k,{c:C.ink2,w:1})+S.text(x,bot+5*k,f.fix(t,0),{anchor:'middle',base:'top',size:13})}
+    const taus=c[kd].received.map(r=>r.tau-c.ref), out=[], ref=[], N=Math.max(300,Math.min(1200,Math.ceil(span))), lim=p.tout?hi:clock-c.ref;
+    for(let i=0;i<=N;i++){const t=lo+(hi-lo)*i/N;ref.push([X(t),bot-FM.signal(t,[0,0,0,0,0],p.width,p.gap,p.deux)*amp]);if(t<=lim)out.push([X(t),bot-FM.signal(t,taus,p.width,p.gap,p.deux)*amp])}
+    s+=S.poly(ref,{c:C.ink2,w:1.4,dash:`${5*k} ${5*k}`,op:.75})+S.poly(out,{c:row===0?C.B:C.F,w:2.6});
+    for(const tau of taus)if(p.tout||tau<=clock-c.ref)s+=S.line(X(tau),bot,X(tau),bot-8*k,{c:C.cInk,w:2});
+    if(visible)s+=S.line(cx,tp+2*k,cx,bot,{c:C.E,w:1.8,dash:`${4*k} ${3*k}`});
+  });
+  s+=S.text(right,H-4*k,`${S.v('t')} − τ<tspan font-size="72%" dy="0.42em">réf</tspan><tspan dy="-0.42em"> (ns) · pointillés : impulsion d'entrée décalée de τ</tspan><tspan font-size="72%" dy="0.42em">réf</tspan>`,{anchor:'end',base:'bottom',size:13});
+  a.svg('signal',s);
+}
+
+/* ===================== interactions ===================== */
+A.drag('fibre',{
+  hit:(x,y)=>A.tab===0&&(A.p.vue==='structure'||!!st.lx&&Math.hypot(x-st.lx.lx,y-st.lx.ly)<40*A.k),
+  start(x,y){st.cam=A.p.vue==='structure'?{x,y,yaw:cam.yaw,pitch:cam.pitch}:null},
+  move(x,y){if(st.cam){cam.yaw=Math.max(-1.45,Math.min(1.45,st.cam.yaw+(x-st.cam.x)*.006));cam.pitch=Math.max(-.2,Math.min(1.3,st.cam.pitch+(y-st.cam.y)*.005));return}
+    const g=st.lx;if(!g)return;const t=Math.atan(Math.tan(Math.atan2(y-g.eY,Math.max(12,g.x0-x)))/g.q)/RAD;A.set('theta',Math.max(-75,Math.min(75,Math.round(t*10)/10)))}
+});
+
 </script>
-<!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
-})();
-</script>
-<!-- CPGE_MENU_SCRIPT_END -->
 </body>
 </html>

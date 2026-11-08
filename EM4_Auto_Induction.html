@@ -1,44 +1,721 @@
 <!doctype html>
-<html lang="fr" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Bobine longue, flux propre, circuit RL, énergie et protection à la coupure : atelier EM4 MPSI autonome."><title>Auto-induction : champ et énergie · EM4 · MPSI</title><style>:root{color-scheme:light;--paper:#eef2f6;--surface:#fff;--ink:#162536;--muted:#536477;--line:#ced8e2;--accent:#254b70;--accent-ink:#254b70;--soft:#e9f0f7;--field:#2869ae;--flux:#256d62;--emf:#8f2227;--current:#995014;--normal:#8558a2;--pos:#c34542;--neg:#366ca4;--shadow:0 4px 22px #19344d09}
-:root[data-theme=dark]{color-scheme:dark;--paper:#101a26;--surface:#182535;--ink:#edf2f9;--muted:#b5c4d6;--line:#384e65;--accent:#a5c7eb;--accent-ink:#a5c7eb;--soft:#22384d;--field:#85bcff;--flux:#7cd4bc;--emf:#ffa3a2;--current:#ffc17c;--normal:#d1b2f1;--pos:#d76c6c;--neg:#668fcb;--shadow:0 4px 22px #0002}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.4 Arial,Helvetica,sans-serif}button,input,select{font:inherit}button{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 11px;border:1px solid var(--line);border-radius:6px;color:var(--ink);background:var(--surface);cursor:pointer;white-space:nowrap}button:hover{background:var(--soft);border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button[aria-pressed=true],button.primary{color:var(--surface);background:var(--accent-ink);border-color:var(--accent-ink)}button:focus-visible,input:focus-visible,select:focus-visible,svg:focus-visible{outline:3px solid var(--field);outline-offset:3px}input,select{accent-color:var(--accent-ink)}input[type=number],select{color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:6px}input[type=number]{width:82px;text-align:right}input[type=range]{width:100%;height:23px;margin:6px 0 0;cursor:pointer}input[type=checkbox]{width:19px;height:19px;margin:0}select{width:100%;min-height:40px;max-width:100%}p{margin:8px 0}h1{font-size:28px;line-height:1.15;font-weight:500;letter-spacing:-.03em;margin:0}.topline{height:5px;background:#254b70}.shell{height:calc(100dvh - 5px);max-width:2050px;margin:auto;display:flex;flex-direction:column;gap:11px;padding:14px 18px 12px}.masthead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none}.brand{min-width:220px;flex:1}.eyebrow{color:var(--accent-ink);font-size:12px;letter-spacing:.11em;font-weight:bold;margin-bottom:3px;text-transform:uppercase}.global-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.global-actions button{font-size:15px;line-height:1.2}.global-actions #fullscreen{width:40px;max-width:40px;padding:0;font-size:23px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:14px;flex:1;min-height:0}.main{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(220px,1fr) auto minmax(155px,.56fr) auto;gap:9px}.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow)}.scene-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.scene-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 0;flex:none}.scene-top .kicker{font-size:12px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.06em}.scene-tools{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.scene-tools button{min-height:33px;font-size:14px;padding:4px 8px}.scene-tools .square{width:32px;padding:0;font-size:21px}.scene-svg{display:block;width:100%;height:100%;min-height:0;flex:1;touch-action:none;user-select:none}.scene-note{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:31px;font-size:15px;padding:2px 13px 7px;color:var(--muted)}.scene-note .emphasis{font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums}.scene-note .hint{font-size:13px}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:7px 0}.readout{min-width:0;padding:0 14px;border-left:1px solid var(--line)}.readout:first-child{border:0}.metric-label{display:flex;align-items:center;gap:7px;font-size:16px;color:var(--muted)}.metric-label:before{content:'';height:3px;width:16px;background:var(--c);flex:none}.metric-value{font-size:34px;line-height:1.18;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.metric-unit{font-size:.53em;letter-spacing:0;margin-left:4px;color:var(--muted)}.metric-extra{font-size:12px;color:var(--muted);min-height:16px}.plots-card{display:flex;flex-direction:column;min-height:0;overflow:hidden}.plot-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 13px 0;font-size:17px}.formula{font:21px Georgia,'Times New Roman',serif;color:var(--ink)}.plot-note{font-size:13px;color:var(--muted);text-align:right}.plot-svg{width:100%;height:100%;display:block;min-height:0;flex:1;touch-action:none}.transport{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-height:42px}.transport button{font-size:15px}.transport .time{color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}.transport .scrub{flex:1;min-width:70px;max-width:400px;margin:0}.status{font-size:15px;color:var(--muted);flex:1;min-width:160px}.controls{overflow:auto;min-height:0;scrollbar-width:thin;background:var(--surface);border:1px solid var(--line);border-radius:9px}.control-section{padding:15px;border-bottom:1px solid var(--line)}.control-section:last-child{border:0}.section-title{font-size:12px;color:var(--accent-ink);letter-spacing:.09em;font-weight:bold;text-transform:uppercase;margin:0 0 11px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:16px;margin-top:12px}.field-head:first-child{margin-top:0}.field-head label{max-width:190px}.small-note{font-size:13px;color:var(--muted);line-height:1.5}.control-section .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}.control-section .row>button{font-size:14px;flex:1;min-height:36px;padding:5px 8px}.check{display:flex;gap:9px;align-items:center;font-size:16px;cursor:pointer;margin:10px 0}.explain{padding:9px 11px;background:var(--soft);border-left:3px solid var(--accent);font-size:14px;line-height:1.45;color:var(--muted);margin-top:10px}.mode-tabs{display:flex;gap:4px;margin-bottom:11px}.mode-tabs button{flex:1;padding:7px 5px;min-height:38px;font-size:13px;white-space:normal}.mobile-settings,.panel-close{display:none}.drawer-backdrop{display:none}.timeline-caption{font-size:13px;color:var(--muted)}.answer-masked{color:var(--muted)}.prediction .reveal-answer{visibility:hidden}.prediction .answer-value:after{content:'?';visibility:visible}.prediction .answer-value .metric-unit{visibility:hidden}dialog{width:min(800px,calc(100% - 28px));max-height:87dvh;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:25px;overflow:auto}dialog::backdrop{background:#061427a8}dialog h2{font-size:27px;font-weight:500;margin:0 0 16px}dialog h3{font-size:19px;margin-top:20px}dialog p,dialog li{font-size:17px;line-height:1.6;color:var(--muted)}dialog .close-row{display:flex;justify-content:flex-end;margin-top:22px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);padding:12px 18px;background:var(--accent-ink);color:var(--surface);border-radius:6px;z-index:20;font-size:16px}.toast:empty{display:none}[hidden]{display:none!important}svg text{font-family:Arial,Helvetica,sans-serif}.projection .controls,.projection .eyebrow{display:none}.projection .workspace{grid-template-columns:1fr}.projection .shell{padding:10px 15px;max-width:none}.projection .metric-value{font-size:42px}.projection .metric-label{font-size:20px}.projection .metric-extra{font-size:14px}.projection .scene-note .emphasis{font-size:22px}.projection .scene-note .hint{display:none}.projection .plot-head .formula{font-size:24px}.projection .plot-note{font-size:16px}.projection .transport button,.projection .status{font-size:18px}.projection .main{grid-template-rows:minmax(240px,1fr) auto minmax(165px,.55fr) auto}.projection .mobile-settings{display:none!important}
-@media(max-width:1200px){.workspace{grid-template-columns:minmax(0,1fr) 282px;gap:10px}.shell{padding:10px 12px;gap:9px}h1{font-size:25px}.scene-top{padding:7px 9px 0}.scene-top .kicker{font-size:11px}.metric-value{font-size:31px}.status{font-size:13px}.global-actions button{padding:7px 9px;font-size:14px}.readout{padding:0 10px}.scene-tools button{font-size:13px}.control-section{padding:13px}}
-@media(max-width:1000px){.workspace{grid-template-columns:1fr}.mobile-settings{display:inline-flex}.controls{position:fixed;inset:0 0 0 auto;width:min(340px,88vw);border-radius:0;z-index:12;transform:translateX(102%);transition:transform .18s ease;box-shadow:-8px 0 36px #0003}.panel-open .controls{transform:translateX(0)}.panel-close{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.drawer-backdrop{position:fixed;inset:0;background:#07162577;z-index:11}.panel-open .drawer-backdrop{display:block}.projection .controls{display:none}}
-@media(max-width:760px){.masthead{gap:10px}.brand{flex-basis:100%}.global-actions{justify-content:flex-start}.global-actions button{font-size:14px;padding:6px 9px}.shell{height:auto;min-height:calc(100dvh - 5px);padding:10px;gap:12px}.main{grid-template-rows:340px auto 270px auto}.workspace{flex:none}.scene-top{flex-wrap:wrap}.scene-tools{margin-left:auto}.scene-note .hint{display:none}.metric-label{font-size:14px}.metric-value{font-size:29px}.metric-extra{font-size:11px}.readout{padding:0 8px}.metric-label:before{width:10px}.transport .scrub{order:5;flex-basis:100%;max-width:none}.status{order:6;flex-basis:100%}.plot-head{flex-wrap:wrap;gap:3px;padding:8px 10px 0}.plot-note{text-align:left;font-size:12px}.projection .shell{height:auto;min-height:100dvh}.projection .main{grid-template-rows:350px auto 290px auto}.projection .metric-value{font-size:32px}.projection .metric-label{font-size:15px}.projection .metric-extra{font-size:12px}}
-@media(max-width:420px){h1{font-size:24px}.metric-value{font-size:25px}.metric-label{font-size:12px}.metric-unit{font-size:.5em}.scene-tools button{font-size:12px;padding:4px 6px}.scene-tools .square{width:29px}.scene-note .emphasis{font-size:15px}.scene-top .kicker{display:none}.scene-top{justify-content:flex-end}.scene-note{padding:2px 9px 7px}.projection .metric-value{font-size:29px}}
-.vec{display:inline-block;position:relative;padding-top:.04em}.vec:before{content:'→';position:absolute;left:0;right:0;top:-.66em;text-align:center;font-size:.9em;line-height:1}
-@media(prefers-reduced-motion:reduce){.controls{transition:none}}
-@media print{.controls,.global-actions,.transport{display:none}.shell{height:auto}.workspace{display:block}.main{grid-template-rows:400px auto 240px auto}.card{box-shadow:none}}
-/* Adaptations EM4 : quatre valeurs, vues accessibles et détails énergétiques. */
-.main{grid-template-rows:auto minmax(225px,1fr) auto minmax(166px,.55fr) auto;gap:8px}.view-tabs{display:flex;gap:6px;flex-wrap:wrap}.view-tabs button{min-height:37px;font-size:15px;padding:5px 13px}.readouts{grid-template-columns:repeat(4,minmax(0,1fr));padding:4px 0}.metric-label{font-size:14px}.metric-value{font-size:31px}.metric-extra{font-size:12px}.metric-unit{margin-left:5px}.select-label{display:block;margin:9px 0 5px;font-size:15px;color:var(--muted)}.select-label:first-child{margin-top:0}.control-section h2{font-size:12px}.param+.param{margin-top:12px}.scene-note .emphasis{font-size:16px}.scene-note .hint{max-width:45%;text-align:right;font-size:12px}.scene-top .kicker{font-size:11px}.scene-tools #equivalent[aria-pressed=true]{background:var(--soft);color:var(--accent-ink)}.balance-grid{display:grid;grid-template-columns:1fr auto;gap:10px 22px;margin:20px 0;font-size:18px}.balance-grid strong{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}.equation{font:22px/1.6 Georgia,'Times New Roman',serif;color:var(--ink);padding:14px;background:var(--soft);border-radius:6px}.balance-grid .separator{grid-column:1/-1;border-top:1px solid var(--line);height:1px}.balance-caption{font-size:15px!important}.metric-value small{font-size:.6em}.plot-head{min-height:30px}.plot-formula{font-size:20px}.transport .time{min-width:95px}.transport .scrub{max-width:230px}.projection .main{grid-template-rows:auto minmax(250px,1fr) auto minmax(175px,.5fr) auto}.projection .view-tabs button{font-size:18px;min-height:41px}.projection .metric-label{font-size:19px}.projection .metric-value{font-size:39px}.projection .metric-extra{font-size:14px}.projection .scene-note .emphasis{font-size:23px}.projection .scene-top .kicker{font-size:15px}.projection .scene-tools button{font-size:17px}.projection .transport .scrub{max-width:380px}svg [data-drag]{cursor:grab}svg [data-drag]:active{cursor:grabbing}svg [data-drag]:focus{outline:none;filter:drop-shadow(0 0 3px var(--field))}
-@media(min-width:1550px){.workspace{grid-template-columns:minmax(0,1fr) 332px}.metric-value{font-size:36px}.metric-label{font-size:17px}.metric-extra{font-size:14px}.scene-note .emphasis{font-size:20px}.scene-note .hint{font-size:14px}.view-tabs button{font-size:17px}.control-section{padding:18px}.scene-top .kicker{font-size:13px}}
-@media(max-width:1200px){.metric-value{font-size:29px}.readout{padding:0 8px}.metric-label{font-size:13px}.metric-extra{font-size:11px}.main{grid-template-rows:auto minmax(225px,1fr) auto minmax(160px,.5fr) auto}}
-@media(max-width:760px){.shell{height:auto}.main{grid-template-rows:auto 540px auto 400px auto}.view-tabs button{flex:1;font-size:14px;white-space:normal;padding:7px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px;padding:7px 0}.readout:nth-child(3){border:0}.metric-label{font-size:15px}.metric-value{font-size:31px}.metric-extra{font-size:12px}.scene-top .kicker{display:none}.scene-top{justify-content:flex-end}.scene-note .emphasis{font-size:16px}.scene-note .hint{display:none}.plot-head .formula{font-size:18px}.projection .main{grid-template-rows:auto 560px auto 420px auto}.projection .metric-value{font-size:34px}.projection .metric-label{font-size:17px}.projection .scene-note .emphasis{font-size:18px}.projection .view-tabs button{font-size:15px}.transport .scrub{max-width:none}.balance-grid{font-size:16px;gap:10px}.equation{font-size:19px}.scene-tools{flex-wrap:nowrap}}
-@media(max-width:420px){.metric-value{font-size:30px}.metric-label{font-size:14px}.view-tabs button{font-size:13px}.scene-tools button{font-size:13px}.scene-note{min-height:44px}.scene-note .emphasis{font-size:15px}.projection .view-tabs button{font-size:14px}.global-actions{gap:5px}.global-actions button{padding:6px 8px}.balance-grid strong{max-width:140px;overflow-wrap:anywhere}}
-@media print{.main{grid-template-rows:auto 440px auto 240px auto}.view-tabs{display:none}}
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Solénoïde long : champ propre, flux propre, inductance et énergie magnétique ; établissement et décharge d&#x27;un circuit RL ; surtension de rupture et protections (résistance, diode de roue libre).">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Auto-induction : champ et énergie · EM4 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Vue physique du transformateur : davantage de place pour le noyau. */
-@media(min-width:761px){.physical-transformer .main{grid-template-rows:auto minmax(255px,1.15fr) auto minmax(135px,.4fr) auto}.physical-transformer.projection .main{grid-template-rows:auto minmax(290px,1.1fr) auto minmax(135px,.4fr) auto}}
-</style></head>
-<body><div class="topline"></div><div class="shell">
-<header class="masthead"><div class="brand"><div class="eyebrow">EM4 · Induction de Neumann · MPSI</div><h1>Auto-induction : champ et énergie</h1></div><div class="global-actions"><button id="settings" class="mobile-settings" aria-controls="controls" aria-expanded="false">Réglages</button><button id="balance">Bilan</button><button id="theme">Sombre</button><button id="help">Aide</button><button id="export" title="Exporter le schéma, les valeurs et les courbes en SVG">Image</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran (F)">⛶</button></div></header>
-<div class="workspace"><main class="main"><nav class="view-tabs" id="modes" aria-label="Situations de l’atelier"><button data-mode="geometry" aria-pressed="false">La bobine</button><button data-mode="transient" aria-pressed="false">Établir et décharger</button><button data-mode="rupture" aria-pressed="false">Coupure et protection</button></nav>
-<section class="card scene-card" aria-label="Expérience"><div class="scene-top"><span class="kicker" id="scene-kicker"></span><div class="scene-tools"><button id="equivalent" aria-pressed="false" title="Afficher la f.é.m. auto-induite en convention générateur">Équivalent</button><button id="zoom-out" class="square" aria-label="Réduire le dessin">−</button><button id="zoom-in" class="square" aria-label="Agrandir le dessin">+</button><button id="frame">Cadrer</button></div></div><svg id="scene" class="scene-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Schéma interactif"></svg><div class="scene-note"><span class="emphasis" id="scene-state"></span><span class="hint" id="scene-hint"></span></div></section>
-<section class="readouts" aria-label="Valeurs calculées"><div class="readout" id="metric-0"><div class="metric-label" id="label-0"></div><div class="metric-value" id="value-0"></div><div class="metric-extra" id="extra-0"></div></div><div class="readout" id="metric-1"><div class="metric-label" id="label-1"></div><div class="metric-value" id="value-1"></div><div class="metric-extra" id="extra-1"></div></div><div class="readout" id="metric-2"><div class="metric-label" id="label-2"></div><div class="metric-value" id="value-2"></div><div class="metric-extra" id="extra-2"></div></div><div class="readout" id="metric-3"><div class="metric-label" id="label-3"></div><div class="metric-value" id="value-3"></div><div class="metric-extra" id="extra-3"></div></div></section>
-<section class="card plots-card" aria-label="Courbes synchronisées"><div class="plot-head"><span id="plot-formula" class="formula"></span><span id="plot-note" class="plot-note"></span></div><svg id="plots" class="plot-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Courbes ; glisser pour examiner un instant"></svg></section>
-<div class="transport"><button id="play" class="primary" aria-pressed="false">▶ Lecture</button><button id="reset">Recommencer</button><span class="time" id="time"></span><input id="scrub" class="scrub" type="range" min="0" max="1" step=".001" value="0" aria-label="Parcourir l’expérience"><span id="status" class="status"></span></div></main>
-<aside id="controls" class="controls" aria-label="Réglages"><div class="panel-close"><strong>Réglages</strong><button id="close-panel">Fermer</button></div><div id="panel-content"></div></aside></div></div>
-<div id="drawer-backdrop" class="drawer-backdrop"></div><dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">Auto-induction : champ et énergie</h2><h3>Flux propre et bobine longue</h3>
-<p>La flèche de référence de i fixe l’orientation du circuit et de sa normale ; ces références restent fixes lorsque i change de signe. La normale de référence pointe vers la droite du dessin. Dans le modèle du solénoïde long dans l’air, Bₚ = μ₀Ni/l à l’intérieur et le champ extérieur est négligé pour le calcul du flux. S = πa² ; le flux à travers une spire vaut BₚS ; le flux lié à l’ensemble des N spires vaut Φₚ = NBₚS = Li, avec L = μ₀N²S/l &gt; 0. Les lignes extérieures sont un rappel schématique de la fermeture des lignes de champ d’une bobine finie, sans correction du modèle de flux.</p>
-<p>Les poignées règlent le rayon et la longueur ; elles sont également utilisables avec les flèches du clavier. Le courant se règle dans le panneau ou directement sur les courbes. La géométrie reste fixe pendant chaque expérience. Le nombre de spires dessinées est échantillonné et la perspective est schématique.</p>
-<h3>Auto-induction et transitoire</h3><p>La f.é.m. eₚ = −L di/dt est en convention générateur ; la tension uL = L di/dt est en convention récepteur. Équivalent échange ces deux descriptions sans modifier le phénomène et sans ajouter un second courant.</p>
-<p>À l’établissement, i(0) = 0 et i(t) = [E/(R₀+R)][1 − exp(−t/τ)]. En décharge, le générateur est retiré et la boucle R₀ + R reste fermée : i(0) = E/(R₀+R) puis i(t) = i(0) exp(−t/τ), avec τ = L/(R₀+R). Ces situations sont deux essais distincts. L s’oppose aux variations de i : la f.é.m. soutient le courant pendant la décroissance.</p>
-<h3>Énergie</h3><p>L’énergie magnétique E_mag = ½Li² est stockée dans le champ. Pour le solénoïde long, E_mag = [B²/(2μ₀)]Sl. La teinte intérieure encode l’énergie avec une échelle comprimée et ne représente aucune couleur matérielle réelle. Bilan donne les puissances instantanées et les énergies intégrées depuis t = 0. La résistance R de la bobine est comptée dans la dissipation et non dans l’énergie magnétique.</p>
-<h3>Coupure et protection</h3><p>Cette vue reprend le TD « Étincelle de rupture ». L et R y sont réglés directement ; la géométrie dessinée n’est pas utilisée pour les calculer. Avant ouverture, le régime permanent donne I₀ = E/R. La tension sur l’interrupteur est définie par uK = V<sub>côté générateur</sub> − V<sub>côté bobine</sub> ; elle comprend donc la tension E du générateur.</p>
-<p>Sans protection : on impose i = I₀(1 − t/Δt) pendant Δt, puis i = 0. Alors eₚ = LI₀/Δt et uK = E − Ri + LI₀/Δt pendant l’extinction ; uK = E après. L’arc dessiné est illustratif : aucun seuil de claquage ni modèle de plasma n’est calculé. Son énergie est déduite du bilan ; le générateur peut encore fournir de l’énergie pendant Δt.</p>
-<p>Avec R′ en parallèle de l’ensemble L, R : i = I₀ exp[−(R+R′)t/L] et uK = E + R′i. Avec une diode de roue libre de chute directe constante Vᴅ : L di/dt + Ri + Vᴅ = 0 tant que i &gt; 0, puis la diode se bloque ; uK = E + Vᴅ pendant la conduction et E après extinction. Aucun courant négatif n’est autorisé dans cette diode. Les capacités parasites, le rayonnement et les effets de commutation réels sont exclus.</p><h3>Commandes communes</h3><p>Les réglages se trouvent à droite. Projection masque les réglages et agrandit les informations ; ⛶ active séparément le plein écran. Le zoom agit sur le dessin, en conservant la taille des textes. Cadrer rétablit la vue initiale. Image exporte la scène et ses courbes dans le thème choisi.</p><p>Lecture est volontairement ralentie. Les valeurs du temps sont celles du modèle physique. La barre du temps et les courbes permettent de revenir à un instant. Toute modification physique relance un essai avec une géométrie fixe ; une pause de lecture fige l’affichage. Raccourcis : Espace, lecture/pause ; R, recommencer ; F, plein écran ; Échap, fermer une fenêtre. Fichier autonome hors connexion.</p><div class="close-row"><button class="primary" data-close="help-dialog">Revenir à l’atelier</button></div></dialog>
-<dialog id="balance-dialog" aria-labelledby="balance-title"><h2 id="balance-title">Puissances et énergie</h2><div id="balance-content"></div><div class="close-row"><button class="primary" data-close="balance-dialog">Revenir à l’atelier</button></div></dialog>
-<div id="toast" class="toast" role="status"></div><script id="physics">'use strict';
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* EM4 · physique d'origine (ex-physique.js), équations inchangées */
+'use strict';
 // Les flux Φ sont les flux liés à l'ensemble des spires. Unités SI.
 const EM4Physics = (() => {
   const mu0=4*Math.PI*1e-7, clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -126,165 +803,410 @@ const EM4Physics = (() => {
 })();
 if(typeof module!=='undefined')module.exports=EM4Physics;
 if(typeof window!=='undefined')window.EM4Physics=EM4Physics;
-</script><script>'use strict';
-window.EM4UI=(()=>{
- const $=id=>document.getElementById(id),clamp=EM4Physics.clamp;
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
- const fmt=(x,d=2)=>new Intl.NumberFormat('fr-FR',{maximumFractionDigits:d}).format(Math.abs(x)<1e-12?0:x);
- function si(v,unit){const a=Math.abs(v),scale=unit===''||unit==='%'||a<1e-18?1:a>=1e6?1e6:a>=1e3?1e3:a>=1?1:a>=1e-3?1e-3:a>=1e-6?1e-6:1e-9;return {value:fmt(v/scale,Math.abs(v/scale)>=100?1:2),unit:({1000000:'M',1000:'k',1:'',0.001:'m',0.000001:'µ',0.000000001:'n'})[scale]+unit,scale};}
- const quantity=(v,u)=>{const q=si(v,u);return `${q.value} ${q.unit}`;};
- function palette(){const s=getComputedStyle(document.documentElement),r={};for(const k of ['surface','paper','ink','muted','line','accent','soft','field','flux','current','emf','normal'])r[k]=s.getPropertyValue('--'+k).trim();return r;}
- const path=pts=>pts.map((p,i)=>(i?'L':'M')+p.map(v=>Number(v).toFixed(2)).join(',')).join(' ');
- const line=(a,b,c,w=2,extra='')=>`<path d="${path([a,b])}" fill="none" stroke="${c}" stroke-width="${w}" ${extra}/>`;
- function arrow(a,b,c,w=2.5,dash=false){const d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d<.01)return '';const t=Math.atan2(b[1]-a[1],b[0]-a[0]),l=Math.min(11,d*.35),h=Math.min(4.5,d*.15),p1=[b[0]-l*Math.cos(t)+h*Math.sin(t),b[1]-l*Math.sin(t)-h*Math.cos(t)],p2=[b[0]-l*Math.cos(t)-h*Math.sin(t),b[1]-l*Math.sin(t)+h*Math.cos(t)];return line(a,b,c,w,dash?'stroke-dasharray="5 5"':'')+`<path d="${path([b,p1,p2])}Z" fill="${c}"/>`;}
- function text(x,y,s,c,size=22,anchor='start',extra=''){const rich=esc(s).replace(/_\{([^}]+)\}|_([A-Za-z0-9]+)/g,(_,a,b)=>`<tspan baseline-shift="sub" font-size="${size*.68}">${a||b}</tspan>`);return `<text x="${x}" y="${y}" fill="${c}" font-size="${size}" text-anchor="${anchor}" ${extra}>${rich}</text>`;}
- const halo=(x,y,s,c,z=22,a='start')=>text(x,y,s,c,z,a,`paint-order="stroke" stroke="${palette().surface}" stroke-width="5" stroke-linejoin="round"`);
- const rect=(x,y,w,h,fill,stroke='none',r=6,extra='')=>`<rect x="${x}" y="${y}" width="${Math.max(0,w)}" height="${Math.max(0,h)}" rx="${r}" fill="${fill}" stroke="${stroke}" ${extra}/>`;
- function field(id,label,min,max,step,value,unit='',log=false){return `<div class="param"><div class="field-head"><label for="${id}-number">${label}${unit?' ('+unit+')':''}</label><input id="${id}-number" data-param="${id}" type="number" min="${min}" max="${max}" step="${step}" value="${value}"></div><input id="${id}" data-param="${id}" ${log?'data-log="true"':''} type="range" aria-label="${esc(label)}" min="${log?Math.log10(min):min}" max="${log?Math.log10(max):max}" step="${log?.004:step}" value="${log?Math.log10(value):value}"></div>`;}
- const select=(id,label,options,value)=>`<label class="select-label" for="${id}">${label}</label><select id="${id}">${options.map(([k,t])=>`<option value="${k}" ${String(k)===String(value)?'selected':''}>${t}</option>`).join('')}</select>`;
- const section=(title,content)=>`<section class="control-section"><h2 class="section-title">${title}</h2>${content}</section>`;
- const buttons=(items)=>`<div class="row">${items.map(([id,label])=>`<button id="${id}">${label}</button>`).join('')}</div>`;
- function bindFields(change){document.querySelectorAll('[data-param]').forEach(el=>{el.dataset.modelValue=$(el.dataset.param+'-number').value;el.addEventListener('input',()=>{if(el.value===''||!Number.isFinite(el.valueAsNumber))return;let v=el.dataset.log?10**el.valueAsNumber:el.valueAsNumber;const n=$(el.dataset.param+'-number'),step=Number(n.step);v=clamp(Math.round(v/step)*step,Number(n.min),Number(n.max));change(el.dataset.param,Number(v.toPrecision(10)));});});document.querySelectorAll('input[type=number]').forEach(el=>el.addEventListener('change',()=>{el.value=el.dataset.modelValue;}));}
- function syncFields(p){document.querySelectorAll('[data-param]').forEach(el=>{const v=p[el.dataset.param];if(v===undefined)return;el.dataset.modelValue=String(v);if(document.activeElement===el&&el.type==='number')return;el.value=el.dataset.log?Math.log10(Math.max(v,1e-30)):v;});}
- function metric(n,label,value,unit,extra='',color='field'){const q=si(value,unit);$('label-'+n).textContent=label;$('value-'+n).innerHTML=esc(q.value)+`<span class="metric-unit">${esc(q.unit)}</span>`;$('value-'+n).dataset.value=String(value);$('extra-'+n).textContent=extra;$('metric-'+n).style.setProperty('--c',`var(--${color})`);}
- function dimensions(svg){const b=svg.getBoundingClientRect(),w=Math.max(280,b.width),h=Math.max(120,b.height);svg.setAttribute('viewBox',`0 0 ${w} ${h}`);return {w,h};}
- function charts(svg,specs){const {w,h}=dimensions(svg),c=palette(),proj=document.body.classList.contains('projection'),small=w<640,font=proj?18:15,sets=[],parts=[];
-  specs.forEach((s,j)=>{const cell={x:small?0:j*w/specs.length,y:small?j*h/specs.length:0,w:small?w:w/specs.length,h:small?h/specs.length:h};const vals=s.series.flatMap(a=>a.points.map(p=>p[1])),peak=Math.max(1e-30,...vals.map(Math.abs)),unit=si(peak,s.unit),signed=s.signed===undefined?Math.min(...vals)<-peak*.001:s.signed;
-   const ymax=peak<1e-20?1:peak*1.12,ymin=signed?-ymax:0,x0=cell.x+68,x1=cell.x+cell.w-23,y0=cell.y+39,y1=cell.y+cell.h-33,X=x=>x0+(x-s.min)/(s.max-s.min)*(x1-x0),Y=y=>y1-(y-ymin)/(ymax-ymin)*(y1-y0);
-   let lx=cell.x+13;s.series.forEach(a=>{parts.push(line([lx,cell.y+18],[lx+14,cell.y+18],a.color,2.7,a.dash?'stroke-dasharray="4 3"':''));parts.push(text(lx+20,cell.y+24,a.name,a.color,proj?20:18));lx+=Math.max(65,a.name.length*10+32);});parts.push(text(cell.x+cell.w-15,cell.y+24,unit.unit,c.muted,font,'end'));
-   const ticks=signed?[-peak,0,peak]:[0,peak/2,peak];ticks.forEach(v=>{parts.push(line([x0,Y(v)],[x1,Y(v)],c.line,v===0?1.2:.7,v===0?'':'stroke-dasharray="2 4"'));parts.push(text(x0-8,Y(v)+5,fmt(v/unit.scale,peak/unit.scale<10?2:1),c.muted,font-1,'end'));});
-   const xu=si(Math.max(Math.abs(s.min),Math.abs(s.max)),s.xUnit===undefined?'s':s.xUnit);[s.min,(s.min+s.max)/2,s.max].forEach(x=>parts.push(text(X(x),y1+23,fmt(x/xu.scale,2),c.muted,font-1,'middle')));parts.push(text(x1,y0+15,(s.xLabel||'t')+(xu.unit?' ('+xu.unit+')':''),c.muted,font-1,'end'));
-   s.series.forEach((a,k)=>{parts.push(`<path d="${path(a.points.map(p=>[X(p[0]),Y(p[1])]))}" fill="none" stroke="${a.color}" stroke-width="2.6" stroke-linejoin="round" ${a.dash?'stroke-dasharray="6 5"':''}/><circle id="point-${j}-${k}" r="4.4" fill="${a.color}" stroke="${c.surface}" stroke-width="1.8"/>`);});
-   parts.push(`<path id="cursor-${j}" fill="none" stroke="${c.muted}" stroke-width="1.1" stroke-dasharray="4 4"/>`);sets.push({s,X,Y,x0,x1,y0,y1,cell});
-  });svg.innerHTML=parts.join('');
-  return {update(x,values){sets.forEach((a,j)=>{const xx=a.X(clamp(x,a.s.min,a.s.max));$('cursor-'+j).setAttribute('d',path([[xx,a.y0],[xx,a.y1]]));a.s.series.forEach((s,k)=>{const v=values[s.key],p=$('point-'+j+'-'+k);p.setAttribute('cx',xx);p.setAttribute('cy',a.Y(v));});});},xAt(e){const b=svg.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top,a=sets[small?Math.min(sets.length-1,Math.floor(y/h*sets.length)):Math.min(sets.length-1,Math.floor(x/w*sets.length))];return clamp(a.s.min+(x-a.x0)/(a.x1-a.x0)*(a.s.max-a.s.min),a.s.min,a.s.max);}};
- }
- // Coupe schématique d'un solénoïde ; les textes gardent leur taille en pixels.
- function coil(x1,x2,cy,r,color,turns=14,fill='none',opacity=.1){let s=rect(x1,cy-r,x2-x1,2*r,fill,'none',0,`opacity="${opacity}"`);for(let j=0;j<=turns;j++){const x=x1+(x2-x1)*j/turns;s+=`<ellipse cx="${x}" cy="${cy}" rx="${Math.max(3,r*.22)}" ry="${r}" fill="none" stroke="${color}" stroke-width="${j===0||j===turns?2.1:1.5}" opacity="${.55+.45*j/turns}"/>`;}return s;}
- function resistor(a,b,color,vertical=false){const d=Math.hypot(b[0]-a[0],b[1]-a[1]),len=Math.min(36,d*.6),mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;return line(a,b,color,2)+rect(mx-(vertical?7:len/2),my-(vertical?len/2:7),vertical?14:len,vertical?len:14,palette().surface,color,0);}
- function inductor(x,y,len,color,equivalent=false,turns=4){if(equivalent)return line([x,y-len/2],[x,y+len/2],color,2)+`<circle cx="${x}" cy="${y}" r="15" fill="${palette().surface}" stroke="${color}" stroke-width="2"/>`;let d=`M${x},${y-len/2}`;for(let j=0;j<turns;j++)d+=`c-17,0 -17,${len/turns} 0,${len/turns}`;return `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.2"/>`;}
- function source(x,y,r,color,label='~'){return `<circle cx="${x}" cy="${y}" r="${r}" fill="${palette().surface}" stroke="${color}" stroke-width="2"/>`+text(x,y+6,label,color,22,'middle');}
- function badge(x,y,label,color){const size=15,w=label.length*8.1+20;return rect(x,y-20,w,29,palette().surface,palette().line,5)+text(x+10,y,label,color,size);}
- function bar(x,y,w,h,v,max,color,label,value){return text(x,y-9,label,palette().muted,16)+rect(x,y,w,h,palette().soft)+rect(x,y,w*clamp(v/Math.max(max,1e-30),0,1),h,color)+text(x+w,y-9,value,palette().ink,17,'end');}
- let toastTimer;function toast(t){$('toast').textContent=t;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',2500);}
- function setup(config){let dark=false,focus=null;try{dark=localStorage.getItem('EM4-theme')==='dark';}catch(_){}
-  const redraw=()=>config.redraw();function theme(){document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';try{localStorage.setItem('EM4-theme',dark?'dark':'light');}catch(_){}redraw();}
-  $('theme').onclick=()=>{dark=!dark;theme();};
-  function panel(open){document.body.classList.toggle('panel-open',open);$('settings').setAttribute('aria-expanded',String(open));document.querySelector('.main').inert=open;document.querySelector('.masthead').inert=open;if(open){focus=document.activeElement;$('controls').setAttribute('role','dialog');$('controls').setAttribute('aria-modal','true');$('close-panel').focus();}else{$('controls').removeAttribute('role');$('controls').removeAttribute('aria-modal');if(focus)focus.focus();}$('controls').inert=innerWidth<=1000&&!open;$('controls').setAttribute('aria-hidden',String(innerWidth<=1000&&!open));}
-  $('settings').onclick=()=>panel(true);$('close-panel').onclick=() =>panel(false);$('drawer-backdrop').onclick=()=>panel(false);
-  $('help').onclick=()=>{config.pause();$('help-dialog').showModal();};$('balance').onclick=()=>{config.pause();config.balance();$('balance-dialog').showModal();};document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-  $('projection').onclick=()=>{panel(false);const p=document.body.classList.toggle('projection');$('projection').textContent=p?'Réglages':'Projection';$('projection').setAttribute('aria-pressed',String(p));redraw();};
-  async function full(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){toast('Le plein écran est indisponible.');}}$('fullscreen').onclick=full;
-  document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Plein écran');redraw();});
-  $('zoom-in').onclick=()=>config.zoom(.15);$('zoom-out').onclick=()=>config.zoom(-.15);$('frame').onclick=()=>config.zoom(0);
-  $('play').onclick=config.play;$('reset').onclick=config.reset;$('scrub').oninput=e=>config.scrub(Number(e.target.value));
-  let dragging=false;$('plots').addEventListener('pointerdown',e=>{dragging=true;$('plots').setPointerCapture(e.pointerId);config.chart(e);});$('plots').addEventListener('pointermove',e=>{if(dragging)config.chart(e);});$('plots').addEventListener('pointerup',()=>dragging=false);$('plots').addEventListener('pointercancel',()=>dragging=false);
-  $('export').onclick=()=>{config.pause();const c=palette(),a=$('scene').getBoundingClientRect(),b=$('plots').getBoundingClientRect(),w=Math.ceil(a.width),sh=Math.ceil(a.height),ph=Math.ceil(b.height),cols=w<600?2:4,rows=4/cols,height=sh+ph+125+rows*62;
-   let s=rect(0,0,w,height,c.surface)+text(18,32,config.title,c.ink,Math.min(26,w/19))+text(18,57,config.caption(),c.muted,w<600?12:15);
-   s+=`<g transform="translate(0,72)">${$('scene').innerHTML}</g>`;
-   for(let i=0;i<4;i++){const x=18+(i%cols)*w/cols,y=sh+100+Math.floor(i/cols)*62;s+=text(x,y,$('label-'+i).textContent,c.muted,14)+text(x,y+29,$('value-'+i).textContent,c.ink,24);}
-   s+=`<g transform="translate(0,${sh+85+rows*62})">${$('plots').innerHTML}</g>`+text(18,height-12,'EM4 · MPSI · E. Guillaume',c.muted,13);
-   const xml=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${height}" viewBox="0 0 ${w} ${height}"><style>text{font-family:Arial,Helvetica,sans-serif}</style>${s}</svg>`,url=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download=config.file+'.svg';link.click();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('Image SVG enregistrée.');};
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('panel-open'))panel(false);if(/INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement.tagName)||document.querySelector('dialog[open]')||e.ctrlKey||e.metaKey||e.altKey)return;if(e.code==='Space'){e.preventDefault();config.play();}if(e.key.toLowerCase()==='r')config.reset();if(e.key.toLowerCase()==='f')full();});
-  let resizePending=false;new ResizeObserver(()=>{if(resizePending)return;resizePending=true;requestAnimationFrame(()=>{resizePending=false;if(innerWidth>1000&&document.body.classList.contains('panel-open'))panel(false);const hidden=innerWidth<=1000&&!document.body.classList.contains('panel-open');$('controls').inert=hidden;$('controls').setAttribute('aria-hidden',String(hidden));redraw();});}).observe(document.querySelector('.main'));
-  theme();return {panel};
- }
- return {$,esc,clamp,fmt,si,quantity,palette,path,line,arrow,text,halo,rect,field,select,section,buttons,bindFields,syncFields,metric,dimensions,charts,coil,resistor,inductor,source,badge,bar,setup,toast};
+
+/* =====================================================================
+   Outils communs des animations d'induction (EM4, copie des outils EM3) · AnimKit
+   - EMK.unit(max, unité) : préfixe SI lisible (m, µ, n, k) pour les axes et mesures
+   - EMK.vt(...)          : lettre surmontée d'une flèche (vecteur) dans un texte SVG
+   - EMK.tplot(...)       : graphe temporel tracé jusqu'à l'instant courant (option « futur »),
+                            tangente, aire algébrique sous la courbe, courbes fantômes
+   - EMK.split(box, n)    : découpe verticale d'un panneau en n graphes
+   ===================================================================== */
+'use strict';
+globalThis.EMK=(()=>{
+  const PREF=[[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n']];
+  /** facteur et préfixe pour que max soit entre 1 et 1000 */
+  function unit(max,u){
+    max=Math.abs(max);
+    if(!(max>0)||!isFinite(max))return {f:1,u};
+    for(const[s,p]of PREF)if(max>=s*.9995)return {f:1/s,u:p+u};
+    return {f:1e9,u:'n'+u};
+  }
+  function vt(a,x,y,l,sub,o={}){
+    const S=a.S,k=a.k,size=o.size??16,fs=size*k,wl=.62*fs,w=wl+(sub?.42*fs*String(sub).length:0);
+    const x0=o.anchor==='middle'?x-w/2:o.anchor==='end'?x-w:x;
+    return S.text(x0,y,S.v(l,sub),{size,c:o.c,weight:o.weight})+S.arrow(x0+.08*fs,y-.68*fs,x0+wl+.05*fs,y-.68*fs,{c:o.c,w:.9,head:4.2*k});
+  }
+  function split(P,n,gap){
+    const k=1,g=gap??6;const h=(P.h-g*(n-1))/n;
+    return Array.from({length:n},(_,i)=>({x:0,y:i*(h+g),w:P.w,h}));
+  }
+  /**
+   * o = {box, T, xmin, t, futur, n, ylab, xlab, sym:true (axe symétrique),
+   *      series:[{f|vals, c, w, dash, all(true : toujours entière), ghost}],
+   *      tangent:{f, df, c}, area:{f, c}, id, marks:[{x, label, c}]}
+   */
+  function tplot(a,o){
+    const S=a.S,k=a.k,C=a.C,n=o.n||300,x0=o.xmin??0,T=o.T,box=o.box;
+    const xs=Array.from({length:n+1},(_,i)=>x0+(T-x0)*i/n);
+    const ser=o.series.map(s=>({...s,v:s.vals||xs.map(s.f)}));
+    let lo=Infinity,hi=-Infinity;
+    for(const s of ser)for(const v of s.v)if(isFinite(v)){if(v<lo)lo=v;if(v>hi)hi=v}
+    if(o.zero!==false){lo=Math.min(lo,0);hi=Math.max(hi,0)}
+    if(o.sym){const m=Math.max(Math.abs(lo),Math.abs(hi));lo=-m;hi=m}
+    if(!(hi-lo>1e-30)){hi=1;lo=o.sym?-1:0}
+    const pd=(hi-lo)*.08;
+    const G=S.graph({x:box.x+4*k,y:box.y+2*k,w:box.w-8*k,h:box.h-4*k,xmin:x0,xmax:T,ymin:lo-(lo<0?pd:0),ymax:hi+pd,
+      xlab:o.xlab??`${S.v('t')} (s)`,ylab:o.ylab,padL:o.padL});
+    const tc=Math.max(x0,Math.min(T,o.t));
+    const id=(o.id||'g')+Math.round(box.y);
+    let s=G.svg+S.clip(id,G);
+    const upto=(v,all)=>{const pts=[];for(let i=0;i<=n;i++){if(!all&&xs[i]>tc+1e-12)break;pts.push([xs[i],v[i]])}return pts};
+    if(o.area){
+      const pts=[];for(let i=0;i<=n;i++){if(xs[i]>tc+1e-12)break;pts.push([xs[i],o.area.f(xs[i])])}
+      pts.push([tc,o.area.f(tc)]);
+      if(pts.length>1){const d='M'+G.X(pts[0][0]).toFixed(1)+','+G.Y(0).toFixed(1)+pts.map(p=>'L'+G.X(p[0]).toFixed(1)+','+G.Y(p[1]).toFixed(1)).join('')+'L'+G.X(tc).toFixed(1)+','+G.Y(0).toFixed(1)+'Z';
+        s+=`<g clip-path="url(#${id})"><path d="${d}" fill="${o.area.c}" fill-opacity=".22" stroke="none"/></g>`}
+    }
+    for(const sr of ser){
+      const all=o.futur||sr.all, pts=upto(sr.v,all);
+      if(!all&&!sr.vals&&sr.f)pts.push([tc,sr.f(tc)]);
+      s+=S.curve(pts,G,{c:sr.c,w:sr.w??2.4,dash:sr.dash?`${6*k} ${4*k}`:undefined,op:sr.op});
+    }
+    if(o.tangent){
+      const y0=o.tangent.f(tc),sl=o.tangent.df(tc),L=(T-x0)*.16;
+      s+=S.curve([[tc-L,y0-sl*L],[tc+L,y0+sl*L]],G,{c:o.tangent.c||C.pred,w:1.8,dash:`${5*k} ${3*k}`});
+    }
+    for(const m of o.marks||[]){if(m.x<x0||m.x>T)continue;
+      s+=S.line(G.X(m.x),G.y0,G.X(m.x),G.y0+G.h,{c:m.c||C.pred,w:1.2,dash:`${2*k} ${3*k}`})+S.text(G.X(m.x)+4*k,G.y0+4*k,m.label,{base:'top',size:13,c:m.c||C.pred})}
+    s+=S.line(G.X(tc),G.y0,G.X(tc),G.y0+G.h,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`});
+    for(const sr of ser)if(sr.f&&!sr.ghost){const y=sr.f(tc);if(isFinite(y))s+=S.circle(G.X(tc),G.Y(y),3.8*k,{fill:sr.c})}
+    return {svg:s,G};
+  }
+  return Object.freeze({unit,vt,split,tplot});
 })();
-</script><script>'use strict';
-(()=>{
- const U=EM4UI,P=EM4Physics,{$,fmt,quantity:q,palette,field,select,section,buttons,text,halo,line,arrow,rect}=U;
- const state={mode:'geometry',q:0,playing:false,zoom:1,equivalent:false,speed:1,geometry:{N:1000,l:10,a:1,i:1},electrical:{E:6,R0:8,R:2,program:'rise'},cut:{L:.5,R:10,E:12,Rp:100,Vd:.7,delta:1,protection:'open'}};
- let plot=null,dirty=true,drag=null,last=0;
- function params(){if(state.mode==='rupture')return {...state.cut,delta:state.cut.delta*.001};return {...state.geometry,...state.electrical,l:state.geometry.l*.01,a:state.geometry.a*.01};}
- function sampleAt(t){const p=params();return state.mode==='geometry'?P.solenoid(p):state.mode==='transient'?P.rl(p,t):P.rupture(p,t);}
- function duration(){return state.mode==='geometry'?1:sampleAt(0).T;}
- function sample(){return sampleAt(state.q*duration());}
- function pause(){state.playing=false;updateTransport();}
- function restart(){state.q=0;pause();dirty=true;render();}
- function setMode(mode){state.mode=mode;state.q=0;pause();dirty=true;panel();render();}
- function changed(){state.q=0;pause();dirty=true;U.syncFields({...state.geometry,...state.electrical,...(state.mode==='rupture'?state.cut:{})});render();}
- function panel(){const g=state.geometry,e=state.electrical,c=state.cut;
-  let h=section('Situations caractéristiques',select('preset','Accès rapide',state.mode==='geometry'?[['default','Bobine du cours'],['double','Deux fois plus de spires'],['reverse','Courant inversé'],['zero','Courant nul']]:state.mode==='transient'?[['rise','Établissement'],['decay','Décharge depuis le régime permanent']]:[['open','Coupure estimée sur Δt'],['resistor','Résistance de protection'],['diode','Diode de roue libre']],state.mode==='transient'?e.program:state.mode==='rupture'?c.protection:'default'));
-  if(state.mode!=='rupture'){
-   h+=section('Bobine longue · air',field('N','Nombre de spires N',100,2000,50,g.N)+field('l','Longueur l',10,40,.5,g.l,'cm')+field('a','Rayon a',.5,2,.05,g.a,'cm')+(state.mode==='geometry'?field('i','Courant i',-3,3,.01,g.i,'A')+buttons([['reverse','Inverser i']]):'')+'<p class="small-note">Modèle du solénoïde long : champ uniforme à l’intérieur, effets de bord négligés. Les poignées règlent la géométrie entre deux essais.</p>');
-   if(state.mode==='transient')h+=section('Circuit électrique',field('E','F.é.m. E',1,24,.5,e.E,'V')+field('R0','Résistance R₀',1,100,.5,e.R0,'Ω')+field('R','Résistance de la bobine',.5,30,.5,e.R,'Ω')+'<div class="explain">En décharge, le générateur est retiré et la boucle R₀ + R reste fermée. Le courant initial est celui du régime permanent : E/(R₀ + R).</div>');
-  }else h+=section('Bobine et coupure',field('L','Inductance L',.05,2,.05,c.L,'H')+field('E','F.é.m. E',3,24,.5,c.E,'V')+field('R','Résistance de la bobine',5,50,1,c.R,'Ω')+(c.protection==='open'?field('delta','Durée Δt imposée',.1,10,.1,c.delta,'ms')+'<div class="explain">Le courant décroît linéairement sur Δt. Il s’agit de l’estimation du TD ; la tension de claquage de l’air n’est pas calculée.</div>':c.protection==='resistor'?field('Rp','Résistance de protection R′',10,500,5,c.Rp,'Ω')+'<div class="explain">Après ouverture, le courant de la bobine se referme par R′. L’énergie se dissipe dans R et R′.</div>':field('Vd','Tension directe de la diode',.1,1.2,.05,c.Vd,'V')+'<div class="explain">Diode bloquée avant ouverture ; puis chute directe constante Vᴅ. Le courant s’éteint progressivement.</div>'));
-  if(state.mode!=='geometry')h+=section('Lecture du phénomène',select('speed','Vitesse d’affichage',[['.25','Ralenti ×0,25'],['1','Lecture normale'],['2','Lecture ×2']],state.speed)+'<p class="small-note">Un essai complet dure environ 8 s à l’écran. L’axe des courbes donne le temps physique.</p>');
-  h+=section('Lecture du schéma','<p class="small-note">Bleu : champ propre. Orange : courant conventionnel. Vert : flux. La teinte à l’intérieur de la bobine code l’énergie magnétique ; les spires représentées sont échantillonnées.</p><p class="small-note">Bilan détaille les puissances et les énergies à l’instant choisi.</p>');
-  $('panel-content').innerHTML=h;
-  U.bindFields((id,v)=>{if(state.mode==='rupture')state.cut[id]=v;else if(id in state.geometry)state.geometry[id]=v;else state.electrical[id]=v;changed();});
-  $('preset').onchange=ev=>{const v=ev.target.value;if(state.mode==='geometry'){Object.assign(g,{N:1000,l:10,a:1,i:1});if(v==='double')g.N=2000;if(v==='reverse')g.i=-1;if(v==='zero')g.i=0;}else if(state.mode==='transient')e.program=v;else c.protection=v;changed();panel();};
-  if($('reverse'))$('reverse').onclick=()=>{g.i=-g.i;changed();};if($('speed'))$('speed').onchange=e=>state.speed=Number(e.target.value);
- }
- function solenoidDrawing(b,m,p){const c=palette(),proj=document.body.classList.contains('projection'),f=proj?25:21,small=b.w<380;
-  const cx=b.x+b.w*.52,physical=state.mode!=='rupture',len=physical?p.l:.1,a=physical?p.a:.014,compact=b.h<240;
-  const s=(compact?b.w*.67/len:Math.min(b.w*.67/len,Math.max(16,b.h-145)/(2*a)))*state.zoom,L=Math.min(b.w*.81,len*s),r=compact?Math.min(Math.max(12,(b.h-112)/2),Math.max(12,a*s)):Math.min(Math.max(8,(b.h-145)/2),Math.max(8,a*s)),cy=compact?b.y+65+r:b.y+Math.max(72+r,b.h*.46),x1=cx-L/2,x2=cx+L/2;
-  const intensity=physical?Math.abs(m.B)/(Math.abs(m.B)+.001):m.energy/(m.E0+.0001),B=physical?m.B:m.i;
-  const title=physical?(b.w<500?'Champ propre':'Champ propre · bobine longue'):(b.w<500?'Énergie du champ':'Énergie du champ magnétique');
-  let h=text(b.x+13,b.y+24,title,c.muted,proj?18:15);
-  // La valeur reste dans le bandeau supérieur ; le dessin commence plus bas.
-  h+=text(b.x+b.w-14,b.y+25,physical?'B_P = '+q(m.B,'T'):'E_mag = '+q(m.energy,'J'),c.field,small?18:f,'end','id="self-field-label"');
-  h+='<g id="self-field-geometry">';
-  if(B!==0){const returnControl=Math.max(b.y+55,cy-r*1.9),returnArrow=Math.max(b.y+55,cy-r*1.45);h+=`<path d="M${x1},${cy-r*.45} C${x1-35},${returnControl} ${x2+35},${returnControl} ${x2},${cy-r*.45}" fill="none" stroke="${c.field}" stroke-width="1.7" opacity=".45"/>`;h+=arrow(B>0?[x2-12,returnArrow]:[x1+12,returnArrow],B>0?[x1+12,returnArrow]:[x2-12,returnArrow],c.field,1.5);}
-  h+=U.coil(x1,x2,cy,r,c.current,physical?Math.min(27,Math.round(p.N/75)+4):16,c.field,.27*(physical?m.density/(m.density+40):intensity));
-  if(B!==0){const d=L*(.22+.52*intensity),mid=(x1+x2)/2;[-.38,.38].forEach(v=>h+=arrow([mid-(B>0?1:-1)*d/2,cy+r*v],[mid+(B>0?1:-1)*d/2,cy+r*v],c.field,2.5));}
-  h+='</g>';
-  if(Math.abs(m.i)>1e-15)h+=arrow([x1-r*.22,cy-(m.i>0?14:-14)],[x1-r*.22,cy+(m.i>0?14:-14)],c.current,3.4);
-  h+=halo(x1-r*.22-10,cy+7,'i',c.current,f,'end');
-  const by=compact?cy:Math.min(b.y+b.h-48,cy+r+30);if(!compact)h+=arrow([x1+8,by],[x2-8,by],c.normal,1.6,true)+text(cx,by+24,physical?'l = '+q(p.l,'m'):'L = '+q(p.L,'H'),c.ink,small?18:f,'middle');
-  h+=text(cx,b.y+b.h-12,physical?(compact?'N = '+fmt(p.N,0)+' · l = '+q(p.l,'m')+' · a = '+q(p.a,'m'):'N = '+fmt(p.N,0)+' · a = '+q(p.a,'m')):(compact?'L = '+q(p.L,'H')+' · i(0) = '+q(m.I0,'A'):'i(0) = '+q(m.I0,'A')),c.muted,small?15:17,'middle');
-  if(state.mode==='geometry')h+=`<g data-drag="l" role="button" tabindex="0" aria-label="Modifier la longueur ; flèches gauche et droite"><circle cx="${x2}" cy="${by}" r="16" fill="transparent"/><circle cx="${x2}" cy="${by}" r="6.5" fill="${c.surface}" stroke="${c.normal}" stroke-width="2"/></g><g data-drag="a" role="button" tabindex="0" aria-label="Modifier le rayon ; flèches haut et bas"><circle cx="${cx}" cy="${cy-r}" r="16" fill="transparent"/><circle cx="${cx}" cy="${cy-r}" r="6.5" fill="${c.surface}" stroke="${c.normal}" stroke-width="2"/></g>`;
-  return h;
- }
- function circuitDrawing(b,m,p){const c=palette(),proj=document.body.classList.contains('projection'),f=proj?25:20,xl=b.x+57,xr=b.x+b.w-69,yt=b.y+61,yb=b.y+b.h-40,ym=yt+(yb-yt)*.35,cut=state.mode==='rupture',decay=!cut&&p.program==='decay';
-  let h=text(b.x+13,b.y+24,state.equivalent?'Schéma équivalent · f.é.m. e_P':'Circuit électrique',c.muted,proj?18:15);
-  h+=line([xl,yt],[xl,yb],c.ink)+line([xl,yb],[xr,yb],c.ink)+line([xr,yt],[xr,ym-23],c.ink)+line([xr,ym+23],[xr,yb],c.ink);
-  h+=U.inductor(xr,ym,46,c.current,state.equivalent);
-  h+=U.resistor([xr,ym+25],[xr,yb],c.ink,true);
-  h+=text(xr+12,(ym+25+yb)/2+6,'R',c.ink,18);
-  if(!decay){h+=U.source(xl,ym,17,c.ink,'=')+text(xl-25,ym+7,'E',c.ink,f,'end');}else h+=text(xl-12,ym+7,'0',c.muted,17,'end');
-  const sx=xl+(xr-xl)*.52,sw=30;h+=line([xl,yt],[sx-sw/2,yt],c.ink)+line([sx+sw/2,yt],[xr,yt],c.ink);
-  if(cut){h+=line([sx-sw/2,yt],[sx+sw/2,yt-16],c.ink,2.2)+text(sx+28,yt-8,'K',c.muted,16);if(p.protection==='open'&&m.i>1e-6){h+=`<path d="M${sx-11},${yt} l7,-11 5,10 6,-12 4,10" fill="none" stroke="${c.emf}" stroke-width="2.5"/>`;}const px=(xl+xr)/2;
-   if(p.protection!=='open'){h+=line([px,yt],[px,yb],c.ink);if(p.protection==='resistor')h+=U.resistor([px,ym-20],[px,ym+20],c.flux,true)+text(px-12,ym+5,'R′',c.flux,f,'end');else{h+=`<path d="M${px-9},${ym+9} L${px},${ym-8} L${px+9},${ym+9} Z" fill="${c.surface}" stroke="${c.flux}" stroke-width="2"/>`+line([px-10,ym-10],[px+10,ym-10],c.flux,2)+text(px-13,ym+7,'D',c.flux,f,'end');}h+=arrow([px,ym+35],[px,ym+17],c.flux,2.2);}
-  }else{h+=line([sx-sw/2,yt],[sx+sw/2,yt],c.ink,2.4);h+=U.resistor([xl+13,yt],[sx-20,yt],c.ink)+text((xl+sx-7)/2,yt-13,'R₀',c.ink,18,'middle');}
-  h+=arrow([xr+29,state.equivalent?ym-25:ym+25],[xr+29,state.equivalent?ym+25:ym-25],c.emf,2.1)+text(xr+38,ym+7,state.equivalent?'e_P':'u_L',c.emf,f);
-  if(Math.abs(m.i)>1e-15)h+=arrow([xr-15,yb],[xr-65,yb],c.current,3)+halo(xr-39,yb-10,'i',c.current,f,'middle');
-  if(cut)h+=text((xl+xr)/2,b.y+b.h-18,'u_K = '+q(m.UK,'V'),c.emf,Math.min(f,b.w/15),'middle');
-  else h+=text((xl+xr)/2,b.y+b.h-10,decay?'i(0) = E/(R₀ + R)':'i(0) = 0',c.muted,17,'middle');
-  return h;
- }
- function renderScene(m,p){const svg=$('scene'),{w,h}=U.dimensions(svg),c=palette(),stack=w<650,b1={x:0,y:0,w:stack?w:w*.55,h:stack?h*.5:h},b2={x:stack?0:w*.55,y:stack?h*.5:0,w:stack?w:w*.45,h:stack?h*.5:h};let s=solenoidDrawing(b1,m,p);
-  s+=line(stack?[12,h*.5]:[w*.55,12],stack?[w-12,h*.5]:[w*.55,h-12],c.line,1);
-  if(state.mode==='geometry'){const x=b2.x+22,fs=document.body.classList.contains('projection')?25:21,showBar=b2.h>=240,step=Math.min(46,(b2.h-(showBar?110:65))/3);s+=text(x,b2.y+25,'Du champ au flux lié',c.muted,16)+text(x,b2.y+35+step,'B_P = μ₀ (N/l) i',c.field,fs)+text(x,b2.y+35+2*step,'Φ₁ spire = B_P S',c.flux,fs)+text(x,b2.y+35+3*step,'Φ_P = N Φ₁ spire = L i',c.flux,fs);if(showBar)s+=U.bar(x,b2.y+b2.h-21,b2.w-44,10,m.energy,P.solenoid({...p,i:3}).energy,c.field,'Énergie magnétique',q(m.energy,'J'));}
-  else s+=circuitDrawing(b2,m,p);svg.innerHTML=s;
- }
- function buildPlots(){const c=palette(),p=params(),T=duration(),points=fn=>Array.from({length:401},(_,j)=>{const x=state.mode==='geometry'?-3+6*j/400:T*j/400;return [x,fn(x)];});let specs;
-  if(state.mode==='geometry')specs=[{min:-3,max:3,xLabel:'i',xUnit:'A',unit:'Wb',series:[{key:'phi',name:'Φ_P',color:c.flux,points:points(i=>P.solenoid(p,i).phi)}]},{min:-3,max:3,xLabel:'i',xUnit:'A',unit:'J',series:[{key:'energy',name:'E_mag',color:c.field,points:points(i=>P.solenoid(p,i).energy)}]}];
-  else specs=[{min:0,max:T,unit:'A',series:[{key:'i',name:'i',color:c.current,points:points(t=>sampleAt(t).i)}]},{min:0,max:T,unit:'V',series:state.mode==='rupture'?[{key:'ep',name:'e_P',color:c.emf,points:points(t=>sampleAt(t).ep)},{key:'UK',name:'u_K',color:c.normal,dash:true,points:points(t=>sampleAt(t).UK)}]:[{key:state.equivalent?'ep':'uL',name:state.equivalent?'e_P':'u_L',color:c.emf,points:points(t=>sampleAt(t)[state.equivalent?'ep':'uL'])}]}];
-  plot=U.charts($('plots'),specs);dirty=false;
- }
- function render(){const p=params(),m=sample();document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('equivalent').hidden=state.mode==='geometry';$('equivalent').setAttribute('aria-pressed',String(state.equivalent));$('scene-kicker').textContent=state.mode==='geometry'?'Explorer la géométrie et le flux propre':state.mode==='transient'?'Établissement et restitution de l’énergie':'Surtension et protection de l’interrupteur';
-  renderScene(m,p);
-  if(state.mode==='geometry'){U.metric(0,'Inductance L',m.L,'H','L est positive','field');U.metric(1,'Flux propre Φₚ',m.phi,'Wb','Flux lié aux N spires','flux');U.metric(2,'Courant i',m.i,'A','Valeur algébrique','current');U.metric(3,'Énergie magnétique',m.energy,'J','½ L i²','field');$('scene-state').textContent='Φ₁ spire = '+q(m.phiTurn,'Wb');$('scene-hint').textContent='Poignées : rayon et longueur · teinte : énergie du champ';$('plot-formula').innerHTML='Φ<sub>P</sub> = L i &nbsp; · &nbsp; E<sub>mag</sub> = ½ L i²';$('plot-note').textContent='Glisser sur une courbe pour régler i';}
-  else if(state.mode==='transient'){U.metric(0,'Courant i',m.i,'A','I∞ = '+q(m.I,'A'),'current');U.metric(1,state.equivalent?'F.é.m. eₚ':'Tension uL',state.equivalent?m.ep:m.uL,'V',state.equivalent?'Convention générateur':'Convention récepteur','emf');U.metric(2,'Constante de temps τ',m.tau,'s','L = '+q(m.L,'H'),'normal');U.metric(3,'Énergie magnétique',m.energy,'J','Stockée dans le champ','field');$('scene-state').textContent=p.program==='decay'?'La bobine restitue son énergie.':'Le courant s’établit progressivement.';$('scene-hint').textContent='Φₚ = '+q(m.phi,'Wb');$('plot-formula').innerHTML=p.program==='decay'?'L di/dt + (R₀ + R)i = 0':'E = (R₀ + R)i + L di/dt';$('plot-note').textContent='Même instant sur les deux courbes';}
-  else{U.metric(0,'Courant i',m.i,'A','i(0) = '+q(m.I0,'A'),'current');U.metric(1,'Tension sur K',m.UK,'V','Source incluse : uK','normal');U.metric(2,'F.é.m. eₚ',m.ep,'V','−L di/dt','emf');U.metric(3,'Énergie magnétique',m.energy,'J','Initialement '+q(m.E0,'J'),'field');$('scene-state').textContent=p.protection==='open'?'Décroissance linéaire imposée sur Δt.':p.protection==='resistor'?'Le courant se referme par R′.':'La diode conduit pendant la décharge.';$('scene-hint').textContent='Bilan : comparer les protections';$('plot-formula').innerHTML=p.protection==='open'?'e<sub>P</sub> ≈ L I₀/Δt':p.protection==='resistor'?'L di/dt + (R + R′)i = 0':'L di/dt + R i + V<sub>D</sub> = 0';$('plot-note').textContent='Courbes calculées pour la protection choisie';}
-  if(dirty)buildPlots();plot.update(state.mode==='geometry'?p.i:state.q*duration(),m);updateTransport();
- }
- function updateTransport(){$('play').textContent=state.playing?'❚❚ Pause':'▶ Lecture';$('play').setAttribute('aria-pressed',String(state.playing));$('play').disabled=state.mode==='geometry';$('scrub').value=state.mode==='geometry'?(state.geometry.i+3)/6:state.q;$('time').textContent=state.mode==='geometry'?'i réglable':'t = '+q(state.q*duration(),'s');$('status').textContent=state.mode==='geometry'?'Géométrie fixe pendant chaque essai':state.playing?'Lecture ralentie':state.q>=1?'Fin de l’essai':'Temps figé';}
- function play(){if(state.mode==='geometry')return;if(state.q>=1)state.q=0;state.playing=!state.playing;last=performance.now();updateTransport();}
- function scrub(x){pause();if(state.mode==='geometry'){state.geometry.i=Number((-3+6*x).toFixed(2));U.syncFields(state.geometry);}else state.q=x;render();}
- function balance(){const m=sample(),p=params();let formula,rows,note;
-  if(state.mode==='geometry'){formula='E<sub>mag</sub> = ½ L i² = [B²/(2μ₀)] S l';rows=[['Champ magnétique',q(m.B,'T')],['Flux à travers une spire',q(m.phiTurn,'Wb')],['Flux lié aux N spires',q(m.phi,'Wb')],['Densité d’énergie',q(m.density,'J/m³')],['Volume intérieur',fmt(m.volume*1e6,2)+' cm³'],['Énergie du champ',q(m.energy,'J')]];note='La densité d’énergie est uniforme dans le volume intérieur du solénoïde long. La teinte est un codage graphique, sans effet de matériau.';}
-  else if(state.mode==='transient'){formula='P<sub>géné</sub> = (R₀ + R)i² + dE<sub>mag</sub>/dt';rows=[['Puissance du générateur',q(m.Psource,'W')],['Puissance dissipée par effet Joule',q(m.Pjoule,'W')],['Variation de l’énergie du champ',q(m.dEnergy,'W')],['Énergie magnétique initiale',q(m.E0,'J')],['Énergie fournie depuis t = 0',q(m.Eg,'J')],['Énergie dissipée depuis t = 0',q(m.Q,'J')],['Énergie magnétique restante',q(m.energy,'J')]];note='Bilan intégré : E_mag(0) + E_fournie = E_Joule + E_mag(t). Une variation négative de l’énergie signifie une restitution par la bobine.';}
-  else{formula='P<sub>géné</sub> = R i² + P<sub>protection</sub> + dE<sub>mag</sub>/dt';rows=[['Énergie magnétique initiale',q(m.E0,'J')],['Énergie fournie pendant la coupure',q(m.Eg,'J')],['Dissipation dans la résistance R',q(m.Qcoil,'J')],[p.protection==='open'?'Dissipation de l’arc imposé':'Dissipation dans la protection',q(m.Qprotection,'J')],['Énergie magnétique restante',q(m.energy,'J')],['Tension instantanée sur K',q(m.UK,'V')]];note='Pour la coupure à Δt imposé, le générateur fournit encore de l’énergie pendant l’extinction. L’arc est une représentation illustrative ; aucun modèle de claquage n’est utilisé. Pour R′ et la diode, le générateur est isolé après l’ouverture.';}
-  $('balance-content').innerHTML=`<div class="equation">${formula}</div><div class="balance-grid">${rows.map(([a,b])=>`<span>${a}</span><strong>${b}</strong>`).join('')}</div><p>${note}</p>`;
-  if(state.mode==='rupture'){const peakOpen=p.E+p.L*m.I0/p.delta,peakR=p.E+p.Rp*m.I0,peakD=p.E+p.Vd;$('balance-content').innerHTML+=`<h3>Comparaison avec les mêmes L, R et E</h3><div class="balance-grid"><span>Coupure linéaire : sup uK</span><strong>${q(peakOpen,'V')}</strong><span>Résistance R′ : max uK</span><strong>${q(peakR,'V')}</strong><span>Diode : max uK</span><strong>${q(peakD,'V')}</strong></div><p class="balance-caption">La protection réduit la surtension en laissant au courant un chemin de décharge. Avec les valeurs du TD, la diode donne une décroissance plus lente que R′.</p>`;}
- }
- document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));$('equivalent').onclick=()=>{state.equivalent=!state.equivalent;dirty=true;render();};
- const svg=$('scene');svg.addEventListener('pointerdown',e=>{const target=e.target.closest('[data-drag]');if(!target||state.mode!=='geometry')return;pause();drag={id:target.dataset.drag,x:e.clientX,y:e.clientY,value:state.geometry[target.dataset.drag]};svg.setPointerCapture(e.pointerId);});svg.addEventListener('pointermove',e=>{if(!drag)return;state.geometry[drag.id]=drag.id==='l'?Math.round(U.clamp(drag.value+(e.clientX-drag.x)*.08,10,40)*2)/2:Math.round(U.clamp(drag.value-(e.clientY-drag.y)*.012,.5,2)*20)/20;changed();});svg.addEventListener('pointerup',()=>drag=null);svg.addEventListener('pointercancel',()=>drag=null);svg.addEventListener('keydown',e=>{const t=e.target.closest('[data-drag]');if(!t||!e.key.startsWith('Arrow'))return;e.preventDefault();const id=t.dataset.drag;state.geometry[id]=Number(U.clamp(state.geometry[id]+((e.key==='ArrowRight'||e.key==='ArrowUp')?1:-1)*(id==='l'?.5:.05),id==='l'?10:.5,id==='l'?40:2).toFixed(2));changed();svg.querySelector(`[data-drag="${id}"]`)?.focus();});
- panel();U.setup({title:'Auto-induction : champ et énergie',file:'EM4_Auto_Induction',redraw(){dirty=true;render();},pause,play,reset:restart,balance,scrub,zoom(d){state.zoom=d?U.clamp(state.zoom+d,.65,1.3):1;render();},chart(e){if(!plot)return;const x=plot.xAt(e);scrub(state.mode==='geometry'?(x+3)/6:x/duration());},caption:()=>state.mode==='geometry'?'Bobine longue dans l’air':state.mode==='transient'?(state.electrical.program==='decay'?'Décharge':'Établissement')+' · t = '+q(state.q*duration(),'s'):'Coupure : '+state.cut.protection+' · t = '+q(state.q*duration(),'s')});
- function tick(now){if(state.playing){const dt=Math.min(.08,(now-last)/1000);state.q=Math.min(1,state.q+dt*state.speed/8);if(state.q>=1)state.playing=false;render();}last=now;requestAnimationFrame(tick);}requestAnimationFrame(tick);
- window.EM4App={state,params,sample,sampleAt,setMode,render,balance,advance(seconds){state.q=U.clamp(state.q+seconds/duration(),0,1);render();}};
+
+
+/* Symboles de circuit (normes françaises usuelles), en pixels d'écran.
+   Chaque fonction renvoie une chaîne SVG ; a = application AnimKit. */
+globalThis.EMC=(()=>{
+  const W=(a,x1,y1,x2,y2,c)=>a.S.line(x1,y1,x2,y2,{c:c||a.C.ink,w:2});
+  /** résistance (rectangle) entre deux points alignés */
+  function res(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,len=Math.min(o.len??34*k,L*.8),wd=o.wd??11*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(s,t)=>[mx+ux*s-uy*t,my+uy*s+ux*t];const q=[p(-len/2,-wd/2),p(len/2,-wd/2),p(len/2,wd/2),p(-len/2,wd/2)];
+    return W(a,x1,y1,mx-ux*len/2,my-uy*len/2,c)+W(a,mx+ux*len/2,my+uy*len/2,x2,y2,c)+S.poly(q,{c,w:2,fill:a.C.card,close:true});}
+  /** bobine idéale (quatre demi-boucles) */
+  function ind(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,len=Math.min(o.len??44*k,L*.85),n=4,r=len/(2*n),mx=(x1+x2)/2,my=(y1+y2)/2,sd=o.side??1;
+    const s0=[mx-ux*len/2,my-uy*len/2];let d=`M${s0[0].toFixed(1)},${s0[1].toFixed(1)}`;
+    for(let j=0;j<n;j++){const e=[s0[0]+ux*2*r*(j+1),s0[1]+uy*2*r*(j+1)];d+=`A${r.toFixed(1)},${r.toFixed(1)} 0 0 ${sd>0?1:0} ${e[0].toFixed(1)},${e[1].toFixed(1)}`;}
+    return W(a,x1,y1,s0[0],s0[1],c)+W(a,mx+ux*len/2,my+uy*len/2,x2,y2,c)+S.path(d,{c,w:2.4});}
+  /** générateur : cercle ; type '=' (continu) ou '~' ; flèche de f.é.m. facultative */
+  function gen(a,x,y,o={}){const S=a.S,k=a.k,c=o.c||a.C.ink,r=o.r??15*k;let s=S.circle(x,y,r,{fill:a.C.card,c,w:2});
+    if(o.type==='~')s+=S.path(`M${x-r*.55},${y}c${r*.18},${-r*.5} ${r*.37},${-r*.5} ${r*.55},0s${r*.37},${r*.5} ${r*.55},0`,{c,w:1.8});
+    else s+=S.line(x-r*.5,y-r*.22,x+r*.5,y-r*.22,{c,w:1.8})+S.line(x-r*.3,y+r*.22,x+r*.3,y+r*.22,{c,w:1.8});
+    return s;}
+  /** interrupteur entre (x1,y) et (x2,y) : ouvert ou fermé */
+  function sw(a,x1,y,x2,open,o={}){const S=a.S,k=a.k,c=o.c||a.C.ink;return S.circle(x1,y,2.6*k,{fill:c})+S.circle(x2,y,2.6*k,{fill:c})+S.line(x1,y,open?x2-2*k:x2,open?y-(x2-x1)*.55:y,{c,w:2.2});}
+  /** diode passante dans le sens (x1,y1)→(x2,y2) */
+  function diode(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,s=10*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(t,n)=>[mx+ux*t-uy*n,my+uy*t+ux*n];
+    return W(a,x1,y1,mx-ux*s,my-uy*s,c)+W(a,mx+ux*s,my+uy*s,x2,y2,c)+S.poly([p(-s,-s),p(-s,s),p(s,0)],{c,w:2,fill:a.C.card,close:true})+S.line(...p(s,-s),...p(s,s),{c,w:2.2});}
+  /** condensateur */
+  function cap(a,x1,y1,x2,y2,o={}){if(!(Math.hypot(x2-x1,y2-y1)>1))return '';const S=a.S,k=a.k,c=o.c||a.C.ink,L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,g=4*k,hw=11*k,mx=(x1+x2)/2,my=(y1+y2)/2;
+    const p=(t,n)=>[mx+ux*t-uy*n,my+uy*t+ux*n];
+    return W(a,x1,y1,...p(-g,0),c)+W(a,...p(g,0),x2,y2,c)+S.line(...p(-g,-hw),...p(-g,hw),{c,w:2.4})+S.line(...p(g,-hw),...p(g,hw),{c,w:2.4});}
+  /** flèche de tension (à côté d'un dipôle), de (x1,y1) vers (x2,y2) */
+  function volt(a,x1,y1,x2,y2,lab,o={}){const S=a.S,k=a.k,c=o.c||a.C.F;return S.arrow(x1,y1,x2,y2,{c,w:1.8})+S.text((x1+x2)/2+(o.dx??10*k),(y1+y2)/2+(o.dy??0),lab,{size:15,c,anchor:o.anchor||'start'});}
+  /** flèche de courant (référence) sur un fil */
+  function cur(a,x,y,dir,lab,o={}){const S=a.S,k=a.k,c=o.c||a.C.E,L=o.len??18*k,d=dir==='l'?[-1,0]:dir==='r'?[1,0]:dir==='u'?[0,-1]:[0,1];
+    return S.arrow(x-d[0]*L/2,y-d[1]*L/2,x+d[0]*L/2,y+d[1]*L/2,{c,w:2.4,head:9*k})+S.text(x+(o.lx??(d[1]?12*k:0)),y+(o.ly??(d[0]?-14*k:0)),lab,{size:15,c,anchor:d[1]?'start':'middle'});}
+  /** solénoïde vu de profil : spires échantillonnées, bord supérieur et inférieur */
+  function solenoid(a,x1,x2,cy,r,o={}){const S=a.S,k=a.k,c=o.c||a.C.E,n=o.turns??14;let s='';
+    if(o.fill)s+=S.rect(x1,cy-r,x2-x1,2*r,{fill:o.fill,fop:o.fop??.2});
+    for(let j=0;j<n;j++){const x=x1+(x2-x1)*(j+.5)/n,dx=(x2-x1)/n*.35;
+      s+=S.path(`M${(x-dx).toFixed(1)},${(cy+r).toFixed(1)}L${(x+dx).toFixed(1)},${(cy-r).toFixed(1)}`,{c,w:2.2,op:.9})+S.path(`M${(x+dx).toFixed(1)},${(cy-r).toFixed(1)}L${(x+dx*2.8).toFixed(1)},${(cy+r).toFixed(1)}`,{c,w:1.2,op:.35});}
+    return s;}
+  return Object.freeze({res,ind,gen,sw,diode,cap,volt,cur,solenoid,W});
 })();
-</script></body></html>
+
+// @titre Auto-induction : champ et énergie · EM4 · MPSI
+// @sortie ../EM4_Auto_Induction/EM4_Auto_Induction.html
+// @inclure EM4_physique.js
+// @inclure EM4_commun.js
+// @description Solénoïde long : champ propre, flux propre, inductance et énergie magnétique ; établissement et décharge d'un circuit RL ; surtension de rupture et protections (résistance, diode de roue libre).
+'use strict';
+/* =====================================================================
+   EM4 · Auto-induction : champ et énergie (3 onglets)
+   Physique : EM4Physics (EM4_physique.js, ex-physique.js), équations inchangées :
+   B_P = μ₀ N i / l, Φ_P = N B_P S = L i, L = μ₀ N² S / l, E_mag = ½ L i² = B²/(2μ₀) S l ;
+   E = (R₀ + R) i + L di/dt, τ = L/(R₀ + R) ; coupure : Δt imposé, R′ ou diode en parallèle sur la bobine.
+   Conventions du cours : e_P = −L di/dt en convention générateur, u_L = L di/dt en convention récepteur.
+   Lot 9 : branche de protection redessinée en parallèle sur la bobine (côté bobine de K, comme le calcul),
+   tangente à l'origine et repère τ, barres du bilan d'énergie, flèches proportionnelles.
+   ===================================================================== */
+const M=AnimKit.M,P=EM4Physics,K=EMK,E=EMC,MU0=P.mu0;
+const mv=s=>M.v(s);
+const st={drag:null,geo:null,gr:null};
+
+const geo=a=>({N:a.p.N,l:a.p.l/100,a:a.p.ra/100,i:a.p.i0});
+const rlp=a=>({N:a.p.N,l:a.p.l/100,a:a.p.ra/100,E:a.p.E,R0:a.p.R0,R:a.p.Rb,program:a.p.prog});
+const cutp=a=>({L:a.p.Lc,R:a.p.Rc,E:a.p.Ec,Rp:a.p.Rp,Vd:a.p.Vd,delta:a.p.delta/1000,protection:a.p.prot});
+const at=(a,t)=>a.tab===1?P.rl(rlp(a),t):P.rupture(cutp(a),t);
+const TT=a=>a.tab===0?1:at(a,0).T;
+
+const A=AnimKit.app({
+  code:'EM4',partie:'BleuMarine',chapitre:'EM4 Induction de Neumann',
+  titre:'Auto-induction : champ et énergie',sousTitre:'Flux propre, circuit RL et surtension de rupture',
+  fichier:'Auto_Induction',
+  onglets:['La bobine','Établir et décharger','Coupure et protection'],
+  temps:a=>a.tab>0,pas:.05,
+  curseur:{max:a=>TT(a),get:a=>a.t,set:(a,v)=>{a.t=v}},
+  panneaux:[{id:'scene',poids:2.5,ratioTel:.95},{id:'graphe',poids:1.5,ratioTel:1.05}],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Bobine du cours',titre:'N = 1000, l = 10 cm, a = 1 cm : L = 3.9 mH',onglets:[0],valeurs:{N:1000,l:10,ra:1,i0:1}},
+      {label:'Deux fois plus de spires',onglets:[0],valeurs:{N:2000,l:10,ra:1,i0:1}},
+      {label:'Courant inversé',onglets:[0],valeurs:{i0:-1}},
+      {label:'Courant nul',onglets:[0],valeurs:{i0:0}},
+      {label:'Établissement',onglets:[1],valeurs:{prog:'rise'},lecture:true},
+      {label:'Décharge',titre:'Depuis le régime permanent, générateur retiré',onglets:[1],valeurs:{prog:'decay'},lecture:true},
+      {label:'Coupure sur Δt',titre:'Données du TD : L = 0.5 H, R = 10 Ω, E = 12 V, Δt = 1 ms',onglets:[2],valeurs:{prot:'open',Lc:.5,Rc:10,Ec:12,delta:1},lecture:true},
+      {label:'Résistance R′',onglets:[2],valeurs:{prot:'resistor'},lecture:true},
+      {label:'Diode de roue libre',onglets:[2],valeurs:{prot:'diode'},lecture:true}],items:[]},
+    {titre:'Bobine longue dans l\'air',onglets:[0,1],items:[
+      {id:'N',label:`Nombre de spires ${mv('N')}`,min:100,max:2000,step:50,value:1000,unit:''},
+      {id:'l',label:`Longueur ${mv('l')}`,min:10,max:40,step:.5,value:10,unit:'cm'},
+      {id:'ra',label:`Rayon ${mv('a')}`,min:.5,max:2,step:.05,value:1,unit:'cm'},
+      {id:'i0',label:`Courant ${mv('i')}`,min:-3,max:3,step:.01,value:1,unit:'A',onglets:[0]},
+      {type:'note',onglets:[0],html:'Solénoïde long : champ uniforme à l\'intérieur, effets de bord négligés. Glisser les poignées de la bobine, ou la courbe pour régler <i class="m">i</i>.'}]},
+    {titre:'Circuit RL',onglets:[1],items:[
+      {id:'prog',type:'seg',options:[['rise','Établissement'],['decay','Décharge']],value:'rise'},
+      {id:'E',label:`F.é.m. ${mv('E')}`,min:1,max:24,step:.5,value:6,unit:'V'},
+      {id:'R0',label:`Résistance ${M.v('R','0')}`,min:1,max:100,step:.5,value:8,unit:'Ω'},
+      {id:'Rb',label:`Résistance de la bobine ${mv('R')}`,min:.5,max:30,step:.5,value:2,unit:'Ω'},
+      {type:'note',html:a=>a.p.prog==='decay'?'Décharge : le générateur est retiré, la boucle <i class="m">R</i><sub>0</sub> + <i class="m">R</i> reste fermée ; <i class="m">i</i>(0) = <i class="m">E</i>/(<i class="m">R</i><sub>0</sub> + <i class="m">R</i>).':'Interrupteur fermé à <i class="m">t</i> = 0, bobine initialement sans courant.'}]},
+    {titre:'Bobine et coupure',onglets:[2],items:[
+      {id:'prot',type:'seg',options:[['open','Sans protection'],['resistor','R′'],['diode','Diode']],value:'open'},
+      {id:'Lc',label:`Inductance ${mv('L')}`,min:.05,max:2,step:.05,value:.5,unit:'H'},
+      {id:'Ec',label:`F.é.m. ${mv('E')}`,min:3,max:24,step:.5,value:12,unit:'V'},
+      {id:'Rc',label:`Résistance de la bobine ${mv('R')}`,min:5,max:50,step:1,value:10,unit:'Ω'},
+      {id:'delta',label:'Durée de coupure Δ'+mv('t'),min:.1,max:10,step:.1,value:1,unit:'ms',si:a=>a.p.prot==='open'},
+      {id:'Rp',label:'Résistance de protection '+mv('R')+'′',min:10,max:500,step:5,value:100,unit:'Ω',si:a=>a.p.prot==='resistor'},
+      {id:'Vd',label:`Tension de seuil ${M.v('V','D')}`,min:.1,max:1.2,step:.05,value:.7,unit:'V',si:a=>a.p.prot==='diode'},
+      {type:'note',html:a=>a.p.prot==='open'?'Estimation du TD : le courant décroît linéairement sur Δ<i class="m">t</i>. Le claquage de l\'air n\'est pas calculé ; l\'étincelle est illustrative.':a.p.prot==='resistor'?'R′ est branchée en parallèle sur la bobine : après l\'ouverture de K, le courant de la bobine se referme par R′.':'Diode en parallèle sur la bobine, bloquée avant l\'ouverture, puis passante avec une chute constante <i class="m">V</i><sub>D</sub>.'}]},
+    {titre:'Affichage',onglets:[1,2],items:[
+      {id:'schema',type:'seg',label:'Représentation de la bobine',options:[['reel','Bobine (L, R)'],['equiv','Générateur équivalent e_P']],value:'reel'},
+      {id:'tangente',type:'check',label:'Tangente à l\'origine et τ (prévision)',value:false,onglets:[1]},
+      {id:'bilan',type:'check',label:'Bilan d\'énergie',value:true},
+      {id:'futur',type:'check',label:'Montrer toute l\'évolution (prévision)',value:false}]}
+  ],
+  aide:{
+    voit:'Onglet 1 : une bobine longue de <i class="m">N</i> spires parcourue par un courant <i class="m">i</i>, son champ propre et l\'énergie du champ (teinte). Onglet 2 : un circuit RL à l\'établissement et à la décharge. Onglet 3 : l\'ouverture d\'un interrupteur dans un circuit inductif, sans protection, avec une résistance R′ ou une diode de roue libre en parallèle sur la bobine.',
+    faire:'<ul><li>Glisser l\'extrémité de la bobine (longueur) et le point du haut (rayon) ; glisser sur les courbes pour régler <i class="m">i</i>.</li><li>Lancer la lecture (ralentie : un essai dure environ 8 s à l\'écran, l\'axe des graphes donne le temps physique).</li><li>Afficher la tangente à l\'origine pour lire τ.</li><li>Comparer les trois protections : tension maximale aux bornes de K et répartition de l\'énergie.</li></ul>',
+    modele:'Solénoïde long sans effet de bord ; les spires dessinées sont échantillonnées et les échelles axiale et radiale sont différentes. Lignes de retour schématiques. Circuit RL : solution exacte. Coupure : décroissance linéaire imposée sur Δ<i class="m">t</i> (estimation du TD), ou décharge exponentielle dans <i class="m">R</i> + <i class="m">R</i>′, ou diode à seuil constant. Les flèches de courant et de champ ont une longueur proportionnelle à la grandeur.',
+    cours:'EM4 : flux propre Φ<sub>P</sub> = <i class="m">L i</i>, inductance du solénoïde <i class="m">L</i> = μ₀<i class="m">N</i>²<i class="m">S</i>/<i class="m">l</i> (application : 3.9 mH), f.é.m. auto-induite <i class="m">e</i><sub>P</sub> = −<i class="m">L</i> d<i class="m">i</i>/d<i class="m">t</i> et schémas équivalents, établissement du courant (τ = <i class="m">L</i>/(<i class="m">R</i><sub>0</sub> + <i class="m">R</i>)), énergie magnétique ½<i class="m">L i</i>² = <i class="m">B</i>²/(2μ₀) <i class="m">S l</i>, étincelle de rupture et diode de roue libre (TD).'
+  },
+  change(a,id){if(['schema','tangente','bilan','futur'].includes(id))return;a.t=0;},
+  onglet(a){a.play(false);a.t=0;},
+  reset(a){a.t=0;},
+  step(a,dt){const T=TT(a);a.t=Math.min(T,a.t+dt*T/8);if(a.t>=T-1e-12)a.play(false);},
+  peutLire:a=>{if(a.t>=TT(a)*(1-1e-9))a.t=0;return true},
+  draw(a){drawScene(a);drawGraph(a);info(a);}
+});
+
+/* ---------- outils ---------- */
+function sfrac(a,x,y,num,den,o={}){const S=a.S,k=a.k,size=o.size??15,c=o.c||a.C.ink,wd=(o.w??40)*k;
+  return S.text(x,y-10*k,num,{anchor:'middle',size,c})+S.line(x-wd/2,y,x+wd/2,y,{c,w:1.2})+S.text(x,y+11*k,den,{anchor:'middle',size,c});}
+const sub=(a,s,b)=>a.S.v(s,b);
+const BREF=.0754;   // champ maximal réglable (N = 2000, l = 10 cm, i = 3 A)
+
+/** bobine longue de profil ; renvoie le SVG et les poignées */
+function coil(a,b,o){
+  const S=a.S,C=a.C,k=a.k,Lpx=o.Lpx,r=o.r,cx=b.x+b.w*.5,cy=b.y+b.h*.5,x1=cx-Lpx/2,x2=cx+Lpx/2;
+  let s='';
+  const fop=.05+.55*Math.sqrt(Math.min(1,o.dens));
+  s+=S.rect(x1,cy-r,Lpx,2*r,{fill:C.c,fop,rx:3});
+  // lignes de retour schématiques
+  if(Math.abs(o.B)>1e-12){const op=.25+.4*Math.min(1,Math.abs(o.B)/o.Bref);
+    for(const sg of [1,-1]){const yc=cy-sg*(r+Math.min(b.h*.28,r*1.9+24*k));s+=S.path(`M${x2},${cy-sg*r*.55}C${x2+40*k},${yc} ${x1-40*k},${yc} ${x1},${cy-sg*r*.55}`,{c:C.B,w:1.4,op});
+      const xm=cx,ym=cy-sg*(r*.55+.75*(Math.abs(yc-cy)-r*.55)),d=o.B>0?-1:1;s+=S.arrow(xm-d*9*k,ym,xm+d*9*k,ym,{c:C.B,w:1.6,op});}}
+  s+=E.solenoid(a,x1,x2,cy,r,{c:C.E,turns:o.turns});
+  // champ intérieur : longueur proportionnelle à B
+  const Lb=o.pxT*o.B,cap=Math.abs(Lb)>Lpx*.92,Le=cap?Math.sign(Lb)*Lpx*.92:Lb;
+  if(Math.abs(Le)>3)for(const yy of [-.35,.35]){s+=S.arrow(cx-Le/2,cy+yy*r,cx+Le/2,cy+yy*r,{c:C.B,w:3,dash:cap?`${7*k} ${3*k}`:undefined});}
+  if(Math.abs(Le)>3)s+=K.vt(a,x2+10*k,cy-r-8*k,'B','P',{c:C.B,size:16});
+  // courant (sens dans les spires, côté visible)
+  if(Math.abs(o.i)>1e-12){const L=Math.max(6*k,30*k*Math.abs(o.i)/o.iref),sg=Math.sign(o.i);s+=S.arrow(x1-14*k,cy-sg*L/2,x1-14*k,cy+sg*L/2,{c:C.E,w:3})+S.text(x1-22*k,cy,S.v('i'),{anchor:'end',size:16,c:C.E});}
+  return {s,x1,x2,cx,cy,r};
+}
+function bars(a,box,items,eq,max){
+  const S=a.S,C=a.C,k=a.k,f=a.fmt,n=items.length,top=box.y+22*k,Hb=Math.max(0,box.h-58*k),bw=(box.w-20*k)/n,u=K.unit(max,'J');
+  let s=S.text(box.x+8*k,box.y+4*k,eq,{base:'top',size:13,c:C.ink});
+  if(Hb<12*k)return s;
+  items.forEach((it,j)=>{const h=Hb*Math.max(0,it.v)/max,x=box.x+10*k+j*bw+bw*.2;
+    s+=S.rect(x,top+Hb-h,bw*.6,h,{fill:it.c,fop:.85})+S.text(x+bw*.3,top+Hb+12*k,it.l,{anchor:'middle',size:13,c:it.c})+S.text(x+bw*.3,top+Hb+28*k,f.sig(it.v*u.f,3),{anchor:'middle',size:13,c:C.ink2});});
+  s+=S.line(box.x+8*k,top+Hb,box.x+box.w-8*k,top+Hb,{c:C.ink2,w:1})+S.text(box.x+box.w-6*k,box.y+4*k,`(${u.u})`,{anchor:'end',base:'top',size:13,c:C.ink2});
+  return s;
+}
+
+/* ---------- scène ---------- */
+function drawScene(a){
+  const Pn=a.panels.scene,S=a.S,C=a.C,k=a.k,f=a.fmt,w=Pn.w,h=Pn.h,stack=a.narrow;
+  let s='';
+  if(a.tab===0){
+    const g=geo(a),m=P.solenoid(g),zl=stack?{x:0,y:0,w,h:h*.56}:{x:0,y:0,w:w*.6,h},zr=stack?{x:0,y:h*.56,w,h:h*.44}:{x:w*.6,y:0,w:w*.4,h};
+    const scl=(zl.w-70*k)/.40,Lpx=g.l*scl,r=Math.min(zl.h*.22,62*k)*g.a/.02;
+    const C1=coil(a,zl,{Lpx,r,B:m.B,Bref:BREF,pxT:.9*.40*scl/BREF,dens:m.density/(BREF**2/(2*MU0)),i:g.i,iref:3,turns:Math.max(6,Math.min(34,Math.round(g.N/60)))});
+    s+=C1.s;
+    // cote de longueur et poignées
+    const yc=Math.min(zl.y+zl.h-26*k,C1.cy+C1.r+Math.min(zl.h*.28,C1.r*1.9+24*k)+18*k);
+    s+=S.line(C1.x1,yc,C1.x2,yc,{c:C.ink2,w:1})+S.text(C1.cx,yc+14*k,`${S.v('l')} = ${f.sig(g.l*100,3)} cm`,{anchor:'middle',size:14,c:C.ink2});
+    s+=S.circle(C1.x2,C1.cy,7*k,{fill:C.card,c:C.ink,w:2.2})+S.circle(C1.cx,C1.cy-C1.r,7*k,{fill:C.card,c:C.ink,w:2.2});
+    st.geo={len:[C1.x2,C1.cy],rad:[C1.cx,C1.cy-C1.r]};
+    s+=S.text(zl.x+10*k,10*k,`Bobine longue · ${S.v('N')} = ${f.fix(g.N,0)} · ${S.v('a')} = ${f.sig(g.a*100,3)} cm (échelle radiale dilatée)`,{base:'top',size:14,c:C.ink});
+    // du champ au flux
+    const x=zr.x+Math.min(zr.w*.42,96*k),dy=Math.min(70*k,zr.h/5.3),y0=zr.y+Math.max(40*k,(zr.h-4.3*dy)/2);
+    const row=(y,lhs,rhs,val,c)=>S.text(x-6*k,y,lhs,{anchor:'end',size:16,c})+rhs+S.text(x+4*k,y+24*k,'= '+val,{size:13,c:a.C.ink2});
+    s+=row(y0,sub(a,'B','P')+' =',sfrac(a,x+34*k,y0,`${S.r('μ')}${S.r('<tspan font-size="72%" dy="0.42em">0</tspan><tspan dy="-0.3em">​</tspan>')} ${S.v('N')} ${S.v('i')}`,S.v('l'),{c:C.B,w:56}),f.sig(m.B*1e3,3)+' mT',C.B);
+    s+=row(y0+dy,sub(a,'Φ','1 spire')+' =',S.text(x+6*k,y0+dy,`${sub(a,'B','P')} ${S.v('S')}`,{size:16,c:C.v}),f.sig(m.phiTurn*1e6,3)+' µWb',C.v);
+    s+=row(y0+2*dy,sub(a,'Φ','P')+' =',S.text(x+6*k,y0+2*dy,`${S.v('N')} ${sub(a,'Φ','1 spire')}`,{size:16,c:C.v}),f.sig(m.phi*1e3,3)+' mWb',C.v);
+    s+=row(y0+3*dy,S.v('L')+' =',sfrac(a,x+38*k,y0+3*dy,`${S.r('μ₀')} ${S.v('N')}${S.sup('2')} ${S.v('S')}`,S.v('l'),{c:C.ink,w:64}),f.sig(m.L*1e3,3)+' mH',C.ink);
+    s+=row(y0+4*dy,sub(a,'E','mag')+' =',S.text(x+6*k,y0+4*dy,`½ ${S.v('L')} ${S.v('i')}${S.sup('2')}`,{size:16,c:C.cInk}),f.sig(m.energy*1e3,3)+' mJ',C.cInk);
+    if(!stack)s+=S.line(zr.x,12*k,zr.x,h-12*k,{c:C.rule,w:1});
+    a.svg('scene',s);return;
+  }
+  const zl=stack?{x:0,y:0,w,h:h*.4}:{x:0,y:0,w:w*.36,h},zr=stack?{x:0,y:h*.4,w,h:h*.6}:{x:w*.36,y:0,w:w*.64,h};
+  const m=at(a,a.t),T=TT(a);
+  if(a.tab===1){
+    const p=rlp(a),g={N:p.N,l:p.l,a:p.a},m0=P.solenoid({...g,i:m.I}),scl=(zl.w-60*k)/.40;
+    const C1=coil(a,zl,{Lpx:Math.max(40*k,p.l*scl),r:Math.min(zl.h*.22,60*k)*p.a/.02,B:m.B,Bref:m0.B||1,pxT:.75*Math.max(40*k,p.l*scl)/(m0.B||1),dens:(m.i/m.I)**2,i:m.i,iref:m.I,turns:Math.max(6,Math.min(26,Math.round(p.N/70)))});
+    s+=C1.s+S.text(zl.x+10*k,10*k,`${S.v('L')} = ${f.sig(m.L*1e3,3)} mH`,{base:'top',size:14,c:C.ink});
+    s+=circuitRL(a,zr,m,p);
+  }else{
+    const p=cutp(a);
+    s+=energyCoil(a,zl,m,p)+circuitCut(a,zr,m,p);
+  }
+  if(!stack)s+=S.line(zr.x,12*k,zr.x,h-12*k,{c:C.rule,w:1});
+  a.svg('scene',s);
+}
+function energyCoil(a,zl,m,p){
+  const S=a.S,C=a.C,k=a.k,f=a.fmt;
+  const C1=coil(a,zl,{Lpx:zl.w*.6,r:Math.min(zl.h*.16,46*k),B:m.i,Bref:m.I0,pxT:.6*zl.w*.6/m.I0,dens:m.energy/m.E0,i:m.i,iref:m.I0,turns:14});
+  let s=C1.s+S.text(zl.x+10*k,10*k,`${S.v('L')} = ${f.sig(p.L,3)} H`,{base:'top',size:14,c:C.ink});
+  return s;
+}
+function circuitRL(a,b,m,p){
+  const S=a.S,C=a.C,k=a.k,f=a.fmt,eq=a.p.schema==='equiv',decay=p.program==='decay';
+  const xl=b.x+48*k,xr=b.x+b.w-70*k,yt=b.y+56*k,yb=b.y+b.h-48*k,ym=(yt+yb)/2;
+  let s=S.text(b.x+12*k,10*k,eq?'Schéma équivalent : générateur '+sub(a,'e','P'):'Circuit électrique',{base:'top',size:14,c:C.ink});
+  // branche gauche : générateur ou fil
+  if(decay)s+=E.W(a,xl,yt,xl,yb)+S.text(xl-10*k,ym,'générateur retiré',{anchor:'end',size:13,c:C.ink2,rot:-90});
+  else s+=E.W(a,xl,yt,xl,ym-15*k)+E.W(a,xl,ym+15*k,xl,yb)+E.gen(a,xl,ym)+S.text(xl-20*k,ym,S.v('E'),{anchor:'end',size:16});
+  // fil du haut : R0 puis interrupteur fermé
+  const xm=(xl+xr)/2;s+=E.res(a,xl,yt,xm,yt)+S.text((xl+xm)/2,yt-18*k,sub(a,'R','0'),{anchor:'middle',size:15})+E.sw(a,xm+10*k,yt,xm+40*k,false)+E.W(a,xm,yt,xm+10*k,yt)+E.W(a,xm+40*k,yt,xr,yt);
+  s+=S.text(xm+25*k,yt-16*k,'K',{anchor:'middle',size:14,c:C.ink2});
+  // bobine (réelle : L et R ; équivalente : e_P et R)
+  const y1=yt+(yb-yt)*.12,y2=ym+4*k,y3=yb-(yb-yt)*.12;
+  s+=E.W(a,xr,yt,xr,y1)+E.W(a,xr,y3,xr,yb)+E.res(a,xr,y2,xr,y3,{len:30*k})+S.text(xr+14*k,(y2+y3)/2,S.v('R'),{size:15});
+  if(eq){const yg=(y1+y2)/2;s+=E.W(a,xr,y1,xr,yg-14*k)+E.W(a,xr,yg+14*k,xr,y2)+S.circle(xr,yg,14*k,{fill:C.card,c:C.ink,w:2})+S.line(xr,yg-14*k,xr,yg+14*k,{c:C.ink,w:1.6});
+    s+=E.volt(a,xr+30*k,yg-18*k,xr+30*k,yg+18*k,sub(a,'e','P'),{c:C.F,dx:8*k});}
+  else{s+=E.ind(a,xr,y1,xr,y2,{side:-1})+S.text(xr-16*k,(y1+y2)/2,S.v('L'),{anchor:'end',size:15});
+    s+=E.volt(a,xr+30*k,y2-4*k,xr+30*k,y1+4*k,sub(a,'u','L'),{c:C.F,dx:8*k});}
+  s+=S.rect(xr-26*k,y1-6*k,62*k,y3-y1+12*k,{c:C.ink2,w:1,dash:`${4*k} ${3*k}`,rx:4})+S.text(xr+5*k,y3+20*k,'bobine',{anchor:'middle',size:13,c:C.ink2});
+  s+=E.W(a,xl,yb,xr,yb);
+  // courant : flèche proportionnelle
+  if(m.i>1e-12){const L=60*k*m.i/m.I;s+=S.arrow(xm+L/2,yb,xm-L/2,yb,{c:C.E,w:3.2,head:10*k})+S.text(xm,yb+16*k,S.v('i'),{anchor:'middle',size:16,c:C.E});}
+  return s;
+}
+function circuitCut(a,b,m,p){
+  const S=a.S,C=a.C,k=a.k,f=a.fmt,eq=a.p.schema==='equiv',open=a.t>0||true;
+  const xl=b.x+44*k,xr=b.x+b.w-74*k,yt=b.y+62*k,yb=b.y+b.h-46*k,ym=(yt+yb)/2,xk=xl+(xr-xl)*.33,xp=xl+(xr-xl)*.66;
+  let s=S.text(b.x+12*k,10*k,'K s\'ouvre à '+S.v('t')+' = 0',{base:'top',size:14,c:C.ink});
+  {const pk=[p.E+p.L*m.I0/p.delta,p.E+p.Rp*m.I0,p.E+p.Vd];s+=S.text(b.x+b.w/2,b.y+b.h-14*k,`max ${sub(a,'u','K')} : ${f.sig(pk[0],3)} V (sans) · ${f.sig(pk[1],3)} V (${S.v('R')}′) · ${f.sig(pk[2],3)} V (D)`,{anchor:'middle',size:13,c:C.ink2});}
+  s+=E.W(a,xl,yt,xl,ym-15*k)+E.W(a,xl,ym+15*k,xl,yb)+E.gen(a,xl,ym)+S.text(xl-20*k,ym,S.v('E'),{anchor:'end',size:16});
+  s+=E.W(a,xl,yt,xk-16*k,yt)+E.sw(a,xk-16*k,yt,xk+16*k,true)+E.W(a,xk+16*k,yt,xr,yt)+S.text(xk,yt-30*k,'K',{anchor:'middle',size:15,c:C.ink2});
+  s+=E.W(a,xl,yb,xr,yb);
+  // étincelle (coupure sans protection, tant que le courant circule)
+  if(p.protection==='open'&&m.i>1e-9){const sp=Math.min(1,m.i/m.I0);s+=S.path(`M${xk-10*k},${yt}l${6*k},${-9*k} ${4*k},${8*k} ${5*k},${-10*k} ${5*k},${10*k}`,{c:C.F,w:1.5+2*sp,op:.4+.6*sp});}
+  s+=S.text(xk,yt+20*k,`${sub(a,'u','K')} = ${f.sig(m.UK,3)} V`,{anchor:'middle',size:15,c:C.F});
+  // protection, du côté de la bobine
+  if(p.protection==='resistor')s+=E.res(a,xp,yb,xp,yt,{c:C.cInk})+S.text(xp-14*k,ym,S.v('R')+'′',{anchor:'end',size:16,c:C.cInk});
+  if(p.protection==='diode')s+=E.diode(a,xp,yb,xp,yt,{c:C.cInk})+S.text(xp-16*k,ym,'D',{anchor:'end',size:16,c:C.cInk});
+  if(p.protection!=='open'&&m.i>1e-12&&a.t>0){const L=50*k*m.i/m.I0;s+=S.arrow(xp+16*k,ym+L/2,xp+16*k,ym-L/2,{c:C.E,w:2.6,head:9*k});}
+  // bobine
+  const y1=yt+(yb-yt)*.1,y2=ym+4*k,y3=yb-(yb-yt)*.1;
+  s+=E.W(a,xr,yt,xr,y1)+E.W(a,xr,y3,xr,yb)+E.res(a,xr,y2,xr,y3,{len:30*k})+S.text(xr+14*k,(y2+y3)/2,S.v('R'),{size:15});
+  if(eq){const yg=(y1+y2)/2;s+=E.W(a,xr,y1,xr,yg-14*k)+E.W(a,xr,yg+14*k,xr,y2)+S.circle(xr,yg,14*k,{fill:C.card,c:C.ink,w:2})+S.line(xr,yg-14*k,xr,yg+14*k,{c:C.ink,w:1.6})+E.volt(a,xr+30*k,yg-18*k,xr+30*k,yg+18*k,sub(a,'e','P'),{c:C.F,dx:8*k});}
+  else s+=E.ind(a,xr,y1,xr,y2,{side:-1})+S.text(xr-16*k,(y1+y2)/2,S.v('L'),{anchor:'end',size:15})+E.volt(a,xr+30*k,y2-4*k,xr+30*k,y1+4*k,sub(a,'u','L'),{c:C.F,dx:8*k});
+  if(m.i>1e-12){const L=56*k*m.i/m.I0;s+=S.arrow(xr-16*k,ym-L/2,xr-16*k,ym+L/2,{c:C.E,w:3.2,head:10*k})+S.text(xr-24*k,ym+L/2+12*k,S.v('i'),{anchor:'end',size:16,c:C.E});}
+  return s;
+}
+
+/* ---------- graphes ---------- */
+function zones(P,k,wts){const g=6*k,tot=wts.reduce((x,y)=>x+y,0),H=P.h-g*(wts.length-1);let y=0;return wts.map(q=>{const b={x:0,y,w:P.w,h:H*q/tot};y+=b.h+g;return b;});}
+function drawGraph(a){
+  const Pn=a.panels.graphe,S=a.S,C=a.C,k=a.k,f=a.fmt;
+  if(a.tab===0){
+    const g=geo(a),b=zones(Pn,k,[1,1]),L=P.solenoid(g).L,uP=K.unit(L*3,'Wb'),uE=K.unit(.5*L*9,'J');
+    const g1=K.tplot(a,{box:b[0],xmin:-3,T:3,t:g.i,futur:true,xlab:`${S.v('i')} (A)`,ylab:`${sub(a,'Φ','P')} (${uP.u})`,series:[{f:i=>L*i*uP.f,c:C.v}],id:'a1'});
+    const g2=K.tplot(a,{box:b[1],xmin:-3,T:3,t:g.i,futur:true,xlab:`${S.v('i')} (A)`,ylab:`${sub(a,'E','mag')} (${uE.u})`,series:[{f:i=>.5*L*i*i*uE.f,c:C.cInk}],id:'a2'});
+    st.gr=g1.G;a.svg('graphe',g1.svg+g2.svg);return;
+  }
+  const T=TT(a),uT=K.unit(T,'s'),tf=uT.f,m=at(a,a.t),b=zones(Pn,k,a.p.bilan?[1,1,.95]:[1,1]);
+  const I0=a.tab===1?m.I:m.I0,uI=K.unit(I0,'A');
+  const sI=[{f:x=>at(a,x/tf).i*uI.f,c:C.E}];
+  let marks=[];
+  if(a.tab===1&&a.p.tangente){const tau=m.tau,dec=a.p.prog==='decay';
+    sI.unshift({f:()=>I0*uI.f,c:C.pred,w:1.3,dash:true,all:true,ghost:true});
+    sI.unshift({f:x=>{const t=x/tf;return t<=1.25*tau?(dec?I0*(1-t/tau):I0*t/tau)*uI.f:NaN},c:C.pred,w:1.6,dash:true,all:true,ghost:true});
+    marks=[{x:tau*tf,label:'τ'}];}
+  const g1=K.tplot(a,{box:b[0],T:T*tf,t:a.t*tf,futur:a.p.futur,xlab:`${S.v('t')} (${uT.u})`,ylab:`${S.v('i')} (${uI.u})`,series:sI,marks,id:'b1'});
+  let sU;
+  if(a.tab===1){const key=a.p.schema==='equiv'?'ep':'uL';sU=[{f:x=>at(a,x/tf)[key],c:C.F}];}
+  else sU=[{f:x=>at(a,x/tf).ep,c:C.F},{f:x=>at(a,x/tf).UK,c:C.cInk,dash:true}];
+  const g2=K.tplot(a,{box:b[1],T:T*tf,t:a.t*tf,futur:a.p.futur,xlab:`${S.v('t')} (${uT.u})`,ylab:`${a.tab===1?(a.p.schema==='equiv'?sub(a,'e','P'):sub(a,'u','L')):sub(a,'e','P')+' et '+sub(a,'u','K')} (V)`,series:sU,id:'b2'});
+  let s=g1.svg+g2.svg;
+  if(a.p.bilan){
+    if(a.tab===1){const dec=a.p.prog==='decay',tot=dec?m.E0:m.Eg,max=Math.max(1e-15,dec?m.E0:P.rl(rlp(a),TT(a)).Eg);
+      s+=bars(a,b[2],[{l:dec?sub(a,'E','mag')+'(0)':'fournie',v:tot,c:C.ink2},{l:'Joule',v:m.Q,c:C.E},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],dec?'Bilan : '+sub(a,'E','mag')+'(0) = Joule + '+sub(a,'E','mag'):'Bilan : fournie = Joule + '+sub(a,'E','mag'),max);}
+    else{const end=P.rupture(cutp(a),TT(a)),max=Math.max(1e-15,end.E0+end.Eg);
+      s+=bars(a,b[2],[{l:'disponible',v:m.E0+m.Eg,c:C.ink2},{l:'Joule R',v:m.Qcoil,c:C.E},{l:a.p.prot==='open'?'Arc':a.p.prot==='resistor'?'R′':'Diode',v:m.Qprotection,c:C.F},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],'Bilan : disponible = dissipations + '+sub(a,'E','mag'),max);}
+  }
+  a.svg('graphe',s);
+}
+
+/* ---------- mesures ---------- */
+function info(a){
+  const f=a.fmt,C=a.C;
+  if(a.tab===0){const g=geo(a),m=P.solenoid(g);
+    a.metrics([{label:`Inductance ${mv('L')} = ${M.frac('μ<sub>0</sub>'+mv('N')+'<sup>2</sup>'+mv('S'),mv('l'))}`,value:f.sig(m.L*1e3,3),unit:'mH',hint:'toujours positive'},
+      {label:`Flux propre ${M.v('Φ','P')} = ${mv('L')}${mv('i')}`,value:f.sig(m.phi*1e3,3),unit:'mWb',hint:'flux lié aux N spires'},
+      {label:`Champ propre ${M.v('B','P')}`,value:f.sig(m.B*1e3,3),unit:'mT',hint:`densité ${f.sig(m.density,3)} J·m<sup>−3</sup>`},
+      {label:`Énergie ${M.v('E','mag')} = ½${mv('L')}${mv('i')}<sup>2</sup>`,value:f.sig(m.energy*1e3,3),unit:'mJ',hint:`= ${M.frac(mv('B')+'<sup>2</sup>','2μ<sub>0</sub>')}${mv('S')}${mv('l')}`}]);
+    a.insight(g.i===0?'Sans courant, pas de champ propre ni de flux propre ; l\'énergie magnétique est nulle.':'<i class="m">L</i> ne dépend que de la géométrie : doubler <i class="m">N</i> multiplie <i class="m">L</i> par 4. Le flux propre change de signe avec <i class="m">i</i>, l\'énergie ½<i class="m">Li</i>² non.',['<i class="m">L</i> ne dépend que de la géométrie : doubler <i class="m">N</i> multiplie <i class="m">L</i> par 4. Le flux propre change de signe avec <i class="m">i</i>, l\'énergie ½<i class="m">Li</i>² non.']);
+    a.legend([{c:C.B,label:'champ propre'},{c:C.E,label:'courant'},{c:C.v,label:'flux propre'},{c:C.cInk,label:'énergie magnétique'}]);return;}
+  const m=at(a,a.t),T=TT(a),uT=K.unit(T,'s');
+  a.clock(`${mv('t')} = ${f.sig(a.t*uT.f,3)} ${uT.u}`);
+  if(a.tab===1){const p=rlp(a),eq=a.p.schema==='equiv';
+    a.metrics([{label:`Courant ${mv('i')}`,value:f.sig(m.i,3),unit:'A',hint:p.program==='decay'?`${mv('i')}(0) = ${f.sig(m.I,3)} A`:`${M.v('I','∞')} = ${f.sig(m.I,3)} A`},
+      {label:eq?`${M.v('e','P')} = −${mv('L')} d${mv('i')}/d${mv('t')}`:`${M.v('u','L')} = ${mv('L')} d${mv('i')}/d${mv('t')}`,value:f.sig(eq?m.ep:m.uL,3),unit:'V',hint:eq?'générateur':'récepteur'},
+      {label:`Constante de temps τ = ${M.frac(mv('L'),M.v('R','0')+' + '+mv('R'))}`,value:f.sig(m.tau*1e3,3),unit:'ms',hint:`${mv('L')} = ${f.sig(m.L*1e3,3)} mH`},
+      {label:`Énergie ${M.v('E','mag')}`,value:f.sig(m.energy*1e3,3),unit:'mJ',hint:''}]);
+    a.insight(p.program==='decay'?'La bobine restitue son énergie magnétique, dissipée par effet Joule dans <i class="m">R</i><sub>0</sub> + <i class="m">R</i> : le courant ne s\'annule pas brutalement.':'La f.é.m. auto-induite s\'oppose à l\'établissement du courant : <i class="m">i</i> est continu et atteint <i class="m">E</i>/(<i class="m">R</i><sub>0</sub> + <i class="m">R</i>) en quelques τ.',['La bobine restitue son énergie magnétique, dissipée par effet Joule dans <i class="m">R</i><sub>0</sub> + <i class="m">R</i> : le courant ne s\'annule pas brutalement.']);
+    a.legend([{c:C.E,label:'courant'},{c:C.F,label:eq?'f.é.m. e_P':'tension u_L'},{c:C.B,label:'champ propre'},a.p.tangente&&{c:C.pred,dash:true,label:'tangente à l\'origine'}]);
+    return;}
+  const p=cutp(a),pk={open:p.E+p.L*m.I0/p.delta,resistor:p.E+p.Rp*m.I0,diode:p.E+p.Vd};
+  a.metrics([{label:`Courant ${mv('i')}`,value:f.sig(m.i,3),unit:'A',hint:`${mv('i')}(0) = ${M.frac(mv('E'),mv('R'))} = ${f.sig(m.I0,3)} A`},
+    {label:`Tension sur K ${M.v('u','K')}`,value:f.sig(m.UK,3),unit:'V',hint:`max ${f.sig(pk[p.protection],3)} V`},
+    {label:`${M.v('e','P')} = −${mv('L')} d${mv('i')}/d${mv('t')}`,value:f.sig(m.ep,3),unit:'V',hint:p.protection==='open'?`≈ ${mv('L')}${M.v('I','0')}/Δ${mv('t')}`:'convention générateur'},
+    {label:`Énergie ${M.v('E','mag')}`,value:f.sig(m.energy*1e3,3),unit:'mJ',hint:`initialement ${f.sig(m.E0*1e3,3)} mJ`}]);
+  a.insight(p.protection==='open'?'Couper brutalement le courant d\'une bobine crée une f.é.m. très grande : la tension sur K dépasse largement <i class="m">E</i> et une étincelle dissipe l\'énergie magnétique.':p.protection==='resistor'?'R′ offre un chemin au courant de la bobine : la surtension est limitée à <i class="m">E</i> + <i class="m">R</i>′<i class="m">I</i><sub>0</sub>.':'La diode de roue libre laisse le courant décroître dans la bobine : la tension sur K ne dépasse pas <i class="m">E</i> + <i class="m">V</i><sub>D</sub>.',['Couper brutalement le courant d\'une bobine crée une f.é.m. très grande : la tension sur K dépasse largement <i class="m">E</i> et une étincelle dissipe l\'énergie magnétique.']);
+  a.legend([{c:C.E,label:'courant'},{c:C.F,label:'f.é.m. e_P'},{c:C.cInk,dash:true,label:'tension u_K'},{c:C.cInk,label:'énergie magnétique'}]);
+}
+
+/* ---------- interactions ---------- */
+A.drag('scene',{
+  hit:(x,y)=>{if(A.tab!==0||!st.geo)return false;const g=st.geo,k=A.k;return Math.hypot(x-g.len[0],y-g.len[1])<20*k||Math.hypot(x-g.rad[0],y-g.rad[1])<20*k;},
+  start(x,y){const g=st.geo,k=A.k;st.drag=Math.hypot(x-g.len[0],y-g.len[1])<20*k?{id:'l',x,v:A.p.l}:{id:'ra',y,v:A.p.ra};},
+  move(x,y){const d=st.drag;if(!d)return;if(d.id==='l')A.p.l=Math.round(Math.max(10,Math.min(40,d.v+(x-d.x)*.08))*2)/2;else A.p.ra=Math.round(Math.max(.5,Math.min(2,d.v-(y-d.y)*.012))*20)/20;A.refresh();},
+  end(){st.drag=null;}
+});
+A.drag('graphe',{
+  hit:()=>A.tab===0,
+  start(x){this.move(x)},
+  move(x){if(!st.gr)return;A.p.i0=Math.round(Math.max(-3,Math.min(3,st.gr.xv(x)))*100)/100;A.refresh();}
+});
+
+</script>
+</body>
+</html>

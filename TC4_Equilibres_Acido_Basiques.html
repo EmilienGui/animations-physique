@@ -1,50 +1,723 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Animation pédagogique autonome pour le chapitre TC4 de MPSI"><title>Équilibres acido-basiques · TC4 · MPSI</title><style>
-:root{color-scheme:light;--bg:#f2f5f2;--panel:#fff;--ink:#172c28;--muted:#53675f;--line:#c9d7d0;--accent:#008060;--soft:#e6f3eb;--red:#8f2227;--blue:#254b70;--orange:#ac5200;--purple:#7652a0;--grid:#dce5df;--glow:#e0efe6}
-:root[data-theme=dark]{color-scheme:dark;--bg:#101c1a;--panel:#192a26;--ink:#eff6f1;--muted:#b6cec1;--line:#426055;--accent:#73d9ae;--soft:#25453a;--red:#ff9c9f;--blue:#92c5ff;--orange:#ffbf78;--purple:#c7a8ff;--grid:#334b42;--glow:#2b4d3d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.4 Arial,Helvetica,sans-serif;border-top:5px solid var(--accent)}button,input,select{font:inherit;color:inherit}button,select{cursor:pointer}button{border:1px solid var(--line);border-radius:7px;background:var(--panel);min-height:40px;padding:7px 12px;line-height:1.15}button:hover{border-color:var(--accent);background:var(--soft)}button[aria-pressed=true],button.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:bold}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}a{color:var(--accent)}.shell{height:calc(100dvh - 5px);max-width:2100px;margin:auto;padding:13px 20px 8px;display:flex;flex-direction:column;gap:10px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex:none}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:bold;margin-bottom:4px}h1{font-size:28px;line-height:1.15;margin:0;font-weight:500;letter-spacing:-.025em}h1 small{font-size:18px;color:var(--accent);margin-right:10px}.actions,.tabs,.tools,.row,.presets,.steps{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.actions button{font-size:15px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;flex:1;min-height:0}.main{display:flex;flex-direction:column;min-height:0;min-width:0;gap:9px}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}.scene-card{display:flex;flex-direction:column;flex:1;min-height:280px}.scene-head{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-bottom:1px solid var(--line);flex:none}.tabs button{font-size:16px}.tools button{font-size:16px;padding:6px 10px}.scene-body{position:relative;flex:1;min-height:200px}svg#scene{width:100%;height:100%;position:absolute;inset:0;touch-action:none;user-select:none}#scene text{font-family:Arial,Helvetica,sans-serif}.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:7px 15px 0;font-size:17px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.legend i{display:inline-block;width:25px;height:0;border-top:3px solid var(--c)}.legend i.dashed{border-top-style:dashed}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:9px 14px;flex:none;gap:15px}.metric-label{font-size:14px;color:var(--muted)}.metric-value{font-size:31px;line-height:1.25;font-variant-numeric:tabular-nums;white-space:nowrap}.metric-value small{font-size:17px}.note{border-left:4px solid var(--accent);background:var(--soft);padding:9px 14px;min-height:58px;font-size:17px;display:flex;flex-direction:column;justify-content:center}.note strong{font-size:19px}.note p{margin:2px 0 0;color:var(--muted)}.presets button{font-size:15px;min-height:36px}.presets>span{font-size:13px;color:var(--muted);margin-right:3px}.controls{overflow:auto;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 15px}.control{padding:15px 0;border-bottom:1px solid var(--line)}.control:last-child{border:0}.control h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);margin:0 0 12px}.control p,.hint{font-size:14px;color:var(--muted);margin:8px 0 0}.field{margin:12px 0}.field label{font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:6px}.field label input[type=number]{width:84px;text-align:right;padding:5px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin:10px 0 0}select{width:100%;padding:8px;border:1px solid var(--line);border-radius:5px;background:var(--panel)}.control .row button{font-size:15px;flex:1}.formula{font:23px/1.6 Georgia,serif}.chip{display:inline-block;border:1px solid var(--line);border-radius:5px;padding:3px 7px;font-size:14px;color:var(--accent)}.checks label{display:block;font-size:16px;margin:8px 0}.steps button{font-size:15px;flex:1}.steps{margin-top:8px}.small-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.small-grid label{font-size:14px}.small-grid input{width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}.small-grid input:invalid{border-color:var(--red)}footer{display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:11px;flex:none}dialog{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:25px;max-width:780px;max-height:85vh;overflow:auto;font-size:17px}dialog::backdrop{background:#061b16b3}dialog h2{margin:0 0 12px;color:var(--accent);font-size:24px}dialog h3{font-size:18px}dialog p{margin:10px 0}.close-row{text-align:right;margin-top:18px}.projection .controls{display:none}.projection .workspace{grid-template-columns:1fr}.projection .metric-value{font-size:40px}.projection .metric-label{font-size:17px}.projection .note{font-size:20px}.projection .note strong{font-size:22px}.projection .presets{display:none}.projection h1{font-size:27px}.projection .shell{padding:10px 18px}.projection .tabs button{font-size:18px}.projection .legend{font-size:22px}.projection .steps button{font-size:18px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:9px 18px;border-radius:8px;z-index:10;display:none;font-size:16px}.hidden,[hidden]{display:none!important}
-@media(max-width:1100px){.shell{padding:10px 12px 7px}.workspace{grid-template-columns:minmax(0,1fr) 275px;gap:10px}h1{font-size:24px}.actions button{padding:7px 9px;font-size:14px}.metric-value{font-size:28px}.metrics{gap:8px}.scene-head{flex-wrap:wrap}.tabs button{font-size:15px}.controls{padding:0 12px}}
-@media(max-width:760px){.shell{height:auto;min-height:calc(100dvh - 5px);padding:12px;gap:12px}header{align-items:flex-start;flex-direction:column;gap:10px}h1{font-size:26px}.actions{width:100%;gap:5px}.actions button{flex:1}.workspace{display:flex;flex-direction:column}.scene-card{flex:none;height:540px;min-height:540px}.metrics{padding:10px;gap:8px;grid-template-columns:1fr}.metrics>div{display:flex;justify-content:space-between;align-items:center;gap:8px}.metric-value{font-size:26px}.metric-label{font-size:12px}.note{font-size:16px}.note strong{font-size:18px}.controls{overflow:visible}.control{padding:14px 2px}.scene-head{gap:8px}.tools{margin-left:auto}.tabs{width:100%}.tabs button{flex:1}.legend{font-size:15px}.presets button{flex:1}footer{flex-direction:column;gap:3px}.projection .scene-card{height:580px}.projection .metric-value{font-size:30px}.projection .note{font-size:17px}.projection .metric-label{font-size:13px}.projection .legend{font-size:16px}.projection .steps button{font-size:15px}}
-@media print{.actions,.controls,.presets,footer,.tools{display:none}.shell{height:auto}.workspace{display:block}.scene-card{height:650px}.note{break-inside:avoid}}
-</style><!-- CPGE_MENU_STYLE_BEGIN -->
-<style id="cpge-menu-style">
-/* Menu commun : référence OP1 Arc-en-ciel, préférence du 25 octobre 2026. */
-.cpge-menu-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
-.cpge-menu-header> :first-child{min-width:0;flex:1 1 270px}
-.cpge-menu-header .cpge-global-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 1 auto;gap:6px;flex-wrap:wrap;max-width:100%;margin:0}
-.cpge-global-actions>button{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:400;letter-spacing:normal;text-transform:none;line-height:1.2;min-height:40px;padding:7px 11px;border-radius:6px;box-shadow:none;white-space:nowrap;flex:0 0 auto}
-.cpge-global-actions>button.cpge-common-button:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center;width:auto;min-width:0}
-.cpge-global-actions>button.cpge-common-button[aria-pressed=true]{background:var(--accent-ink,var(--accent,#672c8b));border-color:var(--accent-ink,var(--accent,#672c8b));color:var(--surface,var(--panel,var(--paper,#fff)))}
-.cpge-global-actions>button.cpge-common-button>svg{display:none}
-.cpge-global-actions>button.cpge-common-button .button-text,.cpge-global-actions>button.cpge-common-button .word{display:inline!important}
-.cpge-global-actions>button.cpge-fullscreen:not([hidden]){width:40px;min-width:40px;max-width:40px;padding:7px 0;font-size:22px;line-height:1}
-.cpge-global-actions>button:focus-visible{outline:3px solid var(--accent,currentColor);outline-offset:3px}
-.cpge-common-dialog{width:min(760px,calc(100% - 30px));max-height:85dvh;overflow:auto;border:1px solid var(--line,#888);border-radius:10px;padding:24px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:17px/1.6 Arial,Helvetica,sans-serif}
-.cpge-common-dialog::backdrop{background:#10182099}.cpge-common-dialog h2{font-size:26px;margin:0 0 14px}.cpge-common-dialog .cpge-dialog-close{float:right;margin-left:16px}
-.cpge-menu-status{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);z-index:10000;padding:11px 16px;border:1px solid var(--line,#888);border-radius:7px;background:var(--surface,var(--paper,var(--panel,#fff)));color:var(--ink,var(--text,#172a28));font:15px/1.4 Arial,Helvetica,sans-serif;box-shadow:0 5px 25px #0002}
-.cpge-menu-status[hidden]{display:none!important}
-@media(max-width:820px){.cpge-menu-header .cpge-global-actions{justify-content:flex-start;flex:1 1 100%}.cpge-global-actions>button{font-size:14px;padding:7px 9px}}
-.projection .cpge-global-actions>.mobileSettings{display:none!important}
-@media print{.cpge-global-actions,.cpge-menu-status{display:none!important}}
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Atelier d&#x27;équilibres acido-basiques : diagrammes de distribution et de prédominance, prévision, calcul et interprétation d&#x27;un mélange, acide ou base faible dans l&#x27;eau.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Atelier d&#x27;équilibres acido-basiques · TC4 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
 
-/* Le film OP2 garde son éclairage ; seul son cadre de lecture change de thème. */
-html[data-cpge-film]{--accent:#3e8b89;--surface:#fff;--paper:#f3f6f4;--ink:#172a28;--muted:#526663;--line:#cbd9d5;color-scheme:light}
-html[data-cpge-film][data-theme=dark]{--accent:#86c7bf;--surface:#17272b;--paper:#101c1f;--ink:#eef6f3;--muted:#bbcec9;--line:#3c5658;color-scheme:dark}
-html[data-cpge-film] body{background:var(--paper);color:var(--ink)}
-html[data-cpge-film] button{border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-html[data-cpge-film] button:hover{border-color:var(--accent)}
-html[data-cpge-film] .cpge-menu-header{margin-bottom:14px}html[data-cpge-film] .cpge-menu-header h1{font:500 27px/1.2 Arial,Helvetica,sans-serif;margin:4px 0}
-html[data-cpge-film] .cpge-eyebrow{color:var(--accent);font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
-html[data-cpge-film] #status,html[data-cpge-film] #gpu{color:var(--muted)}
-html[data-cpge-film] .projection main{max-width:none;padding:10px 16px}html[data-cpge-film] .projection #film{max-height:calc(100dvh - 155px);object-fit:contain}
-html[data-cpge-film] .projection #gpu,html[data-cpge-film] .projection #capture,html[data-cpge-film] .projection #status,html[data-cpge-film] .projection .cpge-eyebrow{display:none}
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
+.ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
+.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
 </style>
-<!-- CPGE_MENU_STYLE_END -->
 </head>
-<body data-export="TC4_Equilibres_Acido_Basiques"><main class="shell"><header><div><div class="eyebrow">Transformations chimiques · Expérience interactive</div><h1><small>TC4</small>Équilibres acido-basiques</h1></div><div class="actions"><button id="theme" aria-pressed="false">Sombre</button><button id="help">Aide</button><button id="export">Image SVG</button><button id="projection" aria-pressed="false">Projection</button><button id="fullscreen" aria-label="Plein écran" title="Plein écran">⛶</button></div></header>
-<div class="workspace"><section class="main" aria-label="Expérience"><div class="scene-card card"><div class="scene-head"><nav class="tabs" aria-label="Vues"><button id="view-explore" aria-pressed="true">Explorer les couples</button><button id="view-mix" aria-pressed="false">Mélanger et prévoir</button></nav><div class="tools"><button id="play" aria-pressed="false">Animer</button><button id="zoom-out" aria-label="Réduire le dessin">−</button><button id="recenter">Cadrer</button><button id="zoom-in" aria-label="Agrandir le dessin">+</button></div></div><div id="legend" class="legend" ><span>Répartition des formes acide et basique</span></div><div class="scene-body"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Équilibres acido-basiques"></svg></div></div>
-<div class="metrics card"><div><div class="metric-label" id="label1"></div><div class="metric-value" id="value1"></div></div><div><div class="metric-label" id="label2"></div><div class="metric-value" id="value2"></div></div><div><div class="metric-label" id="label3"></div><div class="metric-value" id="value3"></div></div></div><div class="note"><strong id="note-title"></strong><p id="note-detail"></p></div><div class="presets"><span>EXPLORER</span><button data-preset="course">Exemple du cours</button><button data-preset="hundred">K = 100</button><button data-preset="unfavoured">K &lt; 1</button><button data-preset="reverse">Sens inverse</button><button id="reset">Réinitialiser</button></div></section><aside class="controls" aria-label="Réglages"><section class="control"><h2>01 / Parcours</h2><p id="mode-explanation">pH imposé : on explore la répartition des espèces.</p><div id="mix-steps" class="steps" hidden><button id="step1" aria-pressed="true">1 · Prévoir</button><button id="step2" aria-pressed="false">2 · Calculer</button><button id="step3" aria-pressed="false">3 · Interpréter</button></div></section><section class="control" id="explore-controls"><h2>02 / Le système</h2><select id="system" aria-label="Système acido-basique"><option value="acetate">Acide éthanoïque / éthanoate</option><option value="ammonium">Ammonium / ammoniac</option><option value="carbon">Système carbonaté</option><option value="pair">Les deux couples du mélange</option></select><div class="field"><label for="ph">pH imposé<input type="number" id="ph-num" aria-label="pH imposé" min="0" max="14" step="0.05" value="4.8"></label><input id="ph" aria-label="pH imposé" type="range" min="0" max="14" step="0.05" value="4.8"></div><div class="row"><button id="ph-less">pKa − 1</button><button id="ph-equal">pKa</button><button id="ph-more">pKa + 1</button></div><p>Glisser la ligne de pH sur le graphique.</p></section><section class="control"><h2>03 / Les constantes d’acidité</h2><div class="field"><label for="pk1">pKa₁<input type="number" id="pk1-num" aria-label="pKa₁" min="1" max="13" step="0.05" value="4.8"></label><input id="pk1" aria-label="pKa₁" type="range" min="1" max="13" step="0.05" value="4.8"></div><div class="field"><label for="pk2">pKa₂<input type="number" id="pk2-num" aria-label="pKa₂" min="1" max="13" step="0.05" value="9.2"></label><input id="pk2" aria-label="pKa₂" type="range" min="1" max="13" step="0.05" value="9.2"></div><p id="pk-hint">Les pKa sont aussi déplaçables sur les axes de prédominance.</p></section><section class="control" id="mix-controls" hidden><h2>04 / Quantités introduites (mmol)</h2><div class="small-grid"><label><span id="nlabel0">CH₃COOH</span><input id="n0" aria-label="Quantité initiale de la forme acide 1, en mmol" type="number" min="0" max="4" step="0.1" value="1"></label><label><span id="nlabel1">CH₃COO⁻</span><input id="n1" aria-label="Quantité initiale de la forme basique 1, en mmol" type="number" min="0" max="4" step="0.1" value="0"></label><label><span id="nlabel2">NH₄⁺</span><input id="n2" aria-label="Quantité initiale de la forme acide 2, en mmol" type="number" min="0" max="4" step="0.1" value="0"></label><label><span id="nlabel3">NH₃</span><input id="n3" aria-label="Quantité initiale de la forme basique 2, en mmol" type="number" min="0" max="4" step="0.1" value="3"></label></div><div class="field"><label for="volume">Volume final (mL)<input type="number" id="volume-num" aria-label="Volume final (mL)" min="50" max="500" step="10" value="100"></label><input id="volume" aria-label="Volume final (mL)" type="range" min="50" max="500" step="10" value="100"></div><div id="progress-controls" hidden><div class="field"><label for="progress">Progression pédagogique (%)<input type="number" id="progress-num" aria-label="Progression pédagogique (%)" min="0" max="100" step="1" value="100"></label><input id="progress" aria-label="Progression pédagogique (%)" type="range" min="0" max="100" step="1" value="100"></div><p>Interpolation de ξ, sans temps physique.</p></div><p>Quantités formelles avant redistribution. Le pH final est calculé, jamais imposé.</p></section><section class="control"><h2>La relation commune</h2><div class="formula">pH = pKa + log([base]/[acide])</div><p id="model-caption">À pH = pKa, les deux formes adjacentes sont en concentrations égales.</p></section></aside></div><footer><span>E. Guillaume · MPSI · TC4 — Réactions acido-basiques</span><span>Hors connexion · Espace : animer / pause · R : réinitialiser · F : plein écran</span></footer></main><dialog id="about"><h2>Des espèces présentes à l’état final</h2><p><strong>Explorer.</strong> Le pH est imposé par un réservoir extérieur non représenté. Les fractions d’un couple monoprotique sont α<sub>acide</sub> = 1/(1 + 10<sup>pH−pKa</sup>) et α<sub>base</sub> = 1 − α<sub>acide</sub>. Pour le système carbonaté, les trois formes sont CO₂* (CO₂ dissous + H₂CO₃), HCO₃⁻ et CO₃²⁻, avec les pKa apparents 6,3 et 10,3. Les fractions sont normalisées sur la quantité totale de carbone de ces trois formes. Aucun échange de CO₂ avec l’atmosphère n’est calculé.</p><p><strong>Manipuler.</strong> Glisser la ligne de pH dans le graphique. Les poignées de pKa sur les axes inférieurs sont déplaçables ; le premier pKa du système carbonaté est réglable en mode modèle, le second reste fixé à 10,3. La position pH = pKa égalise les deux formes adjacentes, mais ne signifie pas que chacune représente 50 % d’un polyacide.</p><p><strong>Mélanger.</strong> Le mélange de référence est CH₃COOH + NH₃ ⇌ CH₃COO⁻ + NH₄⁺. Les quantités initiales sont les quantités formelles introduites avant redistribution acido-basique, en mmol, et le volume est le volume final. Les éventuels contre-ions des sels sont pris en compte pour le bilan des charges. Si les pKa sont modifiés, les noms deviennent AH/A⁻ et BH⁺/B : il s’agit de couples modèles.</p><p><strong>Prévoir.</strong> K = 10<sup>pKa₂ − pKa₁</sup>, tandis que Qᵢ = n(A⁻) n(BH⁺) / [n(AH) n(B)]. Le sens est direct si Qᵢ &lt; K, inverse si Qᵢ &gt; K. La valeur de K n’indique aucune vitesse. Un quotient 0/0 n’est pas défini ; un mélange où l’une des familles est absente ne peut pas subir ce transfert entre les deux familles.</p><p><strong>Calculer.</strong> On résout Q(ξ) = K dans l’intervalle où toutes les quantités restent positives ou nulles. C’est le modèle de réaction unique du cours, sans les réactions avec l’eau. Le taux affiché est |ξ| divisé par la quantité disponible du réactif limitant dans le sens effectif d’évolution. Aucun seuil universel de quasi-totalité n’est imposé ; on peut apprécier une transformation à 99 % avec le seuil explicite de 1 % de réactif limitant résiduel.</p><p><strong>Interpréter.</strong> Le pH et les quantités finales du modèle aqueux sont calculés avec les deux équilibres d’acidité, l’autoprotolyse, la conservation de chaque famille et l’électroneutralité. Avec h = [H₃O⁺], [HO⁻] = Kₑ(C°)²/h, et les concentrations de contre-ions s⁺ − s⁻ = (nᵢ(A⁻) − nᵢ(BH⁺))/V, on résout h − [HO⁻] − [A⁻] + [BH⁺] + s⁺ − s⁻ = 0. Ici C° = 1 mol/L et Kₑ = 10⁻¹⁴. Le bilan de réaction unique et le calcul aqueux sont comparés ; leur différence mesure l’effet des équilibres avec l’eau dans ce modèle.</p><p><strong>Hypothèses.</strong> 25 °C, solutions idéales, activités assimilées à [i]/C°, volumes additifs, aucun autre équilibre. Le calcul numérique ne valide pas l’idéalité des solutions réelles. Les valeurs de pKa des exemples suivent le cours TC4. Les tracés restent limités à pH 0–14 à cadrage normal, même si un résultat calculé se trouve au-delà.</p><p><strong>Animer.</strong> Le balayage du pH est une exploration du diagramme. À l’étape Calculer, la progression est une interpolation de l’avancement jusqu’à ξₑ, sans loi cinétique ni temps physique. À l’étape Interpréter, les résultats sont toujours ceux de l’équilibre aqueux.</p><div class="close-row"><button id="close-about" class="primary">Revenir à l’expérience</button></div></dialog><div class="toast" id="toast" role="status"></div><script id="model">
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
 'use strict';
-window.AcidBaseModel=Object.freeze({
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      let s='';
+      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
+      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
+       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
+      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+    }
+  }
+  /* ---------- rendu ---------- */
+  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  /** écrit le SVG d'un panneau */
+  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
+  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
+  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+})();
+
+</script>
+<script>
+/* TC4 · Équilibres acido-basiques : modèle d'origine, inchangé (seule la déclaration window.AcidBaseModel devient const).
+   mono/carbon : répartition ; reaction : réaction unique (ξ par dichotomie sur Q = K) ; aqueous : pH et quantités avec l'eau. */
+'use strict';
+const AcidBaseModel=Object.freeze({
  mono(pH,pKa){const r=10**(pH-pKa);return [1/(1+r),r/(1+r)]},
  carbon(pH,p1=6.3,p2=10.3){const a=10**(pH-p1),b=10**(2*pH-p1-p2),d=1+a+b;return [1/d,a/d,b/d]},
  quotient(n){const numerator=n[1]*n[2],denominator=n[0]*n[3];return denominator===0?(numerator===0?NaN:Infinity):numerator/denominator},
@@ -68,196 +741,376 @@ window.AcidBaseModel=Object.freeze({
   return {pH,final,h:10**(-pH),oh:10**(pH-14),chargeResidual:charge(pH),spectator};
  }
 });
-</script><script>
-const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
-const F=(n,d=1)=>Number.isFinite(n)?new Intl.NumberFormat('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(n)<1e-12?0:n):'—';
-const sci=n=>n===0?'0':!Number.isFinite(n)?'∞':n>=.01&&n<1000?F(n,n<1?3:1):n.toExponential(2).replace('.',',').replace('e+',' × 10^').replace('e',' × 10^');
-let dark=false,zoom=1,W=1000,H=500,playing=false,lastTime=0;
-let C={};
-function palette(){const cs=getComputedStyle(document.documentElement);for(const k of ['ink','muted','line','accent','soft','red','blue','orange','purple','grid','panel','glow'])C[k]=cs.getPropertyValue('--'+k).trim()}
-function el(tag,a={},parent=$('scene')){const n=document.createElementNS(NS,tag);for(const [k,v]of Object.entries(a))n.setAttribute(k,v);parent.append(n);return n}
-function line(x1,y1,x2,y2,color=C.line,width=1,extra={}){return el('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,...extra})}
-function rect(x,y,width,height,fill=C.soft,stroke='none',extra={}){return el('rect',{x,y,width:Math.max(0,width),height:Math.max(0,height),fill,stroke,rx:6,...extra})}
-function txt(x,y,t,color=C.ink,size=21,anchor='start',extra={}){const n=el('text',{x,y,fill:color,'font-size':size*(document.body.classList.contains('projection')&&W>=760?1.12:1),'text-anchor':anchor,...extra});n.textContent=t;return n}
-function path(d,stroke=C.ink,width=2,fill='none',extra={}){return el('path',{d,fill,stroke,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...extra})}
-function circle(x,y,r,fill,stroke='none',extra={}){return el('circle',{cx:x,cy:y,r,fill,stroke,...extra})}
-function clearScene(){palette();$('scene').replaceChildren();W=Math.max(280,$('scene').clientWidth);H=Math.max(180,$('scene').clientHeight);$('scene').setAttribute('viewBox',`0 0 ${W} ${H}`)}
-function toggle(el,on){el.setAttribute('aria-pressed',on?'true':'false')}
-function metric(i,label,value){$('label'+i).textContent=label;$('value'+i).innerHTML=value}
-function note(title,detail){$('note-title').textContent=title;$('note-detail').textContent=detail}
-function toast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('toast').style.display='none',2600)}
-function bindRange(id,cb){const a=$(id),b=$(id+'-num');function set(source){let v=+source.value;if(source.value===''||!Number.isFinite(v)){source.value=a.value;return}v=Math.max(+a.min,Math.min(+a.max,v));a.value=b.value=v;cb(v)}a.oninput=()=>set(a);b.onchange=()=>set(b)}
-function setField(id,v){$(id).value=$(id+'-num').value=v}
-$('theme').onclick=()=>{dark=!dark;document.documentElement.dataset.theme=dark?'dark':'light';$('theme').textContent=dark?'Clair':'Sombre';toggle($('theme'),dark);render()};
-$('projection').onclick=()=>{const p=document.body.classList.toggle('projection');toggle($('projection'),p);$('projection').textContent=p?'Réglages':'Projection';zoom=1;requestAnimationFrame(render)};
-$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{toast('Plein écran indisponible dans ce navigateur.')}};
-$('help').onclick=()=>$('about').showModal();$('close-about').onclick=()=>$('about').close();
-$('zoom-in').onclick=()=>{zoom=Math.min(2.4,zoom*1.2);render()};$('zoom-out').onclick=()=>{zoom=Math.max(1,zoom/1.2);render()};$('recenter').onclick=()=>{zoom=1;render()};
-$('export').onclick=()=>{const copy=$('scene').cloneNode(true);copy.setAttribute('xmlns',NS);copy.setAttribute('width',W);copy.setAttribute('height',H);copy.insertBefore(Object.assign(document.createElementNS(NS,'rect'),{}),copy.firstChild);const bg=copy.firstChild;for(const[k,v]of Object.entries({x:0,y:0,width:W,height:H,fill:C.panel}))bg.setAttribute(k,v);const a=document.createElement('a'),url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)],{type:'image/svg+xml'}));a.href=url;a.download=document.body.dataset.export+'.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Schéma SVG enregistré.')};
-$('reset').onclick=()=>{zoom=1;reset()};
-$('play').onclick=()=>{playing=!playing;syncPlay()};
-function syncPlay(){$('play').textContent=playing?'Pause':'Animer';toggle($('play'),playing)}
-new ResizeObserver(()=>render()).observe($('scene'));
-function frame(t){const dt=Math.min(.05,(t-lastTime)/1000||0);lastTime=t;if(playing&&!document.hidden&&!$('about').open)tick(dt);requestAnimationFrame(frame)}requestAnimationFrame(frame);
-document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||$('about').open)return;if(e.code==='Space'){e.preventDefault();playing=!playing;syncPlay()}if(e.key.toLowerCase()==='r')$('reset').click();if(e.key.toLowerCase()==='f')$('fullscreen').click()});
 
-
-const M=AcidBaseModel;
-$('mix-steps').style.cssText='margin:8px 12px 0;flex:none';$('legend').before($('mix-steps'));
-let state={mode:'explore',system:'acetate',pH:4.8,p1:4.8,p2:9.2,n:[1,0,0,3],volume:100,step:1,progress:100},plot=null,handles=[];
-let reaction,aqueous;
-const carbonPK2=10.3;
-const superDigits={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
-function number(n,d=2){if(Number.isNaN(n))return 'indéfini';if(!Number.isFinite(n))return '∞';if(n===0)return '0';if(Math.abs(n)>=.01&&Math.abs(n)<1000)return F(n,d);const [m,e]=n.toExponential(2).split('e');return m.replace('.',',')+' × 10'+String(+e).split('').map(x=>superDigits[x]).join('')}
-function realNames(){return Math.abs(state.p1-4.8)<1e-8&&Math.abs(state.p2-9.2)<1e-8}
-function names(){return realNames()?['CH₃COOH','CH₃COO⁻','NH₄⁺','NH₃']:['AH','A⁻','BH⁺','B']}
-function currentPK(){if(state.system==='ammonium')return state.p2;if(state.system==='carbon')return state.p1;return state.p1}
-function sync(){setField('ph',state.pH);setField('pk1',state.p1);setField('pk2',state.p2);setField('volume',state.volume);setField('progress',state.progress);$('system').value=state.system;state.n.forEach((v,i)=>$('n'+i).value=v)}
-function setMode(mode){state.mode=mode;zoom=1;playing=false;syncPlay();render()}
-$('view-explore').onclick=()=>setMode('explore');$('view-mix').onclick=()=>setMode('mix');
-$('system').onchange=()=>{state.system=$('system').value;if(state.system==='carbon'){state.p1=6.3;setField('pk1',6.3);state.pH=6.3}else if(state.system==='ammonium')state.pH=state.p2;else state.pH=state.p1;setField('ph',state.pH);zoom=1;render()};
-bindRange('ph',v=>{state.pH=v;render()});bindRange('pk1',v=>{state.p1=v;if(state.system==='carbon'&&v>=carbonPK2){state.p1=carbonPK2-.05;setField('pk1',state.p1)}render()});bindRange('pk2',v=>{state.p2=v;render()});bindRange('volume',v=>{state.volume=v;render()});bindRange('progress',v=>{state.progress=v;playing=false;syncPlay();render()});
-$('ph-less').onclick=()=>{state.pH=Math.max(0,currentPK()-1);setField('ph',state.pH);render()};$('ph-equal').onclick=()=>{state.pH=currentPK();setField('ph',state.pH);render()};$('ph-more').onclick=()=>{state.pH=Math.min(14,currentPK()+1);setField('ph',state.pH);render()};
-for(let i=0;i<4;i++)$('n'+i).onchange=()=>{const v=+$('n'+i).value;state.n[i]=Number.isFinite(v)?Math.max(0,Math.min(4,v)):0;$('n'+i).value=state.n[i];state.progress=100;setField('progress',100);render()};
-for(let i=1;i<=3;i++)$('step'+i).onclick=()=>{state.step=i;state.progress=100;setField('progress',100);playing=false;syncPlay();render()};
-function preset(k){playing=false;syncPlay();zoom=1;state={mode:'mix',system:'pair',pH:7,p1:4.8,p2:9.2,n:[1,0,0,3],volume:100,step:1,progress:100};if(k==='hundred'){state.p1=5;state.p2=7;state.n=[1,0,0,1];state.step=2}if(k==='unfavoured'){state.p1=9;state.p2=5;state.n=[1,0,0,1];state.step=2}if(k==='reverse'){state.n=[.1,2,2,.1];state.p1=6;state.p2=8;state.step=1}sync();render()}
-document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>preset(b.dataset.preset));
-function reset(){state={mode:'explore',system:'acetate',pH:4.8,p1:4.8,p2:9.2,n:[1,0,0,3],volume:100,step:1,progress:100};playing=false;syncPlay();sync();render()}
-function species(){const nn=names();if(state.mode==='mix'||state.system==='pair')return [{name:nn[0],c:C.red,dash:false,f:p=>M.mono(p,state.p1)[0]},{name:nn[1],c:C.blue,dash:false,f:p=>M.mono(p,state.p1)[1]},{name:nn[2],c:C.orange,dash:true,f:p=>M.mono(p,state.p2)[0]},{name:nn[3],c:C.purple,dash:true,f:p=>M.mono(p,state.p2)[1]}];if(state.system==='carbon')return ['CO₂*','HCO₃⁻','CO₃²⁻'].map((n,i)=>({name:n,c:[C.red,C.blue,C.purple][i],dash:i===2,f:p=>M.carbon(p,state.p1,carbonPK2)[i]}));const pk=state.system==='ammonium'?state.p2:state.p1,ns=state.system==='ammonium'?['NH₄⁺','NH₃']:['CH₃COOH','CH₃COO⁻'];const isStandard=Math.abs(pk-(state.system==='ammonium'?9.2:4.8))<1e-8;return (isStandard?ns:state.system==='ammonium'?['BH⁺','B']:['AH','A⁻']).map((n,i)=>({name:n,c:[C.red,C.blue][i],dash:!!i,f:p=>M.mono(p,pk)[i]}))}
-function domain(y,p,acid,base,c1,c2,handle){const {X,left,right}=plot,px=Math.max(left,Math.min(right,X(p)));rect(left,y-14,px-left,26,c1,'none',{'fill-opacity':.12});rect(px,y-14,right-px,26,c2,'none',{'fill-opacity':.12});line(left,y,right,y,C.muted,1);line(px,y-17,px,y+18,C.ink,2);if(px-left>55)txt((left+px)/2,y+7,acid,c1,W<650?16:20,'middle');if(right-px>55)txt((px+right)/2,y+7,base,c2,W<650?16:20,'middle');
- const ha=circle(px,y,9,C.panel,C.accent,{'stroke-width':2});ha.style.cursor='ew-resize';ha.setAttribute('role','slider');ha.setAttribute('data-handle',handle||'fixed');ha.setAttribute('tabindex',handle?'0':'-1');ha.setAttribute('aria-label','pKa '+p);ha.setAttribute('aria-valuemin',1);ha.setAttribute('aria-valuemax',13);ha.setAttribute('aria-valuenow',p);ha.onkeydown=e=>{if(!handle||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();let v=p+(e.key==='ArrowRight'?.05:-.05);if(handle==='p1'&&state.system==='carbon')v=Math.min(10.25,v);state[handle]=Math.max(1,Math.min(13,v));setField(handle==='p1'?'pk1':'pk2',state[handle]);render();$('scene').querySelector('[data-handle="'+handle+'"]')?.focus()};if(handle)handles.push({x:px,y,key:handle});
- // Values of pKa are in controls and on the top plot, so no extra row is needed.
-}
-function graph(showMarker=true,domainsOnly=false){
- const left=W<600?52:65,right=W-32,top=domainsOnly?H*.30:36,domRows=state.mode==='mix'||state.system==='pair'?2:state.system==='carbon'?2:1,bottom=domainsOnly?H*.48:H-(domRows===2?116:90),height=Math.max(45,bottom-top);
- const focus=state.mode==='mix'?aqueous.pH:state.pH,center=zoom===1?7:Math.max(7/zoom,Math.min(14-7/zoom,focus)),min=center-7/zoom,max=center+7/zoom;
- const X=p=>left+(p-min)/(max-min)*(right-left),Y=f=>bottom-f*height;plot={left,right,top,bottom,X,Y,min,max};handles=[];
- if(!domainsOnly){for(let f=0;f<=1.001;f+=.25){line(left,Y(f),right,Y(f),C.grid);txt(left-9,Y(f)+6,F(f*100,0),C.muted,16,'end')}txt(left,22,W<600?'%':'Proportion (%)',C.muted,17);for(let p=Math.ceil(min);p<max-.2;p++){line(X(p),top,X(p),bottom,C.grid);if(X(p)<right-40)txt(X(p),bottom+24,p,C.muted,16,'middle')}txt(right,bottom+24,'pH',C.ink,17,'end');
- const clipId='graph-clip',defs=el('defs'),clip=el('clipPath',{id:clipId},defs);el('rect',{x:left,y:top,width:right-left,height:height},clip);const g=el('g',{'clip-path':`url(#${clipId})`});
- for(const s of species()){let d='';for(let i=0;i<=300;i++){const p=min+(max-min)*i/300;d+=(i?'L':'M')+X(p)+','+Y(s.f(p))}el('path',{d,stroke:s.c,'stroke-width':3,fill:'none','stroke-dasharray':s.dash?'9 5':'none'},g)}
- if(showMarker&&focus>=min&&focus<=max){line(X(focus),top,X(focus),bottom,C.accent,2);for(const s of species())circle(X(focus),Y(s.f(focus)),5,s.c,C.panel,{'stroke-width':1.5});/* The large pH readout below the plot labels the cursor without hiding the curves. */}
- const pks=state.mode==='mix'||state.system==='pair'?[state.p1,state.p2]:state.system==='carbon'?[state.p1,carbonPK2]:[currentPK()];
- txt(right,22,pks.map((p,i)=>'pKa'+(pks.length>1?(i+1):'')+' = '+F(p,2)).join(' · '),C.muted,W<600?13:17,'end');pks.forEach((p,i)=>{if(X(p)>=left&&X(p)<=right){line(X(p),top,X(p),bottom,C.muted,1,{'stroke-dasharray':'2 6'});/* pKa values are grouped above the plot to avoid collisions near equal pKa. */}});
+/* TC4 · Équilibres acido-basiques : ajouts de physique (lot 18).
+   weak(kind, pK, c) : pH exact d'une solution d'acide faible (kind 'acide', couple AH/A⁻) ou de base faible (kind 'base',
+   couple BH⁺/B) de concentration apportée c (mol/L) dans l'eau pure : électroneutralité [H₃O⁺] = [HO⁻] + [A⁻]
+   (ou [H₃O⁺] + [BH⁺] = [HO⁻]), avec Kₑ = 10⁻¹⁴, activités = concentrations, 25 °C.
+   Approximations du cours : acide faible pH ≈ ½(pKa − log c) ; base faible pH ≈ 7 + ½(pKa + log c) ;
+   acide fort pH = −log c ; base forte pH = 14 + log c. */
+'use strict';
+const WeakModel=(()=>{
+ const mono=AcidBaseModel.mono;
+ function exact(kind,pK,c){
+  const charge=p=>{const f=mono(p,pK);return 10**(-p)-10**(p-14)+(kind==='acide'?-c*f[1]:c*f[0])};
+  let lo=-3,hi=17;for(let i=0;i<120;i++){const m=(lo+hi)/2;if(charge(m)>0)lo=m;else hi=m}
+  const pH=(lo+hi)/2,f=mono(pH,pK);
+  /* taux de réaction avec l'eau : fraction de A⁻ (acide) ou de BH⁺ (base) formée */
+  return{pH,h:10**(-pH),oh:10**(pH-14),alpha:kind==='acide'?f[1]:f[0],f,tau:kind==='acide'?f[1]:f[0]};
  }
- if(domainsOnly){const nn=names(),rxn=`${nn[0]} + ${nn[3]} ⇌ ${nn[1]} + ${nn[2]}`;txt(W/2,Math.max(36,H*.10),rxn,C.ink,W<500?19:W<650?22:29,'middle');txt(W/2,Math.max(76,H*.26),'ΔpKa = '+F(state.p2-state.p1,2)+'   ·   K = '+number(reaction.K),C.accent,21,'middle');
- // Overlay the incompatible / common region of the reactant predominance domains.
- const pLo=Math.min(state.p1,state.p2),pHi=Math.max(state.p1,state.p2),xl=Math.max(left,X(pLo)),xr=Math.min(right,X(pHi));if(xr>xl)rect(xl,H*.34,xr-xl,H*.31,C.accent,'none',{'fill-opacity':.07});
- txt(W/2,H*.83,state.p2>state.p1?(W<600?'Réactifs : domaines disjoints':nn[0]+' et '+nn[3]+' : domaines de prédominance disjoints'):state.p2<state.p1?(W<600?'Réactifs : domaine commun':nn[0]+' et '+nn[3]+' : domaine de prédominance commun'):'Même pKa : K = 1',C.accent,W<650?17:22,'middle');txt(W/2,H*.94,'Déplacer les poignées pour modifier les pKa',C.muted,W<650?15:18,'middle');
- const y1=H*.43,y2=H*.61;domain(y1,state.p1,nn[0],nn[1],C.red,C.blue,'p1');domain(y2,state.p2,nn[2],nn[3],C.orange,C.purple,'p2');
- for(let p=Math.ceil(min);p<max-.2;p+=2)txt(X(p),H*.72,p,C.muted,16,'middle');txt(right,H*.72,'pH',C.ink,17,'end');
- }else{const ys=domRows===2?[H-72,H-25]:[H-31],nn=names();if(state.mode==='mix'||state.system==='pair'){domain(ys[0],state.p1,nn[0],nn[1],C.red,C.blue,'p1');domain(ys[1],state.p2,nn[2],nn[3],C.orange,C.purple,'p2')}else if(state.system==='carbon'){domain(ys[0],state.p1,'CO₂*','HCO₃⁻',C.red,C.blue,'p1');domain(ys[1],carbonPK2,'HCO₃⁻','CO₃²⁻',C.blue,C.purple,null)}else{const sp=species();domain(ys[0],currentPK(),sp[0].name,sp[1].name,sp[0].c,sp[1].c,state.system==='ammonium'?'p2':'p1')}}
-}
-function table(){
- if(W<620){handles=[];plot=null;const nn=names(),left=12,right=W-12,labelWidth=92,col=(right-left-labelWidth)/3,rowH=Math.min(65,(H-85)/5),start=48,xi=reaction.xi*state.progress/100,current=[state.n[0]-xi,state.n[1]+xi,state.n[2]+xi,state.n[3]-xi];const compact=n=>n===0?'0':Math.abs(n)>=.01?F(n,3):n.toExponential(2).replace('.',',').replace('e-','e−').replace('e+','e');txt(W/2,25,'Réaction unique · mmol',C.accent,19,'middle');rect(left,start,right-left,rowH,C.soft);['Initial','À ξ','Final'].forEach((s,i)=>txt(left+labelWidth+col*(i+.5),start+rowH*.65,s,C.muted,16,'middle'));nn.forEach((n,i)=>{const y=start+(i+1)*rowH;line(left,y,right,y,C.line);txt(left+4,y+rowH*.65,n,[C.red,C.blue,C.orange,C.purple][i],16);[state.n[i],current[i],reaction.final[i]].forEach((v,j)=>txt(left+labelWidth+col*(j+.5),y+rowH*.65,compact(v),j===2?C.accent:C.ink,15,'middle'))});txt(W/2,Math.min(H-12,start+5*rowH+25),'ξ = '+compact(xi)+' / ξₑ = '+compact(reaction.xi)+' mmol',C.muted,16,'middle');return}
- handles=[];plot=null;const nn=names(),left=18,right=W-18,labelWidth=W<620?88:135,col=(right-left-labelWidth)/4,rowH=Math.min(58,(H-95)/5.3),start=57;
- txt(W/2,28,'Réaction unique · quantités en mmol',C.accent,W<650?18:23,'middle');rect(left,start,right-left,rowH,C.soft);
- txt(left+9,start+rowH*.65,'État',C.muted,W<650?15:18);
- nn.forEach((n,i)=>txt(left+labelWidth+col*(i+.5),start+rowH*.65,n,[C.red,C.blue,C.orange,C.purple][i],W<650?16:21,'middle'));
- const xi=reaction.xi*state.progress/100,progress=[state.n[0]-xi,state.n[1]+xi,state.n[2]+xi,state.n[3]-xi];
- const rows=[['Introduit',state.n],['Variation',[-xi,xi,xi,-xi]],['À ξ',progress],['Équilibre',reaction.final]];
- rows.forEach(([label,values],r)=>{const y=start+(r+1)*rowH;if(r===3)rect(left,y,right-left,rowH,C.soft);else line(left,y,right,y,C.line);txt(left+9,y+rowH*.65,label,r===3?C.accent:C.muted,W<650?15:18);values.forEach((v,i)=>txt(left+labelWidth+col*(i+.5),y+rowH*.65,(r===1&&v>0?'+':'')+number(v,3),r===3?C.accent:C.ink,W<650?16:22,'middle'))});
- const y=Math.min(H-13,start+rowH*5+28);txt(W/2,y,'ξ = '+number(xi,4)+' mmol   /   ξₑ = '+number(reaction.xi,4)+' mmol',C.muted,W<650?16:21,'middle');
-}
-function finalBars(){
- // Wide screens can show the aqueous quantities as an inset, but keep the plot readable.
- graph(true,false);
-}
-function modeUI(){const mix=state.mode==='mix';toggle($('view-explore'),!mix);toggle($('view-mix'),mix);$('explore-controls').hidden=mix;$('mix-controls').hidden=!mix;$('mix-steps').hidden=!mix;$('progress-controls').hidden=!mix||state.step!==2;
- $('mode-explanation').textContent=mix?'pH calculé : les quantités introduites déterminent l’équilibre.':'pH imposé : on explore la répartition des espèces.';
- for(let i=1;i<=3;i++)toggle($('step'+i),state.step===i);
- const carbon=!mix&&state.system==='carbon';$('pk2').disabled=$('pk2-num').disabled=carbon;$('pk1').max=$('pk1-num').max=carbon?10.25:13;
- $('pk-hint').textContent=carbon?'Modèle carbonaté : pKa₂ fixé à 10,3. Réinitialiser le système pour retrouver pKa₁ = 6,3.':'Les pKa sont aussi déplaçables sur les axes de prédominance.';
- $('model-caption').textContent=mix?'Réaction unique pour le tableau ; vérification aqueuse avec l’eau pour le pH final.':'À pH = pKa, les deux formes adjacentes sont en concentrations égales.';
- const nn=names();nn.forEach((n,i)=>$('nlabel'+i).textContent=n);
- const sp=species();$('legend').hidden=mix&&state.step!==3;$('legend').innerHTML=sp.map(s=>`<span><i class="${s.dash?'dashed':''}" style="--c:${s.c}"></i>${s.name}</span>`).join('');
-}
-function render(){
- clearScene();reaction=M.reaction(state.n,state.p1,state.p2);aqueous=M.aqueous(state.n,state.p1,state.p2,state.volume);modeUI();
- if(state.mode==='explore'){
- graph();const sp=species(),fr=sp.map(s=>s.f(state.pH));
- if(fr.length===2){metric(1,'pH imposé',F(state.pH,2));metric(2,sp[0].name,F(fr[0]*100,1)+' <small>%</small>');metric(3,sp[1].name,F(fr[1]*100,1)+' <small>%</small>');const ratio=fr[1]/fr[0];note(Math.abs(fr[0]-.5)<1e-6?'Deux formes en concentrations égales':sp[fr[0]>fr[1]?0:1].name+' prédomine','[base]/[acide] = '+number(ratio)+'. Prédominer ne signifie pas être la seule espèce présente.');}
- else if(state.system==='carbon'){sp.forEach((s,i)=>metric(i+1,s.name,F(fr[i]*100,1)+' <small>%</small>'));note('Système carbonaté · pH imposé : '+F(state.pH,2),'Les trois proportions totalisent 100 %. CO₂* regroupe CO₂ dissous et H₂CO₃.');}
- else{metric(1,'pH imposé',F(state.pH,2));metric(2,sp[0].name+' / '+sp[1].name,F(fr[0]*100,1)+' / '+F(fr[1]*100,1)+' <small>%</small>');metric(3,sp[2].name+' / '+sp[3].name,F(fr[2]*100,1)+' / '+F(fr[3]*100,1)+' <small>%</small>');note('Chaque couple possède sa propre répartition','Les proportions totalisent 100 % pour chacun des deux couples, indépendamment de sa quantité totale.');}
- }else{
- const capacity=(state.n[0]+state.n[1])>0&&(state.n[2]+state.n[3])>0;
- if(state.step===1){graph(false,true);metric(1,'Écart pKa₂ − pKa₁',F(state.p2-state.p1,2));metric(2,'Constante K',number(reaction.K));metric(3,'Quotient initial Qᵢ',number(reaction.Qi));let title=!capacity?'Une famille est absente':Number.isNaN(reaction.Qi)?'Quotient initial indéfini':Math.abs(reaction.xi)<1e-10?'Le mélange est à l’équilibre du modèle unique':reaction.xi>0?'Évolution dans le sens direct : Qᵢ < K':'Évolution dans le sens inverse : Qᵢ > K';note(title,!capacity?'Introduire au moins une espèce de chaque famille pour étudier leur transfert de proton.':'K indique le caractère favorisé ; la comparaison de Qᵢ à K détermine le sens effectif.');}
- else if(state.step===2){table();metric(1,'Avancement d’équilibre ξₑ',number(reaction.xi,4)+' <small>mmol</small>');metric(2,'Conversion dans le sens effectif',(reaction.tau>.9999995&&reaction.tau<1?'&lt; 100':F(reaction.tau*100,reaction.tau>.9999&&reaction.tau<1?4:2))+' <small>%</small>');metric(3,'Constante K',number(reaction.K));note(!capacity?'Aucun transfert entre deux familles':reaction.tau>=.99?'Conversion supérieure ou égale à 99 %':reaction.tau<.01?'Conversion inférieure à 1 %':'La réaction laisse des réactifs résiduels','Tableau du modèle de réaction unique. La progression de ξ est illustrative ; elle ne représente pas une cinétique.');}
- else{
- finalBars();const scales=[state.n[0]+state.n[1],state.n[0]+state.n[1],state.n[2]+state.n[3],state.n[2]+state.n[3]],err=Math.max(...aqueous.final.map((v,i)=>scales[i]?Math.abs(v-reaction.final[i])/scales[i]:0));metric(1,'pH final · eau incluse',F(aqueous.pH,3));metric(2,'Écart maximal des fractions¹',F(err*100,3)+' <small>point(s)</small>');metric(3,'[H₃O⁺] final',number(aqueous.h)+' <small>mol/L</small>');
- note(err<.01?'La réaction unique approche le modèle aqueux à moins de 1 point':'Les équilibres avec l’eau modifient sensiblement le résultat','¹ Écart absolu de proportion au sein d’une famille. Bilan aqueux (mmol) : '+names().map((n,i)=>n+' '+number(aqueous.final[i],4)).join(' · '));
- }
- }
-}
-function tick(dt){if(state.mode==='explore'){state.pH=(state.pH+dt*.55)%14;setField('ph',+state.pH.toFixed(2));render()}else if(state.step===2){if(state.progress>=100)state.progress=0;state.progress=Math.min(100,state.progress+dt*16);setField('progress',Math.round(state.progress));render();if(state.progress>=100){playing=false;syncPlay()}}else if(state.step===1){state.p2=7+5*Math.sin(lastTime/5000);setField('pk2',+state.p2.toFixed(2));render()}else{playing=false;syncPlay();toast('Les résultats de cette vue sont ceux de l’équilibre.')}}
-$('scene').addEventListener('pointerdown',e=>{
- if(!plot)return;const bounds=$('scene').getBoundingClientRect(),x=e.clientX-bounds.left,y=e.clientY-bounds.top;let selected=handles.find(h=>Math.hypot(h.x-x,h.y-y)<22);
- if(!selected&&(state.mode!=='explore'||y<plot.top||y>plot.bottom))return;
- playing=false;syncPlay();const move=e=>{const x=e.clientX-bounds.left;let v=plot.min+(x-plot.left)/(plot.right-plot.left)*(plot.max-plot.min);if(selected){v=Math.max(1,Math.min(selected.key==='p1'&&state.system==='carbon'?10.25:13,v));state[selected.key]=v;setField(selected.key==='p1'?'pk1':'pk2',+v.toFixed(2))}else{state.pH=Math.max(0,Math.min(14,v));setField('ph',+state.pH.toFixed(2))}render()};
- $('scene').setPointerCapture(e.pointerId);move(e);$('scene').onpointermove=move;$('scene').onpointerup=$('scene').onpointercancel=()=>{$('scene').onpointermove=null};
-});
-sync();render();window.TC4App={getState:()=>structuredClone(state),getResults:()=>structuredClone({reaction,aqueous}),setMode,preset,render};
-</script><!-- CPGE_MENU_SCRIPT_BEGIN -->
-<script id="cpge-menu-common">
-/* Barre commune embarquée : conserve les boutons et les fonctions de l’animation. */
-(()=>{
- 'use strict';
- if(document.documentElement.dataset.cpgeMenu==='1')return;
- const header=document.querySelector('header'),theme=document.getElementById('theme');
- if(!header||!theme)return;
- document.documentElement.dataset.cpgeMenu='1';
- const actions=theme.parentElement,film=document.documentElement.hasAttribute('data-cpge-film');
- header.classList.add('cpge-menu-header');actions.classList.add('cpge-global-actions');actions.setAttribute('role','group');actions.setAttribute('aria-label','Commandes générales');
- const make=(id,label)=>{const b=document.createElement('button');b.id=id;b.type='button';b.textContent=label;return b;};
- let help=header.querySelector('button#help,button#about'),image=header.querySelector('button#export'),projection=header.querySelector('button#projection'),full=header.querySelector('button#fullscreen');
- if(film){image=document.getElementById('still');theme.onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';};}
- if(!help){
-  help=make('help','Aide');const dialog=document.createElement('dialog');dialog.className='cpge-common-dialog';
-  const close=make('cpge-close-help','Fermer');close.className='cpge-dialog-close';const title=document.createElement('h2');title.textContent='Utiliser l’animation';
-  const instructions=document.createElement('p'),model=document.createElement('p');
-  instructions.textContent=film?'Déplacer le curseur pour parcourir le film. « Image » enregistre l’image courante lorsque le rendu est prêt. « Enregistrer la vidéo » conserve le film complet. Le thème clair/sombre concerne le cadre de lecture ; le film conserve son éclairage.':'Choisir un exemple, ajuster les paramètres puis cliquer sur « Préparer ce mélange » et démarrer. Les commandes de lecture permettent de suivre l’évolution et le graphe. Les détails du modèle et les conventions restent accessibles dans les rubriques de l’animation.';
-  const controls=document.createElement('p');controls.textContent='Sombre / Clair change le thème. Image exporte la représentation. Projection agrandit la scène et masque les réglages ; Réglages les rétablit. Le petit carré utilise le plein écran du navigateur, indépendamment de Projection. Échap permet de quitter le plein écran.';
-  dialog.append(close,title,instructions,model,controls);document.body.append(dialog);close.onclick=()=>dialog.close();help.onclick=()=>{model.textContent=document.getElementById('caseHelp')?.textContent||'';dialog.showModal();};
- }
- if(!projection){projection=make('projection','Projection');projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};}
- if(!full)full=make('fullscreen','⛶');
- if(!image)return;
- if(film)projection.onclick=()=>{document.body.classList.toggle('projection');window.dispatchEvent(new Event('resize'));};
- const common=[theme,help,image,projection,full];
- // Les boutons propres à l’animation gardent leur place avant les cinq commandes communes.
- const extras=[...actions.children].filter(e=>!common.includes(e));actions.replaceChildren(...extras,...common);
- for(const b of common){b.classList.add('cpge-common-button');if(!b.hasAttribute('type'))b.type='button';}
- full.classList.add('cpge-fullscreen');
- const imageTitle=image.getAttribute('title')||(/PNG/i.test(image.textContent)?'Enregistrer une image PNG':/SVG/i.test(image.textContent)?'Enregistrer une image SVG':'Enregistrer une image de la scène');
- const label=(b,value)=>{const target=b.querySelector('#theme-label,.button-text,.word')||b;if(target!==b)for(const node of b.childNodes)if(node.nodeType===3&&node.textContent.trim())node.textContent='';if(target.textContent!==value)target.textContent=value;};
- const attr=(e,key,value)=>{if(e.getAttribute(key)!==String(value))e.setAttribute(key,String(value));};
- const fullscreen=()=>document.fullscreenElement||document.webkitFullscreenElement;
- let queued=false,busy=false,wasFull=Boolean(fullscreen()),escapeUntil=0;
- function sync(){
-  queued=false;const root=document.documentElement,body=document.body,dark=(root.dataset.theme||body.dataset.theme)==='dark'||body.classList.contains('dark')||root.classList.contains('dark'),projected=body.classList.contains('projection')||root.classList.contains('projection'),on=Boolean(fullscreen());
-  label(theme,dark?'Clair':'Sombre');attr(theme,'aria-pressed',dark);attr(theme,'aria-label',dark?'Passer au thème clair':'Passer au thème sombre');attr(theme,'title',dark?'Passer au thème clair':'Passer au thème sombre');
-  label(help,'Aide');attr(help,'aria-label','Aide');attr(help,'title','Utilisation, modèle et hypothèses');
-  label(image,'Image');attr(image,'aria-label','Enregistrer une image');attr(image,'title',imageTitle);
-  label(projection,projected?'Réglages':'Projection');attr(projection,'aria-pressed',projected);attr(projection,'aria-label',projected?'Afficher les réglages':'Mode projection');attr(projection,'title',projected?'Afficher les réglages':'Agrandir la scène et masquer les réglages');
-  label(full,'⛶');attr(full,'aria-pressed',on);attr(full,'aria-label',on?'Quitter le plein écran':'Plein écran');attr(full,'title',on?'Quitter le plein écran · Échap':'Plein écran');
- }
- const queue=()=>{if(!queued){queued=true;queueMicrotask(sync);}};
- function notice(message){let status=document.getElementById('cpge-menu-status');if(!status){status=document.createElement('div');status.id='cpge-menu-status';status.className='cpge-menu-status';status.setAttribute('role','status');document.body.append(status);}status.textContent=message;status.hidden=false;setTimeout(()=>status.hidden=true,6000);}
- async function toggleFullscreen(){
-  if(busy)return;busy=true;
-  try{if(fullscreen()){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(!exit)throw Error();await exit.call(document);}else{const enter=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(!enter)throw Error();await enter.call(document.documentElement);}}
-  catch{notice('Le plein écran n’est pas disponible ici. Utiliser le plein écran du navigateur dans une fenêtre indépendante.');}
-  finally{busy=false;queue();}
- }
- // Capture avant les anciennes actions : une seule demande, y compris pour les boutons ajoutés.
- full.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();toggleFullscreen();},true);
- function fullscreenChanged(){const on=Boolean(fullscreen());if(wasFull&&!on)escapeUntil=performance.now()+500;wasFull=on;queue();}
- document.addEventListener('fullscreenchange',fullscreenChanged);document.addEventListener('webkitfullscreenchange',fullscreenChanged);
- // Échap quitte le plein écran sans déclencher la sortie de Projection des anciennes interfaces.
- document.addEventListener('keydown',event=>{if(event.key!=='Escape'||document.querySelector('dialog[open]'))return;if(fullscreen()||busy||performance.now()<escapeUntil){event.stopImmediatePropagation();if(fullscreen()&&!busy){event.preventDefault();toggleFullscreen();}}},true);
- new MutationObserver(queue).observe(actions,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-pressed','title']});
- const stateObserver=new MutationObserver(queue);stateObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','class']});stateObserver.observe(document.body,{attributes:true,attributeFilter:['data-theme','class']});
- sync();
+ const approx=(kind,pK,c)=>kind==='acide'?.5*(pK-Math.log10(c)):7+.5*(pK+Math.log10(c));
+ const strong=(kind,c)=>kind==='acide'?-Math.log10(c):14+Math.log10(c);
+ return{exact,approx,strong};
 })();
+
+// @titre Atelier d'équilibres acido-basiques · TC4 · MPSI
+// @sortie ../TC4_Equilibres_Acido_Basiques/TC4_Equilibres_Acido_Basiques.html
+// @inclure TC4_Equilibres_Acido_Basiques_physique.js
+// @inclure TC4_Ajouts_physique.js
+// @description Atelier d'équilibres acido-basiques : diagrammes de distribution et de prédominance, prévision, calcul et interprétation d'un mélange, acide ou base faible dans l'eau.
+'use strict';
+/* =====================================================================
+   TC4 · Atelier d'équilibres acido-basiques (5 onglets)
+   1 Explorer (pH imposé) · 2 Prévoir (K, Q₀) · 3 Calculer (réaction unique) · 4 Interpréter (avec l'eau) · 5 Acide ou base dans l'eau
+   Physique : AcidBaseModel (TC4_Equilibres_Acido_Basiques_physique.js, d'origine, inchangée) ;
+   ajouts TC4_Ajouts_physique.js : pH exact d'un acide ou d'une base faible (proposition F), formules approchées.
+   Lot 18 : sur AnimKit ; pH de 0 à 14 fixe (zoom du kit) ; prévisions (K, Q₀, équilibre, résultats aqueux, formules approchées)
+   masquées au départ ; progression de ξ au curseur temporel ; comparaison en barres (introduit / réaction unique / avec l'eau).
+   ===================================================================== */
+const MD=AcidBaseModel,WK=WeakModel,fm=AnimKit.fmt,Mh=AnimKit.M;
+const CARB2=10.3;
+const st={prog:0,dir:1,hand:{dist:[],prevoir:[],phc:[]},plot:{dist:null,prevoir:null,phc:null}};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rd=(v,d=2)=>Math.round(v*10**d)/10**d;
+const sv=(a,s)=>String(s).replace(/<sup>(.*?)<\/sup>/g,(_,e)=>a.S.sup(e));
+const subT=t=>`<tspan font-size="72%" dy="0.3em">${t}</tspan><tspan dy="-0.3em">​</tspan>`;
+/* formules : 'CH_3COO^−' → SVG (tspan) ou HTML (<sub>, <sup>) */
+const cS=(a,s)=>s.replace(/_(\d+)/g,(_,d)=>subT(d)).replace(/\^([0-9+−*]+)/g,(_,e)=>a.S.sup(e));
+const cH=s=>s.replace(/_(\d+)/g,'<sub>$1</sub>').replace(/\^([0-9+−*]+)/g,'<sup>$1</sup>');
+const pal=C=>({purple:C.dark?'#c79bff':'#7b3fb3'});
+const real=(a)=>Math.abs(a.p.pk1-4.8)<1e-8&&Math.abs(a.p.pk2-9.2)<1e-8;
+const names=a=>real(a)?['CH_3COOH','CH_3COO^−','NH_4^+','NH_3']:['AH','A^−','BH^+','B'];
+const currentPK=a=>a.p.system==='ammonium'?a.p.pk2:a.p.pk1;
+const nvec=a=>[a.p.n0,a.p.n1,a.p.n2,a.p.n3];
+const calc=a=>({rx:MD.reaction(nvec(a),a.p.pk1,a.p.pk2),aq:MD.aqueous(nvec(a),a.p.pk1,a.p.pk2,a.p.vol)});
+const num=(a,x,d=3)=>x===null||x===undefined||Number.isNaN(x)?'indéfini':!Number.isFinite(x)?'∞':x===0?'0':fm.sig(x,d);
+const numS=(a,x,d=3)=>sv(a,num(a,x,d));
+const wnames=a=>a.p.wkind==='acide'?['AH','A^−']:['BH^+','B'];
+
+/* espèces tracées dans le diagramme de distribution */
+function species(a,mix){
+  const p=a.p,C=a.C,P=pal(C),nn=names(a),R=[C.F,C.B,C.E,P.purple];
+  if(a.tab===4){const w=wnames(a);return[{name:w[0],c:C.F,dash:false,f:x=>MD.mono(x,p.wpk)[0]},{name:w[1],c:C.B,dash:true,f:x=>MD.mono(x,p.wpk)[1]}]}
+  if(mix||p.system==='pair')return[
+    {name:nn[0],c:R[0],dash:false,f:x=>MD.mono(x,p.pk1)[0]},{name:nn[1],c:R[1],dash:false,f:x=>MD.mono(x,p.pk1)[1]},
+    {name:nn[2],c:R[2],dash:true,f:x=>MD.mono(x,p.pk2)[0]},{name:nn[3],c:R[3],dash:true,f:x=>MD.mono(x,p.pk2)[1]}];
+  if(p.system==='carbon')return['CO_2*','HCO_3^−','CO_3^2−'].map((n,i)=>({name:n,c:[R[0],R[1],R[3]][i],dash:i===2,f:x=>MD.carbon(x,p.pk1,CARB2)[i]}));
+  const pk=currentPK(a),ammo=p.system==='ammonium',std=Math.abs(pk-(ammo?9.2:4.8))<1e-8;
+  const ns=std?(ammo?['NH_4^+','NH_3']:['CH_3COOH','CH_3COO^−']):(ammo?['BH^+','B']:['AH','A^−']);
+  return ns.map((n,i)=>({name:n,c:[R[0],R[1]][i],dash:!!i,f:x=>MD.mono(x,pk)[i]}));
+}
+
+/* ---------- ligne de prédominance (avec poignée de pKa) ---------- */
+function domaine(a,o,pl,y,pKa,acid,base,c1,c2,key,hand){
+  const S=a.S,C=a.C,k=a.k,{X,left,right}=pl,px=clamp(X(pKa),left,right),W=pl.W;
+  o.s+=S.rect(left,y-14*k,px-left,26*k,{fill:c1,fop:.14,rx:4})+S.rect(px,y-14*k,right-px,26*k,{fill:c2,fop:.14,rx:4});
+  o.s+=S.line(left,y,right,y,{c:C.ink2,w:1})+S.line(px,y-17*k,px,y+18*k,{c:C.ink,w:2});
+  const fs=W<650?15:19;
+  if(px-left>55)o.s+=S.text((left+px)/2,y,cS(a,acid),{anchor:'middle',size:fs,c:c1,halo:false,weight:600});
+  if(right-px>55)o.s+=S.text((px+right)/2,y,cS(a,base),{anchor:'middle',size:fs,c:c2,halo:false,weight:600});
+  o.s+=S.circle(px,y,9*k,{fill:C.card,c:key?C.c:C.ink2,w:2});
+  if(key)hand.push({x:px,y,key});
+}
+
+/* ---------- diagramme de distribution (+ lignes de prédominance) ---------- */
+function dist(a,id,opt){
+  const P=a.panels[id],S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,mix=!!opt.mix;
+  const two=mix||p.system==='pair'||p.system==='carbon';
+  const left=W<600?52:65,right=W-32,top=36*k,bottom=H-(two?116:90)*k,ht=Math.max(45,bottom-top);
+  const X=x=>left+x/14*(right-left),Y=f=>bottom-f*ht,pl={X,left,right,top,bottom,W};
+  const hand=[];st.hand[id]=hand;st.plot[id]=pl;
+  const o={s:''},G={X,Y,x0:left,y0:top,w:right-left,h:ht};
+  for(let f=0;f<=1.001;f+=.25){o.s+=S.line(left,Y(f),right,Y(f),{c:C.grid,w:1,raw:true});o.s+=S.text(left-9,Y(f),fm.fix(f*100,0),{anchor:'end',size:14,c:C.ink2,halo:false})}
+  o.s+=S.text(left,top-16*k,W<600?'%':'Proportion (%)',{size:14,c:C.ink2,halo:false});
+  for(let x=0;x<=14;x++){o.s+=S.line(X(x),top,X(x),bottom,{c:C.grid,w:1,raw:true});if(X(x)<right-26)o.s+=S.text(X(x),bottom+18*k,String(x),{anchor:'middle',size:14,c:C.ink2,halo:false})}
+  o.s+=S.text(right,bottom+18*k,'pH',{anchor:'end',size:15,c:C.ink,halo:false});
+  const sp=species(a,mix),cid='tc4ab-'+id;
+  o.s+=S.clip(cid,G);
+  for(const s of sp){const pts=[];for(let i=0;i<=280;i++){const x=14*i/280;pts.push([x,s.f(x)])}o.s+=S.curve(pts,G,{c:s.c,w:3,dash:s.dash?`${9*k} ${5*k}`:undefined})}
+  const mk=opt.marker;
+  if(mk!==null&&mk!==undefined){
+    o.s+=S.line(X(mk),top,X(mk),bottom,{c:C.c,w:2});
+    for(const s of sp)o.s+=S.circle(X(mk),Y(s.f(mk)),5*k,{fill:s.c,c:C.card,w:1.5});
+    o.s+=S.text(X(mk)+(X(mk)>right-80?-8:8)*k,top+10*k,'pH = '+fm.fix(mk,2),{anchor:X(mk)>right-80?'end':'start',size:14,c:C.cInk});
+  }
+  const pks=opt.pks;
+  pks.forEach(v=>{if(X(v)>=left&&X(v)<=right)o.s+=S.line(X(v),top,X(v),bottom,{c:C.ink2,w:1,dash:`${2*k} ${6*k}`})});
+  o.s+=S.text(right,top-16*k,pks.map((v,i)=>'p'+S.r('K')+S.r('a')+(pks.length>1?subT(i+1):'')+' = '+fm.fix(v,2)).join('  ·  '),{anchor:'end',size:W<600?13:15,c:C.ink2,halo:false});
+  /* lignes de prédominance */
+  const nn=names(a),ys=two?[H-72*k,H-25*k]:[H-31*k],P2=pal(C);
+  if(opt.dom==='wk'){const w=wnames(a);domaine(a,o,pl,ys[0],p.wpk,w[0],w[1],C.F,C.B,'wpk',hand)}
+  else if(mix||p.system==='pair'){domaine(a,o,pl,ys[0],p.pk1,nn[0],nn[1],C.F,C.B,'pk1',hand);domaine(a,o,pl,ys[1],p.pk2,nn[2],nn[3],C.E,P2.purple,'pk2',hand)}
+  else if(p.system==='carbon'){domaine(a,o,pl,ys[0],p.pk1,'CO_2*','HCO_3^−',C.F,C.B,'pk1',hand);domaine(a,o,pl,ys[1],CARB2,'HCO_3^−','CO_3^2−',C.B,P2.purple,null,hand)}
+  else{domaine(a,o,pl,ys[0],currentPK(a),sp[0].name,sp[1].name,sp[0].c,sp[1].c,p.system==='ammonium'?'pk2':'pk1',hand)}
+  return o.s;
+}
+
+/* ---------- Prévoir : lignes de prédominance seules ---------- */
+function prevoir(a,rx){
+  const P=a.panels.prevoir,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,nn=names(a),P2=pal(C);
+  const left=W<600?20:40,right=W-24,X=x=>left+x/14*(right-left),pl={X,left,right,top:0,bottom:H,W};
+  const hand=[];st.hand.prevoir=hand;st.plot.prevoir=pl;const o={s:''};
+  o.s+=S.text(W/2,H*.10,`${cS(a,nn[0])} + ${cS(a,nn[3])} ⇌ ${cS(a,nn[1])} + ${cS(a,nn[2])}`,{anchor:'middle',size:W<500?19:W<650?22:28,c:C.ink,halo:false,weight:600});
+  const pLo=Math.min(p.pk1,p.pk2),pHi=Math.max(p.pk1,p.pk2);
+  if(p.showK){
+    o.s+=S.text(W/2,H*.20,`Δp${S.r('K')}${S.r('a')} = ${fm.fix(p.pk2-p.pk1,2)}   ·   ${S.v('K')} = ${numS(a,rx.K)}`,{anchor:'middle',size:W<500?16:20,c:C.cInk,halo:false});
+    const xl=Math.max(left,X(pLo)),xr=Math.min(right,X(pHi));
+    if(xr>xl)o.s+=S.rect(xl,H*.31,xr-xl,H*.34,{fill:C.c,fop:.09});
+    o.s+=S.text(W/2,H*.83,p.pk2>p.pk1?(W<600?'Réactifs : domaines disjoints':cS(a,nn[0])+' et '+cS(a,nn[3])+' : domaines de prédominance disjoints'):p.pk2<p.pk1?(W<600?'Réactifs : domaine commun':cS(a,nn[0])+' et '+cS(a,nn[3])+' : domaine de prédominance commun'):'Même p'+S.r('K')+S.r('a')+' : '+S.v('K')+' = 1',{anchor:'middle',size:W<650?15:19,c:C.cInk});
+  }
+  const y1=H*.44,y2=H*.62;
+  domaine(a,o,pl,y1,p.pk1,nn[0],nn[1],C.F,C.B,'pk1',hand);domaine(a,o,pl,y2,p.pk2,nn[2],nn[3],C.E,P2.purple,'pk2',hand);
+  for(let x=0;x<=14;x+=2)o.s+=S.text(X(x),H*.73,String(x),{anchor:'middle',size:14,c:C.ink2,halo:false});
+  o.s+=S.text(right,H*.73+20*k,'pH',{anchor:'end',size:15,c:C.ink,halo:false});
+  o.s+=S.text(W/2,H*.95,'Déplacer les poignées pour modifier les p'+S.r('K')+S.r('a'),{anchor:'middle',size:W<650?14:16,c:C.ink2});
+  a.svg('prevoir',o.s);
+}
+
+/* ---------- Calculer : tableau de la réaction unique ---------- */
+function tableau(a,rx){
+  const P=a.panels.tableau,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,nn=names(a),P2=pal(C),col=[C.F,C.B,C.E,P2.purple];
+  const xi=rx.xi*st.prog,cur=[p.n0-xi,p.n1+xi,p.n2+xi,p.n3-xi],ini=nvec(a),q=x=>numS(a,x,3);
+  let o=S.text(W/2,24*k,'Réaction unique · quantités en mmol',{anchor:'middle',size:W<650?16:20,c:C.cInk,halo:false,weight:600});
+  const start=44*k;
+  if(W<620){
+    const left=10,right=W-10,lab=Math.min(92,W*.26),cw=(right-left-lab)/(p.showEq?3:2),rh=Math.min(58*k,(H-start-70*k)/5);
+    const heads=['Initial','À ξ'].concat(p.showEq?['Final']:[]);
+    o+=S.rect(left,start,right-left,rh,{fill:C.cSoft});
+    heads.forEach((s,i)=>o+=S.text(left+lab+cw*(i+.5),start+rh/2,s,{anchor:'middle',size:14,c:C.ink2,halo:false}));
+    nn.forEach((n,i)=>{const y=start+(i+1)*rh;o+=S.line(left,y,right,y,{c:C.rule,w:1});
+      o+=S.text(left+4,y+rh/2,cS(a,n),{size:15,c:col[i],halo:false,weight:600});
+      const vals=[ini[i],cur[i]].concat(p.showEq?[rx.final[i]]:[]);
+      vals.forEach((v,j)=>o+=S.text(left+lab+cw*(j+.5),y+rh/2,q(v),{anchor:'middle',size:14,c:j===2?C.cInk:C.ink,halo:false}))});
+    o+=S.text(W/2,Math.min(H-14*k,start+5*rh+24*k),`${S.v('ξ')} = ${q(xi)} mmol`+(p.showEq?` / ${S.v('ξ','é')} = ${q(rx.xi)} mmol`:''),{anchor:'middle',size:14,c:C.ink2,halo:false});
+  }else{
+    const left=18,right=W-18,lab=W<760?100:135,cw=(right-left-lab)/4,rh=Math.min(56*k,(H-start-64*k)/(p.showEq?5.1:4.2));
+    o+=S.rect(left,start,right-left,rh,{fill:C.cSoft});
+    o+=S.text(left+9,start+rh/2,'État',{size:15,c:C.ink2,halo:false});
+    nn.forEach((n,i)=>o+=S.text(left+lab+cw*(i+.5),start+rh/2,cS(a,n),{anchor:'middle',size:W<760?17:21,c:col[i],halo:false,weight:600}));
+    const rows=[['Introduit',ini],['Variation',[-xi,xi,xi,-xi]],['À ξ',cur]];
+    if(p.showEq)rows.push(['Équilibre',rx.final]);
+    rows.forEach(([label,vals],r)=>{const y=start+(r+1)*rh,last=p.showEq&&r===3;
+      if(last)o+=S.rect(left,y,right-left,rh,{fill:C.cSoft});else o+=S.line(left,y,right,y,{c:C.rule,w:1});
+      o+=S.text(left+9,y+rh/2,label,{size:15,c:last?C.cInk:C.ink2,halo:false});
+      vals.forEach((v,i)=>o+=S.text(left+lab+cw*(i+.5),y+rh/2,(r===1&&v>0?'+':'')+q(v),{anchor:'middle',size:W<760?16:20,c:last?C.cInk:C.ink,halo:false}))});
+    const rows2=rows.length+1;
+    o+=S.text(W/2,Math.min(H-14*k,start+rh*rows2+26*k),`${S.v('ξ')} = ${numS(a,xi,4)} mmol`+(p.showEq?`   /   ${S.v('ξ','é')} = ${numS(a,rx.xi,4)} mmol`:''),{anchor:'middle',size:W<650?15:19,c:C.ink2,halo:false});
+  }
+  a.svg('tableau',o);
+}
+
+/* ---------- Interpréter : barres introduit / réaction unique / avec l'eau ---------- */
+function barres(a,rx,aq){
+  const P=a.panels.barres,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,nn=names(a),P2=pal(C),col=[C.F,C.B,C.E,P2.purple];
+  const ini=nvec(a),mx=Math.max(.1,...ini,...rx.final,...aq.final)*1.12;
+  const G=S.graph({x:2*k,y:2*k,w:W-4*k,h:H-4*k,xmin:0,xmax:4,ymin:0,ymax:mx,xlabels:false,xlab:'',ylab:'Quantité (mmol)',padB:30*k});
+  let o=G.svg;
+  const gw=G.w/4,bw=Math.min(26*k,gw/4.2);
+  for(let i=0;i<4;i++){
+    const cx=G.x0+gw*(i+.5),vals=[ini[i],p.showAq?rx.final[i]:null,p.showAq?aq.final[i]:null];
+    vals.forEach((v,j)=>{if(v===null)return;const x=cx+(j-1)*(bw+3*k)-bw/2,h=v/mx*G.h;
+      o+=j===0?S.rect(x,G.y0+G.h-h,bw,h,{fill:'none',c:col[i],w:1.8}):S.rect(x,G.y0+G.h-h,bw,h,{fill:col[i],fop:j===1?.45:1});});
+    o+=S.text(cx,G.y0+G.h+18*k,cS(a,nn[i]),{anchor:'middle',size:15,c:col[i],halo:false,weight:600});
+  }
+  if(p.showAq)o+=S.text(G.x0+G.w,G.y0+8*k,'contour : introduit · clair : réaction unique · plein : avec l\'eau',{anchor:'end',size:13,c:C.ink2,base:'top'});
+  a.svg('barres',o);
+}
+
+/* ---------- Acide ou base dans l'eau : pH en fonction de log c ---------- */
+function phc(a,w){
+  const P=a.panels.phc,S=a.S,C=a.C,k=a.k,p=a.p,ac=p.wkind==='acide';
+  const G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:-6,xmax:0,ymin:0,ymax:14,xticks:[-6,-5,-4,-3,-2,-1,0],yticks:[0,2,4,6,8,10,12,14],xlab:'log '+S.v('c')+' (c en mol·L'+S.sup('−1')+')',ylab:'pH',padB:40*k});
+  st.plot.phc=G;
+  let o=G.svg+S.clip('tc4ab-phc',G);
+  const N=100,ex=[],ap=[],sg=[];
+  for(let i=0;i<=N;i++){const lc=-6+6*i/N,c=10**lc;ex.push([lc,WK.exact(p.wkind,p.wpk,c).pH]);ap.push([lc,WK.approx(p.wkind,p.wpk,c)]);sg.push([lc,WK.strong(p.wkind,c)])}
+  o+=S.line(G.x0,G.Y(7),G.x0+G.w,G.Y(7),{c:C.ink2,w:1,dash:`${3*k} ${5*k}`});
+  if(p.showApprox){
+    o+=S.curve(sg,G,{c:C.ink2,w:1.8,dash:`${5*k} ${5*k}`});
+    o+=S.curve(ap,G,{c:C.pred,w:2,dash:`${8*k} ${4*k}`});
+  }
+  o+=S.curve(ex,G,{c:C.c,w:3});
+  const lc=Math.log10(p.wc),cx=G.X(lc),cy=G.Y(w.pH);
+  o+=`<path d="M${cx.toFixed(1)},${(G.y0+G.h).toFixed(1)}V${cy.toFixed(1)}H${G.x0.toFixed(1)}" fill="none" stroke="${C.F}" stroke-width="${(1.5*k).toFixed(1)}" stroke-dasharray="${4*k} ${5*k}"/>`;
+  o+=S.circle(cx,cy,7*k,{fill:C.F,c:C.card,w:2});
+  o+=S.text(cx+(lc>-1.2?-10:10)*k,cy+(ac?-16:16)*k,'pH = '+fm.fix(w.pH,2),{anchor:lc>-1.2?'end':'start',size:14,c:C.cInk});
+  o+=S.text(G.x0+G.w-6*k,G.Y(7)-10*k,'pH = 7',{anchor:'end',size:13,c:C.ink2,halo:false});
+  a.svg('phc',o);
+}
+
+/* ---------- application ---------- */
+const BASE={system:'acetate',ph:4.8,pk1:4.8,pk2:9.2,n0:1,n1:0,n2:0,n3:3,vol:100};
+const MIX=o=>({...BASE,system:'pair',...o});
+function scrub(on){const d=typeof document!=='undefined'&&document.querySelector?document.querySelector('.ak-scrub'):null;if(d)d.hidden=!on}
+
+const A=AnimKit.app({
+  code:'TC4',partie:'VertEmeraude',chapitre:'TC4 Réactions acido-basiques',
+  titre:'Atelier d\'équilibres acido-basiques',sousTitre:'Explorer, prévoir, calculer, interpréter',
+  fichier:'Equilibres_Acido_Basiques',
+  onglets:['Explorer','Prévoir','Calculer','Interpréter','Dans l\'eau'],
+  temps:a=>a.tab!==3,pas:.5,
+  curseur:{max:()=>1,get:()=>st.prog,set:(a,v)=>{if(a.tab===2)st.prog=clamp(v,0,1)}},
+  panneaux:[
+    {id:'dist',poids:1,onglets:[0,3,4],ratioTel:1.05},
+    {id:'prevoir',poids:1,onglets:[1],ratioTel:1},
+    {id:'tableau',poids:1,onglets:[2],ratioTel:1.15},
+    {id:'barres',titre:'Quantités finales (mmol)',poids:.8,onglets:[3],ratioTel:.7},
+    {id:'phc',titre:'pH en fonction de log c',poids:.9,onglets:[4],ratioTel:.8}
+  ],
+  reglages:[
+    {titre:'Situations',presets:[
+      {label:'Exemple du cours',titre:'1 mmol de CH₃COOH et 3 mmol de NH₃ dans 100 mL',valeurs:MIX({}),action:a=>{st.prog=0;a.setTab(1)}},
+      {label:'K = 100',titre:'pKa,1 = 5, pKa,2 = 7',valeurs:MIX({pk1:5,pk2:7,n0:1,n1:0,n2:0,n3:1}),action:a=>{st.prog=0;a.setTab(2)}},
+      {label:'K < 1',titre:'pKa,1 = 9, pKa,2 = 5',valeurs:MIX({pk1:9,pk2:5,n0:1,n1:0,n2:0,n3:1}),action:a=>{st.prog=0;a.setTab(2)}},
+      {label:'Sens indirect',titre:'Beaucoup de produits au départ : Q₀ > K',valeurs:MIX({pk1:6,pk2:8,n0:.1,n1:2,n2:2,n3:.1}),action:a=>{st.prog=0;a.setTab(1)}}],items:[],onglets:[0,1,2,3]},
+    {titre:'Acide ou base faible',presets:[
+      {label:'Acide éthanoïque 0.1 mol·L⁻¹',valeurs:{wkind:'acide',wpk:4.8,wc:.1},action:a=>a.setTab(4)},
+      {label:'Ammoniac 0.1 mol·L⁻¹',titre:'base faible, couple NH₄⁺/NH₃',valeurs:{wkind:'base',wpk:9.2,wc:.1},action:a=>a.setTab(4)},
+      {label:'Acide très dilué',titre:'l\'autoprotolyse de l\'eau compte',valeurs:{wkind:'acide',wpk:4.8,wc:1e-5},action:a=>a.setTab(4)}],items:[],onglets:[4]},
+    {titre:'Le système',onglets:[0],items:[
+      {id:'system',type:'select',label:'Système acido-basique',options:[['acetate','Acide éthanoïque / éthanoate'],['ammonium','Ammonium / ammoniac'],['carbon','Système carbonaté'],['pair','Les deux couples du mélange']],value:'acetate'},
+      {id:'ph',label:'pH imposé',min:0,max:14,step:.05,dec:2,value:4.8},
+      {type:'boutons',items:[{label:'pKa − 1',action:a=>a.set('ph',Math.max(0,currentPK(a)-1))},{label:'pKa',action:a=>a.set('ph',currentPK(a))},{label:'pKa + 1',action:a=>a.set('ph',Math.min(14,currentPK(a)+1))}]},
+      {type:'note',html:'Le pH est imposé par un réservoir extérieur non représenté. Glisser la ligne de pH sur le graphique.'}]},
+    {titre:'Les constantes d\'acidité',onglets:[0,1,2,3],items:[
+      {id:'pk1',label:'pK<sub>a,1</sub>',min:1,max:13,step:.05,dec:2,value:4.8},
+      {id:'pk2',label:'pK<sub>a,2</sub>',min:1,max:13,step:.05,dec:2,value:9.2,si:a=>!(a.tab===0&&a.p.system==='carbon')},
+      {type:'note',html:a=>a.tab===0&&a.p.system==='carbon'?'Modèle carbonaté : pK<sub>a,2</sub> fixé à 10.3. Choisir un autre système pour retrouver pK<sub>a,1</sub> = 4.8 ou 6.3.':'Les pKa sont aussi déplaçables sur les axes de prédominance.'}]},
+    {titre:'Quantités introduites (mmol)',onglets:[1,2,3],items:[
+      {id:'n0',label:'acide du couple 1',min:0,max:4,step:.1,dec:1,value:1,unit:'mmol'},
+      {id:'n1',label:'base du couple 1',min:0,max:4,step:.1,dec:1,value:0,unit:'mmol'},
+      {id:'n2',label:'acide du couple 2',min:0,max:4,step:.1,dec:1,value:0,unit:'mmol'},
+      {id:'n3',label:'base du couple 2',min:0,max:4,step:.1,dec:1,value:3,unit:'mmol'},
+      {id:'vol',label:'Volume final',min:50,max:500,step:10,value:100,unit:'mL'},
+      {type:'note',html:a=>{const n=names(a);return `Couple 1 : ${cH(n[0])} / ${cH(n[1])} · couple 2 : ${cH(n[2])} / ${cH(n[3])}. Quantités formelles avant redistribution ; le pH final est calculé, jamais imposé.`}}]},
+    {titre:'Acide ou base dans l\'eau',onglets:[4],items:[
+      {id:'wkind',type:'seg',label:'Soluté apporté',options:[['acide','Acide faible AH'],['base','Base faible B']],value:'acide'},
+      {id:'wpk',label:'p<i>K</i><sub>a</sub> du couple',min:-2,max:16,step:.05,dec:2,value:4.8},
+      {id:'wc',label:'Concentration apportée <i>c</i>',min:1e-6,max:1,log:true,step:.001,dec:6,value:.1,unit:'mol·L⁻¹'},
+      {type:'note',html:'Eau pure + soluté ; 25 °C, activités égales aux concentrations. La lecture dilue la solution à partir de la concentration choisie.'}]},
+    {titre:'Affichages (prévisions masquées)',items:[
+      {id:'showK',type:'check',label:'ΔpKa, K, Q₀ et verdict',value:false,onglets:[1]},
+      {id:'showEq',type:'check',label:'Équilibre : ξₑ, conversion et ligne « Équilibre »',value:false,onglets:[2]},
+      {id:'showAq',type:'check',label:'Résultats : réaction unique et calcul avec l\'eau',value:false,onglets:[3]},
+      {id:'showApprox',type:'check',label:'Formules approchées du cours et acide ou base fort(e)',value:false,onglets:[4]}]}
+  ],
+  aide:{
+    voit:'Quatre formes acido-basiques et leurs <b>proportions</b> en fonction du pH (courbes), avec en dessous les <b>domaines de prédominance</b> de chaque couple. Le mélange de référence est CH<sub>3</sub>COOH + NH<sub>3</sub> ⇌ CH<sub>3</sub>COO<sup>−</sup> + NH<sub>4</sub><sup>+</sup>.',
+    faire:'<ul><li><b>Explorer</b> : le pH est <b>imposé</b>. Glisser la ligne de pH, ou utiliser pKa − 1, pKa, pKa + 1 ; choisir le couple. Les poignées rondes des domaines déplacent les pKa.</li><li><b>Prévoir</b> : comparer les domaines des réactifs, calculer <i class="m">K</i> et comparer <i class="m">Q</i><sub>i</sub> à <i class="m">K</i> ; cocher ensuite pour vérifier.</li><li><b>Calculer</b> : le tableau d\'avancement de la réaction unique ; le curseur (ou la lecture) fait avancer <i class="m">ξ</i>. L\'équilibre est masqué : le prévoir d\'abord.</li><li><b>Interpréter</b> : le pH final est <b>calculé</b> avec l\'eau ; comparer aux quantités de la réaction unique.</li><li><b>Dans l\'eau</b> : acide ou base faible seul(e) dans l\'eau ; la lecture dilue la solution et montre quand les approximations cessent d\'être valables.</li></ul>',
+    modele:'25 °C, solutions idéales (activités = [i]/C°), volumes additifs. Couple monoprotique : α<sub>acide</sub> = 1/(1 + 10<sup>pH−pKa</sup>). Carbonaté : CO<sub>2</sub>* = CO<sub>2</sub>(aq) + H<sub>2</sub>CO<sub>3</sub>, pKa 6.3 et 10.3. <i class="m">K</i> = 10<sup>pKa₂ − pKa₁</sup> ; <i class="m">Q</i><sub>i</sub> = n(A<sup>−</sup>)n(BH<sup>+</sup>)/[n(AH)n(B)] ; sens direct si <i class="m">Q</i><sub>i</sub> &lt; <i class="m">K</i>. La progression de <i class="m">ξ</i> est une interpolation, sans cinétique. Le calcul avec l\'eau résout l\'électroneutralité avec <i class="m">K</i><sub>e</sub> = 10<sup>−14</sup> et la conservation de chaque famille ; les contre-ions des sels sont pris en compte. Acide faible seul : [H<sub>3</sub>O<sup>+</sup>] = [HO<sup>−</sup>] + [A<sup>−</sup>] ; approximation pH ≈ ½(pKa − log <i class="m">c</i>) valable si l\'acide est peu dissocié et pH &lt; 6.5 ; base faible : pH ≈ 7 + ½(pKa + log <i class="m">c</i>). L\'écart exprimé est une différence de proportions au sein d\'une famille.',
+    cours:'TC4 : couples acide/base, constante d\'acidité, diagrammes de distribution et de prédominance, constante de réaction et quotient initial, tableau d\'avancement, pH d\'une solution d\'acide ou de base faible.'
+  },
+  change(a,id,v){
+    const p=a.p;
+    if(id==='system'){
+      if(v==='carbon'){p.pk1=6.3;p.ph=6.3}else if(v==='ammonium')p.ph=p.pk2;else if(v==='acetate'){p.ph=p.pk1}
+    }
+    if(id==='pk1'&&p.system==='carbon'&&a.tab===0&&v>=CARB2)p.pk1=CARB2-.05;
+    if(['n0','n1','n2','n3','vol','pk1','pk2'].includes(id))st.prog=0;
+    a.refresh();
+  },
+  init(){scrub(false)},
+  onglet(a,i){a.play(false);scrub(i===2);if(i===2)st.prog=0},
+  reset(a){st.dir=1;if(a.tab===2)st.prog=0},
+  peutLire(a){
+    if(a.tab===2&&st.prog>=1)st.prog=0;
+    if(a.tab===4&&a.p.wc<=1.0001e-6)a.set('wc',1);
+    return true;
+  },
+  step(a,dt){
+    const p=a.p;
+    if(a.tab===0){p.ph=rd((p.ph+dt*.55)%14,2);a.refresh()}
+    else if(a.tab===1){let v=p.pk2+st.dir*dt;if(v>=13){v=13;st.dir=-1}else if(v<=1){v=1;st.dir=1}p.pk2=rd(v,2);a.refresh()}
+    else if(a.tab===2){st.prog=Math.min(1,st.prog+dt/6);if(st.prog>=1)a.play(false)}
+    else if(a.tab===4){const lc=Math.log10(p.wc)-dt*.35;if(lc<=-6){p.wc=1e-6;a.play(false)}else p.wc=10**lc;a.refresh()}
+  },
+  draw(a){
+    const p=a.p,t=a.tab,{rx,aq}=calc(a);
+    if(t===0)a.svg('dist',dist(a,'dist',{mix:false,marker:p.ph,pks:(p.system==='pair')?[p.pk1,p.pk2]:p.system==='carbon'?[p.pk1,CARB2]:[currentPK(a)]}));
+    else if(t===1)prevoir(a,rx);
+    else if(t===2)tableau(a,rx);
+    else if(t===3){
+      a.svg('dist',dist(a,'dist',{mix:true,marker:p.showAq?aq.pH:null,pks:[p.pk1,p.pk2]}));
+      barres(a,rx,aq);
+    }else{
+      const w=WK.exact(p.wkind,p.wpk,p.wc);
+      a.svg('dist',dist(a,'dist',{mix:false,marker:w.pH,pks:[p.wpk],dom:'wk'}));
+      phc(a,w);
+    }
+    info(a,rx,aq);
+  }
+});
+
+/* ---------- mesures, légende, temps ---------- */
+function info(a,rx,aq){
+  const p=a.p,t=a.tab,arr=[],sp=species(a,t===1||t===2||t===3),Mv=Mh.v;
+  if(t===0){
+    const fr=sp.map(s=>s.f(p.ph));
+    arr.push({label:'pH imposé',value:fm.fix(p.ph,2)});
+    if(sp.length===2)sp.forEach((s,i)=>arr.push({label:cH(s.name),value:fm.fix(fr[i]*100,1),unit:'%',hint:i===1?`[base]/[acide] = ${num(a,fr[1]/fr[0])}`:''}));
+    else if(p.system==='carbon')sp.forEach((s,i)=>arr.push({label:cH(s.name),value:fm.fix(fr[i]*100,1),unit:'%'}));
+    else{arr.push({label:`${cH(sp[0].name)} / ${cH(sp[1].name)}`,value:`${fm.fix(fr[0]*100,1)} / ${fm.fix(fr[1]*100,1)}`,unit:'%'});arr.push({label:`${cH(sp[2].name)} / ${cH(sp[3].name)}`,value:`${fm.fix(fr[2]*100,1)} / ${fm.fix(fr[3]*100,1)}`,unit:'%',hint:'chaque couple totalise 100 %'})}
+  }else if(t===1&&p.showK){
+    arr.push({label:`Écart p${Mv('K','a')}₂ − p${Mv('K','a')}₁`,value:fm.fix(p.pk2-p.pk1,2)});
+    arr.push({label:`Constante ${Mv('K')}`,value:num(a,rx.K)});
+    arr.push({label:`Quotient initial ${Mv('Q','0')}`,value:num(a,rx.Qi),hint:Number.isNaN(rx.Qi)?'0/0 : non défini':rx.Qi<rx.K?`${Mv('Q','0')} < ${Mv('K')} : sens direct`:rx.Qi>rx.K?`${Mv('Q','0')} > ${Mv('K')} : sens indirect`:'à l\'équilibre'});
+  }else if(t===2&&p.showEq){
+    const tau=rx.tau;
+    arr.push({label:`Avancement d'équilibre ${Mv('ξ','é')}`,value:num(a,rx.xi,4),unit:'mmol'});
+    arr.push({label:'Conversion dans le sens effectif',value:tau>.9999995&&tau<1?'< 100':fm.fix(tau*100,tau>.9999&&tau<1?4:2),unit:'%'});
+    arr.push({label:`Constante ${Mv('K')}`,value:num(a,rx.K)});
+  }else if(t===3&&p.showAq){
+    const sc=[p.n0+p.n1,p.n0+p.n1,p.n2+p.n3,p.n2+p.n3],err=Math.max(...aq.final.map((v,i)=>sc[i]?Math.abs(v-rx.final[i])/sc[i]:0));
+    arr.push({label:'pH final · eau incluse',value:fm.fix(aq.pH,3)});
+    arr.push({label:'Écart maximal des fractions',value:fm.fix(err*100,3),unit:'point(s)',hint:'réaction unique / calcul avec l\'eau, au sein d\'une famille'});
+    arr.push({label:'[H<sub>3</sub>O<sup>+</sup>] final',value:num(a,aq.h),unit:'mol·L⁻¹'});
+  }else if(t===4){
+    const w=WK.exact(p.wkind,p.wpk,p.wc),ac=p.wkind==='acide';
+    arr.push({label:'pH de la solution',value:fm.fix(w.pH,2)});
+    arr.push({label:ac?'Fraction d\'acide dissocié':'Fraction de base protonée',value:fm.fix(w.tau*100,w.tau<.01?3:1),unit:'%',hint:ac?'[A⁻]/c':'[BH⁺]/c'});
+    if(p.showApprox){
+      const ap=WK.approx(p.wkind,p.wpk,p.wc),stg=WK.strong(p.wkind,p.wc);
+      arr.push({label:ac?`Approximation ½(p${Mv('K','a')} − log ${Mv('c')})`:`Approximation 7 + ½(p${Mv('K','a')} + log ${Mv('c')})`,value:fm.fix(ap,2),hint:`écart avec le calcul exact : ${(ap-w.pH>=0?'+':'−')}${fm.fix(Math.abs(ap-w.pH),2)} unité de pH`});
+      arr.push({label:ac?'Si l\'acide était fort : −log c':'Si la base était forte : 14 + log c',value:fm.fix(stg,2)});
+    }
+  }
+  a.metrics(arr);
+  const nonvide=(t===0||t===3||t===4)?sp.map(s=>({c:s.c,label:cH(s.name),dash:s.dash})):[];
+  a.legend(nonvide);
+  a.clock(t===2?`${Mh.v('ξ')} = ${fm.sig(rx.xi*st.prog,3)} mmol · ${fm.fix(st.prog*100,0)} %`:t===4?`c = ${fm.sig(p.wc,3)} mol·L<sup>−1</sup>`:'');
+}
+
+/* ---------- poignées de pKa, ligne de pH ---------- */
+function drag(id,tabOK){
+  const pickH=(x,y)=>st.hand[id].find(h=>Math.hypot(h.x-x,h.y-y)<22);
+  const phOf=(pl,x)=>clamp((x-pl.left)/(pl.right-pl.left)*14,0,14);
+  let sel=null;
+  A.drag(id,{
+    hit:(x,y)=>{const pl=st.plot[id];if(!pl||!tabOK(A.tab))return false;return !!pickH(x,y)||(id==='dist'&&A.tab===0&&y>=pl.top&&y<=pl.bottom)},
+    start:(x,y)=>{A.play(false);sel=pickH(x,y)||null;apply(x)},
+    move:(x)=>apply(x),end:()=>{sel=null}
+  });
+  function apply(x){
+    const pl=st.plot[id];if(!pl)return;const v=phOf(pl,x);
+    if(sel){
+      const lim=(sel.key==='pk1'&&A.p.system==='carbon'&&A.tab===0)?10.25:13;
+      A.set(sel.key,rd(clamp(v,1,lim),2));
+    }else A.set('ph',rd(v,2));
+  }
+}
+drag('dist',t=>t===0||t===3||t===4);
+drag('prevoir',t=>t===1);
+
 </script>
-<!-- CPGE_MENU_SCRIPT_END -->
-</body></html>
+</body>
+</html>
