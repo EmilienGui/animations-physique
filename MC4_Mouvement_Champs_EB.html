@@ -86,7 +86,9 @@ sub,sup{line-height:0}
 .ak-ptools{position:absolute;top:.35em;right:.35em;display:flex;gap:.25em;z-index:1;opacity:.45;transition:opacity .15s}
 .ak-panel:hover>.ak-ptools,.ak-ptools:focus-within,.ak-ptools.is-zoomed{opacity:1}
 .ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
-.ak-ptools [data-z="0"]{display:none}.ak-ptools.is-zoomed [data-z="0"]{display:inline-block;border-color:var(--c)}
+.ak-ptools [data-z="0"]{display:grid;place-items:center;width:1.9em;padding:0}
+.ak-ptools [data-z="0"] svg{display:block;width:1.1em;height:1.1em}
+.ak-ptools.is-zoomed [data-z="0"]{border-color:var(--c)}
 .mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
 .mini:hover{border-color:var(--c)}
 .mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
@@ -191,6 +193,7 @@ sub,sup{line-height:0}
   .ak-tools .ib{padding:.3em .45em}
   .ak-title{font-size:1.05em}
   .ak-ptools .mini{min-height:36px}
+  .ak-ptools [data-z="0"]{min-width:36px}
   .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
   .ak-btn-settings{display:inline-flex}
   .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
@@ -341,6 +344,7 @@ const IC={
   image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
   proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
   fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  cadrer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
   step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
   reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
 };
@@ -505,7 +509,10 @@ function app(cfg){
     /* Les figures SVG utilisent le viewBox. Un panneau qui affiche S.graph
        ajuste les échelles de ses graphiques. Un canvas garde son zoom interne. */
     P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
-    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML=`
+      <button class="mini" data-z="-" title="Dézoomer (−)">−</button>
+      <button class="mini" data-z="0" aria-label="Cadrer" title="Cadrer : vue initiale (0)">${IC.cadrer}</button>
+      <button class="mini" data-z="+" title="Zoomer (+)">+</button>`;
       tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
     A.panels[pc.id]=P; pwrap.append(pe);
   }
