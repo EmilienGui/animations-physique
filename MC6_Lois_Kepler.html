@@ -20,6 +20,7 @@
   --c-ink:color-mix(in srgb,var(--c) 70%,#000);
   --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
   --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --switch-off:#7e8a9d;
   --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
   --q-hot:#c62f36; --q-cold:#1e50be;
   --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -28,6 +29,7 @@
 }
 :root[data-theme="dark"]{
   --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --switch-off:#7a879b;
   --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
   --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
   --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
@@ -137,8 +139,30 @@ sub,sup{line-height:0}
 .ak-seg button+button{border-left:1px solid var(--rule)}
 .ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
 .ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
-.ak-chk{display:flex;gap:.45em;align-items:center;font-size:.88em;cursor:pointer}
-.ak-chk input{accent-color:var(--c);width:1.1em;height:1.1em;flex:none;margin:0}
+.ak-chk{position:relative;display:flex;gap:.6em;align-items:center;min-height:34px;font-size:.88em;cursor:pointer}
+.ak-chk>input{position:absolute;width:1px;height:1px;margin:0;opacity:0;clip-path:inset(50%)}
+.ak-switch-track{
+  position:relative;flex:0 0 42px;height:24px;border-radius:99px;background:var(--switch-off);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.25);transition:background-color .16s
+}
+.ak-switch-track::after{
+  content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px #0004;transition:transform .16s
+}
+.ak-chk>input:checked+.ak-switch-track{background:var(--switch-on,var(--c))}
+.ak-chk>input:checked+.ak-switch-track::after{transform:translateX(18px)}
+.ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid var(--c-ink);outline-offset:2px}
+.ak-chk:has(>input:disabled){opacity:.56;cursor:default}
+@media (prefers-reduced-motion:reduce){
+  .ak-switch-track,.ak-switch-track::after{transition:none}
+}
+@media (forced-colors:active){
+  .ak-switch-track{forced-color-adjust:none;background:Canvas;outline:1px solid CanvasText}
+  .ak-switch-track::after{background:CanvasText}
+  .ak-chk>input:checked+.ak-switch-track{background:Highlight}
+  .ak-chk>input:checked+.ak-switch-track::after{background:HighlightText}
+  .ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid Highlight}
+}
 .ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
 .ak-dlg-sub{color:var(--ink2);font-style:italic}
 .ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
@@ -161,6 +185,7 @@ sub,sup{line-height:0}
 /* ---------- téléphone ---------- */
 @media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
 @media (max-width:640px){
+  .ak-chk{min-height:44px}
   .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
   .ak-sub,.ak-lbl{display:none}
   .ak-tools .ib{padding:.3em .45em}
@@ -298,6 +323,13 @@ function tickLabel(v,step){
   return fmt.fix(v,d);
 }
 
+function chartTicks(list, min, max, count, formatter, zoomed){
+  if(!list||zoomed&&list.length&&!formatter)return ticks(min,max,count);
+  if(!zoomed)return list;
+  const marge=(max-min)*1e-8;
+  return list.filter(v=>v>=min-marge&&v<=max+marge);
+}
+
 /* ---------------- icônes ---------------- */
 const IC={
   settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
@@ -312,6 +344,16 @@ const IC={
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+function interrupteur(label,id){
+  const conteneur=el('label',{class:'ak-chk'});
+  conteneur.append(
+    el('input',{type:'checkbox',role:'switch',id}),
+    el('span',{class:'ak-switch-track','aria-hidden':'true'}),
+    el('span',{},label)
+  );
+  return conteneur;
+}
 
 /* ---------------- mathématiques en HTML ---------------- */
 const M={
@@ -373,19 +415,28 @@ function makeS(app){
     graph(o){
       const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
       const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
-      const X=v=>x0+(v-o.xmin)/(o.xmax-o.xmin)*w, Y=v=>y0+h-(v-o.ymin)/(o.ymax-o.ymin)*h;
+      const frame=app._graphFrame, id=frame?.graphs.length;
+      const view=frame?.views[id]||null;
+      frame?.graphs.push({id,x0,y0,w,h,view});
+      const dx=o.xmax-o.xmin, dy=o.ymax-o.ymin;
+      const xmin=view?o.xmin+dx*view.vx:o.xmin, xmax=view?xmin+dx/view.vz:o.xmax;
+      const ymax=view?o.ymax-dy*view.vy:o.ymax, ymin=view?ymax-dy/view.vz:o.ymin;
+      const X=v=>x0+(v-xmin)/(xmax-xmin)*w, Y=v=>y0+h-(v-ymin)/(ymax-ymin)*h;
       let s='';
-      const xt=o.xticks||ticks(o.xmin,o.xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5)))), yt=o.yticks||ticks(o.ymin,o.ymax,o.ny??Math.max(1,Math.round(h/(fs*3))));
+      const xt=chartTicks(o.xticks,xmin,xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5))),o.xfmt,view);
+      const yt=chartTicks(o.yticks,ymin,ymax,o.ny??Math.max(1,Math.round(h/(fs*3))),o.yfmt,view);
       const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
       if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
         for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
-      const yAx=o.ymin<=0&&o.ymax>=0&&o.zeroAxis!==false?Y(0):y0+h, xAx=x0;
-      s+=`<line x1="${n(x0)}" y1="${n(yAx)}" x2="${n(x0+w)}" y2="${n(yAx)}" stroke="${C0.ink2}" stroke-width="1.2"/><line x1="${n(xAx)}" y1="${n(y0)}" x2="${n(xAx)}" y2="${n(y0+h)}" stroke="${C0.ink2}" stroke-width="1.2"/>`;
+      s+=S.line(x0,y0+h,x0+w,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      s+=S.line(x0,y0,x0,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      if(ymin<0&&ymax>0&&o.zeroAxis!==false)s+=S.line(x0,Y(0),x0+w,Y(0),{c:C0.ink2,w:1,raw:true});
       for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
       for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
       if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
       if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
-      return{svg:s,X,Y,x0,y0,w,h,xv:px=>o.xmin+(px-x0)/w*(o.xmax-o.xmin),yv:py=>o.ymin+(y0+h-py)/h*(o.ymax-o.ymin)};
+      if(frame)s=`<g data-ak-graph="${id}">${s}</g>`;
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>xmin+(px-x0)/w*(xmax-xmin),yv:py=>ymax-(py-y0)/h*(ymax-ymin)};
     },
     /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
     curve(pts,G,o={}){
@@ -448,8 +499,8 @@ function app(cfg){
     if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
     pe.append(node);
     const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
-    /* Vue (7 novembre 2026) : tout panneau SVG se zoome, se cadre et se déplace (viewBox) ;
-       un canvas déclaré zoom:true garde son zoom interne P.zoom, lu par l'animation. */
+    /* Les figures SVG utilisent le viewBox. Un panneau qui affiche S.graph
+       ajuste les échelles de ses graphiques. Un canvas garde son zoom interne. */
     P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
     if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML='<button class="mini" data-z="-" title="Dézoomer (−)">−</button><button class="mini" data-z="0" title="Cadrer : vue initiale (0)">Cadrer</button><button class="mini" data-z="+" title="Zoomer (+)">+</button>';
       tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
@@ -519,7 +570,7 @@ function app(cfg){
           const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
           items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
         }else if(type==='check'){
-          box.innerHTML=`<label class="ak-chk"><input type="checkbox" id="c_${it.id}"><span>${it.label}</span></label>`;
+          box.append(interrupteur(it.label,'c_'+it.id));
           const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
           items[it.id]={it,box,show:v=>{C.checked=!!v}};
         }else if(type==='boutons'){
@@ -571,6 +622,10 @@ function app(cfg){
   A.panelVisible=id=>!A.panels[id].el.hidden;
 
   /* ---------- tailles ---------- */
+  function viewBox(P){
+    const {w,h,vx,vy,vz}=P;
+    P.node.setAttribute('viewBox',P.vue==='svg'?`${vx.toFixed(2)} ${vy.toFixed(2)} ${(w/vz).toFixed(2)} ${(h/vz).toFixed(2)}`:`0 0 ${w.toFixed(1)} ${h.toFixed(1)}`);
+  }
   function measure(){
     A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
     {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
@@ -579,15 +634,75 @@ function app(cfg){
       if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
       const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
       if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
-      else if(P.vue==='svg')P.node.setAttribute('viewBox',`${P.vx.toFixed(2)} ${P.vy.toFixed(2)} ${(P.w/P.vz).toFixed(2)} ${(P.h/P.vz).toFixed(2)}`);
-      else P.node.setAttribute('viewBox',`0 0 ${P.w.toFixed(1)} ${P.h.toFixed(1)}`);
+      else viewBox(P);
     }
   }
   /* ---------- rendu ---------- */
-  A.renderNow=()=>{A._dirty=false;measure();if(cfg.draw)cfg.draw(A);syncScrub();guardScroll();};
+  let graphPanels=[];
+  const activeChartView=P=>P?.vue==='graphe'&&zoomed(P)?P:null;
+  function drawFrame(){
+    const frame={graphs:[],views:graphPanels.map(activeChartView),outputs:new Map()};
+    A._graphFrame=frame;
+    try{cfg.draw?.(A)}finally{A._graphFrame=null}
+    graphPanels=[];
+    for(const [P,output] of frame.outputs){
+      const graphs=[...output.html.matchAll(/<g data-ak-graph="(\d+)">/g)].map(m=>frame.graphs[+m[1]]).filter(Boolean);
+      output.graphs=graphs;
+      if(P.vue==='svg'||P.vue==='graphe'){
+        const vue=graphs.length?'graphe':'svg';
+        if(vue!==P.vue){P.vue=vue;resetView(P);viewBox(P)}
+        P.graphs=graphs;
+      }
+      const view=activeChartView(P);
+      for(const graph of graphs){
+        graphPanels[graph.id]=P;
+        if(graph.view!==view)frame.changed=true;
+      }
+    }
+    return frame;
+  }
+  function clipCharts(node,graphs){
+    const svgElement=tag=>document.createElementNS(node.namespaceURI,tag);
+    for(const graph of graphs){
+      const axes=node.querySelector(`[data-ak-graph="${graph.id}"]`);
+      if(!axes)continue;
+      const id='ak-cadre-'+graph.id, defs=svgElement('defs'),clip=svgElement('clipPath'),rect=svgElement('rect');
+      clip.id=id;
+      for(const [k,v] of Object.entries({x:graph.x0,y:graph.y0,width:graph.w,height:graph.h}))rect.setAttribute(k,v);
+      clip.append(rect);defs.append(clip);axes.append(defs);
+      let layer=null;
+      for(let next=axes.nextElementSibling;next&&!next.hasAttribute('data-ak-graph');){
+        const child=next;next=child.nextElementSibling;
+        if(child.localName==='defs'||child.hasAttribute('data-ak-hors-graphe')){layer=null;continue}
+        if(!layer){
+          layer=svgElement('g');
+          layer.setAttribute('clip-path',`url(#${id})`);
+          child.before(layer);
+        }
+        layer.append(child);
+      }
+    }
+  }
+  function writeSvg(P,html,graphs=[]){
+    if(P.node._h===html)return;
+    P.node.innerHTML=html;
+    P.node._h=html;
+    if(activeChartView(P))clipCharts(P.node,graphs);
+  }
+  A.renderNow=()=>{
+    A._dirty=false;measure();
+    let frame=drawFrame();
+    // Si un réglage change l'ordre des tracés, associer à nouveau le zoom à son panneau.
+    if(frame.changed)frame=drawFrame();
+    for(const [P,output] of frame.outputs)writeSvg(P,output.html,output.graphs);
+    syncScrub();guardScroll();
+  };
   A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
-  /** écrit le SVG d'un panneau */
-  A.svg=(id,html)=>{const P=A.panels[id];if(P&&P.node._h!==html){P.node.innerHTML=html;P.node._h=html}};
+  A.svg=(id,html)=>{
+    const P=A.panels[id];if(!P)return;
+    if(A._graphFrame)A._graphFrame.outputs.set(P,{html});
+    else writeSvg(P,html);
+  };
 
   /* ---------- temps ---------- */
   let last=0;
@@ -626,16 +741,36 @@ function app(cfg){
     else if(/^[1-9]$/.test(k))A.setTab(+k-1);
   });
 
-  /* ---------- vue : zoom, cadrage, déplacement (7 novembre 2026) ---------- */
-  const zoomed=P=>P.vue==='svg'?(Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>.5||Math.abs(P.vy)>.5):P.vue==='interne'&&Math.abs(P.zoom-1)>1e-6;
+  /* ---------- vue : zoom, cadrage, déplacement ---------- */
+  const deplacable=P=>P.vue==='svg'||P.vue==='graphe';
+  function zoomed(P){
+    if(P.vue==='interne')return Math.abs(P.zoom-1)>1e-6;
+    if(!deplacable(P))return false;
+    const seuil=P.vue==='graphe'?1e-6:.5;
+    return Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>seuil||Math.abs(P.vy)>seuil;
+  }
   const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  const graphAt=(P,x,y)=>P.graphs.find(g=>x>=g.x0&&x<=g.x0+g.w&&y>=g.y0&&y<=g.y0+g.h);
+  function resetView(P){P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P)}
   /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
   A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
     if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
-    else{px=px??P.w/2;py=py??P.h/2;const sx=P.vx+px/P.vz,sy=P.vy+py/P.vz;P.vz=Math.max(.5,Math.min(8,P.vz*f));P.vx=sx-px/P.vz;P.vy=sy-py/P.vz}
+    else{
+      if(P.vue==='graphe'){
+        const graph=graphAt(P,px,py);
+        px=graph?(px-graph.x0)/graph.w:.5;
+        py=graph?(py-graph.y0)/graph.h:.5;
+      }else{px=px??P.w/2;py=py??P.h/2}
+      const z=Math.max(.5,Math.min(8,P.vz*f)), delta=1/P.vz-1/z;
+      P.vx+=px*delta;P.vy+=py*delta;P.vz=z;
+    }
     markZoom(P);A.render()};
-  A.deplacer=(P,dx,dy)=>{if(P.vue!=='svg')return;P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()};
-  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy,px,py)=>{
+    if(!deplacable(P))return;
+    if(P.vue==='graphe'){const g=graphAt(P,px,py)||P.graphs[0];dx/=g.w;dy/=g.h}
+    P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()
+  };
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;resetView(P);A.render()};
   A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
   /* ---------- glisser dans un panneau ----------
      Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
@@ -650,17 +785,17 @@ function app(cfg){
       if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
       if(pts.size>1)return;
       const[x,y]=toV(s);
-      if(P.vue==='svg'&&(e.shiftKey||e.button===1))mode='pan';
+      if(deplacable(P)&&(e.shiftKey||e.button===1))mode='pan';
       else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
         if(h){mode='drag';if(h.start)h.start(x,y,e)}
-        else if(P.vue==='svg'&&zoomed(P))mode='pan';
+        else if(deplacable(P)&&zoomed(P))mode='pan';
         else{mode=null;return}}
       last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
     N.addEventListener('pointermove',e=>{const s=scr(e);
-      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(P.vue==='svg'&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(deplacable(P)&&(e.shiftKey||zoomed(P)))?'move':''}return}
       pts.set(e.pointerId,s);
-      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1]);pin=q;return}
-      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1]);last=s;return}
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1],q.c[0],q.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1],last[0],last[1]);last=s;return}
       if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
     const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
       if(mode==='drag'&&h&&h.end)h.end(e);
@@ -713,7 +848,7 @@ function app(cfg){
   return A;
 }
 
-window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH};
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH,interrupteur};
 })();
 
 </script>
