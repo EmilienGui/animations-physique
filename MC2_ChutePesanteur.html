@@ -1,0 +1,1834 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Tir dans un champ uniforme, comparaison des lois de traînée et application au grêlon.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Chute dans le champ de pesanteur · MC2 · MPSI</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --switch-off:#7e8a9d;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --switch-off:#7a879b;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:0;right:0;display:flex;gap:.25em;padding:.35em .35em .9em .9em;z-index:1}
+@media (hover:hover) and (pointer:fine){
+  .ak-ptools{opacity:0;transition:opacity .15s}
+  .ak-ptools:hover,.ak-ptools:has(button:focus-visible){opacity:1}
+}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:grid;place-items:center;width:1.9em;padding:0}
+.ak-ptools [data-z="0"] svg{display:block;width:1.1em;height:1.1em}
+.ak-ptools.is-zoomed [data-z="0"]{border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{position:relative;display:flex;gap:.6em;align-items:center;min-height:34px;font-size:.88em;cursor:pointer}
+.ak-chk>input{position:absolute;width:1px;height:1px;margin:0;opacity:0;clip-path:inset(50%)}
+.ak-switch-track{
+  position:relative;flex:0 0 42px;height:24px;border-radius:99px;background:var(--switch-off);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.25);transition:background-color .16s
+}
+.ak-switch-track::after{
+  content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px #0004;transition:transform .16s
+}
+.ak-chk>input:checked+.ak-switch-track{background:var(--switch-on,var(--c))}
+.ak-chk>input:checked+.ak-switch-track::after{transform:translateX(18px)}
+.ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid var(--c-ink);outline-offset:2px}
+.ak-chk:has(>input:disabled){opacity:.56;cursor:default}
+@media (prefers-reduced-motion:reduce){
+  .ak-ptools{transition:none}
+  .ak-switch-track,.ak-switch-track::after{transition:none}
+}
+@media (forced-colors:active){
+  .ak-switch-track{forced-color-adjust:none;background:Canvas;outline:1px solid CanvasText}
+  .ak-switch-track::after{background:CanvasText}
+  .ak-chk>input:checked+.ak-switch-track{background:Highlight}
+  .ak-chk>input:checked+.ak-switch-track::after{background:HighlightText}
+  .ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid Highlight}
+}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-chk{min-height:44px}
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-ptools [data-z="0"]{min-width:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* Bandeau commun du guide de création des animations. */
+.ak-menu-commun .ak-top {flex-wrap:wrap;gap:6px 12px}
+.ak-menu-commun .ak-tools {
+  flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%;
+}
+.ak-menu-commun .ak-tools .ib {min-height:40px;padding:0 10px;font-size:15px}
+.ak-menu-commun .ak-tools [data-act="fs"] {width:40px;padding:0}
+.ak-menu-commun .ak-tools .ak-btn-settings {display:none}
+@media(max-width:820px){
+  .ak-menu-commun .ak-tools {margin-left:0;flex:1 0 100%;justify-content:flex-start}
+}
+@media(max-width:640px){
+  .ak-menu-commun .ak-tools {gap:4px}
+  .ak-menu-commun .ak-tools .ib {min-height:44px;padding:0 6px;font-size:13px}
+  .ak-menu-commun .ak-tools .ak-lbl {display:inline}
+  .ak-menu-commun .ak-tools .ib svg {display:none}
+  .ak-menu-commun .ak-tools [data-act="fs"] {width:44px;padding:0}
+  .ak-menu-commun .ak-tools [data-act="fs"] svg {display:block}
+  .ak-menu-commun .ak-tools [data-act="image"],
+  .ak-menu-commun .ak-tools [data-act="proj"],
+  .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
+}
+
+.mc2-chute .ak-panel[data-id="projectile"] {border-left:0}
+.mc2-chute .ak-panel[data-id="graph"] .ak-phead {padding:.35em .45em 0}
+.mc2-chute .ak-panel[data-id="graph"] .ak-seg {display:inline-flex;max-width:100%}
+.mc2-chute .ak-panel[data-id="graph"] .ak-seg button {padding-inline:.42em}
+.mc2-chute .ak-panel[data-id="graph"] .ak-ptools {top:2.15em}
+.mc2-chute [data-hit="launch"] {cursor:grab}
+.mc2-chute [data-hit="launch"]:active {cursor:grabbing}
+.mc2-readings {
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:minmax(0,1fr);
+  flex:none;
+  border-top:1px solid var(--rule);
+}
+.mc2-reading {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  min-width:0;
+  padding:.25em .65em .3em;
+  color:var(--ink2);
+}
+.mc2-reading + .mc2-reading {border-left:1px solid var(--rule)}
+.mc2-caption,.mc2-hint {font-size:.73em;line-height:1.25}
+.mc2-reading strong {
+  font-size:1.28em;
+  font-weight:650;
+  line-height:1.25;
+  font-variant-numeric:tabular-nums;
+  color:var(--ink);
+}
+.mc2-reading small {font-size:.61em;font-weight:500;color:var(--ink2)}
+.mc2-chute.is-proj .mc2-reading strong {font-size:1.55em}
+.mc2-chute .ak-side {scrollbar-gutter:stable}
+@media(max-width:640px){
+  .mc2-chute .ak-titles {flex:1 1 calc(100% - 5em)}
+  .mc2-chute .ak-tab {padding-inline:.55em}
+  .mc2-chute .ak-side,
+  .mc2-chute.is-proj .ak-side {
+    position:fixed;inset:0 0 0 auto;width:min(22em,95vw);max-width:none;max-height:none;
+    border-radius:0;transform:translateX(105%);
+  }
+  .mc2-chute.drawer-open .ak-side {transform:none;visibility:visible}
+  .mc2-readings {grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mc2-reading:nth-child(n+3) {border-top:1px solid var(--rule)}
+  .mc2-reading:nth-child(odd) {border-left:0}
+}
+
+.mc2-chute .ak-grp .ak-item {margin-block:.28em}
+.mc2-chute .ak-grp input[type=range] {height:1.4em}
+.mc2-chute .ak-transport .ak-scrub {width:auto;margin:0 .3em}
+.mc2-chute .ak-panel:hover .ak-ptools,
+.mc2-chute .ak-ptools.is-zoomed {opacity:1}
+@media(max-width:640px){
+  .mc2-chute .mc2-reading:last-child:nth-child(odd) {grid-column:1/-1}
+}
+@media(max-width:640px){
+  .mc2-chute .ak-transport {position:static}
+}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+function chartTicks(list, min, max, count, formatter, zoomed){
+  if(!list||zoomed&&list.length&&!formatter)return ticks(min,max,count);
+  if(!zoomed)return list;
+  const marge=(max-min)*1e-8;
+  return list.filter(v=>v>=min-marge&&v<=max+marge);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  cadrer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+function interrupteur(label,id){
+  const conteneur=el('label',{class:'ak-chk'});
+  conteneur.append(
+    el('input',{type:'checkbox',role:'switch',id}),
+    el('span',{class:'ak-switch-track','aria-hidden':'true'}),
+    el('span',{},label)
+  );
+  return conteneur;
+}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const frame=app._graphFrame, id=frame?.graphs.length;
+      const view=frame?.views[id]||null;
+      frame?.graphs.push({id,x0,y0,w,h,view});
+      const dx=o.xmax-o.xmin, dy=o.ymax-o.ymin;
+      const xmin=view?o.xmin+dx*view.vx:o.xmin, xmax=view?xmin+dx/view.vz:o.xmax;
+      const ymax=view?o.ymax-dy*view.vy:o.ymax, ymin=view?ymax-dy/view.vz:o.ymin;
+      const X=v=>x0+(v-xmin)/(xmax-xmin)*w, Y=v=>y0+h-(v-ymin)/(ymax-ymin)*h;
+      let s='';
+      const xt=chartTicks(o.xticks,xmin,xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5))),o.xfmt,view);
+      const yt=chartTicks(o.yticks,ymin,ymax,o.ny??Math.max(1,Math.round(h/(fs*3))),o.yfmt,view);
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      s+=S.line(x0,y0+h,x0+w,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      s+=S.line(x0,y0,x0,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      if(ymin<0&&ymax>0&&o.zeroAxis!==false)s+=S.line(x0,Y(0),x0+w,Y(0),{c:C0.ink2,w:1,raw:true});
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      if(frame)s=`<g data-ak-graph="${id}">${s}</g>`;
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>xmin+(px-x0)/w*(xmax-xmin),yv:py=>ymax-(py-y0)/h*(ymax-ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:cfg.menuCommun?'ak ak-menu-commun':'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  const nav=$('.ak-tools',top);
+  const themeButton=$('[data-act=theme]',nav);
+  const projButton=$('[data-act=proj]',nav);
+  const fullButton=$('[data-act=fs]',nav);
+  if(cfg.menuCommun){
+    nav.insertBefore($('[data-act=settings]',nav),fullButton);
+    $('[data-act=image]',nav).title='Enregistrer une image PNG (I)';
+  }
+  function syncMenu(){
+    if(!cfg.menuCommun)return;
+    const dark=root.dataset.theme==='dark', projected=ak.classList.contains('is-proj');
+    const full=Boolean(document.fullscreenElement);
+    themeButton.title=dark?'Passer au thème clair (T)':'Passer au thème sombre (T)';
+    $('.ak-lbl',projButton).textContent=projected?'Réglages':'Projection';
+    projButton.title=projected?'Rétablir les réglages (P)':'Agrandir la scène et masquer les réglages (P)';
+    projButton.setAttribute('aria-pressed',String(projected));
+    const fullscreenLabel=full?'Quitter le plein écran':'Plein écran';
+    fullButton.setAttribute('aria-label',fullscreenLabel);
+    fullButton.title=fullscreenLabel+' (F)';
+  }
+  if(cfg.menuCommun){
+    syncMenu();
+    document.addEventListener('fullscreenchange',syncMenu);
+  }
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Les figures SVG utilisent le viewBox. Un panneau qui affiche S.graph
+       ajuste les échelles de ses graphiques. Un canvas garde son zoom interne. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML=`
+      <button class="mini" data-z="-" title="Dézoomer (−)">−</button>
+      <button class="mini" data-z="0" aria-label="Cadrer" title="Cadrer : vue initiale (0)">${IC.cadrer}</button>
+      <button class="mini" data-z="+" title="Zoomer (+)">+</button>`;
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.append(interrupteur(it.label,'c_'+it.id));
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function viewBox(P){
+    const {w,h,vx,vy,vz}=P;
+    P.node.setAttribute('viewBox',P.vue==='svg'?`${vx.toFixed(2)} ${vy.toFixed(2)} ${(w/vz).toFixed(2)} ${(h/vz).toFixed(2)}`:`0 0 ${w.toFixed(1)} ${h.toFixed(1)}`);
+  }
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else viewBox(P);
+    }
+  }
+  /* ---------- rendu ---------- */
+  let graphPanels=[];
+  const activeChartView=P=>P?.vue==='graphe'&&zoomed(P)?P:null;
+  function drawFrame(){
+    const frame={graphs:[],views:graphPanels.map(activeChartView),outputs:new Map()};
+    A._graphFrame=frame;
+    try{cfg.draw?.(A)}finally{A._graphFrame=null}
+    graphPanels=[];
+    for(const [P,output] of frame.outputs){
+      const graphs=[...output.html.matchAll(/<g data-ak-graph="(\d+)">/g)].map(m=>frame.graphs[+m[1]]).filter(Boolean);
+      output.graphs=graphs;
+      if(P.vue==='svg'||P.vue==='graphe'){
+        const vue=graphs.length?'graphe':'svg';
+        if(vue!==P.vue){P.vue=vue;resetView(P);viewBox(P)}
+        P.graphs=graphs;
+      }
+      const view=activeChartView(P);
+      for(const graph of graphs){
+        graphPanels[graph.id]=P;
+        if(graph.view!==view)frame.changed=true;
+      }
+    }
+    return frame;
+  }
+  function clipCharts(node,graphs){
+    const svgElement=tag=>document.createElementNS(node.namespaceURI,tag);
+    for(const graph of graphs){
+      const axes=node.querySelector(`[data-ak-graph="${graph.id}"]`);
+      if(!axes)continue;
+      const id='ak-cadre-'+graph.id, defs=svgElement('defs'),clip=svgElement('clipPath'),rect=svgElement('rect');
+      clip.id=id;
+      for(const [k,v] of Object.entries({x:graph.x0,y:graph.y0,width:graph.w,height:graph.h}))rect.setAttribute(k,v);
+      clip.append(rect);defs.append(clip);axes.append(defs);
+      let layer=null;
+      for(let next=axes.nextElementSibling;next&&!next.hasAttribute('data-ak-graph');){
+        const child=next;next=child.nextElementSibling;
+        if(child.localName==='defs'||child.hasAttribute('data-ak-hors-graphe')){layer=null;continue}
+        if(!layer){
+          layer=svgElement('g');
+          layer.setAttribute('clip-path',`url(#${id})`);
+          child.before(layer);
+        }
+        layer.append(child);
+      }
+    }
+  }
+  function writeSvg(P,html,graphs=[]){
+    if(P.node._h===html)return;
+    P.node.innerHTML=html;
+    P.node._h=html;
+    if(activeChartView(P))clipCharts(P.node,graphs);
+  }
+  A.renderNow=()=>{
+    A._dirty=false;measure();
+    let frame=drawFrame();
+    // Si un réglage change l'ordre des tracés, associer à nouveau le zoom à son panneau.
+    if(frame.changed)frame=drawFrame();
+    for(const [P,output] of frame.outputs)writeSvg(P,output.html,output.graphs);
+    syncScrub();guardScroll();
+  };
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  A.svg=(id,html)=>{
+    const P=A.panels[id];if(!P)return;
+    if(A._graphFrame)A._graphFrame.outputs.set(P,{html});
+    else writeSvg(P,html);
+  };
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();syncMenu();A.renderNow()};
+  A.setProj=on=>{
+    ak.classList.toggle('is-proj',on);
+    ak.classList.remove('drawer-open');
+    projButton.classList.toggle('on',on);
+    syncMenu();
+    A.render();
+  };
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>{
+      const projected=ak.classList.contains('is-proj');
+      A.setProj(!projected);
+      if(cfg.menuCommun&&projected&&A.narrow)ak.classList.add('drawer-open');
+    },
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement ---------- */
+  const deplacable=P=>P.vue==='svg'||P.vue==='graphe';
+  function zoomed(P){
+    if(P.vue==='interne')return Math.abs(P.zoom-1)>1e-6;
+    if(!deplacable(P))return false;
+    const seuil=P.vue==='graphe'?1e-6:.5;
+    return Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>seuil||Math.abs(P.vy)>seuil;
+  }
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  const graphAt=(P,x,y)=>P.graphs.find(g=>x>=g.x0&&x<=g.x0+g.w&&y>=g.y0&&y<=g.y0+g.h);
+  function resetView(P){P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P)}
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{
+      if(P.vue==='graphe'){
+        const graph=graphAt(P,px,py);
+        px=graph?(px-graph.x0)/graph.w:.5;
+        py=graph?(py-graph.y0)/graph.h:.5;
+      }else{px=px??P.w/2;py=py??P.h/2}
+      const z=Math.max(.5,Math.min(8,P.vz*f)), delta=1/P.vz-1/z;
+      P.vx+=px*delta;P.vy+=py*delta;P.vz=z;
+    }
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy,px,py)=>{
+    if(!deplacable(P))return;
+    if(P.vue==='graphe'){const g=graphAt(P,px,py)||P.graphs[0];dx/=g.w;dy/=g.h}
+    P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()
+  };
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;resetView(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(deplacable(P)&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(deplacable(P)&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(deplacable(P)&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1],q.c[0],q.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1],last[0],last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH,interrupteur};
+})();
+
+</script>
+<script>
+
+'use strict';
+window.HailModel=(()=>{
+ const g=9.81,ids=['free','linear','quadratic'];
+ function constants(p){const R=p.R*1e-3,m=p.m*1e-3,eta=p.eta*1e-6,rho=p.rho,Cx=p.Cx,h=p.h;if(![R,m,eta,rho,Cx,h].every(Number.isFinite)||R<=0||m<=0||h<=0||eta<0||rho<0||Cx<0)throw new RangeError('Paramètres physiques hors domaine');const b=6*Math.PI*eta*R,c=.5*rho*Cx*Math.PI*R**2;return {R,m,eta,rho,Cx,h,b,c,gamma:b/m,k:c/m,g};}
+ function logCosh(x){x=Math.abs(x);if(x<1e-3){const y=x*x;return y*(.5+y*(-1/12+y*(1/45-17*y/2520)));}return x+Math.log1p(Math.exp(-2*x))-Math.LN2;}
+ function distance(c,id,t){if(t<0)throw new RangeError('Temps négatif');if(id==='free'||(id==='linear'&&c.b===0)||(id==='quadratic'&&c.c===0))return .5*g*t*t;if(id==='linear'){const x=c.gamma*t;if(x<1e-3)return .5*g*t*t*(1-x/3+x*x/12-x**3/60+x**4/360);return g/c.gamma**2*(x+Math.expm1(-x));}const x=t*Math.sqrt(g*c.k);if(x<1e-3)return .5*g*t*t*(1-x*x/6+2*x**4/45-17*x**6/1260);return logCosh(x)/c.k;}
+ function instant(c,id,t){let v,a;if(id==='free'||(id==='linear'&&c.b===0)||(id==='quadratic'&&c.c===0)){v=-g*t;a=-g;}else if(id==='linear'){v=-g/c.gamma*(-Math.expm1(-c.gamma*t));a=-g*Math.exp(-c.gamma*t);}else{const vt=Math.sqrt(g/c.k),x=t*g/vt,q=Math.exp(-2*x);v=-vt*Math.tanh(x);a=-g*4*q/(1+q)**2;}const f=id==='free'?0:id==='linear'?c.b*Math.abs(v):c.c*v*v;return {t,z:c.h-distance(c,id,t),v,a,P:c.m*g,f,Re:c.eta>0?2*c.rho*c.R*Math.abs(v)/c.eta:Infinity};}
+ function timeToDistance(c,id,d){if(d<=0)return 0;if(id==='free'||(id==='linear'&&c.b===0)||(id==='quadratic'&&c.c===0))return Math.sqrt(2*d/g);if(id==='quadratic'){const y=c.k*d,acoshExp=y+Math.log1p(Math.sqrt(-Math.expm1(-2*y)));return acoshExp/Math.sqrt(g*c.k);}let lo=0,hi=Math.sqrt(2*d/g)*1.1;while(distance(c,id,hi)<d)hi*=2;for(let i=0;i<70;i++){const mid=(lo+hi)/2;if(distance(c,id,mid)<d)lo=mid;else hi=mid;}return (lo+hi)/2;}
+ function build(p){const c=constants(p),models={};for(const id of ids){const impact=timeToDistance(c,id,c.h),vlim=id==='free'||(id==='linear'&&c.b===0)||(id==='quadratic'&&c.c===0)?null:id==='linear'?-g/c.gamma:-Math.sqrt(g/c.k),tau=vlim===null?null:id==='linear'?1/c.gamma:Math.abs(vlim)/g,t99=tau===null?null:id==='linear'?tau*Math.log(100):tau*.5*Math.log(199);models[id]={impact,vlim,tau,t99,d99:t99===null?null:distance(c,id,t99),arrival:instant(c,id,impact)};}return {c,models,duration:Math.max(...ids.map(id=>models[id].impact))};}
+ function sample(bundle,id,t,stopAtGround=true){const end=bundle.models[id].impact,tt=stopAtGround?Math.min(Math.max(0,t),end):t,q=instant(bundle.c,id,tt);return {...q,z:stopAtGround?Math.max(0,q.z):q.z,impacted:stopAtGround&&t>=end-1e-9};}
+ return Object.freeze({g,ids,constants,logCosh,distance,instant,timeToDistance,build,sample});
+})();
+
+'use strict';
+
+/* Mouvement dans le plan (Oxz), z vers le haut. Les coefficients de traînée
+   sont rapportés à la masse. L'intégration s'arrête au premier contact au sol. */
+window.ProjectileModel = (() => {
+  const g = window.HailModel.g;
+  const step = 0.002;
+
+  function initialState({z0, v0, alpha}) {
+    const angle = alpha * Math.PI / 180;
+    const component = f => Math.abs(f) < 1e-14 ? 0 : v0 * f;
+    return {x: 0, z: z0, vx: component(Math.cos(angle)), vz: component(Math.sin(angle))};
+  }
+
+  // Pour les tirs rasants ou vers le bas, on part du côté où z est décroissant.
+  function zero(lo, hi, f) {
+    for (let i = 0; i < 48; i++) {
+      const mid = (lo + hi) / 2;
+      if (f(mid) > 0) lo = mid;
+      else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+
+  function simulate(params, law = 'free') {
+    const initial = initialState(params);
+    const {z, vx, vz} = initial;
+    const terminal = law === 'free' ? null : params.terminal;
+    const linear = law === 'linear' ? g / terminal : 0;
+    const quadratic = law === 'quadratic' ? g / terminal ** 2 : 0;
+    const acceleration = q => {
+      const factor = linear + quadratic * Math.hypot(q.vx, q.vz);
+      return {ax: -factor * q.vx, az: -g - factor * q.vz};
+    };
+
+    let impact = 0, tApex = 0;
+    let at;
+    if (law === 'free') {
+      at = t => ({x: vx * t, z: z + vz * t - g * t ** 2 / 2, vx, vz: vz - g * t});
+      tApex = Math.max(0, vz / g);
+      const root = Math.hypot(vz, Math.sqrt(2 * g * z));
+      impact = vz >= 0 ? (vz + root) / g : 2 * z / (root - vz);
+    } else if (law === 'linear') {
+      at = t => {
+        const u = linear * t;
+        const decay = -Math.expm1(-u);
+        const integral = decay / linear;
+        const gravityDistance = u < 1e-3
+          ? g * t ** 2 / 2 * (1 - u / 3 + u ** 2 / 12)
+          : (g / linear) * (t - integral);
+        return {x: vx * integral, z: z + vz * integral - gravityDistance,
+          vx: vx * Math.exp(-u), vz: vz * Math.exp(-u) - terminal * decay};
+      };
+      tApex = vz > 0 ? Math.log1p(vz / terminal) / linear : 0;
+      if (z > 0 || vz > 0) {
+        let hi = tApex + 1;
+        while (at(hi).z > 0) hi *= 2;
+        impact = zero(tApex, hi, t => at(t).z);
+      }
+    } else {
+      function slope(q) {
+        const {ax, az} = acceleration(q);
+        return {x:q.vx,z:q.vz,vx:ax,vz:az};
+      }
+      function offset(q, d, dt) {
+        return {x: q.x + d.x * dt, z: q.z + d.z * dt, vx: q.vx + d.vx * dt, vz: q.vz + d.vz * dt};
+      }
+      function advance(q, dt) {
+        const a = slope(q);
+        const b = slope(offset(q, a, dt / 2));
+        const c = slope(offset(q, b, dt / 2));
+        const d = slope(offset(q, c, dt));
+        const mean = key => (a[key] + 2 * (b[key] + c[key]) + d[key]) / 6;
+        return offset(q, {x: mean('x'), z: mean('z'), vx: mean('vx'), vz: mean('vz')}, dt);
+      }
+
+      const states = [initial];
+      if (z > 0 || vz > 0) {
+        for (let i = 0; ; i++) {
+          const q = states[i];
+          const next = advance(q, step);
+          const apexInStep = q.vz > 0 && next.vz <= 0;
+          if (apexInStep) tApex = i * step + zero(0, step, dt => advance(q, dt).vz);
+          if (next.z <= 0) {
+            const lo = apexInStep ? tApex - i * step : 0;
+            impact = i * step + zero(lo, step, dt => advance(q, dt).z);
+            break;
+          }
+          states.push(next);
+        }
+      }
+      at = t => {
+        const i = Math.min(states.length - 1, Math.floor(t / step));
+        return advance(states[i], Math.max(0, t - i * step));
+      };
+    }
+
+    function sample(t) {
+      const time = Math.max(0, Math.min(impact, t));
+      const q = at(time);
+      return {...q, z: time >= impact ? 0 : Math.max(0, q.z), ...acceleration(q), time, impacted: t >= impact};
+    }
+    const apex = sample(tApex), arrival = sample(impact);
+    return {law, terminal, initial, impact, tApex, apex, arrival, sample};
+  }
+
+  // Enveloppe des tirs de même vitesse et de même altitude initiales.
+  function safetyParabola({z0, v0}) {
+    if (v0 === 0) return null;
+    const apex = z0 + v0 ** 2 / (2 * g);
+    const range = v0 * Math.sqrt(2 * apex / g);
+    const bestAngle = Math.atan(v0 / Math.sqrt(v0 ** 2 + 2 * g * z0)) * 180 / Math.PI;
+    return {apex, range, bestAngle, heightAt: x => apex * (1 - (x / range) ** 2)};
+  }
+
+  return Object.freeze({g, simulate, safetyParabola});
+})();
+
+/* =====================================================================
+   MC2 · Chute d'un grêlon (application du cours MC2)
+   Modèle : HailModel (fichier d'origine, inchangé) : solutions analytiques des trois
+   modèles, lâcher sans vitesse depuis z = h, axe (Oz) vertical ascendant.
+   Linéaire : f = −6πηR v, τ = m/(6πηR), v_lim,1 = −τg, t99 = τ ln 100.
+   Quadratique : f = −½ρCxπR²‖v‖v, v_lim,2 = −√(2mg/(ρCxπR²)), t99 = (|v_lim|/g) artanh 0.99.
+   ===================================================================== */
+const Hail = (() => {
+const HM=window.HailModel, Mh=AnimKit.M, IDS=HM.ids;
+const NOM={free:'Sans traînée',linear:'Traînée linéaire',quadratic:'Traînée quadratique'}, COURT={free:'Sans',linear:'Linéaire',quadratic:'Quadratique'};
+const DEF={R:10,m:3.9,h:1000,eta:17,rho:1.3,Cx:.45}, RHO0=.0039/(4*Math.PI/3*.01**3);
+const mv=s=>Mh.v(s);
+let B=null, trans=false, cap=false;
+const st={sel:'quadratic', plot:'v'};
+
+function build(a){
+  const {R,m,h,eta,rho,Cx}=a.p;
+  B=HM.build({R,m,h,eta,rho,Cx});
+  a.t=Math.min(a.t,B.duration);
+}
+function setPlot(a,plot){
+  st.plot=plot;
+  a.cadrer('graph');
+  for(const button of plotButtons)button.setAttribute('aria-pressed',String(button.dataset.plot===plot));
+}
+const kmh=a=>a.p.unit==='kmh', vf=a=>kmh(a)?3.6:1, vu=a=>kmh(a)?'km·h<sup>−1</sup>':'m·s<sup>−1</sup>';
+const nearCourse=a=>Object.keys(DEF).every(k=>Math.abs(a.p[k]-DEF[k])<1e-8*Math.max(1,DEF[k]));
+const col=(a,id)=>({free:a.C.ink2,linear:a.C.B,quadratic:a.C.cInk})[id];
+const DASH={free:[3,5],linear:[9,5],quadratic:null};
+
+const analysisNote = {type:'note',si:a=>a.p.ana,html:a=>analyse(a)};
+const displaySettings = [
+  {id:'unit',type:'seg',label:'Unité des vitesses',options:[['ms','m·s<sup>−1</sup>'],['kmh','km·h<sup>−1</sup>']],value:'ms'},
+  {id:'vlim',type:'check',label:'Vitesse limite du modèle détaillé',value:false,si:()=>st.plot==='v'},
+  {id:'ref',type:'check',label:'Repère 75 km·h<sup>−1</sup> (données du cours)',value:false,si:()=>st.plot==='v'},
+  {id:'res',type:'check',label:'Résultante des forces',value:false},
+  {id:'gain',label:'Échelle des forces',min:.25,max:2,step:.25,unit:'×',value:1},
+  {id:'ana',type:'check',label:'Analyse du modèle détaillé',value:false},
+  analysisNote
+];
+for(const item of displaySettings)item.onglets=[2];
+
+const hailSettings = [
+    {titre:'Situations',presets:[
+      {label:'Données du cours',valeurs:{...DEF,lie:true},action:a=>{a.set('sel','quadratic');trans=false;setPlot(a,'v')}},
+      {label:'Transitoire quadratique',titre:'Agrandit les dix premières secondes',valeurs:{},action:a=>{a.set('sel','quadratic');trans=true;setPlot(a,'v');const md=B.models.quadratic;a.t=Math.min(md.t99,md.impact,10)}},
+      {label:'Toute la chute',valeurs:{},action:a=>{trans=false}}]},
+    {titre:'Modèle détaillé',items:[
+      {id:'sel',type:'seg',options:[['free','Sans'],['linear','Linéaire'],['quadratic','Quadratique']],value:'quadratic'},
+      {type:'note',html:'Bilan des forces et analyse de ce modèle ; on peut aussi cliquer sur un grêlon.'},
+      {type:'boutons',items:[{id:'imp',label:'Instant de l\'impact',action:a=>{a.play(false);a.t=B.models[st.sel].impact}},
+        {id:'t99',label:'À 99 % de la limite',action:a=>{const md=B.models[st.sel];if(md.t99!==null&&md.t99<=md.impact){a.play(false);a.t=md.t99}}}]}]},
+    {titre:'Le grêlon',items:[
+      {id:'R',label:`Rayon ${mv('R')}`,min:2,max:20,step:.1,unit:'mm',value:10,reinit:true},
+      {id:'m',label:`Masse ${mv('m')}`,min:.01,max:40,step:.01,unit:'g',value:3.9,reinit:true,si:a=>!a.p.lie},
+      {id:'lie',type:'check',label:`Masse liée à ${mv('R')}<sup>3</sup> (même masse volumique)`,value:true},
+      {type:'note',html:a=>`${mv('m')} = ${a.fmt.sig(a.p.m,3)} g ; masse volumique ${a.fmt.sig(a.p.m*1e-3/(4*Math.PI/3*(a.p.R*1e-3)**3),3)} kg·m<sup>−3</sup>.`},
+      {id:'h',label:`Hauteur ${mv('h')}`,min:50,max:2000,step:10,unit:'m',value:1000,reinit:true}]},
+    {titre:'L\'air',items:[
+      {id:'rho',label:`Masse volumique ${mv('ρ')}`,min:.5,max:2,step:.01,unit:'kg·m<sup>−3</sup>',value:1.3,reinit:true},
+      {id:'eta',label:`Viscosité ${mv('η')}`,min:5,max:100,step:.1,unit:'µPa·s',value:17,reinit:true},
+      {id:'Cx',label:`Coefficient ${mv('C')}<sub>x</sub>`,min:.1,max:1.2,step:.01,unit:'',value:.45,reinit:true},
+      {type:'note',html:'Air uniforme, au repos ; <i class="m">g</i> = 9.81 m·s<sup>−2</sup> ; poussée d\'Archimède négligée.'}]},
+  ];
+/* ---------- valeurs et messages ---------- */
+function analyse(a){
+  if(!B)return'';const f=a.fmt,md=B.models[st.sel],q=HM.sample(B,st.sel,a.t),c=B.c;
+  let s=md.vlim===null?'Pas de vitesse limite : accélération constante.':`${mv('v')}<sub>lim</sub> = ${f.sig(md.vlim*vf(a),3)} ${vu(a)} ; ${st.sel==='linear'?'τ':`|${mv('v')}<sub>lim</sub>|/${mv('g')}`} = ${f.sig(md.tau,3)} s ; seuil 99 % à ${f.sig(md.t99,3)} s, après ${f.sig(md.d99,3)} m de chute`+(md.t99>md.impact?' (après l\'impact)':'')+'.';
+  s+=` Poussée d'Archimède négligée : Π/${mv('P')} = ${f.sig(c.rho*(4*Math.PI/3*c.R**3)/c.m*100,2)} %. Nombre de Reynolds à cet instant : ${mv('Re')} = ${f.sig(q.Re,2)}`+(st.sel==='linear'?' (Stokes exige Re ≪ 1).':'.');
+  return s;
+}
+function infos(a,metrics){
+  const f=a.fmt,md=B.models[st.sel];
+  a.enable('t99',md.t99!==null&&md.t99<=md.impact);
+  metrics(IDS.map(id=>{const qq=HM.sample(B,id,a.t);return{label:`${NOM[id]}${qq.impacted?' · au sol':''}`,value:st.plot==='z'?f.sig(qq.z,3):st.plot==='a'?f.sig(qq.a,3):f.sig(qq.v*vf(a),3),unit:st.plot==='z'?'m':st.plot==='a'?'m·s<sup>−2</sup>':vu(a),hint:a.p.preview||qq.impacted?`sol à ${f.sig(B.models[id].impact,3)} s`:''}}));
+  const L=IDS.map(id=>({c:col(a,id),label:COURT[id],dash:!!DASH[id]}));
+  if(a.p.vlim&&st.plot==='v'&&md.vlim!==null)L.push({c:col(a,st.sel),label:`${mv('v')}<sub>lim</sub> = ${f.sig(md.vlim*vf(a),3)} ${vu(a)}`,dash:true});
+  if(a.p.ref&&st.plot==='v'&&nearCourse(a))L.push({c:a.C.pred,label:'75 km·h<sup>−1</sup>',dash:true});
+  L.push({c:a.C.F,label:`forces : 1 mN ↔ ${f.sig(scF*1e-3,2)} px`+(cap?' (plafonnées)':'')});
+  a.legend(L);
+  a.clock(`${mv('t')} = ${f.fix(a.t,2)} s`);
+}
+
+/* ---------- trois chutes ---------- */
+let CH={top:0,bot:0};
+function drawChute(a){
+  const P=a.panels.chute,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,top=55*k,bot=h-33*k,ax=44*k;
+  CH={top,bot};
+  let s=S.rect(ax+8*k,top-10*k,w-ax-14*k,bot-top+10*k,{fill:C.B,fop:C.dark?.1:.07,rx:4});
+  s+=S.rect(ax+8*k,bot,w-ax-14*k,8*k,{fill:C.ink2,fop:.45});
+  s+=S.arrow(ax,bot,ax,top-14*k,{c:C.ink2,w:1.3});s+=S.text(ax-6*k,top-28*k,`${S.v('z')} (m)`,{size:13,base:'bottom'});
+  for(const fr of[0,.5,1]){const y=bot-fr*(bot-top);s+=S.line(ax-4*k,y,ax+4*k,y,{c:C.ink2,w:1})+S.text(ax-6*k,y,a.fmt.fix(a.p.h*fr,0),{anchor:'end',size:13,halo:false})}
+  const x0=ax+30*k,x1=w-28*k;
+  IDS.forEach((id,i)=>{const x=x0+i*(x1-x0)/2,q=HM.sample(B,id,a.t),y=bot-q.z/a.p.h*(bot-top),r=Math.max(3*k,Math.min((4+.8*a.p.R)*k*.85,(x1-x0)/4-3*k)),c=col(a,id);
+    s+=S.line(x,top,x,bot,{c,w:1,dash:DASH[id]?DASH[id].map(v=>v*k).join(' '):`${2*k} ${5*k}`,op:.7});
+    s+=S.text(x,top-24*k,{free:'Sans',linear:'Lin.',quadratic:'Quadr.'}[id],{anchor:'middle',size:13,c,weight:id===st.sel?700:undefined});
+    if(id===st.sel)s+=S.circle(x,y,r+5*k,{c,w:2});
+    s+=S.circle(x,y,r,{fill:C.card,c,w:2})+S.line(x-r*.55,y,x+r*.55,y,{c,w:1})+S.line(x,y-r*.55,x,y+r*.55,{c,w:1});
+    if(q.impacted)s+=S.text(x,bot+12*k,'au sol',{anchor:'middle',size:13,c,base:'top'});
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.min(r+12*k,(x1-x0)/4).toFixed(1)}" fill="transparent" data-id="${id}" style="cursor:grab"/>`});
+  a.svg('chute',s);
+}
+
+/* ---------- graphe ---------- */
+let G=null;
+function range(a){
+  const lo=0,hi=trans?Math.min(10,B.duration):B.duration;
+  let ymin=0,ymax=0;
+  if(st.plot==='z')ymax=a.p.h*1.05;else if(st.plot==='a'){ymin=-HM.g*1.1;ymax=HM.g*.05}
+  else{ymin=trans?-Math.abs(B.models.quadratic.vlim||B.models.quadratic.arrival.v)*1.25*vf(a):-Math.max(...IDS.map(id=>Math.abs(HM.sample(B,id,Math.min(hi,B.models[id].impact)).v)))*1.1*vf(a);ymin=Math.min(-1,ymin)}
+  return{lo,hi,ymin,ymax};
+}
+const ord=(a,q)=>st.plot==='z'?q.z:st.plot==='a'?q.a:q.v*vf(a);
+function drawGraph(a){
+  const P=a.panels.graph,S=a.S,C=a.C,k=a.k,r=range(a);
+  const label=st.plot==='v'?`${S.v('v','z')} (${kmh(a)?'km·h':'m·s'}${S.sup('−1')})`
+    :st.plot==='z'?`${S.v('z')} (m)`:`${S.v('a','z')} (m·s${S.sup('−2')})`;
+  P.node.setAttribute('aria-label', {v:'Vitesse verticale',z:'Altitude',a:'Accélération verticale'}[st.plot]+' en fonction du temps');
+  G=S.graph({x:4*k,y:4*k,w:P.w-8*k,h:P.h-8*k,padT:22*k,padB:31*k,xmin:r.lo,xmax:r.hi,ymin:r.ymin,ymax:r.ymax,xlab:`${S.v('t')} (s)`,ylab:label,padR:16*k});
+  let s=G.svg+S.clip('gcl',G);
+  for(const id of IDS){
+    const until=Math.min(r.hi,B.models[id].impact,a.p.preview?Infinity:a.t);
+    if(until<=r.lo)continue;
+    const pts=[];
+    for(let i=0;i<=200;i++){
+      const t=r.lo+(until-r.lo)*i/200;
+      pts.push([t,ord(a,HM.sample(B,id,t))]);
+    }
+    s+=S.curve(pts,G,{c:col(a,id),w:id===st.sel?3:2,dash:DASH[id]?DASH[id].map(v=>v*k).join(' '):undefined})}
+  if(st.plot==='v'&&a.p.vlim){const L=B.models[st.sel].vlim;if(L!==null){const y=G.Y(L*vf(a));if(y>=G.y0&&y<=G.y0+G.h)s+=S.line(G.x0,y,G.x0+G.w,y,{c:col(a,st.sel),w:1.2,dash:`${12*k} ${5*k} ${2*k} ${5*k}`})+S.text(G.x0+G.w-4*k,y-10*k,`${S.v('v','lim')}`,{anchor:'end',size:14,c:col(a,st.sel)});
+      else s+=S.text(G.x0+G.w-4*k,G.y0+G.h-12*k,`${S.v('v','lim')} = ${a.fmt.sig(L*vf(a),2).replace(/<sup>(.*?)<\/sup>/,(m,e)=>S.sup(e))} : hors du graphe`,{anchor:'end',size:13,c:col(a,st.sel)})}}
+  if(st.plot==='v'&&a.p.ref&&nearCourse(a)){const y=G.Y(-75/3.6*vf(a));if(y>=G.y0&&y<=G.y0+G.h)s+=S.line(G.x0,y,G.x0+G.w,y,{c:C.pred,w:1,dash:`${5*k} ${6*k}`})+S.text(G.x0+8*k,y+12*k,'75 km·h'+S.sup('−1')+' · cours',{size:13,c:C.ink2})}
+  if(a.t>=r.lo&&a.t<=r.hi){const x=G.X(a.t);s+=S.line(x,G.y0,x,G.y0+G.h,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`});
+    for(const id of IDS){const q=HM.sample(B,id,a.t);if(!q.impacted||Math.abs(a.t-B.models[id].impact)<1e-7){const y=G.Y(ord(a,q));if(y>=G.y0&&y<=G.y0+G.h)s+=S.circle(x,y,4*k,{fill:col(a,id)})}}}
+  a.svg('graph',s);
+}
+
+/* ---------- bilan des forces du modèle détaillé ---------- */
+let scF=1;
+function drawForces(a){
+  const P=a.panels.forces,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,f=a.fmt,q=HM.sample(B,st.sel,a.t),c=col(a,st.sel);cap=false;
+  const svgv=x=>f.sig(x,3).replace(/<sup>(.*?)<\/sup>/,(m,e)=>S.sup(e));
+  let s=S.text(w/2,8*k,NOM[st.sel],{anchor:'middle',base:'top',size:13,c,weight:650});
+  if(q.impacted)s+=S.text(w/2,26*k,'Juste avant l’impact',{anchor:'middle',base:'top',size:11,c:C.ink2});
+  const cx=w*.42,cy=h*.42,room=Math.max(20*k,Math.min(h*.29,cy-48*k,h-cy-85*k));
+  scF=room/(.0039*HM.g)*.85*a.p.gain;   // px par newton
+  const lp=q.P*scF,ld=q.f*scF;if(lp>room+.1||ld>room+.1||(a.p.res&&Math.abs(q.f-q.P)*scF>room+.1))cap=true;
+  s+=S.circle(cx,cy,12*k,{fill:C.card,c,w:1.6});
+  s+=S.arrow(cx,cy,cx,cy+Math.min(lp,room),{c:C.F,w:3})+vl(a,cx+10*k,cy+Math.min(lp,room)-4*k,'P',C.F);
+  if(q.f>1e-13&&ld>.5)s+=S.arrow(cx,cy,cx,cy-Math.min(ld,room),{c:C.F,w:3})+(ld>18*k?vl(a,cx+10*k,cy-Math.min(ld,room)+12*k,'f',C.F):'');
+  if(a.p.res){const net=q.f-q.P,L=Math.min(Math.abs(net)*scF,room),x=cx-40*k;if(L>.5)s+=S.arrow(x,cy,x,cy-Math.sign(net)*L,{c:C.ink2,w:2,dash:`${4*k} ${3*k}`});s+=S.text(x-6*k,cy,'Σ'+S.v('F'),{anchor:'end',size:15,c:C.ink2})}
+  const y0=Math.min(h-63*k,cy+room+16*k);
+  s+=S.text(10*k,y0,`${S.v('P')} = ${svgv(q.P*1e3)} mN`,{size:14,c:C.ink,base:'top'});
+  s+=S.text(10*k,y0+20*k,`${S.v('f')} = ${svgv(q.f*1e3)} mN`,{size:14,c:C.ink,base:'top'});
+  s+=S.text(10*k,y0+40*k,`${S.v('a','z')} = ${svgv(q.a)} m·s${S.sup('−2')}`,{size:14,c:C.ink,base:'top'});
+  a.svg('forces',s);
+}
+function vl(a,x,y,l,c){const S=a.S,k=a.k,fs=17*k;return S.text(x,y,S.v(l),{size:17,c})+S.arrow(x+.05*fs,y-.55*fs,x+.6*fs,y-.55*fs,{c,w:.9,head:4.5*k})}
+
+
+let plotButtons=[];
+function wire(a){
+  const head=a.panels.graph.head;
+  head.innerHTML='<div class="ak-seg" role="group" aria-label="Grandeur tracée"></div>';
+  const choices=head.firstElementChild;
+  for(const [id,label] of [['v','Vitesse'],['z','Altitude'],['a','Accélération']]){
+    const button=document.createElement('button');
+    button.type='button';
+    button.dataset.plot=id;
+    button.textContent=label;
+    button.addEventListener('click',()=>{
+      setPlot(a,id);
+      a.refresh();
+      a.render();
+    });
+    choices.append(button);
+    plotButtons.push(button);
+  }
+  setPlot(a,'v');
+
+  let draggedModel=null;
+  a.drag('chute',{
+    hit:(x,y,e)=>!!e.target.closest('[data-id]'),
+    start(x,y,e){
+      a.play(false);
+      draggedModel=e.target.closest('[data-id]').dataset.id;
+      a.set('sel',draggedModel);
+    },
+    move(x,y){
+      const fraction=Math.max(0,Math.min(1,(y-CH.top)/(CH.bot-CH.top)));
+      a.t=Math.min(B.duration,HM.timeToDistance(B.c,draggedModel,a.p.h*fraction));
+    },
+    end(){draggedModel=null}
+  });
+  const seek=x=>{a.t=Math.max(0,Math.min(B.duration,G.xv(Math.max(G.x0,Math.min(G.x0+G.w,x)))))};
+  a.drag('graph',{
+    hit:(x,y)=>G&&x>=G.x0-4&&x<=G.x0+G.w+4&&y>=G.y0&&y<=G.y0+G.h,
+    start(x){a.play(false);seek(x)},
+    move(x){seek(x)}
+  });
+}
+function change(a,id,v){
+  if(id==='sel')st.sel=v;
+  if((id==='R'||id==='lie')&&a.p.lie){
+    a.p.m=+(RHO0*(4*Math.PI/3*(a.p.R*1e-3)**3)*1e3).toFixed(4);
+    if(id==='lie')build(a);
+  }
+  if(['R','m','h','rho','eta','Cx'].includes(id))trans=false;
+}
+function draw(a,metrics){
+  drawChute(a);
+  drawGraph(a);
+  drawForces(a);
+  infos(a,metrics);
+  if(a.p.ana){
+    const note=analysisNote._box.firstChild;
+    const html=analyse(a);
+    if(note.innerHTML!==html)note.innerHTML=html;
+  }
+}
+return {settings:hailSettings.map(group=>({...group,onglets:[2]})),
+  display:displaySettings,build,duration:()=>B.duration,change,draw,wire};
+})();
+
+// @titre Chute dans le champ de pesanteur · MC2 · MPSI
+// @sortie ../MC2_ChutePesanteur/MC2_ChutePesanteur.html
+// @inclure MC2_Chute_Grelon_physique.js
+// @inclure MC2_ChutePesanteur_physique.js
+// @inclure MC2_ChutePesanteur_grelon.js
+// @style MC2_ChutePesanteur.css
+// @description Tir dans un champ uniforme, comparaison des lois de traînée et application au grêlon.
+'use strict';
+
+const PM = window.ProjectileModel;
+const M = AnimKit.M;
+const ms = 'm·s<sup>−1</sup>';
+const launch = {z0: 0, v0: 30, alpha: 45};
+const modelName = {free: 'Chute libre', linear: 'Traînée linéaire', quadratic: 'Traînée quadratique'};
+let free, drag, scene, dragView, historyGraph;
+let previousTab = 0, hailTime = 0, projectileTime = 0;
+let readings, angleStudy;
+
+const model = a => a.tab === 0 ? free : drag;
+const compared = a => a.tab === 1 && a.p.compare;
+const plotAngles = a => a.tab === 0 && a.p.plotAngles;
+const heightColor = a => a.C.dark ? a.C.E : '#a64d00';
+const duration = a => a.tab === 2 ? Hail.duration()
+  : Math.max(model(a).impact, compared(a) ? free.impact : 0);
+const seek = (a,t) => {a.t = Math.max(0, Math.min(duration(a), t))};
+
+function rebuild(a) {
+  const prepare = law => {
+    const path = PM.simulate(a.p,law);
+    const states = Array.from({length:181},(_,i)=>path.sample(path.impact*i/180));
+    return {...path, states,
+      maxAcceleration:Math.max(...states.map(p=>Math.hypot(p.ax,p.az)))};
+  };
+  free = prepare('free');
+  drag = prepare(a.p.law);
+}
+
+function ballistics(a) {
+  const {z0,v0} = a.p;
+  if (angleStudy?.z0 === z0 && angleStudy.v0 === v0) return angleStudy;
+  const safety = PM.safetyParabola({z0,v0});
+  const shot = alpha => PM.simulate({z0,v0,alpha});
+  const angles = Array.from({length:361},(_,i)=>i-180);
+  if (safety) angles.push(safety.bestAngle,180-safety.bestAngle);
+  angles.sort((a,b)=>a-b);
+  const results = angles.map(alpha=>{
+    const path = shot(alpha);
+    return {alpha, range:Math.abs(path.arrival.x), height:path.apex.z};
+  });
+  const rightAngles = safety ? [safety.bestAngle/2,safety.bestAngle,
+    safety.bestAngle+.3*(90-safety.bestAngle),safety.bestAngle+.7*(90-safety.bestAngle)] : [];
+  const ghostAngles = safety ? [...rightAngles,90,...rightAngles.map(alpha=>180-alpha)] : [];
+  const ghosts = ghostAngles.map(alpha=>{
+    const path = shot(alpha);
+    return Array.from({length:101},(_,i)=>{
+      const q = path.sample(path.impact*i/100);
+      return [q.x,q.z];
+    });
+  });
+  angleStudy = {z0,v0,safety,results,ghosts};
+  return angleStudy;
+}
+
+const A = AnimKit.app({
+  code: 'MC2', partie: 'RougeGrenat', chapitre: 'MC2 Dynamique du point',
+  titre: 'Chute dans le champ de pesanteur', fichier: 'ChutePesanteur',
+  onglets: ['Chute libre', 'Avec frottements', 'Grêlon'], menuCommun: true,
+  temps: true, pas: .05, vitesses: [.25, .5, 1, 2, 4, 8], vitesse: 1,
+  panneaux: [
+    {id: 'projectile', titre: 'Trajectoire dans le plan (Oxz)', poids: 1.65, onglets: [0,1], ratioTel: .96},
+    {id: 'evolution', titre: 'Évolution au cours du temps', onglets: [0,1], si: a => plotAngles(a) || a.p.history !== 'none', ratioTel: .82},
+    {id: 'chute', titre: 'Chutes synchronisées', poids: .95, onglets: [2], ratioTel: .78},
+    {id: 'graph', titre: 'Grandeur tracée', poids: 1.6, onglets: [2], ratioTel: .83},
+    {id: 'forces', titre: 'Bilan des forces', poids: .76, onglets: [2], ratioTel: .78}
+  ],
+  curseur: {max: duration, get: a => a.t, set: seek},
+  peutLire(a) {
+    const end = duration(a);
+    if (end <= 0) return false;
+    if (a.t >= end) a.t = 0;
+    return true;
+  },
+  touches: {arrowleft(a) {a.play(false);seek(a, a.t - (a.tab === 2 ? .5 : .05))}},
+  onglet(a,i) {
+    a.play(false);
+    if (i === 2 && previousTab !== 2) {
+      projectileTime = a.t;
+      seek(a, hailTime);
+    } else if (i !== 2) {
+      if (previousTab === 2) {
+        hailTime = a.t;
+        seek(a, projectileTime);
+      } else seek(a, a.t);
+    }
+    previousTab = i;
+  },
+  reglages: [
+    {titre: 'Situations', onglets: [0,1], presets: [
+      {label: 'Tir du cours', valeurs: {...launch}},
+      {label: 'Lancer horizontal', valeurs: {z0: 20, v0: 20, alpha: 0}},
+      {label: 'Lâcher vertical', valeurs: {z0: 45, v0: 0, alpha: 0}}
+    ]},
+    {titre: 'Lancement', onglets: [0,1], items: [
+      {id: 'z0', label: `Altitude initiale ${M.v('z',0)}`, min: 0, max: 100, step: .1, unit: 'm', value: launch.z0, reinit: true},
+      {id: 'v0', label: `Vitesse initiale ${M.v('v',0)}`, min: 0, max: 55, step: .1, unit: ms, value: launch.v0, reinit: true},
+      {id: 'alpha', label: `Angle de tir ${M.v('α')}`, min: -180, max: 180, step: 1, unit: '°', value: launch.alpha, reinit: true},
+      {type: 'boutons', items: [
+        {id: 'apex', label: 'Sommet', action: a => {a.play(false);seek(a, model(a).tApex)}},
+        {id: 'arrival', label: 'Impact', action: a => {a.play(false);seek(a, model(a).impact)}}
+      ]}
+    ]},
+    {titre: 'Frottements fluides', onglets: [1], items: [
+      {id: 'law', type: 'seg', options: [['linear','Linéaires'], ['quadratic','Quadratiques']], value: 'quadratic', reinit: true},
+      {id: 'terminal', label: `Norme de la vitesse limite ${M.v('v','lim')}`, min: 8, max: 80, step: .5, unit: ms, value: 22, reinit: true},
+      {type: 'note', html: a => a.p.law === 'linear'
+        ? `<span class="vec">F</span><sub>f</sub> = −${M.v('h')} <span class="vec">v</span> · ${M.v('h')}/${M.v('m')} = ${a.fmt.sig(PM.g/a.p.terminal,3)} s<sup>−1</sup>`
+        : `<span class="vec">F</span><sub>f</sub> = −${M.v('h','', '′')} ‖<span class="vec">v</span>‖ <span class="vec">v</span> · ${M.v('h','', '′')}/${M.v('m')} = ${a.fmt.sig(PM.g/a.p.terminal**2,3)} m<sup>−1</sup>`},
+      {id: 'compare', type: 'check', label: 'Superposer la chute libre', value: true}
+    ]},
+    ...Hail.settings,
+    {titre: 'Affichage', items: [
+      {id: 'plotAngles', type: 'check', onglets: [0], label: 'Portée et flèche selon α', value: false},
+      {id: 'safety', type: 'check', onglets: [0], label: 'Parabole de sûreté', value: false},
+      {id: 'ghosts', type: 'check', onglets: [0], label: 'Trajectoires fantômes', value: false},
+      {type: 'note', onglets: [0], si: a => (a.p.safety || a.p.ghosts) && a.p.v0 === 0,
+        html: 'Une vitesse initiale non nulle permet de faire varier la direction du tir.'},
+      {id: 'preview', type: 'check', label: 'Préafficher les tracés', value: false},
+      {id: 'markers', onglets: [0,1], type: 'check', label: 'Flèche et portée', value: true},
+      {id: 'vectors', onglets: [0,1], type: 'check', label: 'Vecteurs vitesse et accélération', value: true},
+      {id: 'history', onglets: [0,1], si: a => !plotAngles(a), type: 'select', label: 'Courbes temporelles', options: [
+        ['none','Masquées'],['velocity','Composantes de la vitesse'],['position','Positions x et z']
+      ], value: 'none'},
+      ...Hail.display
+    ]}
+  ],
+  aide: {
+    voit: '<ul><li><b>Chute libre.</b> Tir dans le plan vertical (Oxz), depuis le sol ou en altitude. La flèche est l’altitude maximale au-dessus du sol. La portée est la distance horizontale entre le départ et l’impact.</li><li><b>Avec frottements.</b> Même lancement et même horloge que la référence en pointillés. Chaque trajectoire s’arrête à son premier contact avec le sol.</li><li><b>Grêlon.</b> Trois lâchers verticaux sans vitesse. Le sélecteur au-dessus du graphe affiche la vitesse, l’altitude ou l’accélération verticale. Cliquer sur un grêlon sélectionne son bilan des forces. Le glisser ou cliquer dans le graphe règle l’instant.</li></ul>',
+    faire: '<p>Régler le lancement ou glisser la pointe de la flèche verte au départ pour choisir la norme et la direction de la vitesse initiale. Les boutons « Sommet » et « Impact » placent l’horloge aux instants correspondants. Dans Affichage, activer « Préafficher les tracés » pour voir les trajectoires et les courbes en entier. En mode Projection, « Réglages » ramène le panneau de droite. Le cadre garde la même échelle en <i>x</i> et <i>z</i>. Les vecteurs vitesse et accélération ont chacun leur échelle, indiquée dans la légende.</p>',
+    modele: '<p>Référentiel terrestre supposé galiléen, axe <i>Oz</i> vertical ascendant, champ uniforme <i>g</i> = 9,81 m·s<sup>−2</sup>. L’air est au repos et la poussée d’Archimède est négligée. En chute libre, <i>x</i> = <i>v</i><sub>0x</sub><i>t</i> et <i>z</i> = <i>z</i><sub>0</sub> + <i>v</i><sub>0z</sub><i>t</i> − ½<i>gt</i>². Pour un départ au sol et un tir vers le haut et vers la droite, la portée vaut <i>v</i><sub>0</sub>² sin(2<i>α</i>)/<i>g</i> et est maximale à 45°.</p><p>Pour la traînée linéaire −<i>h</i> <span class="vec">v</span>, <i>h</i>/<i>m</i> = <i>g</i>/<i>v</i><sub>lim</sub>. Pour la traînée quadratique −<i>h</i>′ ‖<span class="vec">v</span>‖ <span class="vec">v</span>, <i>h</i>′/<i>m</i> = <i>g</i>/<i>v</i><sub>lim</sub>². Le même réglage impose donc la même vitesse limite verticale aux deux lois. La solution linéaire est analytique. Le mouvement oblique quadratique est intégré par Runge–Kutta d’ordre 4 (pas de 0,002 s). Les valeurs à l’impact sont celles juste avant le choc.</p>',
+    cours: '<p>MC2, applications « Chute libre dans le champ de pesanteur » et « Chute d’un grêlon ». Pour le grêlon du cours (<i>R</i> = 10 mm, <i>m</i> = 3,9 g, <i>h</i> = 1 km), les trois solutions verticales sont analytiques. La loi linéaire de Stokes suppose <i>Re</i> ≪ 1, avec <i>Re</i> = 2<i>ρRv</i>/<i>η</i>. Le modèle quadratique donne <i>v</i><sub>z,lim</sub> ≈ −20,4 m·s<sup>−1</sup>, soit une norme de 73,5 km·h<sup>−1</sup>. Le seuil de 99 % est franchi vers 5,50 s après environ 83 m de chute.</p>',
+    plus: `<p>Dans « Portée et flèche selon α », cliquer ou glisser dans le graphe pour changer l’angle. La portée est la distance horizontale à l’impact, mesurée dans les deux sens. La flèche est l’altitude maximale au-dessus du sol.</p><p>Pour une altitude initiale <i>z</i><sub>0</sub> et une norme <i>v</i><sub>0</sub> fixées, avec <i>v</i><sub>0</sub> &gt; 0, maximiser <i>z</i>(<i>x</i>) par rapport à tan α donne la parabole de sûreté <i>z</i><sub>s</sub>(<i>x</i>) = <i>z</i><sub>0</sub> + ${M.frac('<i>v</i><sub>0</sub>²','2<i>g</i>')} − ${M.frac('<i>g x</i>²','2<i>v</i><sub>0</sub>²')}. Elle borne toutes les trajectoires par le haut. Les trajectoires fantômes gardent les mêmes <i>z</i><sub>0</sub> et <i>v</i><sub>0</sub> que le projectile et s’arrêtent au sol.</p>`,
+    touches: '<kbd>←</kbd> recule de 0,05 s (0,5 s pour le grêlon)'
+  },
+  init(a) {
+    rebuild(a);
+    Hail.build(a);
+    readings = document.createElement('div');
+    readings.className = 'mc2-readings';
+    readings.setAttribute('aria-label','Mesures');
+    a.root.querySelector('.ak-legend').before(readings);
+    a.root.classList.add('mc2-chute');
+  },
+  reset(a) {
+    if (a.tab === 2) Hail.build(a);
+    else rebuild(a);
+  },
+  change(a,id,v) {
+    if (a.tab === 2) Hail.change(a,id,v);
+    if (id === 'compare') seek(a,a.t);
+    if (id === 'plotAngles') a.cadrer('evolution');
+    if (id === 'plotAngles' || id === 'safety' || id === 'ghosts') a.cadrer('projectile');
+  },
+  step(a,dt) {
+    seek(a,a.t + (a.tab === 2 && !a.running ? dt * 10 : dt));
+    if (a.t >= duration(a)) a.play(false);
+  },
+  draw(a) {
+    if (a.tab === 2) Hail.draw(a, showReadings);
+    else {
+      drawProjectile(a);
+      if (a.panelVisible('evolution')) {
+        const angular = plotAngles(a);
+        const title = angular ? 'Portée et flèche selon α' : 'Évolution au cours du temps';
+        const panel = a.panels.evolution;
+        if (panel.head.textContent !== title) {
+          panel.head.textContent = title;
+          panel.node.setAttribute('aria-label',title);
+        }
+        if (angular) drawAngles(a);
+        else drawHistory(a);
+      }
+      projectileReadings(a);
+    }
+  }
+});
+
+function showReadings(values) {
+  const html = values.map(({label,value,unit,hint}) => `<div class="mc2-reading">
+    <span class="mc2-caption">${label}</span>
+    <strong>${value} <small>${unit}</small></strong>${hint ? `<span class="mc2-hint">${hint}</span>` : ''}</div>`).join('');
+  if (readings._html !== html) {
+    readings.innerHTML = html;
+    readings._html = html;
+  }
+}
+
+function projectileReadings(a) {
+  const q = model(a), f = a.fmt;
+  const measures = [
+    ['Flèche', 'm', path => path.apex.z, path => path.tApex],
+    ['Portée', 'm', path => Math.abs(path.arrival.x), path => path.impact],
+    ['Durée du vol', 's', path => path.impact, path => path.impact],
+    ['Vitesse à l’impact', ms, path => Math.hypot(path.arrival.vx,path.arrival.vz), path => path.impact]
+  ];
+  showReadings(measures.map(([label,unit,value,instant]) => {
+    const display = path => a.p.preview || a.t >= instant(path) ? f.sig(value(path),3) : '—';
+    const current = display(q), reference = display(free);
+    return {
+      label, value:current, unit:current === '—' ? '' : unit,
+      hint: compared(a) ? `Libre · ${reference === '—' ? reference : reference+' '+unit}` : ''
+    };
+  }));
+  a.enable('apex', q.tApex > 0);
+  a.enable('arrival', q.impact > 0);
+  a.clock(q.impact === 0 && !duration(a) ? 'Impact immédiat' : `t = ${f.fix(a.t,2)} s`);
+}
+
+function view(a) {
+  if (dragView) return dragView;
+  const {w,h} = a.panels.projectile, {k} = a;
+  const padL = 46*k, padR = 20*k, padT = 38*k, padB = 43*k;
+  const width = Math.max(50,w-padL-padR), height = Math.max(50,h-padT-padB);
+  const inset = Math.min(42*k, width*.19);
+  const ground = Math.min(48*k, height*.24);
+  const paths = compared(a) ? [model(a),free] : [model(a)];
+  const xs = paths.map(path => path.arrival.x);
+  const safety = a.tab === 0 && (a.p.safety || a.p.ghosts || plotAngles(a)) ? ballistics(a).safety : null;
+  const radius = safety?.range || 0;
+  const xMin = Math.min(-radius,...xs), xMax = Math.max(radius,...xs);
+  const zMax = Math.max(safety?.apex || 0,...paths.map(path => path.apex.z));
+  const scale = Math.min((width-2*inset) / Math.max(10,xMax-xMin),
+    (height-ground-Math.min(34*k,height*.18)) / Math.max(8,zMax));
+  const xMid = (xMin+xMax)/2;
+  return {width,height,padL,padR,padT,padB,
+    xmin: xMid-width/(2*scale), xmax: xMid+width/(2*scale),
+    ymin: -ground/scale, ymax: (height-ground)/scale,
+    handleScale: Math.min(1.38*k, width*.22/55, height*.34/55)
+  };
+}
+
+function statesThrough(path,p) {
+  if (p.time <= 0) return [];
+  if (p.time >= path.impact) return path.states;
+  const index = Math.ceil(p.time/path.impact*(path.states.length-1));
+  return [...path.states.slice(0,index),p];
+}
+
+function drawProjectile(a) {
+  const {S,C,k} = a, {w,h} = a.panels.projectile;
+  const bounds = view(a), q = model(a);
+  const {padL,padR,padT,padB,handleScale,xmin,xmax,ymin,ymax} = bounds;
+  const G = S.graph({x:0,y:0,w,h,padL,padR,padT,padB,xmin,xmax,ymin,ymax,nx:Math.max(3,Math.round(bounds.width/(95*k))),
+    xlab: `${S.v('x')} (m)`, ylab: `${S.v('z')} (m)`, zeroAxis:false,
+    yfmt:(z,step)=>z<0?'':a.fmt.fix(z,Math.max(0,-Math.floor(Math.log10(step))))});
+  scene = {bounds,G};
+  const Z = G.Y(0), X = G.X(0), xEnd = G.x0+G.w;
+  const c = C.cInk, measures = heightColor(a);
+  const dashed = `${7*k} ${5*k}`;
+  let s = G.svg + S.clip('projectile-cadre',G);
+  if (Z>=G.y0 && Z<=G.y0+G.h) {
+    s += S.rect(G.x0,Z,G.w,G.y0+G.h-Z,{fill:C.cSoft,op:.82});
+    s += S.line(G.x0,Z,xEnd,Z,{c:C.ink2,w:1.4});
+    s += S.text(xEnd-5*k,Z+13*k,'Sol',{anchor:'end',size:12});
+  }
+  if (X>=G.x0 && X<=xEnd) s += S.arrow(X,Math.min(Z,G.y0+G.h),X,G.y0+5*k,{c:C.ink2,w:1.3});
+  const study = a.tab === 0 && (a.p.safety || a.p.ghosts) ? ballistics(a) : null;
+  const safety = a.p.safety ? study?.safety : null;
+  if (safety) {
+    const left = G.X(-safety.range), right = G.X(safety.range);
+    const curve = `Q${X},${G.Y(2*safety.apex)} ${right},${Z}`;
+    if (Z > G.y0) {
+      const lo = Math.min(G.x0,left), hi = Math.max(xEnd,right);
+      const zone = `M${lo},${Z} H${left} ${curve} H${hi} V${G.y0} H${lo} Z`;
+      s += '<g clip-path="url(#projectile-cadre)">'+S.path(zone,{fill:C.B,c:'none',fop:.07})+'</g>';
+    }
+  }
+  if (study?.safety) {
+    if (a.p.ghosts) {
+      s += '<g data-ghosts="">';
+      for (const track of study.ghosts) {
+        s += S.curve(track,G,{c:C.ink2,w:1.2,op:.56,dash:`${2*k} ${4*k}`});
+      }
+      s += '</g>';
+    }
+    if (safety) {
+      const {range,apex} = safety;
+      const path = `M${G.X(-range)},${Z} Q${X},${G.Y(2*apex)} ${G.X(range)},${Z}`;
+      s += '<g data-safety="" clip-path="url(#projectile-cadre)">'+S.path(path,{c:C.B,w:2.3,dash:`${9*k} ${4*k}`})+'</g>';
+      if (G.Y(apex)-G.y0>53*k && G.w>175*k) {
+        s += S.text(G.x0+12*k,G.y0+20*k,'Zone hors d’atteinte',{size:13,c:C.B});
+      }
+    }
+  }
+  const p = q.sample(a.t), origin = q.initial;
+  if (compared(a)) {
+    const ref = free.sample(a.t);
+    const visible = a.p.preview ? free.states : statesThrough(free,ref);
+    if (visible.length) s += S.curve(visible.map(q=>[q.x,q.z]),G,{c:C.B,w:1.9,dash:dashed});
+    s += S.circle(G.X(ref.x),G.Y(ref.z),7*k,{c:C.B,w:2,fill:C.card});
+  }
+  if (a.p.preview && q.impact>0) s += S.curve(q.states.map(q=>[q.x,q.z]),G,{c,w:2,op:.58});
+  if (p.time > 0) s += S.curve(statesThrough(q,p).map(q=>[q.x,q.z]),G,{c,w:3});
+  if (a.p.markers) {
+    const xApex=G.X(q.apex.x), yApex=G.Y(q.apex.z), xArrival=G.X(q.arrival.x);
+    if (a.p.preview || a.t >= q.tApex) {
+      if (Z-yApex>15*k) {
+        s += S.line(xApex,yApex,xApex,Z,{c:measures,w:1.2,dash:`${3*k} ${4*k}`});
+        if (Z-yApex>55*k) {
+          const left = xApex-G.x0>76*k;
+          s += S.text(xApex+(left?-9:9)*k,(Z+yApex)/2,'Flèche',
+            {c:measures,size:14,anchor:left?'end':'start'});
+        }
+      }
+      s += S.circle(xApex,yApex,4*k,{fill:C.card,c:measures,w:1.7});
+    }
+    if (q.impact>0 && (a.p.preview || p.impacted)) {
+      if (Math.abs(xArrival-X)>48*k) {
+        const y=Z+12*k;
+        s += S.line(X,y,xArrival,y,{c:measures,w:1.4});
+        for (const x of [X,xArrival]) s += S.line(x,y-5*k,x,y+5*k,{c:measures,w:1.4});
+        if(Math.abs(xArrival-X)>84*k) s += S.text((X+xArrival)/2,y+20*k,'Portée',{c:measures,anchor:'middle',size:14});
+      }
+      s += S.circle(xArrival,Z,4*k,{fill:C.card,c:measures,w:1.7});
+    }
+  }
+
+  s += '<g data-ak-hors-graphe="">';
+  const ox = X, oy = G.Y(origin.z);
+  const dx = origin.vx*handleScale, dy = -origin.vz*handleScale;
+  const hx = ox+dx, hy = oy+dy;
+  const size = Math.hypot(dx,dy);
+  const initialAngle = Math.atan2(origin.vz,origin.vx);
+  s += S.circle(ox,oy,4*k,{fill:C.card,c:C.ink2,w:1.5});
+  if (size>22*k && Math.abs(initialAngle)>.18 && Math.abs(initialAngle)<2.9) {
+    const radius = Math.min(24*k,size*.48), textAngle = initialAngle*.53;
+    s += S.line(ox,oy,ox+radius+9*k,oy,{c:C.v,w:1,dash:`${2*k} ${3*k}`});
+    s += S.arc(ox,oy,radius,0,initialAngle,{c:C.v,w:1});
+    s += S.text(ox+(radius+10*k)*Math.cos(textAngle),oy-(radius+10*k)*Math.sin(textAngle),S.v('α'),{c:C.v,size:14});
+  }
+  s += S.arrow(ox,oy,hx,hy,{c:C.v,w:2.6});
+  s += S.circle(hx,hy,5*k,{fill:C.card,c:C.v,w:1.7});
+  s += vectorLabel(a,hx+(dx<0?-9:9)*k,hy-9*k,'v','0',C.v,dx<0?'end':'start');
+
+  const px = G.X(p.x), py = G.Y(p.z), accScale = Math.min(4.3,53/q.maxAcceleration)*k;
+  if (a.p.vectors) {
+    if (p.time>0) {
+      const vx=px+p.vx*handleScale, vy=py-p.vz*handleScale;
+      s += S.arrow(px,py,vx,vy,{c:C.v,w:2.3});
+      if (Math.hypot(vx-px,vy-py)>15*k && Math.hypot(vx-hx,vy-hy)>29*k) s += vectorLabel(a,vx+(p.vx<0?-8:8)*k,vy-7*k,
+        'v',undefined,C.v,p.vx<0?'end':'start');
+    }
+    const ax = px+p.ax*accScale, ay = py-p.az*accScale;
+    s += S.arrow(px,py,ax,ay,{c:C.F,w:2.3});
+    const labelY = ay+(q.law==='free'?-8:5)*k;
+    if (Math.hypot(ax-px,ay-py)>9*k) s += vectorLabel(a,ax+(p.ax<0?-7:7)*k,labelY,
+      q.law==='free'?'g':'a',undefined,C.F,p.ax<0?'end':'start');
+  }
+  if (a.t>0 && (!compared(a) || p.time>0)) s += S.circle(px,py,6*k,{fill:c,c:C.card,w:1.5});
+  s += S.circle(hx,hy,15*k,{fill:'transparent',hit:'launch'}) + '</g>';
+  a.svg('projectile',s);
+  a.legend([
+    {c,label:modelName[q.law]},
+    compared(a) && {c:C.B,label:'Chute libre',dash:true},
+    study?.safety && a.p.safety && {c:C.B,label:'Parabole de sûreté',dash:true},
+    study?.safety && a.p.ghosts && {c:C.ink2,label:'Trajectoires fantômes',dot:true},
+    {c:C.v,label:`Vitesse · 10 m·s⁻¹ ↔ ${a.fmt.fix(10*handleScale,0)} px`},
+    a.p.vectors && {c:C.F,label:`Accélération · 10 m·s⁻² ↔ ${a.fmt.fix(10*accScale,0)} px`}
+  ]);
+}
+
+function vectorLabel({S,k},x,y,symbol,sub,c,anchor) {
+  const start=anchor==='end'?x-(sub?18:11)*k:x;
+  return S.text(x,y,S.v(symbol,sub),{c,anchor,size:16,weight:650})+
+    S.arrow(start,y-8*k,start+10*k,y-8*k,{c,w:.8,head:3.5*k});
+}
+
+function drawAngles(a) {
+  const {S,C,k} = a, panel = a.panels.evolution;
+  const {z0,safety,results} = ballistics(a);
+  const heightInk = heightColor(a);
+  const dash = `${6*k} ${4*k}`;
+  const height = free.apex.z;
+  const range = Math.abs(free.arrival.x);
+  const max = Math.max(1,safety?.range || 0,safety?.apex || z0);
+  const xticks = panel.w/k < 320 ? [-180,-90,0,90,180] : [-180,-120,-60,0,60,120,180];
+  const G = S.graph({x:0,y:0,w:panel.w,h:panel.h,padT:64*k,padR:25*k,padL:43*k,padB:35*k,
+    xmin:-180,xmax:180,ymin:0,ymax:1.1*max,xticks,xfmt:x=>a.fmt.fix(x,0),
+    xlab:`${S.v('α')} (°)`,ylab:'m'});
+  historyGraph = G;
+  let s = G.svg + S.clip('angle-cadre',G);
+  s += S.curve(results.map(q=>[q.alpha,q.range]),G,{c:C.cInk,w:2.5});
+  s += S.curve(results.map(q=>[q.alpha,q.height]),G,{c:heightInk,w:2.3,dash});
+
+  const x = G.X(a.p.alpha);
+  s += '<g clip-path="url(#angle-cadre)">';
+  if (safety) {
+    for (const alpha of [safety.bestAngle,180-safety.bestAngle]) {
+      s += S.circle(G.X(alpha),G.Y(safety.range),4*k,{fill:C.card,c:C.cInk,w:1.5});
+    }
+  }
+  s += S.line(x,G.y0,x,G.y0+G.h,{c:C.ink2,w:1,dash:`${2*k} ${4*k}`});
+  s += S.circle(x,G.Y(range),5*k,{fill:C.cInk,c:C.card,w:1.3});
+  s += S.circle(x,G.Y(height),4*k,{fill:C.card,c:heightInk,w:2});
+  s += '</g>';
+
+  const labels = [['Portée',range,C.cInk,undefined],['Flèche',height,heightInk,dash]];
+  s += '<g data-ak-hors-graphe="">';
+  labels.forEach(([label,value,c,dash],i)=>{
+    const left = 12*k+i*(panel.w/2);
+    const amount = a.fmt.sig(value,3).replace(/<sup>(.*?)<\/sup>/g,(_,e)=>S.sup(e));
+    s += S.line(left,13*k,left+16*k,13*k,{c,w:2,dash});
+    s += S.text(left+22*k,13*k,`${label} ${amount} m`,{c,size:13,weight:650});
+  });
+  if (safety) {
+    const angle = a.fmt.fix(safety.bestAngle,1).replace(/\.0$/,'');
+    const mirror = a.fmt.fix(180-safety.bestAngle,1).replace(/\.0$/,'');
+    s += S.text(12*k,36*k,`Portée max. à ${angle}° et ${mirror}°`,{size:12,c:C.ink2});
+  }
+  s += S.text(G.x0,G.y0+G.h+23.4*k,`${S.v('α')} = ${a.fmt.fix(a.p.alpha,0)}°`,{c:C.ink,size:13,weight:650});
+  s += '</g>';
+  a.svg('evolution',s);
+}
+
+function drawHistory(a) {
+  const {S,C,k} = a, panel = a.panels.evolution;
+  const q = model(a), velocity = a.p.history==='velocity';
+  const keys = velocity ? ['vx','vz'] : ['x','z'];
+  const labels = velocity ? [S.v('v','x'), S.v('v','z')] : [S.v('x'),S.v('z')];
+  const paths = compared(a) ? [q,free] : [q];
+  const tables = paths.map(path=>path.states);
+  const values = tables.flatMap(table=>table.flatMap(p=>keys.map(key=>p[key])));
+  const lo = Math.min(0,...values), hi = Math.max(1,...values);
+  const margin = (hi-lo)*.08;
+  const G = S.graph({x:0,y:0,w:panel.w,h:panel.h,padT:48*k,padR:18*k,
+    xmin:0,xmax:Math.max(.1,duration(a)),ymin:lo-margin,ymax:hi+margin,
+    xlab:`${S.v('t')} (s)`,ylab:velocity?`m·s${S.sup('−1')}`:'m'});
+  historyGraph = G;
+  const colors = [C.B,C.cInk];
+  let s = G.svg + S.clip('evolution-cadre',G);
+  paths.forEach((path,i)=>{
+    const table = a.p.preview ? path.states : statesThrough(path,path.sample(a.t));
+    if (!table.length) return;
+    keys.forEach((key,j)=>{
+      s += S.curve(table.map(p=>[p.time,p[key]]),G,{c:colors[j],w:i?1.4:2.2,dash:i?`${6*k} ${5*k}`:undefined});
+    });
+  });
+  s += `<g clip-path="url(#evolution-cadre)">${S.line(G.X(a.t),G.y0,G.X(a.t),G.y0+G.h,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`})}`;
+  paths.forEach((path,i)=>{
+    if (a.t>path.impact) return;
+    const p = path.sample(a.t);
+    keys.forEach((key,j)=>{s += S.circle(G.X(a.t),G.Y(p[key]),4*k,{fill:i?C.card:colors[j],c:colors[j],w:1.3})});
+  });
+  s += '</g>';
+  s += `<g data-ak-hors-graphe="">${S.text(16*k,12*k,labels[0],{c:colors[0],size:16,weight:700})}${S.text(49*k,12*k,labels[1],{c:colors[1],size:16,weight:700})}
+    ${compared(a)?S.text(83*k,12*k,'Pointillés · chute libre',{size:12}):''}</g>`;
+  a.svg('evolution',s);
+}
+
+A.drag('projectile',{
+  hit:(x,y,e)=>!!e.target.closest('[data-hit=launch]'),
+  start() {
+    A.play(false);
+    A.t=0;
+    dragView=scene.bounds;
+  },
+  move(x,y) {
+    const {G,bounds} = scene, {initial} = model(A);
+    const dx = x-G.X(0), dy = G.Y(initial.z)-y;
+    const speed = Math.round(10*Math.min(55,Math.hypot(dx,dy)/bounds.handleScale))/10;
+    A.p.v0 = speed;
+    if (speed>0) A.p.alpha = Math.round(Math.atan2(dy,dx)*180/Math.PI);
+    rebuild(A);
+    A.refresh();
+  },
+  end() {dragView=null}
+});
+function selectAbscissa(x) {
+  const value = historyGraph.xv(x);
+  if (plotAngles(A)) {
+    const alpha = Math.max(-180,Math.min(180,Math.round(value)));
+    if (alpha !== A.p.alpha) {
+      A.set('alpha',alpha);
+      A.reset();
+    }
+  } else seek(A,value);
+}
+A.drag('evolution',{
+  hit:(x,y)=>historyGraph&&x>=historyGraph.x0&&x<=historyGraph.x0+historyGraph.w&&
+    y>=historyGraph.y0&&y<=historyGraph.y0+historyGraph.h,
+  start(x){A.play(false);selectAbscissa(x)},
+  move(x){selectAbscissa(x)}
+});
+Hail.wire(A);
+if (location.hash === '#grelon') A.setTab(2);
+
+</script>
+</body>
+</html>

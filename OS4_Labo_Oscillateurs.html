@@ -246,6 +246,19 @@ sub,sup{line-height:0}
 .ak-toast.show{opacity:1}
 @media print{.ak-tools,.ak-side,.ak-transport{display:none}}
 
+.ak-panels {
+  display: grid;
+  grid-template: repeat(2, minmax(0, 1fr)) / minmax(0, 1fr) minmax(0, 1.2fr);
+}
+.ak-panel[data-id="scene"] { grid-row: span 2; }
+.ak-panel[data-id="phase"] { border-top: 1px solid var(--rule); }
+.ak-panel[data-id="phase"] > .ak-phead,
+.ak-panel[data-id="temps"] > .ak-phead { display: none; }
+
+@media (max-width: 640px) {
+  .ak-panels { display: flex; }
+}
+
 </style>
 </head>
 <body>
@@ -1038,6 +1051,7 @@ globalThis.OSC=(()=>{
 // @sortie ../OS4_Labo_Oscillateurs/OS4_Labo_Oscillateurs.html
 // @inclure OS4_Labo_Oscillateurs_physique.js
 // @inclure ../../../OS1_ElectroARQS/OS1_Animations/_Sources/OS_commun.js
+// @style OS4_Labo_Oscillateurs.css
 // @description Masse-ressort vertical, circuit LC/RLC série et pendule : régimes libres et échelon, plan de phase, énergies, comparaison de trois amortissements, analogie électro-mécanique.
 'use strict';
 /* =====================================================================
@@ -1050,7 +1064,8 @@ globalThis.OSC=(()=>{
      caractéristique, charge q dans l'analogie, Ω, T/T0 et nombre d'oscillations ≈ Q.
    ===================================================================== */
 const MD=window.OS4Model,K=OSK,E=OSC,Mh=AnimKit.M,TAU=2*Math.PI,L0=.4;
-const st={p:null,exp:null,ref:null,samp:[],refsamp:[],H:1,t:0,saved:[],curves:[],emax:1,geom:{},res:[]};
+const PENDULUM_SPEED_MAX=16;
+const st={p:null,exp:null,ref:null,samp:[],refsamp:[],H:1,t:0,offset:0,saved:[],curves:[],emax:1,geom:{},res:[],portrait:null};
 
 /* ---------- état du modèle ---------- */
 const sysOf=a=>a.tab<3?['spring','circuit','pendulum'][a.tab]:a.tab===3?a.p.sysC:'spring';
@@ -1071,28 +1086,42 @@ function analogy(pp){
 }
 const samples=(ex,H,n=640)=>Array.from({length:n+1},(_,i)=>ex.at(H*i/n));
 const QS=a=>[a.p.q0,a.p.q1,a.p.q2];
-function rebuild(a,clear){
+const continuous=a=>modeOf(a)==='compare'?QS(a).includes(Infinity):st.p.gamma===0;
+const rotationThreshold=pp=>2*pp.w*Math.cos(pp.x0/2);
+const aboveRotationThreshold=pp=>pp.exact&&Math.abs(pp.v0)>rotationThreshold(pp);
+const bottomSpeed=(pp,v)=>Math.hypot(v,2*pp.w*Math.sin(pp.x0/2));
+const timeFormat=(a,unit=1)=>st.offset?(t,step)=>a.fmt.fix(t+st.offset/unit,Math.max(0,-Math.floor(Math.log10(step)+1e-9))):undefined;
+function windowExperiment(pp,initial){
+  if(pp.exact)return MD.experiment(initial?{...pp,x0:initial.x,v0:initial.v}:pp,st.H);
+  const offset=st.offset;
+  return {at:t=>({...MD.linear(pp,t+offset),t})};
+}
+function rebuild(a,clear,initial){
   const pp=MD.parameters(ms(a));st.p=pp;
   st.H=a.p.dur*pp.T0;
-  st.exp=MD.experiment(pp,st.H);st.samp=samples(st.exp,st.H);
-  const rp={...pp,exact:false};st.ref=MD.experiment(rp,st.H);st.refsamp=pp.exact?samples(st.ref,st.H):[];
+  st.exp=windowExperiment(pp,initial);st.samp=samples(st.exp,st.H);
+  st.ref=windowExperiment({...pp,exact:false});st.refsamp=pp.exact?samples(st.ref,st.H):[];
   if(clear)st.saved=[];
-  else st.saved=st.saved.map(c=>({...c,ex:MD.experiment(c.p,st.H)}));
   st.curves=[];st.res=[];
   const mode=modeOf(a),C=a.C;
   if(mode==='compare'){
     const cols=[C.F,C.v,C.B];
-    QS(a).forEach((q,i)=>{const cp={...pp,gamma:q===Infinity?0:pp.w/q,Q:q,exact:false,experiment:'free',eq:0},ex=MD.experiment(cp,st.H);
+    QS(a).forEach((q,i)=>{const cp={...pp,gamma:q===Infinity?0:pp.w/q,Q:q,exact:false,experiment:'free',eq:0},ex=windowExperiment(cp);
       st.curves.push({p:cp,ex,samp:samples(ex,st.H),color:cols[i],label:Mh.v('Q',String(i+1))+' = '+(q===Infinity?'∞':a.fmt.sig(q,2)),vs:(q===Infinity?'∞':a.fmt.sig(q,2)),q});
       st.res.push(MD.returns(cp,a.p.tol/100))});
   }else if(mode==='analogy'){
-    const ap=analogy(pp),ex=MD.experiment(ap,st.H);
+    const ap=analogy(pp),ex=windowExperiment(ap);
     st.curves=[{p:pp,ex:st.exp,samp:st.samp,color:C.cInk,label:'Ressort'},{p:ap,ex,samp:samples(ex,st.H),color:C.F,label:'Circuit RLC',dash:true}];
   }
   // énergies : échelle fixée à l'état initial (ne bouge pas avec le temps)
-  let mx=1e-12,mn=0;
-  if(mode==='explore')for(const z of st.samp){const e=MD.energies(pp,z);for(const v of[e.potential,e.kinetic,e.stored,e.loss,e.work]){if(v>mx)mx=v;if(v<mn)mn=v}}
+  let mx=1e-12,mn=0,lo=st.samp[0].x,hi=lo;
+  if(mode==='explore')for(const z of st.samp){
+    const e=MD.energies(pp,z);
+    for(const v of[e.potential,e.kinetic,e.stored,e.loss,e.work]){if(v>mx)mx=v;if(v<mn)mn=v}
+    lo=Math.min(lo,z.x);hi=Math.max(hi,z.x);
+  }
   st.emax=mx*1.08;st.emin=mn*1.08;
+  st.angleMin=lo*180/Math.PI;st.angleMax=hi*180/Math.PI;
   st.t=Math.min(st.t,st.H);
 }
 
@@ -1125,6 +1154,13 @@ function setGamma(a,g){
 function applyPreset(a,key){
   const sys=sysOf(a),w=MD.parameters(ms(a)).w;
   if(key==='large'){a.set('exact',true);a.set('th0',120);a.set('thd0',0);a.set('xm_p',130);a.set('refl',true);a.set('vtemps','pos');return}
+  if(key==='rotation'){
+    a.set('gam',0);a.set('exact',true);
+    a.set('th0',0);a.set('thd0',Number((1.2*rotationThreshold(st.p)).toFixed(1)));
+    a.set('xm_p',180);
+    a.set('refl',false);a.set('vtemps','both');a.set('portrait',true);
+    return;
+  }
   if(key==='velocity'){
     if(sys==='circuit'){a.set('U0',a.p.exper==='step'?a.p.E:0);a.set('I0',.04)}
     else if(sys==='spring'){a.set('xs0',0);a.set('vs0',.8)}
@@ -1137,7 +1173,7 @@ function setIC(a,sys,pos,vel){
   const cl=(v,lo,hi)=>Math.max(lo,Math.min(hi,v)),r=(v,n)=>+v.toFixed(n);
   if(sys==='spring'){a.set('xs0',r(cl(pos,-.3,.3),3));if(vel!==undefined)a.set('vs0',r(cl(vel,-2,2),2))}
   else if(sys==='circuit'){a.set('U0',r(cl(pos,-10,10),2));if(vel!==undefined)a.set('I0',r(cl(vel,-.5,.5),3))}
-  else{a.set('th0',Math.round(cl(pos,-170,170)));if(vel!==undefined)a.set('thd0',r(cl(vel,-8,8),2))}
+  else{a.set('th0',Math.round(cl(pos,-170,170)));if(vel!==undefined)a.set('thd0',r(cl(vel,-PENDULUM_SPEED_MAX,PENDULUM_SPEED_MAX),2))}
 }
 
 /* ---------- scènes ---------- */
@@ -1175,8 +1211,8 @@ function drawPendulum(a,b,zs,pp){
   if(a.p.refl&&pp.exact){const r=st.ref.at(st.t),rx=cx+len*Math.sin(r.x),ry=top+len*Math.cos(r.x);
     s+=S.line(cx,top,rx,ry,{c:C.pred,w:2,dash:`${6*k} ${5*k}`})+S.circle(rx,ry,mr+4*k,{c:C.pred,w:2,dash:`${5*k} ${4*k}`})}
   s+=S.line(cx,top,X,Y,{c:C.ink2,w:3})+S.circle(X,Y,mr,{fill:C.cSoft,c:C.cInk,w:2.5})+S.circle(cx,top,4*k,{fill:C.ink});
-  const r=Math.min(46*k,len*.35),an=Math.min(Math.PI*1.99,Math.abs(zs.x));
-  if(an>.02)s+=S.path(`M${cx},${top+r}A${r},${r} 0 ${an>Math.PI?1:0} ${zs.x>0?0:1} ${cx+r*Math.sin(zs.x)},${top+r*Math.cos(zs.x)}`,{c:C.cInk,w:2});
+  const r=Math.min(46*k,len*.35),angle=pp.exact?Math.atan2(Math.sin(zs.x),Math.cos(zs.x)):zs.x;
+  if(Math.abs(angle)>.02)s+=S.path(`M${cx},${top+r}A${r},${r} 0 ${Math.abs(angle)>Math.PI?1:0} ${angle>0?0:1} ${cx+r*Math.sin(angle)},${top+r*Math.cos(angle)}`,{c:C.cInk,w:2});
   s+=S.text(cx+r+8*k,top+r*.9,S.v('θ'),{size:fs,c:C.cInk});
   if(a.p.forces){const f=60*k/(pp.m*MD.g*1.6),Pw=pp.m*MD.g*f,T=pp.m*(MD.g*Math.cos(zs.x)+pp.length*zs.v*zs.v);
     s+=S.arrow(X,Y,X,Y+Pw,{c:C.F,w:2.4})+S.text(X+10*k,Y+Pw*.7,'P',{size:fs,c:C.F});
@@ -1249,7 +1285,7 @@ let gid=0;
 /** repère + courbes. o = {box,xmin,xmax,ymin,ymax,xlab,ylab,series:[{pts,c,w,dash,op}],bands:[{y1,y2,c}],hl:[{y,c,label}],vl:[{x,c,label}],dots:[{x,y,c}],right:{V,c,dec},cursor,extra(G)} */
 function gr(a,o){
   const S=a.S,k=a.k,C=a.C,b=o.box;
-  const G=S.graph({x:b.x+2*k,y:b.y,w:b.w-4*k,h:b.h,xmin:o.xmin,xmax:o.xmax,ymin:o.ymin,ymax:o.ymax,xlab:o.xlab,ylab:o.ylab,padR:o.right?46*k:undefined,xticks:o.xticks,yticks:o.yticks,xfmt:o.xfmt});
+  const G=S.graph({x:b.x+2*k,y:b.y,w:b.w-4*k,h:b.h,xmin:o.xmin,xmax:o.xmax,ymin:o.ymin,ymax:o.ymax,xlab:o.xlab,ylab:o.ylab,padB:32*k,padR:o.right?46*k:undefined,xticks:o.xticks,yticks:o.yticks,xfmt:o.xfmt});
   const id='og'+(gid++%100000);let s=G.svg+S.clip(id,G);
   for(const z of o.bands||[])s+=`<g clip-path="url(#${id})">`+S.rect(G.x0,G.Y(z.y2),G.w,Math.abs(G.Y(z.y1)-G.Y(z.y2)),{fill:z.c||C.pred,fop:.14})+'</g>';
   for(const h of o.hl||[]){s+=`<g clip-path="url(#${id})">`+S.line(G.x0,G.Y(h.y),G.x0+G.w,G.Y(h.y),{c:h.c||C.pred,w:1.3,dash:`${6*k} ${4*k}`,op:.9})+'</g>';
@@ -1259,7 +1295,11 @@ function gr(a,o){
   if(o.extra)s+=o.extra(G);
   for(const sr of o.series||[])if(sr.pts.length>1)s+=S.curve(sr.pts,G,{c:sr.c,w:sr.w??2.8,dash:sr.dash?`${7*k} ${4*k}`:undefined,op:sr.op});
   if(o.cursor!==undefined&&o.cursor>=o.xmin&&o.cursor<=o.xmax)s+=S.line(G.X(o.cursor),G.y0,G.X(o.cursor),G.y0+G.h,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`});
-  for(const d of o.dots||[])if(isFinite(d.y))s+=S.circle(G.X(d.x),G.Y(d.y),(d.r??4.5)*k,{fill:d.hollow?C.card:d.c,c:d.hollow?d.c:undefined,w:2});
+  if(o.dots?.length){
+    s+=`<g clip-path="url(#${id})">`;
+    for(const d of o.dots)if(isFinite(d.y))s+=S.circle(G.X(d.x),G.Y(d.y),(d.r??4.5)*k,{fill:d.hollow?C.card:d.c,c:d.hollow?d.c:undefined,w:2});
+    s+='</g>';
+  }
   if(o.right){const r=o.right,x=G.x0+G.w;s+=S.line(x,G.y0,x,G.y0+G.h,{c:r.c,w:1.2});
     for(const q of[-1,-.5,0,.5,1])s+=S.text(x+5*k,G.Y(o.ymin+(q+1)/2*(o.ymax-o.ymin)),a.fmt.fix(q*r.V,r.dec),{size:12,c:r.c,halo:false});
     s+=S.text(x+2*k,G.y0-9*k,r.label,{anchor:'start',size:13,c:r.c,halo:false})}
@@ -1272,6 +1312,11 @@ const full=(samp,f)=>samp.map(z=>[z.t,f(z)]);
 /** 1) signaux temporels (explorer) */
 function timeExplore(a,box){
   const pp=st.p,vw=view(a,pp),C=a.C,S=a.S,now=st.t,H=st.H,mode=a.p.vtemps,showP=mode!=='vel',showV=mode!=='pos',both=showP&&showV;
+  if(aboveRotationThreshold(pp)){
+    vw.eq=(st.angleMax+st.angleMin)/2;
+    vw.X=Math.max(40,1.06*(st.angleMax-st.angleMin)/2);
+    vw.V=1.06*bottomSpeed(pp,pp.v0);
+  }
   const sc=vw.X/vw.V,cp=pp.system==='circuit'?C.F:C.cInk,cv=pp.system==='circuit'?C.E:C.v,toD=pp.system==='pendulum'?180/Math.PI:1;
   const yv=showP?v=>vw.eq+v*sc:v=>v;
   const ymin=showP?vw.eq-vw.X:-vw.V,ymax=showP?vw.eq+vw.X:vw.V;
@@ -1295,23 +1340,132 @@ function timeExplore(a,box){
   if(showV){series.push({pts:past(st.samp,z=>yv(vw.vel(z)),st.exp,now),c:cv});dots.push({x:now,y:yv(vw.vel(z0)),c:cv})}
   const dec=vw.V>=10?0:vw.V>=1?1:vw.V>=.1?2:3;
   const r=gr(a,{box,xmin:0,xmax:H,ymin,ymax,xlab:'t (s)',ylab:showP?vw.pl+' ('+vw.pu+')':vw.vl,series,hl,vl,dots,bands,cursor:now,
+    xfmt:timeFormat(a),
     right:both?{V:vw.V,c:cv,dec,label:vw.vl}:undefined});
   return r.svg;
 }
+/** Trajectoires de référence en temps réduit ω₀t. Calculées une fois par cadrage et modèle. */
+function phasePortrait(pp,vmax){
+  const d=pp.gamma/pp.w, xmax=pp.exact?Math.PI:1;
+  const curves=[],separatrix=[];
+  const curve=(f,n=160)=>Array.from({length:n+1},(_,i)=>f(i/n));
+  if(d===0){
+    if(!pp.exact){
+      for(const r of [.18,.36,.54,.72,.9,1.1,1.3,1.4])curves.push(curve(t=>[r*Math.cos(TAU*t),-r*Math.sin(TAU*t)]));
+    }else{
+      for(const deg of [30,60,90,120,145,165]){
+        const max=deg*Math.PI/180;
+        curves.push(curve(t=>{
+          const phi=TAU*t,x=max*Math.sin(phi);
+          return [x,Math.sign(Math.cos(phi))*Math.sqrt(Math.max(0,2*(Math.cos(x)-Math.cos(max))))];
+        }));
+      }
+      const peakMax=Math.hypot(vmax,2);
+      for(const sign of [-1,1]){
+        for(const f of [.13,.32,.57,.84]){
+          const peak=2+f*(peakMax-2);
+          curves.push(curve(t=>{
+            const x=xmax*(2*t-1);
+            return [x,sign*Math.sqrt(peak*peak-4*Math.sin(x/2)**2)];
+          }));
+        }
+        separatrix.push(curve(t=>{const x=xmax*(2*t-1);return [x,sign*2*Math.cos(x/2)]}));
+      }
+    }
+  }else{
+    const reduced={...pp,w:1,T0:TAU,gamma:d,eq:0};
+    const force=pp.exact?Math.sin:x=>x;
+    const trace=(p,H,sign=1)=>{
+      const ex=MD.experiment(p,H),pts=[];
+      // Les solutions linéaires sont analytiques. Échantillonner plus serré
+      // au début pour résoudre le mode rapide, sans suréchantillonner le mode lent.
+      const rate=Math.max(1,d), log=Math.log1p(H*rate);
+      const n=pp.exact?Math.ceil(H*Math.max(36,9*d)):320;
+      for(let i=0;i<=n;i++){
+        const t=pp.exact?H*i/n:Math.expm1(log*i/n)/rate;
+        const z=ex.at(t),v=sign*z.v;
+        pts.push([z.x,v]);
+        if(i>0&&(Math.abs(z.x)>xmax||Math.abs(v)>vmax||Math.hypot(z.x/xmax,v/vmax)<.006))break;
+      }
+      return pts;
+    };
+    // Échantillonner les bords par lesquels le flot entre dans le cadre.
+    const horizon=Math.max(18,7*d);
+    const spirals=!pp.exact&&d<2;
+    const sides=spirals?[.2,.65]:[.15,.4,.65,.9];
+    const top=spirals?[-.65,0,.65]:[-.8,-.4,0,.4,.8];
+    for(const s of [-1,1]){
+      for(const f of sides)curves.push(trace({...reduced,x0:s*xmax,v0:-s*f*vmax},horizon));
+      for(const f of top){
+        const x=s*f*xmax,v=s*vmax;
+        if(s*(-d*v-force(x))<0)curves.push(trace({...reduced,x0:x,v0:v},horizon));
+      }
+    }
+    // À faible amortissement, les trajectoires des bords restent loin du centre.
+    if(d<.12)for(const f of [.18,.36,.54,.72,.9])curves.push(trace({...reduced,x0:f*xmax,v0:0},12));
+    if(pp.exact){
+      // Remonter le temps depuis la direction stable de l'équilibre renversé.
+      const eps=1e-5,lambda=(d+Math.hypot(d,2))/2;
+      const branch=trace({...reduced,gamma:-d,x0:Math.PI-eps,v0:-lambda*eps},16/lambda+5,-1);
+      branch.unshift([Math.PI,0]);
+      separatrix.push(branch,branch.map(([x,v])=>[-x,-v]));
+    }
+  }
+  return {curves,separatrix,xmax,vmax};
+}
+function phaseData(pp,vw){
+  const key=[pp.exact,pp.gamma/pp.w,vw.eq,vw.X,vw.V].join('/');
+  if(st.portrait?.key===key)return st.portrait;
+  const {curves,separatrix,xmax,vmax}=phasePortrait(pp,pp.exact?vw.V/pp.w:1);
+  const map=pts=>pts.map(([x,v])=>[vw.eq+x*vw.X/xmax,v*vw.V/vmax]);
+  return st.portrait={key,curves:curves.map(map),separatrix:separatrix.map(map)};
+}
+const wrapAngle=deg=>((deg+180)%360+360)%360-180;
 /** 2) plan de phase (explorer) */
 function phaseExplore(a,box){
-  const pp=st.p,vw=view(a,pp),C=a.C,S=a.S,now=st.t,k=a.k;
-  const cp=pp.system==='circuit'?C.F:C.cInk,pts=(samp,vv)=>samp.map(z=>[vv.pos(z),vv.vel(z)]);
+  const pp=st.p,vw=view(a,pp),C=a.C,now=st.t,k=a.k,fold=pp.exact&&(a.p.portrait||aboveRotationThreshold(pp));
+  if(fold){
+    vw.X=180;
+    vw.V=Math.max(2.7*pp.w+.65*pp.gamma,1.05*Math.hypot(PENDULUM_SPEED_MAX,2*pp.w));
+  }
+  const cp=pp.system==='circuit'?C.F:C.cInk;
+  const point=(z,vv)=>[fold?wrapAngle(vv.pos(z)):vv.pos(z),vv.vel(z)];
+  const pts=(samp,vv)=>{
+    const out=[];
+    for(const z of samp){
+      const xy=point(z,vv);
+      const last=out.at(-1);
+      if(fold&&last&&Math.abs(xy[0]-last[0])>180){
+        const edge=xy[0]<last[0]?180:-180;
+        const f=(edge-last[0])/(xy[0]+2*edge-last[0]);
+        const v=last[1]+f*(xy[1]-last[1]);
+        out.push([edge,v],[NaN,NaN],[-edge,v]);
+      }
+      out.push(xy);
+    }
+    return out;
+  };
   const series=[];
-  for(const c of st.saved){const vv=view(a,c.p),ss=samples(c.ex,st.H),upto=ss.filter(z=>z.t<c.until).concat(c.ex.at(c.until));series.push({pts:pts(upto,vv),c:C.ink2,w:1.6,op:.55})}
+  if(a.p.portrait){
+    const data=phaseData(pp,vw);
+    for(const curve of data.curves)series.push({pts:curve,c:C.ink2,w:1.55,op:.7});
+    for(const curve of data.separatrix)series.push({pts:curve,c:C.E,dash:true,w:3});
+  }
+  for(const c of st.saved)series.push({pts:pts(c.samples,view(a,c.p)),c:C.ink2,w:1.6,op:.65});
   if(a.p.refl&&pp.exact)series.push({pts:pts(st.refsamp.filter(z=>z.t<now).concat(st.ref.at(now)),vw),c:C.pred,dash:true,w:2});
   const cur=st.samp.filter(z=>z.t<now).concat(st.exp.at(now));series.push({pts:pts(cur,vw),c:cp});
-  const z0=st.exp.at(0),zn=st.exp.at(now);
-  const dots=[{x:vw.pos(z0),y:vw.vel(z0),c:cp,hollow:true,r:6},{x:vw.pos(zn),y:vw.vel(zn),c:cp}];
-  const r=gr(a,{box,xmin:vw.eq-vw.X,xmax:vw.eq+vw.X,ymin:-vw.V,ymax:vw.V,xlab:vw.pl+' ('+vw.pu+')',ylab:vw.vl,series,dots,
+  const [x0,y0]=point({x:pp.x0,y:pp.x0+pp.eq,v:pp.v0},vw),[xn,yn]=point(st.exp.at(now),vw);
+  const dots=[{x:x0,y:y0,c:cp,hollow:true,r:6},{x:xn,y:yn,c:cp}];
+  if(fold&&a.p.portrait)for(const x of [-180,180])dots.push({x,y:0,c:C.E,hollow:true,r:4});
+  const span=fold?184:vw.X;
+  const r=gr(a,{box,xmin:vw.eq-span,xmax:vw.eq+span,ymin:-vw.V,ymax:vw.V,xlab:vw.pl+' ('+vw.pu+')',
+    ylab:vw.vl+(fold?' (rad·s⁻¹)':''),xticks:fold?[-180,-90,0,90,180]:undefined,series,dots,
     extra:G=>{ // flèche de sens de parcours, près du début
       const ta=Math.min(st.H*.15,pp.T0*.17),tb=ta+pp.T0*.03;if(now<tb)return'';
-      const p1=st.exp.at(ta),p2=st.exp.at(tb);return a.S.arrow(G.X(vw.pos(p1)),G.Y(vw.vel(p1)),G.X(vw.pos(p2)),G.Y(vw.vel(p2)),{c:cp,w:2.4,head:11*k});}});
+      const [x1,y1]=point(st.exp.at(ta),vw),[x2,y2]=point(st.exp.at(tb),vw);
+      const start=[G.X(x1),G.Y(y1)],end=[G.X(x2),G.Y(y2)];
+      if(!inBox(G,...start)||!inBox(G,...end)||(fold&&Math.abs(x2-x1)>180))return'';
+      return a.S.arrow(...start,...end,{c:cp,w:2.4,head:11*k});}});
   st.geom.phase={...r.G,vw};
   return r.svg;
 }
@@ -1346,16 +1500,17 @@ function timeReduced(a,box){
   st.curves.forEach((c,i)=>{
     const pts=[];for(const z of c.samp){if(z.t>=now)break;pts.push([z.t/T0,red(c.p,z).x])}pts.push([now/T0,red(c.p,c.ex.at(now)).x]);
     series.push({pts,c:c.color,dash:c.dash,w:2.8});dots.push({x:now/T0,y:red(c.p,c.ex.at(now)).x,c:c.color,r:i&&!cmp?3.5:5});
-    if(cmp&&a.p.marks&&isFinite(st.res[i].settled))vl.push({x:st.res[i].settled/T0,c:c.color,label:''});
+    if(cmp&&a.p.marks&&isFinite(st.res[i].settled))vl.push({x:(st.res[i].settled-st.offset)/T0,c:c.color,label:''});
   });
   const r=gr(a,{box,xmin:0,xmax:st.H/T0,ymin:-1.3,ymax:1.3,xlab:'t / '+a.S.v('T','0'),ylab:'Écart réduit '+a.S.v('X'),series,dots,vl,cursor:now/T0,
+    xfmt:timeFormat(a,T0),
     bands:cmp?[{y1:-eps,y2:eps,c:C.E}]:[],hl:cmp?[{y:eps,c:C.E},{y:-eps,c:C.E}]:[]});
   return r.svg;
 }
 function phaseReduced(a,box){
   const now=st.t,series=[],dots=[];
   st.curves.forEach((c,i)=>{const pts=[];for(const z of c.samp){if(z.t>=now)break;const r=red(c.p,z);pts.push([r.x,r.v])}const rn=red(c.p,c.ex.at(now));pts.push([rn.x,rn.v]);
-    series.push({pts,c:c.color,dash:c.dash,w:2.8});dots.push({x:rn.x,y:rn.v,c:c.color,r:i&&modeOf(a)==='analogy'?3.5:5.5});const r0=red(c.p,c.ex.at(0));dots.push({x:r0.x,y:r0.v,c:c.color,hollow:true,r:5})});
+    series.push({pts,c:c.color,dash:c.dash,w:2.8});dots.push({x:rn.x,y:rn.v,c:c.color,r:i&&modeOf(a)==='analogy'?3.5:5.5});const r0=red(c.p,{x:c.p.x0,v:c.p.v0});dots.push({x:r0.x,y:r0.v,c:c.color,hollow:true,r:5})});
   return gr(a,{box,xmin:-1.3,xmax:1.3,ymin:-1.3,ymax:1.3,xlab:a.S.v('X'),ylab:a.S.v('V')+' = '+a.S.v('ẋ')+' / ('+a.S.v('ω','0')+a.S.v('a')+')',series,dots}).svg;
 }
 function energyReduced(a,box){
@@ -1363,26 +1518,26 @@ function energyReduced(a,box){
   st.curves.forEach((c,i)=>{const ini=MD.energies(c.p,c.ex.at(0)).initial||1,T0=st.p.T0,pts=[];
     for(const z of c.samp){if(z.t>=now)break;pts.push([z.t/T0,MD.energies(c.p,z).stored/ini])}const en=MD.energies(c.p,c.ex.at(now)).stored/ini;pts.push([now/T0,en]);
     series.push({pts,c:c.color,dash:c.dash,w:2.8});dots.push({x:now/T0,y:en,c:c.color,r:i&&modeOf(a)==='analogy'?3.5:5})});
-  return gr(a,{box,xmin:0,xmax:st.H/st.p.T0,ymin:0,ymax:1.08,xlab:'t / '+a.S.v('T','0'),ylab:'Énergie stockée / '+a.S.v('E','0'),series,dots,cursor:now/st.p.T0}).svg;
+  return gr(a,{box,xmin:0,xmax:st.H/st.p.T0,ymin:0,ymax:1.08,xlab:'t / '+a.S.v('T','0'),ylab:'Énergie stockée / '+a.S.v('E','0'),series,dots,cursor:now/st.p.T0,
+    xfmt:timeFormat(a,st.p.T0)}).svg;
 }
 function courbes(a){
-  const P=a.panels.courbes,w=P.w,h=P.h,k=a.k,mode=modeOf(a),h1=Math.round(h*.5);
-  const b1={x:0,y:0,w,h:h1},b2={x:0,y:h1,w,h:h-h1};
-  let s='';const v2=a.p.vue2;
+  const box=id=>({x:0,y:0,w:a.panels[id].w,h:a.panels[id].h});
+  const b1=box('temps'),b2=box('phase'),mode=modeOf(a),v2=a.p.vue2;
   if(mode==='explore'){
-    s+=timeExplore(a,b1);
-    s+=v2==='phase'?phaseExplore(a,b2):v2==='energie'?energyExplore(a,b2):rootsPlot(a,b2,[[st.p.Q,a.C.cInk]]);
+    a.svg('temps',timeExplore(a,b1));
+    a.svg('phase',v2==='phase'?phaseExplore(a,b2):v2==='energie'?energyExplore(a,b2):rootsPlot(a,b2,[[st.p.Q,a.C.cInk]]));
   }else{
-    s+=timeReduced(a,b1);
-    s+=v2==='phase'?phaseReduced(a,b2):v2==='energie'?energyReduced(a,b2):rootsPlot(a,b2,mode==='compare'?st.curves.map(c=>[c.q,c.color]):[[st.p.Q,a.C.cInk]]);
+    a.svg('temps',timeReduced(a,b1));
+    a.svg('phase',v2==='phase'?phaseReduced(a,b2):v2==='energie'?energyReduced(a,b2):rootsPlot(a,b2,mode==='compare'?st.curves.map(c=>[c.q,c.color]):[[st.p.Q,a.C.cInk]]));
   }
-  a.svg('courbes',s);
 }
 
 /* ---------- mesures, légende, horloge ---------- */
 function info(a){
   const mode=modeOf(a),pp=st.p,C=a.C,hide=a.p.cacher,K=OSK;
-  a.clock('t = '+K.qty(a,st.t,'s')+' ('+a.fmt.fix(st.t/pp.T0,2)+' T<sub>0</sub>)');
+  const t=st.t+st.offset;
+  a.clock('t = '+K.qty(a,t,'s')+' ('+a.fmt.fix(t/pp.T0,2)+' T<sub>0</sub>)');
   const w0={label:Mh.v('ω','0'),value:sg(a,pp.w),unit:'rad·s<sup>−1</sup>',hint:'T<sub>0</sub> = '+K.qty(a,pp.T0,'s')};
   if(mode==='explore'){
     const kind=MD.kind(pp),c=MD.coefficients(pp),e=MD.energies(pp,st.exp.at(st.t)),vw=view(a,pp);
@@ -1396,7 +1551,12 @@ function info(a){
     if(a.p.refl&&pp.exact)L.push({c:C.pred,dash:true,label:'pendule linéarisé'});
     if(a.p.env&&!pp.exact&&kind==='under')L.push({c:C.pred,dash:true,label:'enveloppe'});
     if(a.p.vue2==='energie')for(const l of st.legE||[])L.push(l);
-    else if(a.p.vue2==='phase'){L.push({c:cp,label:'état courant (plein) · état initial (cercle)'});if(st.saved.length)L.push({c:C.ink2,label:'trajectoires gardées'})}
+    else if(a.p.vue2==='phase'){
+      L.push({c:cp,label:'état courant (plein) · état initial (cercle)'});
+      if(a.p.portrait)L.push({c:C.ink2,label:'trajectoires prétracées'});
+      if(a.p.portrait&&pp.exact)L.push({c:C.E,dash:true,label:pp.gamma===0?'séparatrice · oscillations / rotations':'séparatrices · équilibres renversés'});
+      if(st.saved.length)L.push({c:C.ink2,label:'trajectoires gardées'});
+    }
     a.legend(L);
   }else if(mode==='compare'){
     a.metrics([w0]);a.legend(st.curves.map(c=>({c:c.color,label:c.label})).concat([{c:C.E,label:'bande ± '+a.p.tol+' %'}]));
@@ -1422,7 +1582,11 @@ const A=AnimKit.app({
   onglets:['Ressort','Circuit LC / RLC','Pendule','Comparer','Analogie'],
   temps:true,pas:.04,
   curseur:{max:()=>st.H,get:()=>st.t,set:(a,v)=>{st.t=Math.max(0,Math.min(st.H,v))}},
-  panneaux:[{id:'scene',poids:1,ratioTel:.95},{id:'courbes',poids:1.2,ratioTel:1.3}],
+  panneaux:[
+    {id:'scene',ratioTel:.95},
+    {id:'temps',titre:'Courbes temporelles',ratioTel:.65},
+    {id:'phase',titre:'Phase, énergies ou racines',ratioTel:.65}
+  ],
   reglages:[
     {titre:'Situations',onglets:[0,1,2],presets:[
       {label:'Sans pertes',titre:'Amortissement nul',action:a=>applyPreset(a,'harmonic')},
@@ -1430,7 +1594,8 @@ const A=AnimKit.app({
       {label:'Critique',titre:'Q = 1/2 (pendule : aux petits angles)',action:a=>applyPreset(a,'critical')},
       {label:'Fort amortissement',titre:'Q = 0.2',action:a=>applyPreset(a,'strong')},
       {label:'Départ en vitesse',titre:'Position initiale nulle, vitesse (ou courant) non nul',action:a=>applyPreset(a,'velocity')},
-      {label:'Grande amplitude',titre:'Pendule exact, 120°, comparé au modèle linéarisé',action:a=>applyPreset(a,'large')}],items:[]},
+      {label:'Grande amplitude',titre:'Pendule exact, 120°, comparé au modèle linéarisé',onglets:[2],action:a=>applyPreset(a,'large')},
+      {label:'Rotation complète',titre:'Pendule exact, sans amortissement, lancé au-dessus du seuil',onglets:[2],action:a=>applyPreset(a,'rotation')}],items:[]},
     {titre:'Expérience',onglets:[1],items:[
       {id:'exper',type:'seg',options:[['free','Régime libre'],['step','Échelon '+Mh.v('E')]],value:'free'},
       {type:'note',html:a=>a.p.exper==='step'?'Source idéale maintenue à '+Mh.v('E')+' après t = 0 ; '+Mh.v('u','C')+' et '+Mh.v('i')+' sont continues.':'Pas de source : le condensateur chargé se décharge dans la bobine et la résistance.'}]},
@@ -1463,18 +1628,27 @@ const A=AnimKit.app({
       RG('U0','Tension initiale '+Mh.v('u','C0'),-10,10,.5,5,'V',cir),
       RG('I0','Courant initial '+Mh.v('i','0'),-.5,.5,.01,0,'A',cir),
       RG('th0','Angle initial '+Mh.v('θ','0'),-170,170,1,30,'°',pen),
-      RG('thd0','Vitesse angulaire initiale',-8,8,.1,0,'rad·s⁻¹',pen),
-      {type:'note',html:'Glisser la masse ou le pendule dans la scène, ou cliquer dans le plan de phase : retour à t = 0.'}]},
+      RG('thd0','Vitesse angulaire initiale',-PENDULUM_SPEED_MAX,PENDULUM_SPEED_MAX,.1,0,'rad·s⁻¹',pen),
+      {type:'note',si:a=>a.tab===2&&a.p.exact,html:a=>{
+        if(a.tab!==2||!a.p.exact)return '';
+        const threshold=rotationThreshold(MD.parameters(ms(a)));
+        return 'À cet angle, sans amortissement, rotation si |'+Mh.v('θ̇','0')+'| > '+a.fmt.fix(threshold,2)+' rad·s⁻¹.';
+      }},
+      {type:'note',html:'Glisser la masse ou le pendule, ou cliquer dans le plan de phase cadré, pour poser les conditions initiales.'}]},
     {titre:'Affichage',onglets:[0,1,2],items:[
       {id:'vue2',type:'seg',options:[['phase','Phase'],['energie','Énergies'],['racines','Racines']],value:'phase'},
       {id:'vtemps',type:'seg',options:[['both','Les deux'],['pos','Position'],['vel','Vitesse']],value:'both'},
       {id:'dur',type:'seg',options:[[3,'3 T<sub>0</sub>'],[6,'6 T<sub>0</sub>'],[12,'12 T<sub>0</sub>'],[24,'24 T<sub>0</sub>']],value:6},
       {id:'forces',type:'check',label:'Forces (ressort, pendule) ou tensions (circuit)',value:false},
       {id:'refl',type:'check',label:'Comparer au pendule linéarisé',value:false,si:a=>a.tab===2&&a.p.exact},
-      {type:'boutons',items:[{label:'Garder la trajectoire',titre:'Conserve la trajectoire de phase (6 au plus)',action:a=>{st.saved.push({p:st.p,ex:st.exp,until:Math.max(st.t,st.p.T0*.01)});if(st.saved.length>6)st.saved.shift()}},{label:'Effacer',action:a=>{st.saved=[]}}]}]},
+      {type:'boutons',items:[{label:'Garder la trajectoire',titre:'Conserve la trajectoire de phase (6 au plus)',action:a=>{
+        st.saved.push({p:st.p,samples:samples(st.exp,Math.max(st.t,st.p.T0*.01))});
+        if(st.saved.length>6)st.saved.shift();
+      }},{label:'Effacer',action:a=>{st.saved=[]}}]}]},
     {titre:'Prévoir',onglets:[0,1,2],items:[
       {id:'cacher',type:'check',label:'Masquer Q et le régime (à prévoir)',value:false},
       {id:'env',type:'check',label:'Enveloppe et temps τ (prévision)',value:false},
+      {id:'portrait',type:'check',label:'Portrait de phase complet',value:false},
       {id:'depass',type:'check',label:'<span>Premier dépassement D<sub>1</sub> (prévision)</span>',value:false}]},
     {titre:'Échelles des axes (fixes)',onglets:[0,1,2,4],items:[
       RG('xm_s','Écart maximal affiché',.05,.4,.01,.2,'m',a=>a.tab===0||a.tab===4),
@@ -1483,8 +1657,8 @@ const A=AnimKit.app({
       {type:'boutons',items:[{label:'Ajuster aux conditions initiales',action:a=>ajuster(a)}]}]}
   ],
   aide:{
-    voit:'Une <b>scène</b> (ressort, circuit ou pendule) et deux <b>graphes empilés</b> : signaux (position et vitesse, ou tension et courant), puis plan de phase, énergies ou racines de l’équation caractéristique. Tout se rapporte au même instant (curseur temporel). Convention du cours : l’axe <i>z</i> du ressort pointe vers le bas depuis O ; <i>z</i><sub>éq</sub> = ℓ<sub>0</sub> + <i>mg</i>/<i>k</i> (ℓ<sub>0</sub> = 0.40 m). Les courbes sont tracées jusqu’à l’instant courant.',
-    faire:'<ul><li>Déplacer la masse ou le pendule, ou cliquer dans le plan de phase : conditions initiales (retour à t = 0). « Lecture » part de l’instant où l’on s’est arrêté ; à × 1, une période propre dure une seconde.</li><li><b>Situations</b> : sans pertes, faible, critique, fort amortissement, départ en vitesse, grande amplitude (pendule).</li><li><b>Garder la trajectoire</b> : jusqu’à 6 trajectoires de phase superposées.</li><li><b>Comparer</b> : trois amortissements aux mêmes ω<sub>0</sub> et conditions initiales ; la bande ± ε distingue premier passage et établissement.</li><li><b>Analogie</b> : ressort et RLC aux mêmes ω<sub>0</sub> et Q (<i>z</i> ↔ <i>q</i>, <i>m</i> ↔ <i>L</i>, <i>α</i> ↔ <i>R</i>, <i>k</i> ↔ 1/<i>C</i>).</li><li><b>Prévoir</b> : masquer Q et le régime, puis afficher enveloppe, τ et dépassement.</li><li>Les échelles des axes sont fixes ; « Ajuster aux conditions initiales » les recadre une fois.</li></ul>',
+    voit:'Une <b>scène</b> (ressort, circuit ou pendule) et deux <b>graphes empilés</b> : signaux (position et vitesse, ou tension et courant), puis plan de phase, énergies ou racines de l’équation caractéristique. Convention du cours : l’axe <i>z</i> du ressort pointe vers le bas depuis O ; <i>z</i><sub>éq</sub> = ℓ<sub>0</sub> + <i>mg</i>/<i>k</i> (ℓ<sub>0</sub> = 0.40 m). La trajectoire active est tracée jusqu’à l’instant courant.',
+    faire:'<ul><li>Déplacer la masse ou le pendule, ou cliquer dans le plan de phase cadré, pour poser les conditions initiales. À × 1, une période propre dure une seconde. Sans pertes, le temps continue dans une nouvelle fenêtre à chaque fin de graphe.</li><li>Les deux graphes se zooment et se déplacent séparément. Utiliser la molette ou les boutons +/− pour zoomer, Maj + glisser pour déplacer, et « Cadrer » pour revenir à la vue initiale du graphe.</li><li>Dans <b>Situations</b>, « Rotation complète » lance le pendule exact au-dessus du seuil sans amortissement. Modifier l’angle ou la vitesse initiale pour passer de part et d’autre du seuil indiqué dans les conditions initiales. Le graphe temporel cumule l’angle au fil des tours.</li><li><b>Garder la trajectoire</b> : jusqu’à 6 trajectoires de phase superposées.</li><li><b>Comparer</b> : trois amortissements aux mêmes ω<sub>0</sub> et conditions initiales ; la bande ± ε distingue premier passage et établissement.</li><li><b>Analogie</b> : ressort et RLC aux mêmes ω<sub>0</sub> et Q (<i>z</i> ↔ <i>q</i>, <i>m</i> ↔ <i>L</i>, <i>α</i> ↔ <i>R</i>, <i>k</i> ↔ 1/<i>C</i>).</li><li>Dans <b>Prévoir</b>, cocher « Portrait de phase complet » pour superposer des trajectoires de référence. Pour le pendule exact, l’angle est ramené à [−180°, 180°] et les branches en pointillé rejoignent les équilibres renversés. Sans pertes, elles séparent oscillations et rotations.</li><li>« Ajuster aux conditions initiales » recadre les échelles de départ.</li></ul>',
     modele:'Frottement linéaire, paramètres constants, pas d’excitation sinusoïdale (c’est OS5). Ressort : <i>x</i> = <i>z</i> − <i>z</i><sub>éq</sub>, énergie potentielle totale ½<i>kx</i>². RLC : résistance totale, bobine idéale ; sous échelon, la source fournit ou reçoit de l’énergie (travail <i>E C</i>(<i>u</i><sub>C</sub> − <i>u</i><sub>C0</sub>)). Pendule (hors cours) : tige rigide sans masse, couple −<i>m</i>ℓ²γ θ̇, solution exacte par Runge–Kutta d’ordre 4. Pseudo-pulsation Ω = ω<sub>0</sub>√(1 − 1/4Q²), enveloppe e<sup>−t/τ</sup> avec τ = 2Q/ω<sub>0</sub>.',
     cours:'OS4 : oscillateur harmonique, oscillateurs amortis (ressort et RLC), analogie électro-mécanique, portraits de phase, régimes pseudo-périodique, apériodique et critique, aspects énergétiques.'
   },
@@ -1495,25 +1669,50 @@ const A=AnimKit.app({
         if(a.tab===2&&g.pend)return Math.hypot(x-g.pend.X,y-g.pend.Y)<g.pend.mr*1.8;return false},
       move:(x,y)=>{if(a.tab===0){const g=st.geom.spring;setIC(a,'spring',(y-g.top)/g.sc-g.zeq);a.set('vs0',0)}
         else{const g=st.geom.pend;setIC(a,'pendulum',Math.atan2(x-g.cx,y-g.top)*180/Math.PI);a.set('thd0',0)}}});
-    a.drag('courbes',{
-      hit:(x,y)=>modeOf(a)==='explore'&&a.p.vue2==='phase'&&!!st.geom.phase&&inBox(st.geom.phase,x,y),
-      move:(x,y)=>{const g=st.geom.phase,xv=g.xv(x),yv=g.yv(y),sys=st.p.system;
-        setIC(a,sys,sys==='spring'?xv-g.vw.eq:xv,yv)}});
+    const place=(x,y)=>{
+      const g=st.geom.phase,xv=g.xv(x),yv=g.yv(y),sys=st.p.system;
+      setIC(a,sys,sys==='spring'?xv-g.vw.eq:xv,yv);
+    };
+    let phaseClick=null;
+    a.drag('phase',{
+      hit:(x,y)=>{
+        const P=a.panels.phase;
+        return modeOf(a)==='explore'&&a.p.vue2==='phase'&&P.vz===1&&!P.vx&&!P.vy&&inBox(st.geom.phase,x,y);
+      },
+      start:(x,y)=>{phaseClick=[x,y]},
+      move:(x,y)=>{phaseClick=null;place(x,y)},
+      end:e=>{if(phaseClick&&e.type==='pointerup')place(...phaseClick);phaseClick=null}
+    });
   },
-  reset(a){rebuild(a,false);st.t=0},
+  reset(a){st.t=st.offset=0;rebuild(a,false)},
   change(a,id,v){
+    if(id==='portrait'){
+      if(v)a.set('vue2','phase');
+      if(v||st.p.exact)a.cadrer('phase');
+      return;
+    }
     if(DISPLAY.includes(id))return;
-    if(id==='dur'){rebuild(a,false);return}
+    if(id==='dur'){rebuild(a,false,st.exp.at(0));return}
     if(id==='exper'){a.p.U0=v==='step'?0:5;a.p.I0=0}
-    rebuild(a,!IC.includes(id));st.t=0;a.play(false);
+    st.t=st.offset=0;rebuild(a,!IC.includes(id));a.play(false);
   },
   onglet(a,i){
     st.saved=[];
     if(i>=3&&a.p.U0===0&&a.p.I0===0)a.p.U0=5;
-    rebuild(a,true);st.t=0;a.play(false);
+    st.t=st.offset=0;rebuild(a,true);a.play(false);
+    if(i<3&&a.p.portrait)a.set('vue2','phase',{silent:true});
   },
-  step(a,dt){st.t=Math.min(st.H,st.t+dt*st.p.T0);if(st.t>=st.H-1e-12)a.play(false)},
-  peutLire(){if(st.t>=st.H-1e-9)st.t=0;return true},
+  step(a,dt){
+    st.t+=dt*st.p.T0;
+    if(continuous(a)){
+      while(st.t>=st.H){
+        const end=st.exp.at(st.H);
+        st.t-=st.H;st.offset+=st.H;
+        rebuild(a,false,end);
+      }
+    }else if(st.t>=st.H-1e-12){st.t=st.H;a.play(false)}
+  },
+  peutLire(a){if(!continuous(a)&&st.t>=st.H-1e-9)st.t=0;return true},
   draw(a){
     const mode=modeOf(a);
     a.svg('scene','<g>'+(mode==='explore'?sceneExplore(a):mode==='compare'?sceneCompare(a):sceneAnalogy(a))+'</g>');
