@@ -1251,6 +1251,7 @@ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const DUREE=24, ORG=['Compresseur','Condenseur','Détendeur','Évaporateur'];
 let U=0, memoKey='', memo=null, plotP=null;
 const sg=(a,v,d=1)=>(v>0.05*10**-d?'+':'')+a.fmt.fix(v,d);
+const indiceSvg=(S,s,indice)=>`<tspan font-family='${S.MATH}' font-style="italic">${s}</tspan><tspan font-size="72%" baseline-shift="-25%">${indice}</tspan>`;
 const pre=a=>a.tab?'h_':'f_';
 function par(a){const p=a.p,x=pre(a),open=!!p[x+'open'];let tf=p[x+'tf'],tc=open?tf:p[x+'tc'];if(!open&&tc<tf+5)tc=tf+5;
   return{tf,tc,ec:p[x+'ec'],eh:p[x+'eh'],eta:p[x+'eta'],sh:p[x+'sh'],sc:p[x+'sc'],open}}
@@ -1343,7 +1344,7 @@ function circuit(a){
   /* énergie : flèches proportionnelles */
   if(a.p.prev){const vm=Math.max(Math.abs(c.qc),c.qf,c.w);
     s+=K.energyArrow(a,[mx,y1-24*k],[mx,Math.max(26*k,y1-76*k)],-c.qc,vm,C.hot,{w:5})+K.energyArrow(a,[mx,y2+60*k],[mx,y2+24*k],c.qf,vm,C.cold,{w:5})+K.energyArrow(a,[x2+80*k,my-20*k],[x2+30*k,my-20*k],c.w,vm,C.v,{w:5})
-     +S.text(mx+22*k,y1-48*k,`${S.v('q','c')} = ${sg(a,c.qc)}`,{anchor:'start',size:13,c:C.hot,weight:600})+S.text(mx+22*k,y2+48*k,`${S.v('q','f')} = ${sg(a,c.qf)}`,{size:13,c:C.cold,weight:600})+S.text(x2+80*k,my-28*k,`w = ${sg(a,c.w)}`,{anchor:'end',size:13,c:C.v,weight:600})}
+     +S.text(mx+22*k,y1-48*k,`${indiceSvg(S,'q','c')} = ${sg(a,c.qc)}`,{anchor:'start',size:13,c:C.hot,weight:600})+S.text(mx+22*k,y2+48*k,`${indiceSvg(S,'q','f')} = ${sg(a,c.qf)}`,{size:13,c:C.cold,weight:600})+S.text(x2+80*k,my-28*k,`w = ${sg(a,c.w)}`,{anchor:'end',size:13,c:C.v,weight:600})}
   /* points mobiles */
   for(let i=0;i<14;i++){const p=pos(U+i/14),d=c.sample(((U+i/14)%1));s+=S.circle(p[0],p[1],3.2*k,{fill:C.paper,c:C.ink,w:1})}
   const pm=pos(U);s+=S.circle(pm[0],pm[1],9*k,{c:C.F,w:3,fill:'none'});
@@ -1389,7 +1390,7 @@ K.cycleDrag(A,'graphe',()=>plotP,u=>{U=u;A.t=u*DUREE},()=>A.p.gmode==='ph');
 /* ---------- bilans par organe ---------- */
 function bilGraph(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,c=cyc(a),f=a.fmt;let s='';plotP=null;
-  const dh=(b,a)=>`${S.v('h',b)} − ${S.v('h',a)}`;
+  const dh=(b,a)=>`${indiceSvg(S,'h',b)} − ${indiceSvg(S,'h',a)}`;
   const rows=[['Compresseur',c.w,C.v,dh('B','A')],['Condenseur',c.qc,C.hot,dh('C','B')],['Détendeur',0,C.E,dh('D','C')+' = 0'],['Évaporateur',c.qf,C.cold,dh('A','D')]],mx=Math.max(c.w,-c.qc,c.qf),x=24*k,ww=w-48*k,dy=Math.min(90*k,(h-30*k)/4);
   rows.forEach(([n,v,col,eq],i)=>{const y=34*k+i*dy;s+=S.text(x,y,n,{size:15,c:col,weight:600,halo:false})+S.text(x+ww,y,a.p.prev?`${sg(a,v)} kJ/kg`:'?',{anchor:'end',size:15,c:col,halo:false})
     +S.rect(x,y+10*k,ww,10*k,{fill:C.rule,fop:.5,rx:3*k})+(a.p.prev&&v?S.rect(x,y+10*k,ww*Math.abs(v)/mx,10*k,{fill:col,rx:3*k}):'')+S.text(x,y+40*k,eq,{size:13,c:C.ink2,halo:false})});
@@ -1399,7 +1400,7 @@ function bilGraph(a){
 /* ---------- efficacité en fonction de T_c ---------- */
 function effGraph(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,f=a.fmt,q=par(a),pac=!!a.tab;let s='';plotP=null;
-  const G=S.graph({x:0,y:0,w,h,xmin:15,xmax:55,ymin:0,ymax:pac?20:15,xlab:`${pac?'Chauffage':'Pièce'} ${S.v('T','c')} (°C)`,ylab:S.v('e',pac?'PAC':'frigo')});
+  const G=S.graph({x:0,y:0,w,h,xmin:15,xmax:55,ymin:0,ymax:pac?20:15,xlab:`${pac?'Chauffage':'Pièce'} ${indiceSvg(S,'T','c')} (°C)`,ylab:indiceSvg(S,'e',pac?'PAC':'frigo')});
   s+=S.clip('eg2',G)+G.svg;
   const pts=[],bd=[];for(let t=Math.max(15,q.tf+5);t<=55.001;t+=1){const c=X4.frigo({...q,open:false,tc:t});pts.push([t,pac?c.ep:c.ef]);bd.push([t,pac?c.epMax:c.efMax])}
   if(a.p.prev)s+=S.curve(bd,G,{c:C.pred,w:2,dash:`${5*k} ${4*k}`});
