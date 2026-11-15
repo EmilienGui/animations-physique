@@ -246,6 +246,28 @@ sub,sup{line-height:0}
 .ak-toast.show{opacity:1}
 @media print{.ak-tools,.ak-side,.ak-transport{display:none}}
 
+/* Bandeau commun du guide de création des animations. */
+.ak-menu-commun .ak-top {flex-wrap:wrap;gap:6px 12px}
+.ak-menu-commun .ak-tools {
+  flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%;
+}
+.ak-menu-commun .ak-tools .ib {min-height:40px;padding:0 10px;font-size:15px}
+.ak-menu-commun .ak-tools [data-act="fs"] {width:40px;padding:0}
+.ak-menu-commun .ak-tools .ak-btn-settings {display:none}
+@media(max-width:820px){
+  .ak-menu-commun .ak-tools {margin-left:0;flex:1 0 100%;justify-content:flex-start}
+}
+@media(max-width:640px){
+  .ak-menu-commun .ak-tools {gap:4px}
+  .ak-menu-commun .ak-tools .ib {min-height:44px;padding:0 6px;font-size:13px}
+  .ak-menu-commun .ak-tools .ak-lbl {display:inline}
+  .ak-menu-commun .ak-tools .ib svg {display:none}
+  .ak-menu-commun .ak-tools [data-act="fs"] {width:44px;padding:0}
+  .ak-menu-commun .ak-tools [data-act="fs"] svg {display:block}
+  .ak-menu-commun .ak-tools [data-act="image"],
+  .ak-menu-commun .ak-tools [data-act="proj"],
+  .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
+}
 
 /* Retour au sommaire GitHub Pages. */
 .ak-sommaire{text-decoration:none}
@@ -260,6 +282,7 @@ sub,sup{line-height:0}
   .ak-tools .ak-sommaire.ib svg{display:block}
   .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
 }
+
 </style>
 </head>
 <body>
@@ -479,7 +502,7 @@ function app(cfg){
   document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
 
   /* ---------- structure ---------- */
-  const ak=el('div',{class:'ak',id:'ak'});
+  const ak=el('div',{class:cfg.menuCommun?'ak ak-menu-commun':'ak',id:'ak'});
   const top=el('header',{class:'ak-top'});
   top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
   <nav class="ak-tools" aria-label="Outils">
@@ -490,6 +513,30 @@ function app(cfg){
    <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
    <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
   </nav>`;
+  const nav=$('.ak-tools',top);
+  const themeButton=$('[data-act=theme]',nav);
+  const projButton=$('[data-act=proj]',nav);
+  const fullButton=$('[data-act=fs]',nav);
+  if(cfg.menuCommun){
+    nav.insertBefore($('[data-act=settings]',nav),fullButton);
+    $('[data-act=image]',nav).title='Enregistrer une image PNG (I)';
+  }
+  function syncMenu(){
+    if(!cfg.menuCommun)return;
+    const dark=root.dataset.theme==='dark', projected=ak.classList.contains('is-proj');
+    const full=Boolean(document.fullscreenElement);
+    themeButton.title=dark?'Passer au thème clair (T)':'Passer au thème sombre (T)';
+    $('.ak-lbl',projButton).textContent=projected?'Réglages':'Projection';
+    projButton.title=projected?'Rétablir les réglages (P)':'Agrandir la scène et masquer les réglages (P)';
+    projButton.setAttribute('aria-pressed',String(projected));
+    const fullscreenLabel=full?'Quitter le plein écran':'Plein écran';
+    fullButton.setAttribute('aria-label',fullscreenLabel);
+    fullButton.title=fullscreenLabel+' (F)';
+  }
+  if(cfg.menuCommun){
+    syncMenu();
+    document.addEventListener('fullscreenchange',syncMenu);
+  }
   $('[data-act=help]',top).before(el('a',{
     class:'ib ak-sommaire',href:'https://emiliengui.github.io/animations-physique/',
     'aria-label':'Sommaire des animations',title:'Retour au sommaire des animations'
@@ -743,12 +790,22 @@ function app(cfg){
   A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
-  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
-  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  A.setTheme=t=>{root.dataset.theme=t;readColors();syncMenu();A.renderNow()};
+  A.setProj=on=>{
+    ak.classList.toggle('is-proj',on);
+    ak.classList.remove('drawer-open');
+    projButton.classList.toggle('on',on);
+    syncMenu();
+    A.render();
+  };
   const acts={
     play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
     help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
-    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    image:()=>A.exportImage(),proj:()=>{
+      const projected=ak.classList.contains('is-proj');
+      A.setProj(!projected);
+      if(cfg.menuCommun&&projected&&A.narrow)ak.classList.add('drawer-open');
+    },
     fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
     settings:()=>{ak.classList.toggle('drawer-open');A.render()}
   };
@@ -1222,7 +1279,7 @@ const A=AnimKit.app({
   reglages:[
     {titre:'Situations',presets:[
       {label:'Réfrigérateur',valeurs:{f_tf:4,f_tc:20,f_ec:14,f_eh:11,f_eta:.6,f_sh:0,f_sc:0,f_open:false,cours:false},onglets:[0]},
-      {label:'Valeurs du cours (η_is = 0.57)',valeurs:{f_tf:4,f_tc:20,f_ec:14,f_eh:11,f_eta:.57,f_sh:0,f_sc:0,f_open:false,cours:true},onglets:[0]},
+      {label:`Valeurs du cours (${M.v('η','is')} = 0.57)`,valeurs:{f_tf:4,f_tc:20,f_ec:14,f_eh:11,f_eta:.57,f_sh:0,f_sc:0,f_open:false,cours:true},onglets:[0]},
       {label:'Congélateur',valeurs:{f_tf:-18,f_tc:23,f_ec:7,f_eh:10,f_eta:.6,f_sh:0,f_sc:0,f_open:false},onglets:[0]},
       {label:'Surchauffe et sous-refroidissement 5 K',valeurs:{f_tf:4,f_tc:20,f_ec:14,f_eh:11,f_eta:.6,f_sh:5,f_sc:5,f_open:false},onglets:[0]},
       {label:'Frigo ouvert',valeurs:{f_tf:20,f_ec:10,f_eh:10,f_eta:.6,f_sh:0,f_sc:0,f_open:true},onglets:[0]},
@@ -1230,7 +1287,7 @@ const A=AnimKit.app({
       {label:'PAC · hiver',valeurs:{h_tf:-7,h_tc:45,h_ec:7,h_eh:7,h_eta:.65,h_sh:0,h_sc:0,h_open:false},onglets:[1]}]},
     ...reglagesTab('f_',false),...reglagesTab('h_',true),
     {titre:'Diagramme',items:[
-      {id:'gmode',type:'seg',label:'Graphe',options:[['ph','(P, h)'],['bil','Bilans'],['e','e(T_c)']],value:'ph'},
+      {id:'gmode',type:'seg',label:'Graphe',options:[['ph','(P, h)'],['bil','Bilans'],['e',`${M.v('e')}(${M.v('T','c')})`]],value:'ph'},
       {id:'quality',type:'check',label:'Isotitres de vapeur',value:false,si:a=>a.p.gmode==='ph'},
       {id:'isotherms',type:'check',label:'Isothermes',value:false,si:a=>a.p.gmode==='ph'},
       {id:'isentropes',type:'check',label:'Isentropes',value:false,si:a=>a.p.gmode==='ph'},
@@ -1241,7 +1298,7 @@ const A=AnimKit.app({
   ],
   aide:{
     voit:'À gauche, le circuit : le fluide circule dans le sens des flèches, la couleur code sa température. À droite, le même cycle dans le diagramme des frigoristes (P, h) en pression logarithmique ; le point mobile correspond à l\'anneau sur le circuit.',
-    faire:'<ul><li>Cliquer un organe (compresseur, condenseur, détendeur, évaporateur) : l\'animation s\'y place.</li><li>Cocher « Afficher les résultats » après avoir prévu les ordres de grandeur de <i class="m">q</i><sub>f</sub>, <i class="m">q</i><sub>c</sub>, <i class="m">w</i> et de <i class="m">e</i>.</li><li>Graphe « e(T_c) » : l\'efficacité chute quand l\'écart de température augmente ; la borne de Carnot n\'apparaît qu\'avec les résultats.</li><li>Surchauffe et sous-refroidissement : ils déforment le cycle sans changer son principe.</li></ul>',
+    faire:`<ul><li>Cliquer un organe (compresseur, condenseur, détendeur, évaporateur) : l\'animation s\'y place.</li><li>Cocher « Afficher les résultats » après avoir prévu les ordres de grandeur de <i class="m">q</i><sub>f</sub>, <i class="m">q</i><sub>c</sub>, <i class="m">w</i> et de <i class="m">e</i>.</li><li>Graphe « ${M.v('e')}(${M.v('T','c')}) » : l\'efficacité chute quand l\'écart de température augmente ; la borne de Carnot n\'apparaît qu\'avec les résultats.</li><li>Surchauffe et sous-refroidissement : ils déforment le cycle sans changer son principe.</li></ul>`,
     modele:'Régime stationnaire, grandeurs massiques ; variations d\'énergie cinétique et potentielle négligées. Compresseur adiabatique de rendement isentropique η<sub>is</sub> = (h<sub>B,s</sub> − h<sub>A</sub>) / (h<sub>B</sub> − h<sub>A</sub>) ; échangeurs isobares ; détendeur isenthalpique (irréversible). La compression dessinée entre A et B est une interpolation à η<sub>is</sub> constant, pas la distribution interne du compresseur. Les températures des <b>sources</b>, et non celles du fluide, fixent la borne de Carnot. Frigo ouvert : la pièce reçoit au total le travail consommé.',
     cours:'TH4 § Réfrigérateur et diagramme des frigoristes. Pour un même fonctionnement, e<sub>PAC</sub> = e<sub>frigo</sub> + 1.',
     plus:'<ul><li>Avec <i>η</i><sub>is</sub> = 0.57 et les températures du cours (4 °C / 20 °C), on retrouve <i>w</i> ≈ 50 kJ/kg et <i>e</i> ≈ 3.0.</li><li>L\'efficacité est loin de la borne de Carnot : irréversibilités du compresseur, du détendeur et écarts de température aux échangeurs.</li></ul>',
@@ -1286,7 +1343,7 @@ function circuit(a){
   /* énergie : flèches proportionnelles */
   if(a.p.prev){const vm=Math.max(Math.abs(c.qc),c.qf,c.w);
     s+=K.energyArrow(a,[mx,y1-24*k],[mx,Math.max(26*k,y1-76*k)],-c.qc,vm,C.hot,{w:5})+K.energyArrow(a,[mx,y2+60*k],[mx,y2+24*k],c.qf,vm,C.cold,{w:5})+K.energyArrow(a,[x2+80*k,my-20*k],[x2+30*k,my-20*k],c.w,vm,C.v,{w:5})
-     +S.text(mx+22*k,y1-48*k,`q_c = ${sg(a,c.qc)}`,{anchor:'start',size:13,c:C.hot,weight:600})+S.text(mx+22*k,y2+48*k,`q_f = ${sg(a,c.qf)}`,{size:13,c:C.cold,weight:600})+S.text(x2+80*k,my-28*k,`w = ${sg(a,c.w)}`,{anchor:'end',size:13,c:C.v,weight:600})}
+     +S.text(mx+22*k,y1-48*k,`${S.v('q','c')} = ${sg(a,c.qc)}`,{anchor:'start',size:13,c:C.hot,weight:600})+S.text(mx+22*k,y2+48*k,`${S.v('q','f')} = ${sg(a,c.qf)}`,{size:13,c:C.cold,weight:600})+S.text(x2+80*k,my-28*k,`w = ${sg(a,c.w)}`,{anchor:'end',size:13,c:C.v,weight:600})}
   /* points mobiles */
   for(let i=0;i<14;i++){const p=pos(U+i/14),d=c.sample(((U+i/14)%1));s+=S.circle(p[0],p[1],3.2*k,{fill:C.paper,c:C.ink,w:1})}
   const pm=pos(U);s+=S.circle(pm[0],pm[1],9*k,{c:C.F,w:3,fill:'none'});
@@ -1332,7 +1389,8 @@ K.cycleDrag(A,'graphe',()=>plotP,u=>{U=u;A.t=u*DUREE},()=>A.p.gmode==='ph');
 /* ---------- bilans par organe ---------- */
 function bilGraph(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,c=cyc(a),f=a.fmt;let s='';plotP=null;
-  const rows=[['Compresseur',c.w,C.v,'h_B − h_A'],['Condenseur',c.qc,C.hot,'h_C − h_B'],['Détendeur',0,C.E,'h_D − h_C = 0'],['Évaporateur',c.qf,C.cold,'h_A − h_D']],mx=Math.max(c.w,-c.qc,c.qf),x=24*k,ww=w-48*k,dy=Math.min(90*k,(h-30*k)/4);
+  const dh=(b,a)=>`${S.v('h',b)} − ${S.v('h',a)}`;
+  const rows=[['Compresseur',c.w,C.v,dh('B','A')],['Condenseur',c.qc,C.hot,dh('C','B')],['Détendeur',0,C.E,dh('D','C')+' = 0'],['Évaporateur',c.qf,C.cold,dh('A','D')]],mx=Math.max(c.w,-c.qc,c.qf),x=24*k,ww=w-48*k,dy=Math.min(90*k,(h-30*k)/4);
   rows.forEach(([n,v,col,eq],i)=>{const y=34*k+i*dy;s+=S.text(x,y,n,{size:15,c:col,weight:600,halo:false})+S.text(x+ww,y,a.p.prev?`${sg(a,v)} kJ/kg`:'?',{anchor:'end',size:15,c:col,halo:false})
     +S.rect(x,y+10*k,ww,10*k,{fill:C.rule,fop:.5,rx:3*k})+(a.p.prev&&v?S.rect(x,y+10*k,ww*Math.abs(v)/mx,10*k,{fill:col,rx:3*k}):'')+S.text(x,y+40*k,eq,{size:13,c:C.ink2,halo:false})});
   a.svg('graphe',s);a.legend([]);
@@ -1341,7 +1399,7 @@ function bilGraph(a){
 /* ---------- efficacité en fonction de T_c ---------- */
 function effGraph(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,f=a.fmt,q=par(a),pac=!!a.tab;let s='';plotP=null;
-  const G=S.graph({x:0,y:0,w,h,xmin:15,xmax:55,ymin:0,ymax:pac?20:15,xlab:`${pac?'Chauffage':'Pièce'} T_c (°C)`,ylab:pac?'e_PAC':'e_frigo'});
+  const G=S.graph({x:0,y:0,w,h,xmin:15,xmax:55,ymin:0,ymax:pac?20:15,xlab:`${pac?'Chauffage':'Pièce'} ${S.v('T','c')} (°C)`,ylab:S.v('e',pac?'PAC':'frigo')});
   s+=S.clip('eg2',G)+G.svg;
   const pts=[],bd=[];for(let t=Math.max(15,q.tf+5);t<=55.001;t+=1){const c=X4.frigo({...q,open:false,tc:t});pts.push([t,pac?c.ep:c.ef]);bd.push([t,pac?c.epMax:c.efMax])}
   if(a.p.prev)s+=S.curve(bd,G,{c:C.pred,w:2,dash:`${5*k} ${4*k}`});
@@ -1354,9 +1412,9 @@ function effGraph(a){
 function infos(a){const c=cyc(a),f=a.fmt,v=M.v,q=par(a),pac=!!a.tab,m=[],d=c.sample(U);
   m.push({label:'État du fluide',value:`${f.fix(d.p,2)} bar · ${f.fix(d.T,1)} °C`,hint:`${d.phase} · h = ${f.fix(d.h,1)} kJ/kg${d.phase==='mélange'?' · x = '+f.fix(d.x,2):''}`});
   if(a.p.prev){
-    m.push({label:`${v('q','f')} prélevé`,value:sg(a,c.qf),unit:'kJ/kg',hint:'h_A − h_D'},{label:`${v('q','c')} cédé`,value:sg(a,c.qc),unit:'kJ/kg',hint:'h_C − h_B'},{label:`${v('w')} compresseur`,value:sg(a,c.w),unit:'kJ/kg',hint:'h_B − h_A'});
+    m.push({label:`${v('q','f')} prélevé`,value:sg(a,c.qf),unit:'kJ/kg',hint:`${v('h','A')} − ${v('h','D')}`},{label:`${v('q','c')} cédé`,value:sg(a,c.qc),unit:'kJ/kg',hint:`${v('h','C')} − ${v('h','B')}`},{label:`${v('w')} compresseur`,value:sg(a,c.w),unit:'kJ/kg',hint:`${v('h','B')} − ${v('h','A')}`});
     if(q.open)m.push({label:'Bilan de la pièce',value:sg(a,-(c.qc+c.qf)),unit:'kJ/kg',warn:true,hint:'= w : la pièce chauffe'});
-    else{m.push({label:pac?'e PAC':'e frigo',value:f.fix(pac?c.ep:c.ef,2),hint:`Carnot : ${f.fix(pac?c.epMax:c.efMax,1)}`});m.push({label:`${v('T','B')}`,value:f.fix(c.B.T,1),unit:'°C',hint:'sortie du compresseur'},{label:`${v('x','D')}`,value:f.fix(c.D.x*100,1),unit:'%',hint:'titre en vapeur après détente'})}
+    else{m.push({label:v('e',pac?'PAC':'frigo'),value:f.fix(pac?c.ep:c.ef,2),hint:`Carnot : ${f.fix(pac?c.epMax:c.efMax,1)}`});m.push({label:`${v('T','B')}`,value:f.fix(c.B.T,1),unit:'°C',hint:'sortie du compresseur'},{label:`${v('x','D')}`,value:f.fix(c.D.x*100,1),unit:'%',hint:'titre en vapeur après détente'})}
   }
   a.metrics(m)}
 
