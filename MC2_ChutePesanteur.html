@@ -269,6 +269,20 @@ sub,sup{line-height:0}
   .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
 }
 
+/* Retour au sommaire GitHub Pages. */
+.ak-sommaire{text-decoration:none}
+.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
+@media(max-width:960px){
+  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
+  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
+  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
+}
+@media(max-width:640px){
+  .ak-tools .ak-sommaire .ak-lbl{display:none}
+  .ak-tools .ak-sommaire.ib svg{display:block}
+  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
+}
+
 .mc2-chute .ak-panel[data-id="projectile"] {border-left:0}
 .mc2-chute .ak-panel[data-id="graph"] .ak-phead {padding:.35em .45em 0}
 .mc2-chute .ak-panel[data-id="graph"] .ak-seg {display:inline-flex;max-width:100%}
@@ -330,20 +344,6 @@ sub,sup{line-height:0}
   .mc2-chute .ak-transport {position:static}
 }
 
-
-/* Retour au sommaire GitHub Pages. */
-.ak-sommaire{text-decoration:none}
-.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
-@media(max-width:960px){
-  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
-  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
-  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
-}
-@media(max-width:640px){
-  .ak-tools .ak-sommaire .ak-lbl{display:none}
-  .ak-tools .ak-sommaire.ib svg{display:block}
-  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
-}
 </style>
 </head>
 <body>
@@ -1367,13 +1367,17 @@ const M = AnimKit.M;
 const ms = 'm·s<sup>−1</sup>';
 const launch = {z0: 0, v0: 30, alpha: 45};
 const modelName = {free: 'Chute libre', linear: 'Traînée linéaire', quadratic: 'Traînée quadratique'};
+const temporalGraphs = [
+  ['none','Masqué'], ['velocity','Composantes de la vitesse'], ['position','Positions x et z']
+];
 let free, drag, scene, dragView, historyGraph;
 let previousTab = 0, hailTime = 0, projectileTime = 0;
 let readings, angleStudy;
 
 const model = a => a.tab === 0 ? free : drag;
 const compared = a => a.tab === 1 && a.p.compare;
-const plotAngles = a => a.tab === 0 && a.p.plotAngles;
+const graphMode = a => a.tab === 0 ? a.p.freeGraph : a.p.history;
+const plotAngles = a => graphMode(a) === 'angle';
 const heightColor = a => a.C.dark ? a.C.E : '#a64d00';
 const duration = a => a.tab === 2 ? Hail.duration()
   : Math.max(model(a).impact, compared(a) ? free.impact : 0);
@@ -1423,7 +1427,7 @@ const A = AnimKit.app({
   temps: true, pas: .05, vitesses: [.25, .5, 1, 2, 4, 8], vitesse: 1,
   panneaux: [
     {id: 'projectile', titre: 'Trajectoire dans le plan (Oxz)', poids: 1.65, onglets: [0,1], ratioTel: .96},
-    {id: 'evolution', titre: 'Évolution au cours du temps', onglets: [0,1], si: a => plotAngles(a) || a.p.history !== 'none', ratioTel: .82},
+    {id: 'evolution', titre: 'Évolution au cours du temps', onglets: [0,1], si: a => graphMode(a) !== 'none', ratioTel: .82},
     {id: 'chute', titre: 'Chutes synchronisées', poids: .95, onglets: [2], ratioTel: .78},
     {id: 'graph', titre: 'Grandeur tracée', poids: 1.6, onglets: [2], ratioTel: .83},
     {id: 'forces', titre: 'Bilan des forces', poids: .76, onglets: [2], ratioTel: .78}
@@ -1474,7 +1478,9 @@ const A = AnimKit.app({
     ]},
     ...Hail.settings,
     {titre: 'Affichage', items: [
-      {id: 'plotAngles', type: 'check', onglets: [0], label: 'Portée et flèche selon α', value: false},
+      {id: 'freeGraph', type: 'select', onglets: [0], label: 'Graphique', value: 'none',
+        options: [...temporalGraphs, ['angle','Portée et flèche selon α']]},
+      {id: 'history', type: 'select', onglets: [1], label: 'Graphique', value: 'none', options: temporalGraphs},
       {id: 'safety', type: 'check', onglets: [0], label: 'Parabole de sûreté', value: false},
       {id: 'ghosts', type: 'check', onglets: [0], label: 'Trajectoires fantômes', value: false},
       {type: 'note', onglets: [0], si: a => (a.p.safety || a.p.ghosts) && a.p.v0 === 0,
@@ -1482,9 +1488,6 @@ const A = AnimKit.app({
       {id: 'preview', type: 'check', label: 'Préafficher les tracés', value: false},
       {id: 'markers', onglets: [0,1], type: 'check', label: 'Flèche et portée', value: true},
       {id: 'vectors', onglets: [0,1], type: 'check', label: 'Vecteurs vitesse et accélération', value: true},
-      {id: 'history', onglets: [0,1], si: a => !plotAngles(a), type: 'select', label: 'Courbes temporelles', options: [
-        ['none','Masquées'],['velocity','Composantes de la vitesse'],['position','Positions x et z']
-      ], value: 'none'},
       ...Hail.display
     ]}
   ],
@@ -1512,8 +1515,10 @@ const A = AnimKit.app({
   change(a,id,v) {
     if (a.tab === 2) Hail.change(a,id,v);
     if (id === 'compare') seek(a,a.t);
-    if (id === 'plotAngles') a.cadrer('evolution');
-    if (id === 'plotAngles' || id === 'safety' || id === 'ghosts') a.cadrer('projectile');
+    if (id === 'freeGraph' && v !== 'angle') a.p.history = v;
+    if (id === 'history' && a.p.freeGraph !== 'angle') a.p.freeGraph = v;
+    if (id === 'freeGraph' || id === 'history') a.cadrer('evolution');
+    if (id === 'freeGraph' || id === 'safety' || id === 'ghosts') a.cadrer('projectile');
   },
   step(a,dt) {
     seek(a,a.t + (a.tab === 2 && !a.running ? dt * 10 : dt));
@@ -1778,7 +1783,7 @@ function drawAngles(a) {
 
 function drawHistory(a) {
   const {S,C,k} = a, panel = a.panels.evolution;
-  const q = model(a), velocity = a.p.history==='velocity';
+  const q = model(a), velocity = graphMode(a)==='velocity';
   const keys = velocity ? ['vx','vz'] : ['x','z'];
   const labels = velocity ? [S.v('v','x'), S.v('v','z')] : [S.v('x'),S.v('z')];
   const paths = compared(a) ? [q,free] : [q];
