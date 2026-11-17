@@ -1091,7 +1091,8 @@ if(typeof module!=='undefined')module.exports=PH2;
 const M=AnimKit.M, F=AnimKit.fmt, SQ3=Math.sqrt(3), BLEU='#58a6ff';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const sub=(s,i)=>M.v(s,i);
-const nomFonction=t=>String(t.nom??'').trim()||'y';
+const nomGrandeur=(t,repli='y')=>String(t.nom??'').trim()||repli;
+const axeGrandeur=(nom,unite)=>unite.trim()?`${nom} [${esc(unite.trim())}]`:nom;
 /* ---------- lecture de nombres : point ou virgule décimale acceptés ---------- */
 function lire(s){
   if(typeof s==='number')return s;
@@ -1396,7 +1397,7 @@ const A=AnimKit.app({
     };
     /* ----- onglet 3 ----- */
     PANES.t2=()=>{const t=ST.t2,p=panes.t2;
-      const formule=fld(`${esc(nomFonction(t))} =`,t,'formule',{cls:'formule',texte:true});
+      const formule=fld(`${esc(nomGrandeur(t))} =`,t,'formule',{cls:'formule',texte:true});
       formule.querySelector('input').id='ph-formule';
       formule.querySelector('label').htmlFor='ph-formule';
       p.append(barre('t2'),sousOnglets(),fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),formule);
@@ -1439,7 +1440,9 @@ const calcZone=()=>A.zones.detail.firstChild;
 /* ===================================================================== */
 /* Onglet 1 : mesure directe                                              */
 function d0(a){
-  const t=ST.t0,P=a.panels.h0,nom=esc(t.nom||'x'),unite=t.unite||'';
+  const t=ST.t0,P=a.panels.h0,nom=esc(nomGrandeur(t,'x')),unite=t.unite||'';
+  const xlab=axeGrandeur(nom,unite),moyenne=`<tspan text-decoration="overline">${nom}</tspan>`;
+  const incertitudeMoyenne=`u(<span style="text-decoration:overline">${nom}</span>)`;
   const data=colonne(t.rows,0),N=data.length,Aa=N>=2?PH2.typeA(data):null;
   const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&bmax>bmin;
   const lecture=Aa?Aa.mean:(N===1?data[0]:bornes?(bmin+bmax)/2:lire(t.lec));
@@ -1453,16 +1456,16 @@ function d0(a){
     const full=PH2.hist(data,N),sF=Aa?Aa.s:0,mF=PH2.mean(data);
     const lo=[full.lo,mF-3*(sF||full.w)],hi=[full.lo+full.nb*full.w,mF+3*(sF||full.w)];
     if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
-    const o={lay:full,counts:PH2.compte(data,N,full),n:N,mode:'eff',xlo:Math.min(...lo),xhi:Math.max(...hi),xlab:`${nom} [${esc(unite)}]`,ylab:'Effectif',cid:'h0'};
-    if(Aa){o.moyenne=Aa.mean;o.moyNom='x̄';if(isFinite(u)&&u>0)o.interv={m:Aa.mean,u,label:`u(x̄)`}}
+    const o={lay:full,counts:PH2.compte(data,N,full),n:N,mode:'eff',xlo:Math.min(...lo),xhi:Math.max(...hi),xlab,ylab:'Effectif',refNom:nom,cid:'h0'};
+    if(Aa){o.moyenne=Aa.mean;o.moyNom=moyenne;if(isFinite(u)&&u>0)o.interv={m:Aa.mean,u,label:`u(${moyenne})`}}
     if(zi)o.ref=zi.ref;
     a.svg('h0',histo(a,{x:0,y:0,w:P.w,h:P.h},o).svg);
   }else if(okB&&Delta>0){
-    const o={mode:'dens',n:0,xlo:x-1.6*Delta,xhi:x+1.6*Delta,xlab:`${nom} [${esc(unite)}]`,ylab:'Densité de probabilité',unif:{c:x,D:Delta},modele:{m:x,s:uB},moyenne:x,moyNom:'x',cid:'h0'};
+    const o={mode:'dens',n:0,xlo:x-1.6*Delta,xhi:x+1.6*Delta,xlab,ylab:'Densité de probabilité',unif:{c:x,D:Delta},modele:{m:x,s:uB},moyenne:x,moyNom:nom,refNom:nom,cid:'h0'};
     if(zi){o.xlo=Math.min(o.xlo,zi.ref.x-3*zi.ref.u,zi.ref.x);o.xhi=Math.max(o.xhi,zi.ref.x+3*zi.ref.u,zi.ref.x);o.ref=zi.ref}
     a.svg('h0',histo(a,{x:0,y:0,w:P.w,h:P.h},o).svg);
   }else manque(a,'h0','Collez vos mesures dans le tableau pour tracer l\'histogramme.');
-  a.legend(N<1?[okB&&{c:a.C.E,label:'Loi uniforme sur [x − Δ ; x + Δ]',dash:true},okB&&{c:a.C.ink,label:'Loi normale de même u'},zi&&{c:a.C.v,label:'Référence'}]:[{c:BLEU,label:'Mesures (histogramme)'},Aa&&{c:a.C.ink,label:'Moyenne x̄',dash:true},Aa&&{c:a.C.E,label:'u(x̄) composée'},zi&&{c:a.C.v,label:'Référence'}]);
+  a.legend(N<1?[okB&&{c:a.C.E,label:`Loi uniforme sur [${nom} − Δ ; ${nom} + Δ]`,dash:true},okB&&{c:a.C.ink,label:'Loi normale de même u'},zi&&{c:a.C.v,label:'Référence'}]:[{c:BLEU,label:'Mesures (histogramme)'},Aa&&{c:a.C.ink,label:`Moyenne de ${nom}`,dash:true},Aa&&{c:a.C.E,label:`${incertitudeMoyenne} composée`},zi&&{c:a.C.v,label:'Référence'}]);
   /* résultats */
   let r='';
   if(isFinite(u)){r+=ligneRes('Résultat',ecrire(x,u,unite,nom));
@@ -1487,20 +1490,21 @@ function d0(a){
 function d1(a){
   const t=ST.t1,vars=t.vars,mute=t.mute;
   while(mute.length<vars.length)mute.push(false);
-  const ve=vEff(vars,mute),k=lire(t.k),somme=t.type==='somme',nom=esc(t.nom||'y'),unite=t.unite||'';
+  const ve=vEff(vars,mute),k=lire(t.k),somme=t.type==='somme',nom=esc(nomGrandeur(t)),unite=t.unite||'';
+  const incertitude=`u(${nom})`;
   const P1=a.panels.bud1,P2=a.panels.res1;
   const ok=vars.length&&vars.every(v=>finis(v.val,v.p,v.coef))&&(somme||finis(k)&&vars.every(v=>v.val!==0));
   if(!ok){manque(a,'bud1','Complétez les valeurs, incertitudes et coefficients.');a.svg('res1','');a.legend([]);
     setZone(a.zones.resultat,note('Complétez le tableau des grandeurs mesurées.','gr'));setZone(calcZone(),'');return}
   const B=somme?PH2.budgetSomme(ve):PH2.budgetProduit(ve,k);
   const y=B.y0,u=B.uLin,zi=zInfo(t,y,u);
-  a.svg('bud1',budget(a,{x:0,y:0,w:P1.w,h:P1.h},vars,B.c,mute,u,'Part de chaque grandeur dans u(y)²'));
+  a.svg('bud1',budget(a,{x:0,y:0,w:P1.w,h:P1.h},vars,B.c,mute,u,`Part de chaque grandeur dans ${incertitude}²`));
   const lo=[y-3.6*u],hi=[y+3.6*u];if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
   if(!(u>0)){lo[0]=y-1;hi[0]=y+1}
-  const o={mode:'dens',n:0,xlo:Math.min(...lo),xhi:Math.max(...hi),xlab:`${nom} [${esc(unite)}]`,ylab:'Densité de probabilité',modele:u>0?{m:y,s:u}:null,ombre:u>0,moyenne:y,moyNom:'y',cid:'r1'};
+  const o={mode:'dens',n:0,xlo:Math.min(...lo),xhi:Math.max(...hi),xlab:axeGrandeur(nom,unite),ylab:'Densité de probabilité',modele:u>0?{m:y,s:u}:null,ombre:u>0,moyenne:y,moyNom:nom,refNom:nom,cid:'r1'};
   if(zi)o.ref=zi.ref;
-  a.svg('res1',u>0?histo(a,{x:0,y:0,w:P2.w,h:P2.h},o).svg:a.S.text(P2.w/2,P2.h/2,'u(y) = 0',{anchor:'middle',size:16,c:a.C.ink2,halo:false}));
-  a.legend([{c:a.C.cInk,label:'Part dans u(y)²'},{c:a.C.ink,label:'Loi normale N(y, u(y))'},zi&&{c:a.C.v,label:'Référence'}]);
+  a.svg('res1',u>0?histo(a,{x:0,y:0,w:P2.w,h:P2.h},o).svg:a.S.text(P2.w/2,P2.h/2,`${incertitude} = 0`,{anchor:'middle',size:16,c:a.C.ink2,halo:false}));
+  a.legend([{c:a.C.cInk,label:`Part dans ${incertitude}²`},{c:a.C.ink,label:`Loi normale N(${nom}, ${incertitude})`},zi&&{c:a.C.v,label:'Référence'}]);
   let r=ligneRes('Résultat',ecrire(y,u,unite,nom))+note(mute.some(Boolean)?'certaines incertitudes sont mises à zéro (clic sur une barre)':'incertitude-type composée',mute.some(Boolean)?'gr':'')+zLigne(zi);
   setZone(a.zones.resultat,r);
   const sg=v=>F.sig(v,3),cf=v=>Number.isInteger(v)?String(v).replace('-','−'):F.sig(v,3),U=`&nbsp;${esc(unite)}`;let c='';
@@ -1521,9 +1525,9 @@ function d1(a){
 function d2(a){
   const t=ST.t2,vars=t.vars,mute=t.mute;
   while(mute.length<vars.length)mute.push(false);
-  const P1=a.panels.res2,P2=a.panels.bud2,nom=esc(nomFonction(t)),unite=t.unite||'';
+  const P1=a.panels.res2,P2=a.panels.bud2,nom=esc(nomGrandeur(t)),unite=t.unite||'';
   const libelle=a.panes.t2.querySelector('label[for="ph-formule"]');
-  const formuleNom=`${nomFonction(t)} =`;
+  const formuleNom=`${nomGrandeur(t)} =`;
   if(libelle.textContent!==formuleNom)libelle.textContent=formuleNom;
   const noms=vars.map(v=>(v.nom||'').trim());
   let err='';
@@ -1544,7 +1548,7 @@ function d2(a){
   const lo=[ys.lay.lo,ys.m-3.8*sd],hi=[ys.lay.lo+ys.lay.nb*ys.lay.w,ys.m+3.8*sd];
   if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
   const xlo=Math.min(...lo),xhi=Math.max(...hi);
-  const o={lay:ys.lay,counts:PH2.compte(ys.y,ys.n,ys.lay),n:ys.n,mode:'dens',xlo,xhi,xlab:`${nom} [${esc(unite)}]`,ylab:'Effectif normalisé',cid:'r2',
+  const o={lay:ys.lay,counts:PH2.compte(ys.y,ys.n,ys.lay),n:ys.n,mode:'dens',xlo,xhi,xlab:axeGrandeur(nom,unite),ylab:'Effectif normalisé',cid:'r2',
     hauteur:sd>0?(1/(sd*Math.sqrt(2*Math.PI)))*echelle(xlo,xhi)*0.9:0,moyenne:y0,moyNom:nom,interv:{m:y0,u:sd,label:incertitude,haut:true}};
   if(t.lin&&B.uLin>0)o.lin={m:B.y0,s:B.uLin};
   if(zi){o.ref=zi.ref;o.refNom=nom}
