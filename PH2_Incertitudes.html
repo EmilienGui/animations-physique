@@ -1333,12 +1333,15 @@ function tableVars(t,coefTitre){
     const tb=h('tbody');
     t.vars.forEach((v,i)=>{
       const tr=h('tr'),cell=(node)=>{const td=h('td');td.append(node);tr.append(td)};
-      const inp=(val,fn,cls)=>{const e=h('input',{type:'text',value:val,inputmode:cls==='nom'?'text':'decimal',spellcheck:'false',autocomplete:'off',class:cls||''});e.oninput=()=>{fn(e.value);change()};return e};
-      cell(inp(v.nom,x=>{v.nom=x},'nom'));cell(inp(nbTexte(v.val),x=>{v.val=lire(x)}));
+      const inp=(val,fn,{cls='',clavier='decimal'}={})=>{
+        const e=h('input',{type:'text',value:val,inputmode:clavier,spellcheck:'false',autocomplete:'off',class:cls});
+        e.oninput=()=>{fn(e.value);change()};return e;
+      };
+      cell(inp(v.nom,x=>{v.nom=x},{cls:'nom',clavier:'text'}));cell(inp(nbTexte(v.val),x=>{v.val=lire(x)}));
       const s=h('select',{'aria-label':'Nature de l\'incertitude'});[['u','u'],['D','Δ']].forEach(([val,l])=>{const o=h('option',{value:val},l);if(v.kind===val)o.selected=true;s.append(o)});
       s.onchange=()=>{v.kind=s.value;change()};cell(s);
       cell(inp(nbTexte(v.p),x=>{v.p=Math.abs(lire(x))}));
-      if(coefTitre)cell(inp(nbTexte(v.coef),x=>{v.coef=lire(x)}));
+      if(coefTitre)cell(inp(nbTexte(v.coef),x=>{v.coef=lire(x)},{clavier:'text'}));
       const td=h('td');if(t.vars.length>1){const x=h('button',{class:'ph-x',type:'button',title:'Supprimer','aria-label':'Supprimer cette grandeur'},'×');x.onclick=()=>{t.vars.splice(i,1);t.mute.splice(i,1);build();change()};td.append(x)}tr.append(td);
       tb.append(tr);
     });
@@ -1422,7 +1425,7 @@ const A=AnimKit.app({
       const tv=tableVars(t,()=>t.type==='somme'?`Coef. ${M.v('c')}`:`Expos. ${M.v('α')}`);
       p.append(barre('t1'),sousOnglets(),h('div',{class:'ph-sub'},t.type==='somme'?'y = Σ cᵢ xᵢ (somme, différence)':'y = k Π xᵢ^αᵢ (produit, quotient, puissances)'),
         fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
-      const kb=h('div');kb.append(fld('Facteur constant k (exact)',t,'k'));kb.hidden=t.type!=='produit';p.append(kb);
+      const kb=h('div');kb.append(fld('Facteur constant k (exact)',t,'k',{texte:true}));kb.hidden=t.type!=='produit';p.append(kb);
       p.append(h('div',{class:'ph-sub'},'Grandeurs mesurées'),tv,blocRef(t));
     };
     /* ----- onglet 3 ----- */
