@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Système fermé associé à un volume de contrôle fixe et conservation du débit massique, en régime stationnaire puis non stationnaire.">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Système fermé qui suit le fluide · TH1 · MP</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --switch-off:#7e8a9d;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --switch-off:#7a879b;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:0;right:0;display:flex;gap:.25em;padding:.35em .35em .9em .9em;z-index:1}
+@media (hover:hover) and (pointer:fine){
+  .ak-ptools{opacity:0;transition:opacity .15s}
+  .ak-ptools:hover,.ak-ptools:has(button:focus-visible){opacity:1}
+}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:grid;place-items:center;width:1.9em;padding:0}
+.ak-ptools [data-z="0"] svg{display:block;width:1.1em;height:1.1em}
+.ak-ptools.is-zoomed [data-z="0"]{border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{position:relative;display:flex;gap:.6em;align-items:center;min-height:34px;font-size:.88em;cursor:pointer}
+.ak-chk>input{position:absolute;width:1px;height:1px;margin:0;opacity:0;clip-path:inset(50%)}
+.ak-switch-track{
+  position:relative;flex:0 0 42px;height:24px;border-radius:99px;background:var(--switch-off);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.25);transition:background-color .16s
+}
+.ak-switch-track::after{
+  content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px #0004;transition:transform .16s
+}
+.ak-chk>input:checked+.ak-switch-track{background:var(--switch-on,var(--c))}
+.ak-chk>input:checked+.ak-switch-track::after{transform:translateX(18px)}
+.ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid var(--c-ink);outline-offset:2px}
+.ak-chk:has(>input:disabled){opacity:.56;cursor:default}
+@media (prefers-reduced-motion:reduce){
+  .ak-ptools{transition:none}
+  .ak-switch-track,.ak-switch-track::after{transition:none}
+}
+@media (forced-colors:active){
+  .ak-switch-track{forced-color-adjust:none;background:Canvas;outline:1px solid CanvasText}
+  .ak-switch-track::after{background:CanvasText}
+  .ak-chk>input:checked+.ak-switch-track{background:Highlight}
+  .ak-chk>input:checked+.ak-switch-track::after{background:HighlightText}
+  .ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid Highlight}
+}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-chk{min-height:44px}
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-ptools [data-z="0"]{min-width:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* Bandeau commun du guide de création des animations. */
+.ak-menu-commun .ak-top {flex-wrap:wrap;gap:6px 12px}
+.ak-menu-commun .ak-tools {
+  flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%;
+}
+.ak-menu-commun .ak-tools .ib {min-height:40px;padding:0 10px;font-size:15px}
+.ak-menu-commun .ak-tools [data-act="fs"] {width:40px;padding:0}
+.ak-menu-commun .ak-tools .ak-btn-settings {display:none}
+@media(max-width:820px){
+  .ak-menu-commun .ak-tools {margin-left:0;flex:1 0 100%;justify-content:flex-start}
+}
+@media(max-width:640px){
+  .ak-menu-commun .ak-tools {gap:4px}
+  .ak-menu-commun .ak-tools .ib {min-height:44px;padding:0 6px;font-size:13px}
+  .ak-menu-commun .ak-tools .ak-lbl {display:inline}
+  .ak-menu-commun .ak-tools .ib svg {display:none}
+  .ak-menu-commun .ak-tools [data-act="fs"] {width:44px;padding:0}
+  .ak-menu-commun .ak-tools [data-act="fs"] svg {display:block}
+  .ak-menu-commun .ak-tools [data-act="image"],
+  .ak-menu-commun .ak-tools [data-act="proj"],
+  .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
+}
+
+/* Retour au sommaire GitHub Pages. */
+.ak-sommaire{text-decoration:none}
+.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
+@media(max-width:960px){
+  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
+  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
+  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
+}
+@media(max-width:640px){
+  .ak-tools .ak-sommaire .ak-lbl{display:none}
+  .ak-tools .ak-sommaire.ib svg{display:block}
+  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
+}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+function chartTicks(list, min, max, count, formatter, zoomed){
+  if(!list||zoomed&&list.length&&!formatter)return ticks(min,max,count);
+  if(!zoomed)return list;
+  const marge=(max-min)*1e-8;
+  return list.filter(v=>v>=min-marge&&v<=max+marge);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  sommaire:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  cadrer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+function interrupteur(label,id){
+  const conteneur=el('label',{class:'ak-chk'});
+  conteneur.append(
+    el('input',{type:'checkbox',role:'switch',id}),
+    el('span',{class:'ak-switch-track','aria-hidden':'true'}),
+    el('span',{},label)
+  );
+  return conteneur;
+}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const frame=app._graphFrame, id=frame?.graphs.length;
+      const view=frame?.views[id]||null;
+      frame?.graphs.push({id,x0,y0,w,h,view});
+      const dx=o.xmax-o.xmin, dy=o.ymax-o.ymin;
+      const xmin=view?o.xmin+dx*view.vx:o.xmin, xmax=view?xmin+dx/view.vz:o.xmax;
+      const ymax=view?o.ymax-dy*view.vy:o.ymax, ymin=view?ymax-dy/view.vz:o.ymin;
+      const X=v=>x0+(v-xmin)/(xmax-xmin)*w, Y=v=>y0+h-(v-ymin)/(ymax-ymin)*h;
+      let s='';
+      const xt=chartTicks(o.xticks,xmin,xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5))),o.xfmt,view);
+      const yt=chartTicks(o.yticks,ymin,ymax,o.ny??Math.max(1,Math.round(h/(fs*3))),o.yfmt,view);
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      s+=S.line(x0,y0+h,x0+w,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      s+=S.line(x0,y0,x0,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      if(ymin<0&&ymax>0&&o.zeroAxis!==false)s+=S.line(x0,Y(0),x0+w,Y(0),{c:C0.ink2,w:1,raw:true});
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      if(frame)s=`<g data-ak-graph="${id}">${s}</g>`;
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>xmin+(px-x0)/w*(xmax-xmin),yv:py=>ymax-(py-y0)/h*(ymax-ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:cfg.menuCommun?'ak ak-menu-commun':'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  const nav=$('.ak-tools',top);
+  const themeButton=$('[data-act=theme]',nav);
+  const projButton=$('[data-act=proj]',nav);
+  const fullButton=$('[data-act=fs]',nav);
+  if(cfg.menuCommun){
+    nav.insertBefore($('[data-act=settings]',nav),fullButton);
+    $('[data-act=image]',nav).title='Enregistrer une image PNG (I)';
+  }
+  function syncMenu(){
+    if(!cfg.menuCommun)return;
+    const dark=root.dataset.theme==='dark', projected=ak.classList.contains('is-proj');
+    const full=Boolean(document.fullscreenElement);
+    themeButton.title=dark?'Passer au thème clair (T)':'Passer au thème sombre (T)';
+    $('.ak-lbl',projButton).textContent=projected?'Réglages':'Projection';
+    projButton.title=projected?'Rétablir les réglages (P)':'Agrandir la scène et masquer les réglages (P)';
+    projButton.setAttribute('aria-pressed',String(projected));
+    const fullscreenLabel=full?'Quitter le plein écran':'Plein écran';
+    fullButton.setAttribute('aria-label',fullscreenLabel);
+    fullButton.title=fullscreenLabel+' (F)';
+  }
+  if(cfg.menuCommun){
+    syncMenu();
+    document.addEventListener('fullscreenchange',syncMenu);
+  }
+  $('[data-act=help]',top).before(el('a',{
+    class:'ib ak-sommaire',href:'https://emiliengui.github.io/animations-physique/',
+    'aria-label':'Sommaire des animations',title:'Retour au sommaire des animations'
+  },`${IC.sommaire}<span class="ak-lbl">Sommaire</span>`));
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Les figures SVG utilisent le viewBox. Un panneau qui affiche S.graph
+       ajuste les échelles de ses graphiques. Un canvas garde son zoom interne. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML=`
+      <button class="mini" data-z="-" title="Dézoomer (−)">−</button>
+      <button class="mini" data-z="0" aria-label="Cadrer" title="Cadrer : vue initiale (0)">${IC.cadrer}</button>
+      <button class="mini" data-z="+" title="Zoomer (+)">+</button>`;
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.append(interrupteur(it.label,'c_'+it.id));
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function viewBox(P){
+    const {w,h,vx,vy,vz}=P;
+    P.node.setAttribute('viewBox',P.vue==='svg'?`${vx.toFixed(2)} ${vy.toFixed(2)} ${(w/vz).toFixed(2)} ${(h/vz).toFixed(2)}`:`0 0 ${w.toFixed(1)} ${h.toFixed(1)}`);
+  }
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else viewBox(P);
+    }
+  }
+  /* ---------- rendu ---------- */
+  let graphPanels=[];
+  const activeChartView=P=>P?.vue==='graphe'&&zoomed(P)?P:null;
+  function drawFrame(){
+    const frame={graphs:[],views:graphPanels.map(activeChartView),outputs:new Map()};
+    A._graphFrame=frame;
+    try{cfg.draw?.(A)}finally{A._graphFrame=null}
+    graphPanels=[];
+    for(const [P,output] of frame.outputs){
+      const graphs=[...output.html.matchAll(/<g data-ak-graph="(\d+)">/g)].map(m=>frame.graphs[+m[1]]).filter(Boolean);
+      output.graphs=graphs;
+      if(P.vue==='svg'||P.vue==='graphe'){
+        const vue=graphs.length?'graphe':'svg';
+        if(vue!==P.vue){P.vue=vue;resetView(P);viewBox(P)}
+        P.graphs=graphs;
+      }
+      const view=activeChartView(P);
+      for(const graph of graphs){
+        graphPanels[graph.id]=P;
+        if(graph.view!==view)frame.changed=true;
+      }
+    }
+    return frame;
+  }
+  function clipCharts(node,graphs){
+    const svgElement=tag=>document.createElementNS(node.namespaceURI,tag);
+    for(const graph of graphs){
+      const axes=node.querySelector(`[data-ak-graph="${graph.id}"]`);
+      if(!axes)continue;
+      const id='ak-cadre-'+graph.id, defs=svgElement('defs'),clip=svgElement('clipPath'),rect=svgElement('rect');
+      clip.id=id;
+      for(const [k,v] of Object.entries({x:graph.x0,y:graph.y0,width:graph.w,height:graph.h}))rect.setAttribute(k,v);
+      clip.append(rect);defs.append(clip);axes.append(defs);
+      let layer=null;
+      for(let next=axes.nextElementSibling;next&&!next.hasAttribute('data-ak-graph');){
+        const child=next;next=child.nextElementSibling;
+        if(child.localName==='defs'||child.hasAttribute('data-ak-hors-graphe')){layer=null;continue}
+        if(!layer){
+          layer=svgElement('g');
+          layer.setAttribute('clip-path',`url(#${id})`);
+          child.before(layer);
+        }
+        layer.append(child);
+      }
+    }
+  }
+  function writeSvg(P,html,graphs=[]){
+    if(P.node._h===html)return;
+    P.node.innerHTML=html;
+    P.node._h=html;
+    if(activeChartView(P))clipCharts(P.node,graphs);
+  }
+  A.renderNow=()=>{
+    A._dirty=false;measure();
+    let frame=drawFrame();
+    // Si un réglage change l'ordre des tracés, associer à nouveau le zoom à son panneau.
+    if(frame.changed)frame=drawFrame();
+    for(const [P,output] of frame.outputs)writeSvg(P,output.html,output.graphs);
+    syncScrub();guardScroll();
+  };
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  A.svg=(id,html)=>{
+    const P=A.panels[id];if(!P)return;
+    if(A._graphFrame)A._graphFrame.outputs.set(P,{html});
+    else writeSvg(P,html);
+  };
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();syncMenu();A.renderNow()};
+  A.setProj=on=>{
+    ak.classList.toggle('is-proj',on);
+    ak.classList.remove('drawer-open');
+    projButton.classList.toggle('on',on);
+    syncMenu();
+    A.render();
+  };
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>{
+      const projected=ak.classList.contains('is-proj');
+      A.setProj(!projected);
+      if(cfg.menuCommun&&projected&&A.narrow)ak.classList.add('drawer-open');
+    },
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement ---------- */
+  const deplacable=P=>P.vue==='svg'||P.vue==='graphe';
+  function zoomed(P){
+    if(P.vue==='interne')return Math.abs(P.zoom-1)>1e-6;
+    if(!deplacable(P))return false;
+    const seuil=P.vue==='graphe'?1e-6:.5;
+    return Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>seuil||Math.abs(P.vy)>seuil;
+  }
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  const graphAt=(P,x,y)=>P.graphs.find(g=>x>=g.x0&&x<=g.x0+g.w&&y>=g.y0&&y<=g.y0+g.h);
+  function resetView(P){P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P)}
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{
+      if(P.vue==='graphe'){
+        const graph=graphAt(P,px,py);
+        px=graph?(px-graph.x0)/graph.w:.5;
+        py=graph?(py-graph.y0)/graph.h:.5;
+      }else{px=px??P.w/2;py=py??P.h/2}
+      const z=Math.max(.5,Math.min(8,P.vz*f)), delta=1/P.vz-1/z;
+      P.vx+=px*delta;P.vy+=py*delta;P.vz=z;
+    }
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy,px,py)=>{
+    if(!deplacable(P))return;
+    if(P.vue==='graphe'){const g=graphAt(P,px,py)||P.graphs[0];dx/=g.w;dy/=g.h}
+    P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()
+  };
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;resetView(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(deplacable(P)&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(deplacable(P)&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(deplacable(P)&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1],q.c[0],q.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1],last[0],last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH,interrupteur};
+})();
+
+</script>
+<script>
+'use strict';
+
+/* TH1 · A1 · Système fermé qui suit le fluide : modèle exact, sans schéma numérique à pas de temps.
+
+   Conduite à section S(x) et masse volumique de référence R(x) sur le volume de contrôle Σ* (x de 0 à L),
+   raccord en cosinus entre S_e, R_e et S_s, R_s (comme la figure du cours). En amont (x < 0) et en aval (x > L),
+   la section et la masse volumique sont uniformes.
+   Masse volumique : ρ(x, t) = R(x) e^{a t}. Pour a = 0 : régime stationnaire.
+   Continuité : ∂(ρS)/∂t + ∂(ρcS)/∂x = 0, donc R c S = R_e c_e S_e − a W(x) avec W(x) = ∫₀ˣ R S dx'.
+   Le champ de vitesse c(x) ne dépend pas du temps : une particule entrée en x = 0 à l'instant t₀ est en
+   x = pos(t − t₀) à l'instant t, avec pos l'inverse du temps de parcours τ(x) = ∫ dx/c. */
+const TH1Debit = (() => {
+  const L = 0.6;                     // longueur de Σ*, en m
+  const X1 = L / 7, X2 = 5 * L / 7;  // début et fin du raccord
+  const N = 1200;
+  const blend = x => x <= X1 ? 0 : x >= X2 ? 1 : .5 * (1 - Math.cos(Math.PI * (x - X1) / (X2 - X1)));
+  const cache = new Map();
+
+  /* q = {Se, Ss (m²), re, rs (kg·m⁻³), ce (m·s⁻¹), a (s⁻¹)} */
+  function create(q) {
+    const key = [q.Se, q.Ss, q.re, q.rs, q.ce, q.a].join('|');
+    if (cache.has(key)) return cache.get(key);
+    const S = x => q.Se + (q.Ss - q.Se) * blend(Math.min(L, Math.max(0, x)));
+    const R = x => q.re + (q.rs - q.re) * blend(Math.min(L, Math.max(0, x)));
+    const W = new Float64Array(N + 1);
+    for (let i = 1; i <= N; i++) {
+      const x0 = L * (i - 1) / N, x1 = L * i / N;
+      W[i] = W[i - 1] + .5 * (R(x0) * S(x0) + R(x1) * S(x1)) * (x1 - x0);
+    }
+    const D0e = q.re * q.ce * q.Se;
+    const M0 = W[N];                       // masse contenue dans Σ* à t = 0
+    const aMax = D0e / M0;                  // au-delà, le débit de sortie s'annule
+    const a = q.a > 0 ? Math.min(q.a, .9 * aMax) : q.a;
+    const c = new Float64Array(N + 1);
+    const tau = new Float64Array(N + 1);
+    for (let i = 0; i <= N; i++) {
+      const x = L * i / N;
+      c[i] = (D0e - a * W[i]) / (R(x) * S(x));
+    }
+    for (let i = 1; i <= N; i++) tau[i] = tau[i - 1] + .5 * (1 / c[i - 1] + 1 / c[i]) * L / N;
+    const cs = c[N], tauL = tau[N];
+    const D0s = q.rs * cs * q.Ss;
+    const g = u => Math.abs(a) < 1e-12 ? u : Math.expm1(a * u) / a;
+    const e = t => Math.exp(a * t);
+
+    function pos(s) {                       // position d'une particule entrée en x = 0 il y a s secondes
+      if (s <= 0) return q.ce * s;
+      if (s >= tauL) return L + cs * (s - tauL);
+      let lo = 0, hi = N;
+      while (hi - lo > 1) {
+        const mid = (lo + hi) >> 1;
+        if (tau[mid] <= s) lo = mid; else hi = mid;
+      }
+      const f = (s - tau[lo]) / (tau[hi] - tau[lo]);
+      return L * (lo + f) / N;
+    }
+    function speed(x) {
+      if (x <= 0) return q.ce;
+      if (x >= L) return cs;
+      const u = x / L * N, i = Math.min(N - 1, Math.floor(u)), f = u - i;
+      return c[i] * (1 - f) + c[i + 1] * f;
+    }
+    const model = {
+      q, L, S, R, aEff: a, aMax, clamped: q.a > a + 1e-12, cs, tauL, pos, speed, g,
+      M0, D0e, D0s,
+      duration: 3 * tauL,
+      dtMax: Math.min(.35 * L / q.ce, .5 * L / cs),
+      rho: (x, t) => R(x) * e(t),
+      mStar: t => M0 * e(t),
+      De: t => D0e * e(t),
+      Ds: t => D0s * e(t),
+      dme: (t, dt) => D0e * e(t) * g(dt),    // masse qui entre entre t et t + dt
+      dms: (t, dt) => D0s * e(t) * g(dt),    // masse qui sort entre t et t + dt
+      Me: t => D0e * g(t),                    // masse entrée depuis t = 0
+      Ms: t => D0s * g(t),
+      stripePeriod: L / (8 * q.ce)            // période d'injection des tranches colorées
+    };
+    if (cache.size > 40) cache.clear();
+    cache.set(key, model);
+    return model;
+  }
+  return {L, X1, X2, blend, create};
+})();
+
+// @titre Système fermé qui suit le fluide · TH1 · MP
+// @sortie ../TH1_Systeme_Ferme_Associe/TH1_Systeme_Ferme_Associe.html
+// @inclure TH1_Debit_Physique.js
+// @description Système fermé associé à un volume de contrôle fixe et conservation du débit massique, en régime stationnaire puis non stationnaire.
+'use strict';
+
+(() => {
+  const {L, create} = TH1Debit;
+  const XMIN = -.4 * L, XMAX = 1.55 * L, MARGIN = 14;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const range = (id, label, min, max, step, value, unit, extra = {}) => ({id, label, min, max, step, value, unit, ...extra});
+  const QUASI = {Se: 20, Ss: 12, rhoe: 1000, rhos: 1000, ce: 10, dtms: 6, a: 0};
+
+  const params = a => ({Se: a.p.Se * 1e-4, Ss: a.p.Ss * 1e-4, re: a.p.rhoe, rs: a.p.rhos, ce: a.p.ce, a: a.p.a});
+  const setup = a => {
+    const M = create(params(a)), wanted = a.p.dtms / 1000;
+    return {M, dt: Math.min(wanted, M.dtMax), limited: wanted > M.dtMax + 1e-12};
+  };
+  const duration = a => create(params(a)).duration;
+  const seek = (a, t) => {a.t = clamp(t, 0, duration(a));};
+  let graphFrame = null;
+
+  const label = (a, x, y, html, o = {}) => a.S.text(x, y, html, {size: 13.5, ...o});
+  const sym = {
+    t: S => S.v('t'),
+    dt: S => S.r('d') + S.v('t'),
+    ce: S => S.v('c', 'e'), cs: S => S.v('c', 's'),
+    Se: S => S.v('S', 'e'), Ss: S => S.v('S', 's'),
+    me: S => S.r('δ') + S.v('m', 'e'), ms: S => S.r('δ') + S.v('m', 's'),
+    mStar: S => S.v('m', 'Σ*'), Sigma: S => S.r('Σ'), SigmaStar: S => S.r('Σ') + S.sup('*')
+  };
+
+  /* Unité de masse commune à un ensemble de valeurs : g ou kg. */
+  function massScale(ref) {return ref >= 1 ? [1, 'kg'] : [1000, 'g'];}
+
+  /* ---------- dessin d'une conduite, des tranches de fluide et des contours ---------- */
+  function pipe(a, st, o) {
+    const {S, C, k} = a, {M} = st, q = M.q, P = a.panels.scene;
+    const wd = P.w - 2 * MARGIN * k;
+    const X = x => MARGIN * k + (x - XMIN) / (XMAX - XMIN) * wd;
+    const Smax = Math.max(q.Se, q.Ss), yc = o.yc, hh = o.hh;
+    const hS = x => hh * M.S(x) / Smax;
+    const top = x => yc - hS(x), bot = x => yc + hS(x);
+    const region = (xa, xb) => {
+      const n = Math.max(3, Math.ceil((xb - xa) / L * 36));
+      let up = '', down = '';
+      for (let i = 0; i <= n; i++) {const x = xa + (xb - xa) * i / n; up += (i ? 'L' : 'M') + X(x).toFixed(2) + ',' + top(x).toFixed(2);}
+      for (let i = n; i >= 0; i--) {const x = xa + (xb - xa) * i / n; down += 'L' + X(x).toFixed(2) + ',' + bot(x).toFixed(2);}
+      return up + down + 'Z';
+    };
+    const t = o.t;
+    let svg = '';
+    // tranches colorées : fluide entré toutes les « stripePeriod » secondes
+    const dl = M.stripePeriod, dur = M.duration;
+    const rhoRef = Math.max(q.re, q.rs) * Math.exp(Math.max(M.aEff, 0) * dur);
+    const jHi = Math.floor((t - XMIN / q.ce) / dl) + 1;
+    const jLo = Math.ceil((t - M.tauL - (XMAX - L) / M.cs) / dl) - 1;
+    for (let j = jLo; j <= jHi && j - jLo < 90; j++) {
+      const xa = Math.max(XMIN, M.pos(t - (j + 1) * dl)), xb = Math.min(XMAX, M.pos(t - j * dl));
+      if (xb <= xa) continue;
+      const rho = M.rho(clamp((xa + xb) / 2, 0, L), t);
+      const op = clamp(.16 + .5 * rho / rhoRef, .16, .72) * ((j & 1) ? .62 : 1);
+      svg += S.path(region(xa, xb), {fill: C.c, fop: op, c: C.card, w: 1.1});
+    }
+    // parois
+    for (const f of [top, bot]) {
+      const pts = [];
+      for (let i = 0; i <= 90; i++) {const x = XMIN + (XMAX - XMIN) * i / 90; pts.push([X(x), f(x)]);}
+      svg += S.poly(pts, {c: C.ink, w: 1.9});
+    }
+    // sections d'entrée et de sortie
+    for (const [x, name] of [[0, sym.Se(S)], [L, sym.Ss(S)]]) {
+      svg += S.line(X(x), top(x) - 7 * k, X(x), bot(x) + 7 * k, {c: C.ink, w: 1.4, dash: '5 4'});
+      svg += label(a, X(x), bot(x) + 19 * k, name, {anchor: 'middle', c: C.ink});
+    }
+    // tranches δm_e et δm_s hachurées, contour de Σ
+    if (o.sigma) {
+      const [xa, xb] = o.sigma;
+      svg += '<defs><pattern id="th1a1-hachure" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+        '<rect width="7" height="7" fill="' + C.card + '" fill-opacity=".5"/><line x1="0" y1="0" x2="0" y2="7" stroke="' + C.cInk + '" stroke-width="2.2"/></pattern></defs>';
+      const [sa, sb] = o.slab;
+      svg += S.path(region(sa, sb), {fill: 'url(#th1a1-hachure)', c: C.cInk, w: 1.5});
+      svg += S.path(region(xa, xb), {c: C.cInk, w: 3.3});
+      const xm = (sa + sb) / 2;
+      const yCote = (sa === L ? top(L) : top(0)) - 14 * k;
+      svg += S.arrow(X(xm), yCote, X(sa), yCote, {c: C.ink, w: 1.5, head: 8});
+      svg += S.arrow(X(xm), yCote, X(sb), yCote, {c: C.ink, w: 1.5, head: 8});
+      // le texte reste du côté extérieur de Σ* pour ne pas heurter le crochet du volume de contrôle
+      svg += label(a, sa === L ? X(sa) : X(sb), yCote - 11 * k, (sa === L ? sym.cs(S) : sym.ce(S)) + ' ' + sym.dt(S), {anchor: sa === L ? 'start' : 'end', c: C.ink});
+      if (X(sb) - X(sa) > 34 * k) svg += label(a, X(xm), yc, sa === L ? sym.ms(S) : sym.me(S), {anchor: 'middle', c: C.ink, weight: 650});
+      svg += label(a, X(.12 * L), yc - hS(.12 * L) * .45, sym.Sigma(S), {c: C.ink, size: 17, math: true, weight: 650});
+    }
+    if (o.brace) {
+      const y = yc - hh - 22 * k;
+      svg += S.poly([[X(0), y + 6 * k], [X(0), y], [X(L), y], [X(L), y + 6 * k]], {c: C.ink2, w: 1.5});
+      svg += label(a, X(L / 2), y - 9 * k, 'volume de contrôle ' + sym.SigmaStar(S) + ', fixe', {anchor: 'middle', c: C.ink});
+    }
+    if (o.title) svg += label(a, MARGIN * k, o.top + 13 * k, o.title, {c: C.ink, weight: 650});
+    return {svg, X, hS, top, bot};
+  }
+
+  /* ---------- onglet 1 : deux instants et bilan de masse du système fermé ---------- */
+  function drawSystem(a) {
+    const {S, C, k} = a, P = a.panels.scene, st = setup(a), {M, dt} = st, t = a.t;
+    const H = P.h, W = P.w;
+    const barsH = Math.max(96 * k, .27 * H), hb = (H - barsH) / 2;
+    const hh = hb * .18;
+    let svg = '';
+    const b1 = pipe(a, st, {top: 0, yc: hb * .62, hh, t, sigma: [-q(M, 'ce') * dt, L], slab: [-q(M, 'ce') * dt, 0], brace: true,
+      title: 'instant ' + sym.t(S)});
+    const cs = M.cs;
+    const b2 = pipe(a, st, {top: hb, yc: hb + hb * .62, hh, t: t + dt, sigma: [0, L + cs * dt], slab: [L, L + cs * dt],
+      title: 'instant ' + sym.t(S) + ' + ' + sym.dt(S)});
+    svg += b1.svg + b2.svg;
+    svg += S.line(0, hb, W, hb, {c: C.rule, w: 1, raw: true});
+
+    // masses des deux représentations du système fermé
+    const mS0 = M.mStar(t), mS1 = M.mStar(t + dt), de = M.dme(t, dt), ds = M.dms(t, dt), total = mS0 + de;
+    const y0 = 2 * hb, labW = 96 * k, wBar = W - labW - MARGIN * k, rowH = Math.min(27 * k, (barsH - 34 * k) / 2);
+    const rows = [[mS0, de, sym.me(S), S.v('m', 'Σ*') + '(' + sym.t(S) + ')'], [mS1, ds, sym.ms(S), S.v('m', 'Σ*') + '(' + sym.t(S) + '+' + sym.dt(S) + ')']];
+    svg += S.line(0, y0, W, y0, {c: C.rule, w: 1, raw: true});
+    svg += label(a, MARGIN * k, y0 + 13 * k, 'Masse du système fermé', {c: C.ink, weight: 650});
+    rows.forEach(([base, slab, slabName, baseName], r) => {
+      const y = y0 + 25 * k + r * (rowH + 9 * k);
+      const wBase = base / total * wBar, wSlab = slab / total * wBar;
+      svg += label(a, MARGIN * k, y + rowH / 2, r ? sym.Sigma(S) + '(' + sym.t(S) + ' + ' + sym.dt(S) + ')' : sym.Sigma(S) + '(' + sym.t(S) + ')', {c: C.ink});
+      svg += S.rect(labW, y, wBase, rowH, {fill: C.c, fop: .35, c: C.cInk, w: 1.4});
+      svg += S.rect(labW + wBase, y, wSlab, rowH, {fill: 'url(#th1a1-hachure)', c: C.cInk, w: 1.4});
+      svg += label(a, labW + wBase / 2, y + rowH / 2, baseName, {anchor: 'middle', c: C.ink});
+      if (wSlab > 30 * k) svg += label(a, labW + wBase + wSlab / 2, y + rowH / 2, slabName, {anchor: 'middle', c: C.ink, weight: 650});
+    });
+    const yTop = y0 + 22 * k, yBot = y0 + 28 * k + 2 * rowH + 9 * k;
+    for (const x of [labW + mS0 / total * wBar, labW + mS1 / total * wBar]) svg += S.line(x, yTop, x, yBot, {c: C.ink2, w: 1.2, dash: '4 4'});
+    svg += S.line(labW + wBar, yTop, labW + wBar, yBot, {c: C.ink2, w: 1.2, dash: '4 4'});
+    svg += notes(a, st);
+    a.svg('scene', svg);
+
+    a.clock('t = ' + a.fmt.fix(t * 1000, 1) + ' ms · t + dt = ' + a.fmt.fix((t + dt) * 1000, 1) + ' ms');
+    a.legend([{c: C.cInk, label: 'Contour du système fermé Σ'}, {c: C.c, label: 'Tranches de fluide entrées à intervalles égaux'}]);
+    a.metrics(metrics(a, st));
+  }
+  const q = (M, key) => M.q[key];
+
+  /* ---------- onglet 2 : conservation du débit ---------- */
+  function drawFlow(a) {
+    const {S, C, k} = a, P = a.panels.scene, st = setup(a), {M} = st, t = a.t;
+    const H = P.h, W = P.w;
+    const hb = H * .5, hh = hb * .23;
+    const b = pipe(a, st, {top: 0, yc: hb * .62, hh, t, brace: true});
+    let svg = b.svg;
+    // flèches de vitesse proportionnelles à c
+    const cmax = Math.max(M.q.ce, M.cs), unit = .3 * L / cmax, yc = hb * .62;
+    for (const [x0, c, name] of [[XMIN + .03 * L, M.q.ce, sym.ce(S)], [L + .06 * L, M.cs, sym.cs(S)]]) {
+      const x1 = b.X(x0), x2 = b.X(x0 + c * unit);
+      svg += S.arrow(x1, yc, x2, yc, {c: C.card, w: 5.2, head: 12});
+      svg += S.arrow(x1, yc, x2, yc, {c: C.ink, w: 2.6, head: 12});
+      svg += label(a, (x1 + x2) / 2, yc - b.hS(x0 > L ? L : 0) - 15 * k, name, {anchor: 'middle', c: C.ink, weight: 650});
+    }
+    // masses cumulées traversant les deux sections
+    const dur = M.duration, f = massScale(Math.max(M.Me(dur), M.Ms(dur)))[0], unitName = massScale(Math.max(M.Me(dur), M.Ms(dur)))[1];
+    const diff = tt => M.Me(tt) - M.Ms(tt);
+    const yMax = Math.max(M.Me(dur), M.Ms(dur)) * 1.08 * f, yMin = Math.min(0, diff(dur) * f * 1.15, diff(dur / 2) * f * 1.15);
+    const gTop = hb + 10 * k;
+    const G = S.graph({x: 4 * k, y: gTop, w: W - 8 * k, h: H - gTop - 4 * k, xmin: 0, xmax: dur * 1000, ymin: yMin, ymax: yMax,
+      xlab: 't (ms)', ylab: 'masse cumulée (' + unitName + ')'});
+    graphFrame = G;
+    let plot = G.svg + S.clip('th1a1-graphe', G);
+    const pts = fn => Array.from({length: 61}, (_, i) => [dur * 1000 * i / 60, fn(dur * i / 60) * f]);
+    plot += S.curve(pts(M.Me), G, {c: C.cInk, w: 3.2});
+    plot += S.curve(pts(M.Ms), G, {c: C.B, w: 2.2, dash: '9 6'});
+    const unsteady = Math.abs(M.aEff) > 1e-12;
+    if (unsteady) plot += S.curve(pts(diff), G, {c: C.hot, w: 2.4});
+    plot += S.line(G.X(t * 1000), G.y0, G.X(t * 1000), G.y0 + G.h, {c: C.ink2, w: 1.4, dash: '5 4'});
+    plot += S.circle(G.X(t * 1000), G.Y(M.Me(t) * f), 5 * k, {fill: C.cInk, c: C.card, w: 1.4});
+    plot += S.circle(G.X(t * 1000), G.Y(M.Ms(t) * f), 3.4 * k, {fill: C.B, c: C.card, w: 1.2});
+    if (unsteady) plot += S.circle(G.X(t * 1000), G.Y(diff(t) * f), 4.4 * k, {fill: C.hot, c: C.card, w: 1.3});
+    svg += plot + notes(a, st);
+    a.svg('scene', svg);
+
+    a.clock('t = ' + a.fmt.fix(t * 1000, 1) + ' ms');
+    a.legend([{c: C.cInk, label: 'm<sub>e</sub>(t) · masse entrée par S<sub>e</sub> depuis t = 0'},
+      {c: C.B, dash: true, label: 'm<sub>s</sub>(t) · masse sortie par S<sub>s</sub>'},
+      unsteady ? {c: C.hot, label: 'm<sub>e</sub> − m<sub>s</sub> = variation de la masse contenue dans Σ*'} : null]);
+    a.metrics(metrics(a, st));
+  }
+
+  function notes(a, st) {
+    const {M} = st, {S, C, k} = a, P = a.panels.scene;
+    let out = '';
+    const lines = [];
+    if (st.limited) lines.push('dt ramené à ' + a.fmt.fix(M.dtMax * 1000, 1) + ' ms (Σ petit devant Σ*)');
+    if (M.clamped) lines.push('a limité à ' + a.fmt.fix(M.aEff, 1) + ' s' + S.sup('−1') + ' (débit de sortie > 0)');
+    lines.forEach((text, i) => {out += label(a, P.w - MARGIN * k, 14 * k + i * 16 * k, text, {anchor: 'end', c: C.hot});});
+    return out;
+  }
+
+  function metrics(a, st) {
+    if (!a.p.valeurs) return [];
+    const {M, dt} = st, t = a.t, {fmt, M: MM} = a;
+    const de = M.dme(t, dt), ds = M.dms(t, dt), [fm, um] = massScale(Math.max(de, ds));
+    const [fd, ud] = massScale(Math.max(M.De(t), M.Ds(t)));
+    const sub = (s, i) => MM.v(s, i);
+    const out = [
+      {label: sub('δm', 'e'), value: fmt.sig(de * fm, 3), unit: um},
+      {label: sub('δm', 's'), value: fmt.sig(ds * fm, 3), unit: um},
+      {label: sub('D', 'm,e'), value: fmt.sig(M.De(t) * fd, 3), unit: ud + '·s<sup>−1</sup>'},
+      {label: sub('D', 'm,s'), value: fmt.sig(M.Ds(t) * fd, 3), unit: ud + '·s<sup>−1</sup>'},
+      {label: sub('c', 's'), value: fmt.sig(M.cs, 3), unit: 'm·s<sup>−1</sup>'}
+    ];
+    if (Math.abs(M.aEff) > 1e-12) out.push({label: sub('δm', 'e') + ' − ' + sub('δm', 's'), value: fmt.sig((de - ds) * fm, 3), unit: um});
+    return out;
+  }
+
+  AnimKit.app({
+    code: 'TH1', partie: 'OrangeBrule', titre: 'Système fermé qui suit le fluide',
+    titreFenetre: 'Système fermé qui suit le fluide · TH1 · MP',
+    menuCommun: true, fichier: 'Systeme_Ferme_Associe',
+    onglets: ['Système fermé associé', 'Conservation du débit'],
+    panneaux: [{id: 'scene', titre: '', poids: 1, ratioTel: 1.25}],
+    temps: true, pas: .25,
+    curseur: {max: duration, get: a => a.t, set: seek},
+    peutLire(a) {
+      if (a.t >= duration(a)) a.t = 0;
+      return true;
+    },
+    step(a, dt) {
+      seek(a, a.t + dt * duration(a) / 10);
+      if (a.t >= duration(a)) a.play(false);
+    },
+    onglet(a) {a.reset();},
+    touches: {arrowleft(a) {a.play(false); seek(a, a.t - duration(a) / 40);}},
+    reglages: [
+      {titre: 'Situations', presets: [
+        {label: 'Figure du cours', valeurs: QUASI},
+        {label: 'Section constante', valeurs: {...QUASI, Ss: 20}},
+        {label: 'Section qui s’élargit', valeurs: {...QUASI, Se: 12, Ss: 20}},
+        {label: 'Gaz qui se détend', valeurs: {...QUASI, rhoe: 5, rhos: 3}},
+        {label: 'Régime non stationnaire', valeurs: {...QUASI, rhoe: 1.2, rhos: 1.2, a: 8}}
+      ]},
+      {titre: 'Conduite et écoulement', items: [
+        range('Se', 'Section d’entrée S<sub>e</sub>', 4, 40, .5, QUASI.Se, 'cm²'),
+        range('Ss', 'Section de sortie S<sub>s</sub>', 4, 40, .5, QUASI.Ss, 'cm²'),
+        range('rhoe', 'Masse volumique ρ<sub>e</sub>', .5, 2000, 0, QUASI.rhoe, 'kg·m⁻³', {log: true, dec: 2, step: 'any'}),
+        range('rhos', 'Masse volumique ρ<sub>s</sub>', .5, 2000, 0, QUASI.rhos, 'kg·m⁻³', {log: true, dec: 2, step: 'any'}),
+        range('ce', 'Vitesse d’entrée c<sub>e</sub>', 1, 30, .5, QUASI.ce, 'm·s⁻¹')
+      ]},
+      {titre: 'Système fermé et régime', items: [
+        range('dtms', 'Durée dt', 1, 30, .5, QUASI.dtms, 'ms'),
+        range('a', 'Taux de variation de ρ (non stationnaire)', -15, 15, .5, 0, 's⁻¹')
+      ]},
+      {titre: 'Affichage', items: [
+        {id: 'valeurs', type: 'check', label: 'Afficher les valeurs calculées', value: false}
+      ]}
+    ],
+    aide: {
+      voit: '<ul><li><b>Système fermé associé.</b> Deux instants, t et t + dt. Le contour épais est le système fermé Σ : le contenu de Σ* et la tranche hachurée δm<sub>e</sub> qui va entrer à l’instant t, puis le contenu de Σ* et la tranche δm<sub>s</sub> qui vient de sortir à t + dt. Les bandes colorées sont du fluide entré à intervalles égaux : chaque bande avance, mais le volume de contrôle Σ* reste fixe. Les barres du bas comparent les masses.</li><li><b>Conservation du débit.</b> Les flèches de vitesse sont proportionnelles à c<sub>e</sub> et c<sub>s</sub>. Le graphe donne les masses cumulées qui ont traversé S<sub>e</sub> et S<sub>s</sub> depuis t = 0.</li></ul>',
+      faire: '<p>Lancer la lecture, puis choisir « Section constante », « Section qui s’élargit » et « Gaz qui se détend ». Avant d’afficher les valeurs calculées, prévoir si c<sub>s</sub> est plus grand ou plus petit que c<sub>e</sub> et de combien, en regardant la longueur de la tranche c<sub>s</sub> dt.</p><p>Choisir « Régime non stationnaire » : la masse volumique du gaz augmente dans toute la conduite. Les masses δm<sub>e</sub> et δm<sub>s</sub> ne sont plus égales, et la courbe m<sub>e</sub> − m<sub>s</sub> n’est plus nulle. Les deux masses de Σ(t) et de Σ(t + dt) restent pourtant égales : Σ est fermé. La démonstration du cours suppose le régime stationnaire : c’est elle qui donne δm<sub>e</sub> = δm<sub>s</sub>.</p>',
+      modele: '<p>Canal plan dont la hauteur dessinée est proportionnelle à la section S(x), avec un raccord en cosinus entre S<sub>e</sub> et S<sub>s</sub>. L’écoulement est unidimensionnel : c, ρ et S sont uniformes dans chaque section. La masse volumique s’écrit ρ(x, t) = R(x) e<sup>at</sup>, avec une transition lisse de ρ<sub>e</sub> à ρ<sub>s</sub> dans Σ*. La vitesse vérifie la conservation de la masse ∂(ρS)/∂t + ∂(ρcS)/∂x = 0, soit ρcS = ρ<sub>e</sub>c<sub>e</sub>S<sub>e</sub> − a∫ρS dx. Pour a = 0, ρcS est constant : c’est D<sub>m</sub>. Les trajectoires des particules sont calculées exactement, sans pas de temps. La représentation n’a de sens que pour dt petit devant le temps de traversée de Σ* : dt est limité pour que les tranches restent dans la fenêtre.</p>',
+      cours: 'TH1 MP, II.2 « Système fermé associé » et II.3 « Débit massique et conservation de la masse ».'
+    },
+    init(a) {
+      a.drag('scene', {
+        hit: (x, y) => a.tab === 1 && graphFrame && x >= graphFrame.x0 && x <= graphFrame.x0 + graphFrame.w &&
+          y >= graphFrame.y0 && y <= graphFrame.y0 + graphFrame.h,
+        start: x => {a.play(false); seek(a, graphFrame.xv(x) / 1000);},
+        move: x => {seek(a, graphFrame.xv(x) / 1000);}
+      });
+    },
+    draw(a) {
+      if (a.tab === 0) drawSystem(a); else drawFlow(a);
+    }
+  });
+})();
+
+</script>
+</body>
+</html>
