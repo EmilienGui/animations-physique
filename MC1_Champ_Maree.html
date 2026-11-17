@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Terme de marée de la Lune et du Soleil, bourrelets de la surface des océans, vives-eaux et mortes-eaux, hauteur d&#x27;eau en un port sur un mois (modèle statique).">
+<meta name="generator" content="AnimKit · E. Guillaume">
+<title>Champ de marée · MC1 · MP</title>
+<style>
+/* =====================================================================
+   AnimKit · feuille de style commune des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+   Ne pas modifier dans une animation : modifier ici puis reconstruire.
+   ===================================================================== */
+:root{
+  --RougeGrenat:139 36 50; --BleuMarine:37 75 112; --VioletImperial:103 44 139;
+  --TurquoiseLagon:62 139 137; --OrangeBrule:218 108 0; --VertEmeraude:0 128 96; --Anthracite:72 65 77;
+  --chap:var(--Anthracite);
+  --c:rgb(var(--chap));
+  --c-ink:color-mix(in srgb,var(--c) 70%,#000);
+  --c-soft:color-mix(in srgb,var(--c) 10%,var(--paper));
+  --paper:#f6f6f4; --card:#ffffff; --ink:#0f0f0f; --ink2:#4a5056; --rule:#dcdcd6; --grid:#ececE8;
+  --switch-off:#7e8a9d;
+  --q-v:#1f7552; --q-F:#c62f36; --q-B:#1e50be; --q-E:#da6c00; --q-Ec:#1e50be; --q-Ep:#da6c00; --q-Em:#0f0f0f; --q-pred:#6b7076;
+  --q-hot:#c62f36; --q-cold:#1e50be;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#15161a; --card:#1e2025; --ink:#ececec; --ink2:#b4b9be; --rule:#34373d; --grid:#2a2d32;
+  --switch-off:#7a879b;
+  --c-ink:color-mix(in srgb,var(--c) 50%,#fff);
+  --c-soft:color-mix(in srgb,var(--c) 22%,var(--card));
+  --q-v:#4fd69a; --q-F:#ff6b72; --q-B:#7aa7ff; --q-E:#ffab52; --q-Ec:#7aa7ff; --q-Ep:#ffab52; --q-Em:#ececec; --q-pred:#9aa0a6;
+  --q-hot:#ff6b72; --q-cold:#7aa7ff;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input,select{font:inherit;color:inherit}
+sub,sup{line-height:0}
+
+/* ---------- mathématiques en HTML ---------- */
+.m{font-family:var(--math);font-style:italic}
+.mr{font-family:var(--math);font-style:normal}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.frac>span:first-child{border-bottom:.08em solid currentColor;padding:0 .2em .05em}
+.frac>span:last-child{padding-top:.05em}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sqrt>.sym{font-family:var(--math);font-size:1.25em;line-height:1}
+.sqrt>.rad{border-top:.08em solid currentColor;padding:.05em .1em 0 .05em}
+.vec{display:inline-block;position:relative;font-family:var(--math);font-style:italic;padding-top:.15em}
+.vec::after{content:"";position:absolute;left:.05em;right:-.05em;top:0;height:.4em;background:no-repeat center/100% 100% url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8'%3E%3Cpath d='M0 4H18M14 1l4 3-4 3' fill='none' stroke='black' stroke-width='1.3'/%3E%3C/svg%3E");}
+:root[data-theme="dark"] .vec::after{filter:invert(1)}
+
+/* ---------- coquille ---------- */
+.ak{--fs:17px;font-size:var(--fs);position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--paper)}
+.ak.is-proj{--fs:23px}
+@media (max-width:640px){.ak{--fs:16px}}
+.ak-top{display:flex;align-items:center;gap:.6em;padding:.3em .8em;background:var(--card);border-bottom:3px solid var(--c);flex:none}
+.ak-badge{background:var(--c);color:#fff;font-weight:700;border-radius:.35em;padding:.1em .45em;font-size:.95em;flex:none}
+.ak-titles{min-width:0}
+.ak-title{font-weight:700;font-size:1.2em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-sub{color:var(--ink2);font-size:.82em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-tools{margin-left:auto;display:flex;gap:.3em;flex:none}
+.ib{display:inline-flex;align-items:center;justify-content:center;gap:.35em;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.45em;padding:.3em .55em;font-size:.85em;cursor:pointer;min-height:2.2em;white-space:nowrap}
+.ib:hover{border-color:var(--c)}
+.ib:disabled{opacity:.45;cursor:default}
+.ib svg{width:1.15em;height:1.15em;flex:none}
+.ib.on,.ib[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.ak-tabs{display:flex;gap:.3em;padding:.4em .8em 0;overflow-x:auto;flex:none;scrollbar-width:none}
+.ak-tab{border:1px solid var(--rule);border-bottom:0;background:transparent;color:var(--ink2);font-size:.9em;padding:.35em .9em;border-radius:.45em .45em 0 0;cursor:pointer;white-space:nowrap}
+.ak-tab b{color:var(--c-ink);margin-right:.35em}
+.ak-tab[aria-selected="true"]{background:var(--card);color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--c)}
+.ak-body{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) 18.5em;gap:.6em;padding:0 .6em .6em;border-top:1px solid var(--rule)}
+.ak-main{display:flex;flex-direction:column;gap:.5em;padding-top:.6em;min-width:0;min-height:0}
+.ak-card{background:var(--card);border:1px solid var(--rule);border-radius:.6em}
+.ak-scene{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ak-panels{flex:1;min-height:0;display:flex}
+.ak-panel{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.ak-panel+.ak-panel{border-left:1px solid var(--rule)}
+.ak-panel[hidden]{display:none}
+.ak-phead{font-size:.8em;color:var(--ink2);padding:.35em .7em 0;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-panel>svg,.ak-panel>canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.ak-ptools{position:absolute;top:0;right:0;display:flex;gap:.25em;padding:.35em .35em .9em .9em;z-index:1}
+@media (hover:hover) and (pointer:fine){
+  .ak-ptools{opacity:0;transition:opacity .15s}
+  .ak-ptools:hover,.ak-ptools:has(button:focus-visible){opacity:1}
+}
+.ak-ptools .mini{padding:.1em .45em;min-height:1.7em}
+.ak-ptools [data-z="0"]{display:grid;place-items:center;width:1.9em;padding:0}
+.ak-ptools [data-z="0"] svg{display:block;width:1.1em;height:1.1em}
+.ak-ptools.is-zoomed [data-z="0"]{border-color:var(--c)}
+.mini{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:.35em;font-size:.85em;padding:.15em .5em;cursor:pointer;min-height:1.9em}
+.mini:hover{border-color:var(--c)}
+.mini[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+/* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+.ak-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.1em 1em;padding:.1em .7em;font-size:.74em;line-height:1.35;color:var(--ink2);border-top:1px solid var(--rule);flex:none}
+.ak-legend:empty{display:none}
+.ak-legend i{display:inline-block;width:1.4em;height:.22em;vertical-align:middle;margin-right:.35em;border-radius:2px}
+.ak-legend i.dash{background:repeating-linear-gradient(90deg,var(--lc) 0 .3em,transparent .3em .5em)!important}
+.ak-legend i.dot{width:.6em;height:.6em;border-radius:50%}
+.ak-transport{display:flex;align-items:center;gap:.45em;padding:.4em .6em;border-top:1px solid var(--rule);flex-wrap:wrap;flex:none}
+.ak-transport[hidden]{display:none}
+.ak-play{background:var(--c);border-color:var(--c);color:#fff;font-weight:600;min-width:7em}
+.ak-speed{font-size:.85em;border:1px solid var(--rule);border-radius:.4em;background:var(--card);padding:.25em;min-height:2.2em}
+.ak-extra{display:flex;gap:.4em;align-items:center;flex-wrap:wrap}
+.ak-extra:empty{display:none}
+.ak-scrub{flex:1 1 12em;min-width:8em;accent-color:var(--c);height:1.8em;margin:0 .3em}
+.ak-scrub[hidden]{display:none}
+.ak-clock{font-variant-numeric:tabular-nums;font-weight:600;margin-left:auto;white-space:nowrap}
+.ak-metrics{display:flex;gap:.5em;flex:none}
+.ak-metrics:empty{display:none}
+.ak-metric{padding:.25em .65em;flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.6em;align-items:baseline}
+.ak-metric .k{grid-column:1/-1;font-size:.75em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric .v{font-size:1.25em;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.ak-metric .u{font-size:.65em;font-weight:500;color:var(--ink2);margin-left:.25em}
+.ak-metric .h{font-size:.72em;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ak-metric.warn{border-color:var(--q-F)}
+/* colonne de droite : mesures, réglages (défilent), pied de page */
+.ak-right{display:flex;flex-direction:column;gap:.5em;min-height:0;min-width:0;padding-top:.6em}
+.ak-side>.ak-metrics{flex-direction:column;gap:.35em;flex:none}
+.ak-side>.ak-metrics::before{content:"Mesures";font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700;padding:.2em .2em 0}
+.ak-right .ak-metric{grid-template-columns:minmax(0,1fr) auto;padding:.2em .6em}
+.ak-right .ak-metric .k{grid-column:1;align-self:center}
+.ak-right .ak-metric .v{grid-column:2;text-align:right;font-size:1.15em}
+.ak-right .ak-metric .h{grid-column:1/-1}
+.ak-side{flex:1;display:flex;flex-direction:column;gap:.5em;overflow:auto;min-height:0;overscroll-behavior:contain}
+.ak-grp{padding:.55em .7em}
+.ak-grp[hidden],.ak-item[hidden]{display:none}
+.ak-grp h4{margin:0 0 .45em;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink)}
+.ak-grp h4 span{opacity:.65;margin-right:.4em}
+.ak-presets,.ak-btns{display:flex;flex-wrap:wrap;gap:.35em}
+.ak-item{margin:.5em 0}
+.ak-item:first-of-type{margin-top:0}
+.ak-row{display:flex;align-items:center;gap:.4em;font-size:.88em}
+.ak-row label{flex:1;min-width:0}
+.ak-num{width:5.2em;font-size:.95em;text-align:right;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);font-variant-numeric:tabular-nums}
+.ak-unit{color:var(--ink2);font-size:.85em;min-width:1.8em}
+.ak-sel{width:100%;font-size:.9em;border:1px solid var(--rule);border-radius:.35em;padding:.25em;background:var(--paper);margin-top:.25em}
+.ak-seg{display:flex;border:1px solid var(--rule);border-radius:.4em;overflow:hidden;margin-top:.25em}
+.ak-seg button{flex:1;border:0;background:var(--paper);padding:.3em .4em;font-size:.85em;cursor:pointer}
+.ak-seg button+button{border-left:1px solid var(--rule)}
+.ak-seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.ak input[type=range]{width:100%;accent-color:var(--c);height:1.6em;margin:0}
+.ak-chk{position:relative;display:flex;gap:.6em;align-items:center;min-height:34px;font-size:.88em;cursor:pointer}
+.ak-chk>input{position:absolute;width:1px;height:1px;margin:0;opacity:0;clip-path:inset(50%)}
+.ak-switch-track{
+  position:relative;flex:0 0 42px;height:24px;border-radius:99px;background:var(--switch-off);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.25);transition:background-color .16s
+}
+.ak-switch-track::after{
+  content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px #0004;transition:transform .16s
+}
+.ak-chk>input:checked+.ak-switch-track{background:var(--switch-on,var(--c))}
+.ak-chk>input:checked+.ak-switch-track::after{transform:translateX(18px)}
+.ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid var(--c-ink);outline-offset:2px}
+.ak-chk:has(>input:disabled){opacity:.56;cursor:default}
+@media (prefers-reduced-motion:reduce){
+  .ak-ptools{transition:none}
+  .ak-switch-track,.ak-switch-track::after{transition:none}
+}
+@media (forced-colors:active){
+  .ak-switch-track{forced-color-adjust:none;background:Canvas;outline:1px solid CanvasText}
+  .ak-switch-track::after{background:CanvasText}
+  .ak-chk>input:checked+.ak-switch-track{background:Highlight}
+  .ak-chk>input:checked+.ak-switch-track::after{background:HighlightText}
+  .ak-chk>input:focus-visible+.ak-switch-track{outline:2px solid Highlight}
+}
+.ak-note{font-size:.8em;color:var(--ink2);margin:.3em 0 0}
+.ak-dlg-sub{color:var(--ink2);font-style:italic}
+.ak-drawer-head{display:none;justify-content:space-between;align-items:center;font-weight:600}
+.ak-btn-settings{display:none}
+
+/* ---------- projection ---------- */
+.ak.is-proj .ak-body{grid-template-columns:minmax(0,1fr)}
+.ak.is-proj .ak-right{display:contents}
+.ak.is-proj .ak-transport .ak-lbl{display:none}
+.ak.is-proj .ak-play{min-width:0}
+.ak.is-proj .ak-side{position:absolute;top:var(--ak-top,calc(2.95em + 3px));right:0;bottom:0;width:19em;max-width:92%;background:var(--paper);border-left:1px solid var(--rule);padding:.7em;transform:translateX(105%);transition:transform .2s;box-shadow:-8px 0 24px rgb(0 0 0/.25);z-index:5;visibility:hidden}
+.ak.is-proj.drawer-open .ak-side{transform:none;visibility:visible}
+/* projection : le volet ouvert pousse la scène à gauche au lieu de la recouvrir (6 novembre 2026) */
+.ak.is-proj.drawer-open .ak-body{grid-template-columns:minmax(0,1fr) 19em}
+.ak.is-proj.drawer-open .ak-right{display:flex}
+.ak.is-proj.drawer-open .ak-side{position:static;width:auto;max-width:none;padding:0;background:none;border-left:0;box-shadow:none;transition:none}
+.ak.is-proj .ak-drawer-head{display:flex}
+.ak.is-proj .ak-btn-settings{display:inline-flex}
+
+/* ---------- téléphone ---------- */
+@media (max-width:640px){.ak{height:auto;min-height:100vh;min-height:100dvh;overflow:visible}}
+@media (max-width:640px){
+  .ak-chk{min-height:44px}
+  .ak-body{grid-template-columns:minmax(0,1fr);padding:0 .4em .4em}
+  .ak-sub,.ak-lbl{display:none}
+  .ak-tools .ib{padding:.3em .45em}
+  .ak-title{font-size:1.05em}
+  .ak-ptools .mini{min-height:36px}
+  .ak-ptools [data-z="0"]{min-width:36px}
+  .ak-tools [data-act=image],.ak-tools [data-act=proj]{display:none}
+  .ak-btn-settings{display:inline-flex}
+  .ak-side{position:fixed;left:0;right:0;bottom:0;max-height:72%;background:var(--paper);border-top:1px solid var(--rule);border-radius:1em 1em 0 0;padding:.6em .9em 1em;transform:translateY(105%);transition:transform .2s;box-shadow:0 -8px 24px rgb(0 0 0/.3);z-index:5;visibility:hidden}
+  .ak.drawer-open .ak-side{transform:none;visibility:visible}
+  .ak-drawer-head{display:flex}
+  .ak-panels{flex-direction:column;flex:none}
+  .ak-panel{flex:none!important}
+  .ak-scene{flex:none;overflow:visible}
+  .ak-panel+.ak-panel{border-left:0;border-top:1px solid var(--rule)}
+  .ak-panel>svg,.ak-panel>canvas{flex:none}
+  .ak-right{display:contents}
+  .ak-right>.ak-metrics{flex-direction:row;flex-wrap:wrap}.ak-metric{flex:1 1 40%}
+    .ib,.ak-grp .mini,.ak-play,.ak-speed{min-height:44px}
+  .ak-transport{position:sticky;bottom:0;background:var(--card);z-index:2}
+}
+
+/* ---------- disposition « atelier » (7 novembre 2026, facultative) ----------
+   Saisie à gauche ; résultat, graphique et détail du calcul à droite ; une colonne sur téléphone. */
+.ak-atelier .ak-body{grid-template-columns:minmax(19em,5fr) minmax(0,7fr)}
+.ak.ak-atelier .ak-right,.ak.ak-atelier.is-proj .ak-right{display:none}
+.ak.ak-atelier .ak-btn-settings,.ak.ak-atelier.is-proj .ak-btn-settings{display:none}
+.ak.ak-atelier.is-proj .ak-body{grid-template-columns:minmax(18em,4fr) minmax(0,8fr)}
+.ak-saisie{margin-top:.6em;padding:.6em .8em;overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.4em;overscroll-behavior:contain}
+.ak-zone-h{font-size:.72em;letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink);font-weight:700}
+.ak-res{padding:.45em .8em;flex:none}
+.ak-detail{flex:none;padding:0 .8em}
+.ak-detail summary{cursor:pointer;padding:.45em 0;font-size:.9em;font-weight:600;color:var(--c-ink)}
+.ak-detail[open]{max-height:42%;overflow:auto}
+.ak-detail-body{padding:0 0 .6em}
+@media (max-width:640px){
+  .ak-atelier .ak-body{grid-template-columns:minmax(0,1fr)}
+  .ak-atelier .ak-saisie{margin-top:.4em;overflow:visible}
+  .ak-atelier .ak-detail[open]{max-height:none;overflow:visible}
+}
+
+/* ---------- aide, messages ---------- */
+.ak-dialog{max-width:min(680px,92vw);max-height:85vh;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0;font-family:var(--font)}
+.ak-dialog::backdrop{background:rgb(0 0 0/.45)}
+.ak-dialog header{display:flex;align-items:center;justify-content:space-between;gap:1em;padding:12px 16px;border-bottom:3px solid var(--c);position:sticky;top:0;background:var(--card)}
+.ak-dialog h3{margin:0;font-size:17px}
+.ak-dialog .db{padding:4px 16px 16px;font-size:15px}
+.ak-dialog h4{color:var(--c-ink);margin:14px 0 4px;font-size:15px}
+.ak-dialog p,.ak-dialog li{margin:.3em 0}
+.ak-dialog kbd{font:12px var(--font);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 5px}
+.ak-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:10}
+.ak-toast.show{opacity:1}
+@media print{.ak-tools,.ak-side,.ak-transport{display:none}}
+
+/* Bandeau commun du guide de création des animations. */
+.ak-menu-commun .ak-top {flex-wrap:wrap;gap:6px 12px}
+.ak-menu-commun .ak-tools {
+  flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%;
+}
+.ak-menu-commun .ak-tools .ib {min-height:40px;padding:0 10px;font-size:15px}
+.ak-menu-commun .ak-tools [data-act="fs"] {width:40px;padding:0}
+.ak-menu-commun .ak-tools .ak-btn-settings {display:none}
+@media(max-width:820px){
+  .ak-menu-commun .ak-tools {margin-left:0;flex:1 0 100%;justify-content:flex-start}
+}
+@media(max-width:640px){
+  .ak-menu-commun .ak-tools {gap:4px}
+  .ak-menu-commun .ak-tools .ib {min-height:44px;padding:0 6px;font-size:13px}
+  .ak-menu-commun .ak-tools .ak-lbl {display:inline}
+  .ak-menu-commun .ak-tools .ib svg {display:none}
+  .ak-menu-commun .ak-tools [data-act="fs"] {width:44px;padding:0}
+  .ak-menu-commun .ak-tools [data-act="fs"] svg {display:block}
+  .ak-menu-commun .ak-tools [data-act="image"],
+  .ak-menu-commun .ak-tools [data-act="proj"],
+  .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
+}
+
+/* Retour au sommaire GitHub Pages. */
+.ak-sommaire{text-decoration:none}
+.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
+@media(max-width:960px){
+  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
+  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
+  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
+}
+@media(max-width:640px){
+  .ak-tools .ak-sommaire .ak-lbl{display:none}
+  .ak-tools .ak-sommaire.ib svg{display:block}
+  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
+}
+
+</style>
+</head>
+<body>
+<noscript>Cette animation nécessite JavaScript.</noscript>
+<script>
+/* =====================================================================
+   AnimKit · script commun des animations de MPSI
+   E. Guillaume · charte du 2 novembre 2026 (Charte_Animations.html)
+
+   Une animation décrit sa configuration et ses fonctions :
+     AnimKit.app({
+       code:'OP1', partie:'TurquoiseLagon', titre:'…', sousTitre:'…', chapitre:'OP1 Propagation de la lumière',
+       onglets:['Vue de face','Perspective'],            // facultatif
+       temps:true | (app)=>bool,                          // barre de lecture
+       pas:1/24,                                          // durée simulée d'un « Pas »
+       panneaux:[{id:'scene', titre:'…', poids:2, type:'svg'|'canvas', onglets:[0], ratioTel:.8, zoom:true}],
+       reglages:[{titre:'Situations', presets:[{label, valeurs:{…}, lecture:true}]},
+                 {titre:'…', items:[{id,type:'range'|'select'|'seg'|'check'|'boutons'|'note', …}], onglets:[…], si:(app)=>bool}],
+       aide:{voit, faire, modele, cours},
+       init(app), reset(app), step(app,dt), draw(app), change(app,id,v), onglet(app,i)
+     })
+   Le kit fournit : app.p (paramètres), app.tab, app.t, app.C (couleurs), app.k (échelle projection),
+   app.S (dessin SVG), app.fmt (nombres), app.metrics(), app.insight(), app.legend(), app.clock(), app.drag()…
+   Réglage à échelle logarithmique : {id,type:'range',log:true,min,max,dec} (curseur en log10, champ numérique en valeur réelle).
+   Disposition facultative  atelier:{saisie:'Mes mesures', detail:'Voir le calcul'} : app.zones.saisie / .resultat / .detail
+   (nœuds DOM à remplir par l'animation) ; pas de colonne de réglages.
+   ===================================================================== */
+(function(){
+'use strict';
+const FONT='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+const MATH='"STIX Two Math","Cambria Math","Latin Modern Math","Times New Roman",serif';
+const MINUS='−';
+
+/* ---------------- nombres : point décimal, vrai signe moins ---------------- */
+const fmt={
+  /** n chiffres significatifs, sans notation exponentielle */
+  sig(x,n=3){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    if(Math.abs(x)<1e-12)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e<-3||e>=6){const m=x/10**e;return (+m.toFixed(n-1)).toFixed(n-1).replace('-',MINUS)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>'}
+    const d=Math.max(0,n-1-e);
+    let s=(+x.toFixed(d)).toFixed(d);
+    if(/^-?0(\.0*)?$/.test(s))s=s.replace('-','');
+    return s.replace('-',MINUS);
+  },
+  /** d décimales fixes */
+  fix(x,d=2){
+    if(x===null||x===undefined||!isFinite(x))return '—';
+    let s=(Math.abs(x)<0.5*10**-d?0:x).toFixed(d);
+    return s.replace('-',MINUS);
+  },
+  /** puissance de dix lisible : 3.0 × 10⁻⁵ */
+  sci(x,n=2){
+    if(!isFinite(x))return '—';
+    if(x===0)return '0';
+    const e=Math.floor(Math.log10(Math.abs(x)));
+    if(e>=-2&&e<=3)return fmt.sig(x,n);
+    return fmt.sig(x/10**e,n)+' × 10<sup>'+String(e).replace('-',MINUS)+'</sup>';
+  },
+  /** angle en degrés depuis des radians */
+  deg(rad,d=0){return fmt.fix(rad*180/Math.PI,d)}
+};
+
+/* ---------------- graduations ---------------- */
+function niceStep(range,n){
+  const raw=range/Math.max(1,n), p=10**Math.floor(Math.log10(raw)), r=raw/p;
+  return (r<1.5?1:r<3?2:r<7?5:10)*p;
+}
+function ticks(a,b,n=5){
+  if(!(b>a))return[a];
+  const st=niceStep(b-a,n), out=[];
+  for(let v=Math.ceil(a/st-1e-9)*st;v<=b+st*1e-9;v+=st)out.push(Math.abs(v)<st*1e-9?0:+v.toPrecision(12));
+  return out;
+}
+function tickLabel(v,step){
+  const d=Math.max(0,-Math.floor(Math.log10(step)+1e-9));
+  return fmt.fix(v,d);
+}
+
+function chartTicks(list, min, max, count, formatter, zoomed){
+  if(!list||zoomed&&list.length&&!formatter)return ticks(min,max,count);
+  if(!zoomed)return list;
+  const marge=(max-min)*1e-8;
+  return list.filter(v=>v>=min-marge&&v<=max+marge);
+}
+
+/* ---------------- icônes ---------------- */
+const IC={
+  settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+  sommaire:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  help:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h0"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+  proj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  fs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  cadrer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+  step:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l9 7-9 7zM16 5h2.5v14H16z"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>'
+};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},html){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))if(v!==undefined&&v!==null&&v!==false)e.setAttribute(k,v===true?'':v);if(html!==undefined)e.innerHTML=html;return e}
+
+function interrupteur(label,id){
+  const conteneur=el('label',{class:'ak-chk'});
+  conteneur.append(
+    el('input',{type:'checkbox',role:'switch',id}),
+    el('span',{class:'ak-switch-track','aria-hidden':'true'}),
+    el('span',{},label)
+  );
+  return conteneur;
+}
+
+/* ---------------- mathématiques en HTML ---------------- */
+const M={
+  v:(s,sub,sup)=>`<span class="m">${s}</span>${sub!==undefined?`<sub>${sub}</sub>`:''}${sup!==undefined?`<sup>${sup}</sup>`:''}`,
+  frac:(a,b)=>`<span class="frac"><span>${a}</span><span>${b}</span></span>`,
+  sqrt:x=>`<span class="sqrt"><span class="sym">√</span><span class="rad">${x}</span></span>`,
+  vec:s=>`<span class="vec">${s}</span>`
+};
+
+/* ---------------- dessin SVG (chaînes) ---------------- */
+function makeS(app){
+  const C=()=>app.C, k=()=>app.k;
+  const a=(o,name,val)=>val===undefined||val===null||val===false?'':` ${name}="${val}"`;
+  const n=v=>typeof v==='number'?+v.toFixed(2):v;
+  const S={
+    FONT,MATH,
+    /** variable en italique avec indice/exposant, utilisable dans S.text */
+    v(sym,sub,sup){
+      let s=`<tspan font-family='${MATH}' font-style="italic">${sym}</tspan>`;
+      if(sub!==undefined)s+=`<tspan font-size="72%" dy="0.42em">${sub}</tspan><tspan dy="-0.3em">​</tspan>`;
+      if(sup!==undefined)s+=`<tspan font-size="72%" dy="-0.55em">${sup}</tspan><tspan dy="0.4em">​</tspan>`;
+      return s;
+    },
+    /** exposant dans un texte SVG (unités : m·s⁻¹…) */
+    sup:x=>`<tspan font-size="72%" dy="-0.55em">${x}</tspan><tspan dy="0.4em">\u200b</tspan>`,
+    /** symbole droit en police mathématique */
+    r:sym=>`<tspan font-family='${MATH}'>${sym}</tspan>`,
+    line(x1,y1,x2,y2,o={}){return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)}${a(o,'stroke-linecap',o.cap||'round')}${a(o,'opacity',o.op)}/>`},
+    path(d,o={}){return`<path d="${d}" fill="${o.fill||'none'}" stroke="${o.c===undefined?C().ink:o.c}" stroke-width="${n((o.w??1.5)*(o.raw?1:k()))}"${a(o,'stroke-dasharray',o.dash)} stroke-linejoin="round" stroke-linecap="round"${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}/>`},
+    poly(pts,o={}){if(pts.length<2)return'';return S.path('M'+pts.map(p=>n(p[0])+','+n(p[1])).join('L')+(o.close?'Z':''),o)},
+    circle(x,y,r,o={}){return`<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1.5)*k())}"`:''}${a(o,'opacity',o.op)}${a(o,'stroke-dasharray',o.dash)}${a(o,'data-hit',o.hit)}${a(o,'style',o.style)}/>`},
+    rect(x,y,w,h,o={}){return`<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" fill="${o.fill||'none'}"${o.c?` stroke="${o.c}" stroke-width="${n((o.w??1)*k())}"`:''}${a(o,'rx',o.rx)}${a(o,'opacity',o.op)}${a(o,'fill-opacity',o.fop)}${a(o,'stroke-dasharray',o.dash)}/>`},
+    /** flèche : pointe proportionnelle à l'épaisseur */
+    arrow(x1,y1,x2,y2,o={}){
+      const w=(o.w??2)*k(), L=Math.hypot(x2-x1,y2-y1); if(L<1)return'';
+      const hl=Math.min(o.head??(6+w*2.6),L*.6), an=Math.atan2(y2-y1,x2-x1), c=o.c||C().ink;
+      const bx=x2-hl*.75*Math.cos(an), by=y2-hl*.75*Math.sin(an);
+      return`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(bx)}" y2="${n(by)}" stroke="${c}" stroke-width="${n(w)}" stroke-linecap="round"${a(o,'stroke-dasharray',o.dash)}${a(o,'opacity',o.op)}/>`+
+        `<path d="M${n(x2)},${n(y2)}L${n(x2-hl*Math.cos(an-.4))},${n(y2-hl*Math.sin(an-.4))}L${n(x2-hl*Math.cos(an+.4))},${n(y2-hl*Math.sin(an+.4))}Z" fill="${c}"${a(o,'opacity',o.op)}/>`;
+    },
+    /** texte avec halo de la couleur du fond (ne masque pas la scène) */
+    text(x,y,content,o={}){
+      const size=(o.size??13)*k(), halo=o.halo===false?'':` style="paint-order:stroke;stroke:${o.bg||C().card};stroke-width:${n(3.5*k())}px;stroke-linejoin:round"`;
+      const anc=o.anchor||'start', dy=o.base==='top'?'0.8em':o.base==='bottom'?'0':'0.35em';
+      return`<text x="${n(x)}" y="${n(y)}" dy="${dy}" text-anchor="${anc}" font-size="${n(size)}" font-family='${o.math?MATH:FONT}' fill="${o.c||C().ink2}"${o.weight?` font-weight="${o.weight}"`:''}${o.italic?' font-style="italic"':''}${halo}${a(o,'transform',o.rot!==undefined?`rotate(${o.rot} ${n(x)} ${n(y)})`:undefined)}>${content}</text>`;
+    },
+    /** arc d'angle orienté de a1 à a2 (radians, sens trigonométrique, y vers le haut) */
+    arc(cx,cy,r,a1,a2,o={}){
+      const p=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)], [x1,y1]=p(a1), [x2,y2]=p(a2), large=Math.abs(a2-a1)>Math.PI?1:0, sweep=a2>a1?0:1;
+      let s=`<path d="M${n(x1)},${n(y1)}A${n(r)},${n(r)} 0 ${large} ${sweep} ${n(x2)},${n(y2)}" fill="none" stroke="${o.c||C().ink}" stroke-width="${n((o.w??1.5)*k())}"/>`;
+      if(o.arrow&&Math.abs(a2-a1)>0.08){const t=a2, d=a2>a1?1:-1, tx=-Math.sin(t)*d, ty=-Math.cos(t)*d, hl=6*k();
+        s+=`<path d="M${n(x2)},${n(y2)}L${n(x2-hl*tx-hl*.45*Math.cos(t))},${n(y2-hl*ty+hl*.45*Math.sin(t))}L${n(x2-hl*tx+hl*.45*Math.cos(t))},${n(y2-hl*ty-hl*.45*Math.sin(t))}Z" fill="${o.c||C().ink}"/>`}
+      return s;
+    },
+    /**
+     * repère de graphe ; renvoie {svg, X, Y, x0,y0,w,h}
+     * o = {x,y,w,h, xmin,xmax,ymin,ymax, xlab, ylab, nx, ny, grid, xticks, yticks}
+     */
+    graph(o){
+      const C0=C(), K=k(), fs=12*K, padL=o.padL??(fs*3.2), padB=o.padB??(fs*2.3), padT=o.padT??(fs*1.4), padR=o.padR??(fs*.8);
+      const x0=o.x+padL, y0=o.y+padT, w=Math.max(10,o.w-padL-padR), h=Math.max(10,o.h-padT-padB);
+      const frame=app._graphFrame, id=frame?.graphs.length;
+      const view=frame?.views[id]||null;
+      frame?.graphs.push({id,x0,y0,w,h,view});
+      const dx=o.xmax-o.xmin, dy=o.ymax-o.ymin;
+      const xmin=view?o.xmin+dx*view.vx:o.xmin, xmax=view?xmin+dx/view.vz:o.xmax;
+      const ymax=view?o.ymax-dy*view.vy:o.ymax, ymin=view?ymax-dy/view.vz:o.ymin;
+      const X=v=>x0+(v-xmin)/(xmax-xmin)*w, Y=v=>y0+h-(v-ymin)/(ymax-ymin)*h;
+      let s='';
+      const xt=chartTicks(o.xticks,xmin,xmax,o.nx??Math.max(2,Math.round(w/(fs*5.5))),o.xfmt,view);
+      const yt=chartTicks(o.yticks,ymin,ymax,o.ny??Math.max(1,Math.round(h/(fs*3))),o.yfmt,view);
+      const xs=xt.length>1?xt[1]-xt[0]:1, ys=yt.length>1?yt[1]-yt[0]:1;
+      if(o.grid!==false){for(const v of xt)s+=`<line x1="${n(X(v))}" y1="${n(y0)}" x2="${n(X(v))}" y2="${n(y0+h)}" stroke="${C0.grid}" stroke-width="1"/>`;
+        for(const v of yt)s+=`<line x1="${n(x0)}" y1="${n(Y(v))}" x2="${n(x0+w)}" y2="${n(Y(v))}" stroke="${C0.grid}" stroke-width="1"/>`}
+      s+=S.line(x0,y0+h,x0+w,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      s+=S.line(x0,y0,x0,y0+h,{c:C0.ink2,w:1.2,raw:true});
+      if(ymin<0&&ymax>0&&o.zeroAxis!==false)s+=S.line(x0,Y(0),x0+w,Y(0),{c:C0.ink2,w:1,raw:true});
+      for(const v of xt){if(o.xlabels===false)break;s+=S.text(X(v),y0+h+fs*.9,(o.xfmt||tickLabel)(v,xs),{anchor:'middle',size:12,halo:false})}
+      for(const v of yt){if(o.ylabels===false)break;s+=S.text(x0-fs*.4,Y(v),(o.yfmt||tickLabel)(v,ys),{anchor:'end',size:12,halo:false})}
+      if(o.xlab)s+=S.text(x0+w,y0+h+fs*1.95,o.xlab,{anchor:'end',size:12.5,halo:false,c:C0.ink2});
+      if(o.ylab)s+=S.text(x0+fs*.3,y0-fs*.75,o.ylab,{anchor:'start',size:12.5,halo:false,c:C0.ink2});
+      if(frame)s=`<g data-ak-graph="${id}">${s}</g>`;
+      return{svg:s,X,Y,x0,y0,w,h,xv:px=>xmin+(px-x0)/w*(xmax-xmin),yv:py=>ymax-(py-y0)/h*(ymax-ymin)};
+    },
+    /** courbe d'un tableau de points [x,y] dans un repère (coupe hors cadre) */
+    curve(pts,G,o={}){
+      let d='',pen=false;
+      for(const[x,y]of pts){if(!isFinite(y)||!isFinite(x)){pen=false;continue}
+        const X=G.X(x), Y=Math.max(G.y0-2e3,Math.min(G.y0+G.h+2e3,G.Y(y)));d+=(pen?'L':'M')+n(X)+','+n(Y);pen=true}
+      return`<g clip-path="url(#${G.clip||''})">`+S.path(d,o)+'</g>';
+    },
+    clip(id,G){G.clip=id;return`<defs><clipPath id="${id}"><rect x="${n(G.x0)}" y="${n(G.y0-1)}" width="${n(G.w+1)}" height="${n(G.h+2)}"/></clipPath></defs>`}
+  };
+  return S;
+}
+
+/* ===================================================================== */
+function app(cfg){
+  const A={cfg,p:{},tab:0,t:0,running:false,speed:1,k:1,narrow:false,C:{},fmt,M,panels:{},_dirty:false};
+  A.S=makeS(A);
+  const root=document.documentElement;
+  root.dataset.theme='dark';
+  if(cfg.partie)root.style.setProperty('--chap',`var(--${cfg.partie})`);
+  document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
+
+  /* ---------- structure ---------- */
+  const ak=el('div',{class:cfg.menuCommun?'ak ak-menu-commun':'ak',id:'ak'});
+  const top=el('header',{class:'ak-top'});
+  top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
+  <nav class="ak-tools" aria-label="Outils">
+   <button class="ib ak-btn-settings" data-act="settings" title="Réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
+   <button class="ib" data-act="help" title="Aide (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
+   <button class="ib" data-act="theme" title="Thème clair / sombre (T)">${IC.theme}<span class="ak-lbl">Thème</span></button>
+   <button class="ib" data-act="image" title="Enregistrer l'image (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+   <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
+   <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
+  </nav>`;
+  const nav=$('.ak-tools',top);
+  const themeButton=$('[data-act=theme]',nav);
+  const projButton=$('[data-act=proj]',nav);
+  const fullButton=$('[data-act=fs]',nav);
+  if(cfg.menuCommun){
+    nav.insertBefore($('[data-act=settings]',nav),fullButton);
+    $('[data-act=image]',nav).title='Enregistrer une image PNG (I)';
+  }
+  function syncMenu(){
+    if(!cfg.menuCommun)return;
+    const dark=root.dataset.theme==='dark', projected=ak.classList.contains('is-proj');
+    const full=Boolean(document.fullscreenElement);
+    themeButton.title=dark?'Passer au thème clair (T)':'Passer au thème sombre (T)';
+    $('.ak-lbl',projButton).textContent=projected?'Réglages':'Projection';
+    projButton.title=projected?'Rétablir les réglages (P)':'Agrandir la scène et masquer les réglages (P)';
+    projButton.setAttribute('aria-pressed',String(projected));
+    const fullscreenLabel=full?'Quitter le plein écran':'Plein écran';
+    fullButton.setAttribute('aria-label',fullscreenLabel);
+    fullButton.title=fullscreenLabel+' (F)';
+  }
+  if(cfg.menuCommun){
+    syncMenu();
+    document.addEventListener('fullscreenchange',syncMenu);
+  }
+  $('[data-act=help]',top).before(el('a',{
+    class:'ib ak-sommaire',href:'https://emiliengui.github.io/animations-physique/',
+    'aria-label':'Sommaire des animations',title:'Retour au sommaire des animations'
+  },`${IC.sommaire}<span class="ak-lbl">Sommaire</span>`));
+  ak.append(top);
+  const tabs=cfg.onglets&&cfg.onglets.length>1?el('div',{class:'ak-tabs',role:'tablist'}):null;
+  if(tabs){cfg.onglets.forEach((t,i)=>{const b=el('button',{class:'ak-tab',role:'tab','aria-selected':String(i===0),'data-tab':i},`<b>${i+1}</b>${t}`);b.onclick=()=>A.setTab(i);tabs.append(b)});ak.append(tabs)}
+  const body=el('div',{class:'ak-body'}); ak.append(body);
+  const main=el('main',{class:'ak-main'}); body.append(main);
+  const scene=el('section',{class:'ak-card ak-scene'}); main.append(scene);
+  /* disposition « atelier » (7 novembre 2026, facultative : cfg.atelier) :
+     saisie à gauche ; résultat, graphique et détail du calcul à droite ; pas de colonne de réglages */
+  A.zones={};
+  if(cfg.atelier){
+    const at=typeof cfg.atelier==='object'?cfg.atelier:{};
+    ak.classList.add('ak-atelier');
+    const left=el('section',{class:'ak-card ak-saisie'},`<div class="ak-zone-h">${at.saisie||'Mes mesures'}</div>`);
+    A.zones.saisie=el('div',{class:'ak-saisie-body'}); left.append(A.zones.saisie);
+    A.zones.resultat=el('section',{class:'ak-card ak-res','aria-live':'polite'});
+    const det=el('details',{class:'ak-card ak-detail'},`<summary>${at.detail||'Voir le calcul'}</summary>`);
+    A.zones.detail=el('div',{class:'ak-detail-body'}); det.append(A.zones.detail);
+    body.insertBefore(left,main); main.insertBefore(A.zones.resultat,scene); main.append(det);
+  }
+  const pwrap=el('div',{class:'ak-panels'}); scene.append(pwrap);
+  for(const pc of (cfg.panneaux||[{id:'scene'}])){
+    const pe=el('div',{class:'ak-panel','data-id':pc.id}); pe.style.flex=`${pc.poids||1} 1 0`;
+    if(pc.titre)pe.append(el('div',{class:'ak-phead'},pc.titre));
+    const type=pc.type||'svg';
+    const node=type==='canvas'?el('canvas'):document.createElementNS('http://www.w3.org/2000/svg','svg');
+    if(type!=='canvas'){node.setAttribute('xmlns','http://www.w3.org/2000/svg');node.setAttribute('role','img');node.setAttribute('aria-label',pc.titre||cfg.titre)}
+    pe.append(node);
+    const P={id:pc.id,cfg:pc,el:pe,node,type,w:300,h:200,zoom:1,panX:0,panY:0,vz:1,vx:0,vy:0,_drags:[],head:pe.querySelector('.ak-phead')};
+    /* Les figures SVG utilisent le viewBox. Un panneau qui affiche S.graph
+       ajuste les échelles de ses graphiques. Un canvas garde son zoom interne. */
+    P.vue=type!=='canvas'?(pc.zoom===false?null:'svg'):(pc.zoom?'interne':null);
+    if(P.vue){const tl=el('div',{class:'ak-ptools'});tl.innerHTML=`
+      <button class="mini" data-z="-" title="Dézoomer (−)">−</button>
+      <button class="mini" data-z="0" aria-label="Cadrer" title="Cadrer : vue initiale (0)">${IC.cadrer}</button>
+      <button class="mini" data-z="+" title="Zoomer (+)">+</button>`;
+      tl.onclick=e=>{const z=e.target.closest('[data-z]');if(!z)return;const v=z.dataset.z;if(v==='0')A.cadrer(P);else A.zoomer(P,v==='+'?1.25:.8)};P.tools=tl;pe.append(tl)}
+    A.panels[pc.id]=P; pwrap.append(pe);
+  }
+  /* légende : bande fine entre la scène et la barre de lecture (6 novembre 2026) */
+  const legend=el('div',{class:'ak-legend'}); scene.append(legend);
+  const tr=el('div',{class:'ak-transport'});
+  tr.innerHTML=`<button class="ib ak-play" data-act="play" title="Lecture / pause (Espace)">▶ Lecture</button>
+   <button class="ib" data-act="step" title="Pas à pas (→)">${IC.step}<span class="ak-lbl">Pas</span></button>
+   <button class="ib" data-act="reset" title="Recommencer (R)">${IC.reset}<span class="ak-lbl">Recommencer</span></button>
+   <select class="ak-speed" title="Vitesse de lecture">${(cfg.vitesses||[.25,.5,1,2,4]).map(v=>`<option value="${v}"${v===(cfg.vitesse||1)?' selected':''}>× ${v}</option>`).join('')}</select>
+   <input type="range" class="ak-scrub" min="0" max="1" step="any" value="0" aria-label="Curseur temporel" hidden><span class="ak-extra"></span><span class="ak-clock"></span>`;
+  scene.append(tr);
+  /* colonne de droite (6 novembre 2026) : réglages qui défilent, mesures en bas des réglages
+     (sur téléphone, les mesures restent sous la scène) */
+  const right=el('div',{class:'ak-right'}); body.append(right);
+  const metrics=el('section',{class:'ak-metrics','aria-label':'Mesures'});
+  const side=el('aside',{class:'ak-side','aria-label':'Réglages'});
+  side.innerHTML='<div class="ak-drawer-head"><span>Réglages</span><button class="mini" data-act="settings">Fermer ✕</button></div>';
+  right.append(side);
+  /* pied de page supprimé le 6 novembre 2026 */
+  const dlg=el('dialog',{class:'ak-dialog'}); const toastEl=el('div',{class:'ak-toast'});
+  document.body.append(ak,dlg,toastEl);
+  A.root=ak; A.extra=$('.ak-extra',tr);
+  /* curseur temporel (facultatif) : cfg.curseur = {max:(a)=>…, get:(a)=>…, set:(a,v)=>…} */
+  const scrub=$('.ak-scrub',tr);
+  if(cfg.curseur){scrub.hidden=false;scrub.oninput=()=>{A.play(false);cfg.curseur.set(A,+scrub.value*cfg.curseur.max(A));A.render()}}
+  const syncScrub=()=>{if(!cfg.curseur||document.activeElement===scrub)return;const m=cfg.curseur.max(A)||1;scrub.value=Math.max(0,Math.min(1,cfg.curseur.get(A)/m))};
+
+  /* ---------- couleurs ---------- */
+  function readColors(){
+    const cs=getComputedStyle(ak), g=v=>cs.getPropertyValue(v).trim();
+    const rgb=s=>{s=s.trim();if(s[0]==='#'){if(s.length===4)s='#'+[...s.slice(1)].map(x=>x+x).join('');return[1,3,5].map(i=>parseInt(s.slice(i,i+2),16))}return s.match(/[\d.]+/g).slice(0,3).map(Number)};
+    const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(v*t+b[i]*(1-t))).join(',')+')';
+    const dark=root.dataset.theme==='dark', base=rgb(getComputedStyle(root).getPropertyValue('--'+(cfg.partie||'Anthracite')));
+    const c=mix(base,base,1), cInk=dark?mix(base,[255,255,255],.5):mix(base,[0,0,0],.7), cSoft=dark?mix(base,rgb(g('--card')),.22):mix(base,rgb(g('--paper')),.1);
+    A.C={paper:g('--paper'),card:g('--card'),ink:g('--ink'),ink2:g('--ink2'),rule:g('--rule'),grid:g('--grid'),c,cInk,cSoft,
+      v:g('--q-v'),F:g('--q-F'),B:g('--q-B'),E:g('--q-E'),Ec:g('--q-Ec'),Ep:g('--q-Ep'),Em:g('--q-Em'),pred:g('--q-pred'),hot:g('--q-hot'),cold:g('--q-cold'),
+      dark:root.dataset.theme==='dark'};
+  }
+
+  /* ---------- réglages ---------- */
+  const items={}; const groups=[];
+  function stepDec(st){const s=String(st);return s.includes('.')?s.split('.')[1].length:0}
+  function buildSettings(){
+    (cfg.reglages||[]).forEach(gc=>{
+      const g=el('div',{class:'ak-card ak-grp'}); const h=el('h4',{},`<span></span>${gc.titre}`); g.append(h);
+      groups.push({gc,el:g,h});
+      if(gc.presets){const pr=el('div',{class:'ak-presets'});gc.presets.forEach(ps=>{const b=el('button',{class:'mini',title:ps.titre||''},ps.label);b.onclick=()=>A.preset(ps);ps._btn=b;pr.append(b)});g.append(pr)}
+      for(const it of gc.items||[]){
+        const box=el('div',{class:'ak-item'}); const type=it.type||'range';
+        if(type==='range'){
+          const dec=it.dec??stepDec(it.step??1);
+          box.innerHTML=`<div class="ak-row"><label for="r_${it.id}">${it.label}</label><input class="ak-num" id="n_${it.id}" type="number" step="${it.step??1}" min="${it.min}" max="${it.max}" inputmode="decimal"><span class="ak-unit">${it.unit||''}</span></div><input type="range" id="r_${it.id}" min="${it.log?Math.log10(it.min):it.min}" max="${it.log?Math.log10(it.max):it.max}" step="${it.log?(it.stepLog??.002):(it.step??1)}">`;
+          const R=$('input[type=range]',box), N=$('.ak-num',box);
+          const lg=!!it.log, show=v=>{R.value=lg?Math.log10(Math.max(v,it.min)):v;N.value=(+v).toFixed(dec)};
+          R.oninput=()=>{const v=lg?Math.min(it.max,Math.max(it.min,10**(+R.value))):+R.value;N.value=v.toFixed(dec);A._change(it,v)};
+          N.onchange=()=>{let v=parseFloat(String(N.value).replace(',','.'));if(!isFinite(v))v=A.p[it.id];v=Math.min(it.max,Math.max(it.min,v));show(v);A._change(it,v)};
+          items[it.id]={it,box,show};
+        }else if(type==='select'){
+          box.innerHTML=`<label class="ak-row" for="s_${it.id}">${it.label}</label><select class="ak-sel" id="s_${it.id}">${it.options.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+          const S=$('select',box); S.onchange=()=>A._change(it,isNaN(+S.value)||S.value===''?S.value:+S.value);
+          items[it.id]={it,box,show:v=>{S.value=v}};
+        }else if(type==='seg'){
+          box.innerHTML=`${it.label?`<div class="ak-row">${it.label}</div>`:''}<div class="ak-seg">${it.options.map(([v,l])=>`<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div>`;
+          const bs=$$('button',box); bs.forEach(b=>b.onclick=()=>{const v=isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v;bs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));A._change(it,v)});
+          items[it.id]={it,box,show:v=>bs.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v==String(v))))};
+        }else if(type==='check'){
+          box.append(interrupteur(it.label,'c_'+it.id));
+          const C=$('input',box); C.onchange=()=>A._change(it,C.checked);
+          items[it.id]={it,box,show:v=>{C.checked=!!v}};
+        }else if(type==='boutons'){
+          const bb=el('div',{class:'ak-btns'}); for(const b of it.items){const x=el('button',{class:'mini',id:b.id?'b_'+b.id:undefined,title:b.titre||''},b.label);x.onclick=()=>{b.action(A);A.render()};bb.append(x)} box.append(bb);
+          if(it.id)items[it.id]={it,box,show:()=>{}};
+        }else if(type==='note'){
+          box.innerHTML=`<p class="ak-note">${typeof it.html==='function'?'':it.html}</p>`; if(it.id)items[it.id]={it,box,show:()=>{}};
+        }
+        if(it.id&&type!=='boutons'&&type!=='note')A.p[it.id]=it.value;
+        (it._box=box); g.append(box);
+      }
+      side.append(g);
+    });
+    for(const id in items)items[id].show(A.p[id]);
+  }
+  A._change=(it,v)=>{A.p[it.id]=v;if(items[it.id])items[it.id]._last=v;if(cfg.change)cfg.change(A,it.id,v);if(it.reinit)A.reset();refreshSettings();A.render()};
+  function vis(c){if(!c)return true;if(c.onglets&&!c.onglets.includes(A.tab))return false;if(c.si&&!c.si(A))return false;return true}
+  /* Mise à jour des réglages sans rien réécrire d'inutile : la position de défilement
+     du panneau est conservée (sinon certains navigateurs remontent en haut). */
+  let sideTop=0,userAt=0;
+  for(const ev of['wheel','touchmove','keydown','pointerdown'])side.addEventListener(ev,()=>{userAt=performance.now()},{passive:true});
+  side.addEventListener('scroll',()=>{const now=performance.now();if(side.scrollTop===0&&sideTop>0&&now-userAt>400){side.scrollTop=sideTop;return}sideTop=side.scrollTop});
+  function guardScroll(){if(side.scrollTop===0&&sideTop>0&&performance.now()-userAt>400)side.scrollTop=sideTop}
+  const setH=(e,v)=>{if(e.hidden!==v)e.hidden=v};
+  const setHTML=(e,v)=>{if(e._h!==v){e.innerHTML=v;e._h=v}};
+  function refreshSettings(){
+    const st=side.scrollTop; let num=0;
+    for(const g of groups){const v=vis(g.gc);setH(g.el,!v);if(v){num++;const t=String(num).padStart(2,'0');if(g.h.firstChild.textContent!==t)g.h.firstChild.textContent=t}
+      for(const ps of g.gc.presets||[])setH(ps._btn,!vis(ps));
+      for(const it of g.gc.items||[])if(it._box){setH(it._box,!vis(it));if(it.type==='note'&&typeof it.html==='function')setHTML(it._box.firstChild,it.html(A))}}
+    for(const id in items){const I=items[id];if(I._last!==A.p[id]){I.show(A.p[id]);I._last=A.p[id]}}
+    for(const P of Object.values(A.panels))setH(P.el,!vis(P.cfg));
+    const showT=typeof cfg.temps==='function'?cfg.temps(A):!!cfg.temps; setH(tr,!showT); if(!showT&&A.running)A.play(false);
+    if(side.scrollTop!==st)side.scrollTop=st;
+    requestAnimationFrame(()=>{if(side.scrollTop===0&&st>0)side.scrollTop=st});
+  }
+  A.refresh=refreshSettings;
+  A.set=(id,v,{silent=false}={})=>{A.p[id]=v;if(items[id]){items[id].show(v);items[id]._last=v}if(!silent&&cfg.change)cfg.change(A,id,v);refreshSettings();A.render()};
+  A.preset=ps=>{A.play(false);A.cadrerTout();for(const[k,v]of Object.entries(ps.valeurs||{})){A.p[k]=v;if(cfg.change)cfg.change(A,k,v)}refreshSettings();A.reset();if(ps.action)ps.action(A);if(ps.lecture)A.play(true);A.render()};
+  A.enable=(id,on)=>{const b=document.getElementById('b_'+id);if(b)b.disabled=!on};
+
+  /* ---------- affichages ---------- */
+  A.metrics=arr=>{const L=(arr||[]).filter(Boolean),hh=L.some(m=>m.hint);metrics.classList.toggle('has-h',hh);ak.classList.toggle('ak-has-metrics',L.length>0);const html=L.map(m=>`<div class="ak-card ak-metric${m.warn?' warn':''}"><div class="k">${m.label}</div><div class="v">${m.value}${m.unit?(m.unit==='°'?'°':`<span class="u">${m.unit}</span>`):''}</div><div class="h">${m.hint||''}</div></div>`).join('');if(metrics._h!==html){metrics.innerHTML=html;metrics._h=html}};
+  // Bloc « À retenir » retiré le 6 novembre 2026 : l'appel reste accepté, sans effet.
+  A.insight=()=>{};
+  A.legend=arr=>{const html=(arr||[]).filter(Boolean).map(l=>`<span><i class="${l.dash?'dash':l.dot?'dot':''}" style="background:${l.c};--lc:${l.c}"></i>${l.label}</span>`).join('');if(legend._h!==html){legend.innerHTML=html;legend._h=html}};
+  A.clock=html=>{const c=$('.ak-clock',tr);if(c._h!==html){c.innerHTML=html;c._h=html}};
+  A.toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+  A.panelVisible=id=>!A.panels[id].el.hidden;
+
+  /* ---------- tailles ---------- */
+  function viewBox(P){
+    const {w,h,vx,vy,vz}=P;
+    P.node.setAttribute('viewBox',P.vue==='svg'?`${vx.toFixed(2)} ${vy.toFixed(2)} ${(w/vz).toFixed(2)} ${(h/vz).toFixed(2)}`:`0 0 ${w.toFixed(1)} ${h.toFixed(1)}`);
+  }
+  function measure(){
+    A.narrow=ak.clientWidth<=640; ak.style.setProperty('--ak-top',(top.offsetHeight+(tabs?tabs.offsetHeight:0))+'px');
+    {const home=A.narrow?right:side;if(metrics.parentNode!==home||(!A.narrow&&side.lastElementChild!==metrics))home.append(metrics)} A.k=ak.classList.contains('is-proj')?1.6:A.narrow?1:1.15;
+    for(const P of Object.values(A.panels)){
+      if(P.el.hidden)continue;
+      if(A.narrow){const w=P.el.clientWidth||ak.clientWidth;P.node.style.height=Math.round(w*(P.cfg.ratioTel??.8))+'px'}else P.node.style.height='';
+      const r=P.node.getBoundingClientRect(); P.w=Math.max(50,r.width); P.h=Math.max(50,r.height);
+      if(P.type==='canvas'){const d=window.devicePixelRatio||1;if(P.node.width!==Math.round(P.w*d)||P.node.height!==Math.round(P.h*d)){P.node.width=Math.round(P.w*d);P.node.height=Math.round(P.h*d)}P.ctx=P.node.getContext('2d');P.ctx.setTransform(d,0,0,d,0,0)}
+      else viewBox(P);
+    }
+  }
+  /* ---------- rendu ---------- */
+  let graphPanels=[];
+  const activeChartView=P=>P?.vue==='graphe'&&zoomed(P)?P:null;
+  function drawFrame(){
+    const frame={graphs:[],views:graphPanels.map(activeChartView),outputs:new Map()};
+    A._graphFrame=frame;
+    try{cfg.draw?.(A)}finally{A._graphFrame=null}
+    graphPanels=[];
+    for(const [P,output] of frame.outputs){
+      const graphs=[...output.html.matchAll(/<g data-ak-graph="(\d+)">/g)].map(m=>frame.graphs[+m[1]]).filter(Boolean);
+      output.graphs=graphs;
+      if(P.vue==='svg'||P.vue==='graphe'){
+        const vue=graphs.length?'graphe':'svg';
+        if(vue!==P.vue){P.vue=vue;resetView(P);viewBox(P)}
+        P.graphs=graphs;
+      }
+      const view=activeChartView(P);
+      for(const graph of graphs){
+        graphPanels[graph.id]=P;
+        if(graph.view!==view)frame.changed=true;
+      }
+    }
+    return frame;
+  }
+  function clipCharts(node,graphs){
+    const svgElement=tag=>document.createElementNS(node.namespaceURI,tag);
+    for(const graph of graphs){
+      const axes=node.querySelector(`[data-ak-graph="${graph.id}"]`);
+      if(!axes)continue;
+      const id='ak-cadre-'+graph.id, defs=svgElement('defs'),clip=svgElement('clipPath'),rect=svgElement('rect');
+      clip.id=id;
+      for(const [k,v] of Object.entries({x:graph.x0,y:graph.y0,width:graph.w,height:graph.h}))rect.setAttribute(k,v);
+      clip.append(rect);defs.append(clip);axes.append(defs);
+      let layer=null;
+      for(let next=axes.nextElementSibling;next&&!next.hasAttribute('data-ak-graph');){
+        const child=next;next=child.nextElementSibling;
+        if(child.localName==='defs'||child.hasAttribute('data-ak-hors-graphe')){layer=null;continue}
+        if(!layer){
+          layer=svgElement('g');
+          layer.setAttribute('clip-path',`url(#${id})`);
+          child.before(layer);
+        }
+        layer.append(child);
+      }
+    }
+  }
+  function writeSvg(P,html,graphs=[]){
+    if(P.node._h===html)return;
+    P.node.innerHTML=html;
+    P.node._h=html;
+    if(activeChartView(P))clipCharts(P.node,graphs);
+  }
+  A.renderNow=()=>{
+    A._dirty=false;measure();
+    let frame=drawFrame();
+    // Si un réglage change l'ordre des tracés, associer à nouveau le zoom à son panneau.
+    if(frame.changed)frame=drawFrame();
+    for(const [P,output] of frame.outputs)writeSvg(P,output.html,output.graphs);
+    syncScrub();guardScroll();
+  };
+  A.render=()=>{if(A._dirty)return;A._dirty=true;requestAnimationFrame(()=>{if(A._dirty)A.renderNow()})};
+  A.svg=(id,html)=>{
+    const P=A.panels[id];if(!P)return;
+    if(A._graphFrame)A._graphFrame.outputs.set(P,{html});
+    else writeSvg(P,html);
+  };
+
+  /* ---------- temps ---------- */
+  let last=0;
+  const playBtn=$('.ak-play',tr);
+  A.play=on=>{on=on===undefined?!A.running:on;if(on&&cfg.peutLire&&!cfg.peutLire(A))on=false;A.running=on;playBtn.textContent=on?'❚❚ Pause':'▶ Lecture';if(on){last=performance.now();requestAnimationFrame(loop)}};
+  function loop(now){if(!A.running)return;const dt=Math.min(.05,(now-last)/1000)*A.speed;last=now;if(cfg.step)cfg.step(A,dt);A.renderNow();requestAnimationFrame(loop)}
+  A.stepOnce=()=>{A.play(false);if(cfg.step)cfg.step(A,cfg.pas??1/24);A.render()};
+  A.reset=()=>{A.play(false);A.t=0;if(cfg.reset)cfg.reset(A);A.render()};
+  $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
+
+  /* ---------- onglets ---------- */
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+
+  /* ---------- thème, projection, plein écran ---------- */
+  A.setTheme=t=>{root.dataset.theme=t;readColors();syncMenu();A.renderNow()};
+  A.setProj=on=>{
+    ak.classList.toggle('is-proj',on);
+    ak.classList.remove('drawer-open');
+    projButton.classList.toggle('on',on);
+    syncMenu();
+    A.render();
+  };
+  const acts={
+    play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
+    help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
+    image:()=>A.exportImage(),proj:()=>{
+      const projected=ak.classList.contains('is-proj');
+      A.setProj(!projected);
+      if(cfg.menuCommun&&projected&&A.narrow)ak.classList.add('drawer-open');
+    },
+    fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
+    settings:()=>{ak.classList.toggle('drawer-open');A.render()}
+  };
+  ak.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&acts[b.dataset.act])acts[b.dataset.act]()});
+  addEventListener('keydown',e=>{
+    if(dlg.open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.matches('input,select,textarea'))return;
+    const k=e.key.toLowerCase(), custom=cfg.touches&&cfg.touches[k];
+    if(custom){e.preventDefault();custom(A);A.render();return}
+    if(k===' '&&!tr.hidden){e.preventDefault();acts.play()}
+    else if(k==='arrowright'&&!tr.hidden){e.preventDefault();acts.step()}
+    else if(k==='r'&&!tr.hidden)acts.reset();
+    else if(k==='h'||k==='?')acts.help();else if(k==='p')acts.proj();else if(k==='f')acts.fs();else if(k==='t')acts.theme();else if(k==='i')acts.image();
+    else if(k==='+'||k==='='||k==='-'||k==='0'){const P=(A._hover&&!A._hover.el.hidden&&A._hover.vue)?A._hover:Object.values(A.panels).find(q=>q.vue&&!q.el.hidden);if(P){e.preventDefault();if(k==='0')A.cadrer(P);else A.zoomer(P,k==='-'?.8:1.25)}}
+    else if(k==='escape'){ak.classList.remove('drawer-open');A.render()}
+    else if(/^[1-9]$/.test(k))A.setTab(+k-1);
+  });
+
+  /* ---------- vue : zoom, cadrage, déplacement ---------- */
+  const deplacable=P=>P.vue==='svg'||P.vue==='graphe';
+  function zoomed(P){
+    if(P.vue==='interne')return Math.abs(P.zoom-1)>1e-6;
+    if(!deplacable(P))return false;
+    const seuil=P.vue==='graphe'?1e-6:.5;
+    return Math.abs(P.vz-1)>1e-6||Math.abs(P.vx)>seuil||Math.abs(P.vy)>seuil;
+  }
+  const markZoom=P=>{if(P.tools)P.tools.classList.toggle('is-zoomed',zoomed(P))};
+  const graphAt=(P,x,y)=>P.graphs.find(g=>x>=g.x0&&x<=g.x0+g.w&&y>=g.y0&&y<=g.y0+g.h);
+  function resetView(P){P.vz=1;P.vx=P.vy=0;P.zoom=1;P.panX=P.panY=0;markZoom(P)}
+  /** zoom d'un facteur f autour du point (px, py) de l'écran du panneau (centre par défaut) */
+  A.zoomer=(P,f,px,py)=>{if(typeof P==='string')P=A.panels[P];if(!P||!P.vue)return;
+    if(P.vue==='interne')P.zoom=Math.max(.4,Math.min(5,P.zoom*f));
+    else{
+      if(P.vue==='graphe'){
+        const graph=graphAt(P,px,py);
+        px=graph?(px-graph.x0)/graph.w:.5;
+        py=graph?(py-graph.y0)/graph.h:.5;
+      }else{px=px??P.w/2;py=py??P.h/2}
+      const z=Math.max(.5,Math.min(8,P.vz*f)), delta=1/P.vz-1/z;
+      P.vx+=px*delta;P.vy+=py*delta;P.vz=z;
+    }
+    markZoom(P);A.render()};
+  A.deplacer=(P,dx,dy,px,py)=>{
+    if(!deplacable(P))return;
+    if(P.vue==='graphe'){const g=graphAt(P,px,py)||P.graphs[0];dx/=g.w;dy/=g.h}
+    P.vx-=dx/P.vz;P.vy-=dy/P.vz;markZoom(P);A.render()
+  };
+  A.cadrer=P=>{if(typeof P==='string')P=A.panels[P];if(!P)return;resetView(P);A.render()};
+  A.cadrerTout=()=>{for(const P of Object.values(A.panels))A.cadrer(P)};
+  /* ---------- glisser dans un panneau ----------
+     Les coordonnées transmises aux animations sont celles de leur dessin (vue zoomée comprise).
+     Maj + glisser, bouton du milieu ou deux doigts : déplacer la vue ; molette ou pincement : zoomer.
+     Glisser hors de tout objet manipulable déplace aussi la vue quand elle est zoomée. */
+  function wire(P){const N=P.node,pts=new Map();let mode=null,h=null,last=null,pin=null;
+    const scr=e=>{const r=N.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+    const toV=s=>P.vue==='svg'?[P.vx+s[0]/P.vz,P.vy+s[1]/P.vz]:s;
+    const two=()=>{const[a,b]=[...pts.values()];return{d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,c:[(a[0]+b[0])/2,(a[1]+b[1])/2]}};
+    N.addEventListener('pointerdown',e=>{
+      const s=scr(e);A._hover=P;pts.set(e.pointerId,s);
+      if(pts.size===2&&P.vue){if(mode==='drag'&&h&&h.end)h.end(e);mode='pinch';h=null;pin=two();N.setPointerCapture(e.pointerId);e.preventDefault();return}
+      if(pts.size>1)return;
+      const[x,y]=toV(s);
+      if(deplacable(P)&&(e.shiftKey||e.button===1))mode='pan';
+      else{h=P._drags.find(d=>!d.hit||d.hit(x,y,e))||null;
+        if(h){mode='drag';if(h.start)h.start(x,y,e)}
+        else if(deplacable(P)&&zoomed(P))mode='pan';
+        else{mode=null;return}}
+      last=s;N.setPointerCapture(e.pointerId);e.preventDefault();A.render()});
+    N.addEventListener('pointermove',e=>{const s=scr(e);
+      if(!pts.has(e.pointerId)){if(e.pointerType==='mouse'){const[x,y]=toV(s);N.style.cursor=P._drags.some(d=>d.hit&&d.hit(x,y,e))?'grab':(deplacable(P)&&(e.shiftKey||zoomed(P)))?'move':''}return}
+      pts.set(e.pointerId,s);
+      if(mode==='pinch'&&pts.size>=2){const q=two();A.zoomer(P,q.d/pin.d,q.c[0],q.c[1]);A.deplacer(P,q.c[0]-pin.c[0],q.c[1]-pin.c[1],q.c[0],q.c[1]);pin=q;return}
+      if(mode==='pan'){A.deplacer(P,s[0]-last[0],s[1]-last[1],last[0],last[1]);last=s;return}
+      if(mode==='drag'&&h){const[x,y]=toV(s);h.move(x,y,e);A.render()}});
+    const end=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);
+      if(mode==='drag'&&h&&h.end)h.end(e);
+      if(pts.size===0){mode=null;h=null}else if(mode==='pinch'){mode='pan';last=[...pts.values()][0]}
+      A.render()};
+    N.addEventListener('pointerup',end);N.addEventListener('pointercancel',end);
+    if(P.vue){
+      N.addEventListener('wheel',e=>{if(A.narrow&&!e.ctrlKey)return;e.preventDefault();const s=scr(e);A.zoomer(P,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),s[0],s[1])},{passive:false});
+      N.addEventListener('dblclick',e=>{const[x,y]=toV(scr(e));if(!P._drags.some(d=>d.hit&&d.hit(x,y,e))&&zoomed(P))A.cadrer(P)});
+      N.addEventListener('pointerenter',()=>{A._hover=P});
+    }
+  }
+  for(const P of Object.values(A.panels))wire(P);
+  A.drag=(id,h)=>{A.panels[id]._drags.push(h)};
+
+  /* ---------- export image (toujours en thème clair) ---------- */
+  A.exportImage=async()=>{
+    const was=root.dataset.theme; root.dataset.theme='light'; readColors(); A.renderNow();
+    const vis=Object.values(A.panels).filter(P=>!P.el.hidden), base=pwrap.getBoundingClientRect(), sc=2;
+    const cv=document.createElement('canvas'); cv.width=Math.round(base.width*sc); cv.height=Math.round(base.height*sc);
+    const ctx=cv.getContext('2d'); ctx.fillStyle=A.C.card; ctx.fillRect(0,0,cv.width,cv.height);
+    const jobs=vis.map(P=>new Promise(res=>{const r=P.node.getBoundingClientRect(), x=(r.left-base.left)*sc, y=(r.top-base.top)*sc;
+      if(P.type==='canvas'){ctx.drawImage(P.node,x,y,r.width*sc,r.height*sc);res();return}
+      const clone=P.node.cloneNode(true); clone.setAttribute('width',r.width); clone.setAttribute('height',r.height);
+      const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+      const im=new Image(); im.onload=()=>{ctx.drawImage(im,x,y,r.width*sc,r.height*sc);res()}; im.onerror=()=>res(); im.src=src;}));
+    await Promise.all(jobs);
+    root.dataset.theme=was; readColors(); A.renderNow();
+    const a=document.createElement('a'); const tabName=cfg.onglets&&cfg.onglets.length>1?'_'+(A.tab+1):'';
+    a.download=`${cfg.code}_${(cfg.fichier||cfg.titre).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'_')}${tabName}.png`;
+    a.href=cv.toDataURL('image/png'); a.click(); A.toast('Image enregistrée (thème clair)');
+  };
+
+  /* ---------- aide ---------- */
+  function buildHelp(){
+    const h=cfg.aide||{}, sec=(t,c)=>c?`<h4>${t}</h4>${/^\s*</.test(c)?c:`<p>${c}</p>`}`:'';
+    dlg.innerHTML=`<header><h3>Aide · ${cfg.titre}</h3><button class="mini" data-close>Fermer ✕</button></header><div class="db">
+    ${cfg.sousTitre?`<p class="ak-dlg-sub">${cfg.sousTitre}</p>`:''}${sec('Ce qu\'on voit',h.voit)}${sec('Ce qu\'on peut faire',h.faire)}${sec('Modèle et hypothèses',h.modele)}${sec('Lien avec le cours',h.cours)}${sec('Pour aller plus loin',h.plus)}
+    <h4>Raccourcis</h4><p>${cfg.temps?'<kbd>Espace</kbd> lecture / pause · <kbd>→</kbd> pas à pas · <kbd>R</kbd> recommencer · ':''}${tabs?`<kbd>1</kbd>–<kbd>${cfg.onglets.length}</kbd> onglets · `:''}<kbd>P</kbd> projection · <kbd>F</kbd> plein écran · <kbd>T</kbd> thème · <kbd>I</kbd> image · <kbd>H</kbd> aide${h.touches?' · '+h.touches:''}</p>
+    <p>Vue : molette, pincement ou <kbd>+</kbd> <kbd>−</kbd> pour zoomer · <kbd>Maj</kbd> + glisser, deux doigts, ou glisser une vue zoomée pour la déplacer · « Cadrer », <kbd>0</kbd> ou double clic : vue initiale.</p>
+    ${h.credits?`<h4>Crédits</h4><p>${h.credits}</p>`:''}</div>`;
+    dlg.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target===dlg)dlg.close()});
+  }
+
+  /* ---------- démarrage ---------- */
+  buildSettings(); buildHelp(); readColors();
+  if(cfg.init)cfg.init(A);
+  refreshSettings(); A.reset();
+  new ResizeObserver(()=>A.render()).observe(ak);
+  return A;
+}
+
+window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH,interrupteur};
+})();
+
+</script>
+<script>
+'use strict';
+/* =====================================================================
+   MC1 MP · A3 Champ de marée : modèle physique
+   Modèle du cours (III.5) : le référentiel géocentrique est en translation d'accélération a(O) = G_L(O) + G_S(O) ;
+   un point M proche de la Terre subit, en plus du champ de pesanteur, le terme de marée  C(M) = G(M) − G(O)  de chaque astre.
+   Premier ordre en R_T/d :  C(M) = (G M_astre / d³) (3 (OM·e) e − OM),  e = vecteur unitaire de O vers l'astre.
+   Ce champ dérive du potentiel  Φ = −(G M / 2d³)(3 (OM·e)² − OM²).
+   Surface libre statique (orthogonale à la pesanteur, terme de marée compris) :  δz = −Φ(R_T)/g = a P₂(cos ψ),
+     a = G M R_T² / (d³ g),  P₂(c) = (3c² − 1)/2,  ψ = angle entre OM et la direction de l'astre.
+   La moyenne de P₂ sur la sphère est nulle : le niveau moyen est conservé.
+   Port de latitude λ, astres dans le plan équatorial (pas de déclinaison) : cos ψ = cos λ cos(φ − φ_astre),
+     écart au niveau moyen de la journée : h = (3/4) cos²λ [a_L cos 2φ_L + a_S cos 2φ_S]
+     (φ_L, φ_S : angles horaires de la Lune et du Soleil au port).
+   Marnage (pic à pic) : (3/2) cos²λ √(a_L² + a_S² + 2 a_L a_S cos 2Δ), Δ = élongation Lune-Soleil.
+   Jour lunaire 24 h 50 min 28 s, mois synodique 29.53059 j. Orbites supposées circulaires et coplanaires avec l'équateur.
+   ===================================================================== */
+const MC1Maree = (() => {
+  const G = 6.67e-11, ML = 7.35e22, DL = 3.84e8, MS = 1.99e30, DS = 1.50e11, RT = 6.37e6, G0 = 9.81;   // données du cours (application 9)
+  const TAU = 2 * Math.PI, DEG = Math.PI / 180;
+  const TJL = 24.8412 * 3600;                          // jour lunaire (s)
+  const TSYN = 29.53059 * 86400;                       // mois synodique (s)
+  const TJL_H = 24.8412, TSYN_J = 29.53059;            // les mêmes en heures et en jours
+  const aL = G * ML * RT * RT / (DL ** 3 * G0), aS = G * MS * RT * RT / (DS ** 3 * G0);   // m
+  const CL_AXE = 2 * G * ML * RT / DL ** 3, CS_AXE = 2 * G * MS * RT / DS ** 3;            // m.s⁻², sur l'axe
+  const P2 = c => (3 * c * c - 1) / 2;
+
+  /** champ de gravitation exact d'un astre de masse M situé en (D, 0), au point (x, y) (mètres) */
+  function gravite(x, y, M, D) { const dx = D - x, r = Math.hypot(dx, y), f = G * M / (r * r * r); return [f * dx, -f * y]; }
+  /** terme de marée exact, G(M) − G(O), astre en (D, 0) */
+  function termeExact(x, y, M, D) { const a = gravite(x, y, M, D), o = gravite(0, 0, M, D); return [a[0] - o[0], a[1] - o[1]]; }
+  /** terme de marée au premier ordre, astre dans la direction d'azimut s (rad), à la distance D */
+  function terme1(x, y, M, D, s) {
+    const ex = Math.cos(s), ey = Math.sin(s), pe = x * ex + y * ey, f = G * M / D ** 3;
+    return [f * (3 * pe * ex - x), f * (3 * pe * ey - y)];
+  }
+  /** terme de marée total (Lune d'azimut 0, Soleil d'azimut s si soleil) au point (x, y) du plan équatorial */
+  function termeTotal(x, y, soleil, s) {
+    const l = terme1(x, y, ML, DL, 0);
+    if (!soleil) return l;
+    const o = terme1(x, y, MS, DS, s);
+    return [l[0] + o[0], l[1] + o[1]];
+  }
+  /** surface libre dans le plan équatorial : dénivellation (m) au point d'azimut φ (Lune d'azimut 0, Soleil d'azimut s) */
+  function dz(phi, soleil, s) { return aL * P2(Math.cos(phi)) + (soleil ? aS * P2(Math.cos(phi - s)) : 0); }
+  /** même chose avec la Lune d'azimut thetaL et le Soleil d'azimut 0 (vue de la scène « Lune et Soleil ») */
+  function dzSoleilFixe(phi, thetaL) { return aL * P2(Math.cos(phi - thetaL)) + aS * P2(Math.cos(phi)); }
+
+  /** h(t) au port (cm), t en jours depuis la nouvelle lune où la Lune et le Soleil sont au méridien ; φ_L = 2π t / T_jl ; φ_S = φ_L − s, s = −2π t / T_syn */
+  function hPort(lat, tJ, soleil) {
+    const c2 = Math.cos(lat * DEG) ** 2, phiL = TAU * tJ * 86400 / TJL, s = -TAU * tJ * 86400 / TSYN;
+    return 100 * .75 * c2 * (aL * Math.cos(2 * phiL) + (soleil ? aS * Math.cos(2 * (phiL - s)) : 0));
+  }
+  /** variante pour la scène 1 : élongation fixe s (rad) et heure t en heures */
+  function hPortH(lat, tH, soleil, s) {
+    const c2 = Math.cos(lat * DEG) ** 2, phiL = TAU * tH / TJL_H;
+    return 100 * .75 * c2 * (aL * Math.cos(2 * phiL) + (soleil ? aS * Math.cos(2 * (phiL - s)) : 0));
+  }
+  /** niveau de la mer avec réponse du bassin : amplification amp, retard (h) */
+  function hBassin(lat, tJ, soleil, amp, retardH) { return amp * hPort(lat, tJ - retardH / 24, soleil); }
+
+  /** marnage (cm), pic à pic, d'élongation Δ (rad) */
+  function marnage(lat, delta, soleil) {
+    const c2 = Math.cos(lat * DEG) ** 2;
+    return 100 * 1.5 * c2 * (soleil ? Math.sqrt(aL * aL + aS * aS + 2 * aL * aS * Math.cos(2 * delta)) : aL);
+  }
+  const vives = lat => marnage(lat, 0, true), mortes = lat => 100 * 1.5 * Math.cos(lat * DEG) ** 2 * (aL - aS);
+
+  /** nom de la phase de la Lune pour un âge (j) ; chaîne vide loin d'une phase principale */
+  function phase(ageJ) {
+    const q = TSYN_J / 4, k = Math.round(ageJ / q);
+    if (Math.abs(ageJ - k * q) > .75) return '';
+    return ['nouvelle lune', 'premier quartier', 'pleine lune', 'dernier quartier', 'nouvelle lune'][k];
+  }
+
+  return {G, ML, DL, MS, DS, RT, G0, TAU, DEG, TJL, TSYN, TJL_H, TSYN_J, aL, aS, CL_AXE, CS_AXE, P2,
+    gravite, termeExact, terme1, termeTotal, dz, dzSoleilFixe, hPort, hPortH, hBassin, marnage, vives, mortes, phase};
+})();
+
+// @titre    Champ de marée · MC1 · MP
+// @sortie   ../MC1_Champ_Maree/MC1_Champ_Maree.html
+// @inclure  MC1_Champ_Maree_Physique.js
+// @description Terme de marée de la Lune et du Soleil, bourrelets de la surface des océans, vives-eaux et mortes-eaux, hauteur d'eau en un port sur un mois (modèle statique).
+'use strict';
+/* =====================================================================
+   MC1 MP · A3 Champ de marée
+   Physique : MC1_Champ_Maree_Physique.js (terme de marée C = G(M) − G(O), surface libre statique δz = a P₂(cos ψ), marnage).
+   Onglets : 1 champ de marée (Terre vue du pôle Nord, Lune, Soleil facultatif, port) · 2 Lune et Soleil (phase, marnage) · 3 marée en un port (mois).
+   Notations du cours : C_L, C_S, G_L, d_L, M_L, R_T, Ω_T, λ ; ψ = angle entre OM et la direction de l'astre (ajouté au cadrage).
+   Temps : onglet 1 en heures (a.t, deux jours lunaires) ; onglets 2 et 3 en jours (a.t, un mois synodique).
+   ===================================================================== */
+(() => {
+  const MM = MC1Maree, M = AnimKit.M, TAU = MM.TAU, DEG = MM.DEG;
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const clipped = (S, G, id, content) => S.clip(id, G) + '<g clip-path="url(#' + id + ')">' + content + '</g>';
+  const lab = (a, x, y, html, o = {}) => a.S.text(x, y, html, {size: 14, ...o});
+  const T0MAX = 2 * MM.TJL_H, TMOIS = MM.TSYN_J;
+  const EXAG = a => a.p.exag * 1e6;                                  // facteur d'exagération des dénivellations
+  const sAz = a => -TAU * a.p.age / TMOIS;                           // azimuth du Soleil (Lune à 0), onglet 1
+  const hm = h => { const m = Math.round(h * 60); return Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); };
+
+  /* ---------- outils de dessin ---------- */
+  function vecLabel(a, x, y, sym, sub, o = {}) {                      // symbole avec flèche au-dessus
+    const S = a.S, size = (o.size ?? 14) * a.k, c = o.c || a.C.ink;
+    const ws = size * .6 * sym.length, wTot = ws + size * (sub ? .45 * sub.length : 0) + size * .6 * (o.tail ? o.tail.length : 0);
+    const x0 = o.anchor === 'end' ? x - wTot : o.anchor === 'middle' ? x - wTot / 2 : x;
+    return S.text(x0, y, S.v(sym, sub) + (o.tail || ''), {anchor: 'start', size: o.size ?? 14, c, weight: o.weight}) +
+      S.arrow(x0 + size * .04, y - size * .78, x0 + ws + size * .04, y - size * .78, {c, w: 1.2, head: 4.5 * a.k});
+  }
+  function contour(cx, cy, f, n = 240) {                              // courbe fermée r(φ), y vers le haut
+    const pts = [];
+    for (let i = 0; i < n; i++) { const phi = TAU * i / n, r = f(phi); pts.push([cx + r * Math.cos(phi), cy - r * Math.sin(phi)]); }
+    return pts;
+  }
+  function soleil(a, x, y, r, c) {                                    // disque et rayons
+    let s = a.S.circle(x, y, r, {fill: a.C.card, c, w: 2});
+    for (let i = 0; i < 10; i++) { const f = i * TAU / 10; s += a.S.line(x + 1.4 * r * Math.cos(f), y + 1.4 * r * Math.sin(f), x + 1.9 * r * Math.cos(f), y + 1.9 * r * Math.sin(f), {c, w: 2}); }
+    return s;
+  }
+  function lune(a, x, y, r, claire) {                                 // disque ; moitié éclairée du côté du Soleil (à droite)
+    let s = a.S.circle(x, y, r, {fill: a.C.rule, c: a.C.ink2, w: 1.6});
+    if (claire) s += `<path d="M${x},${y - r}A${r},${r} 0 0 1 ${x},${y + r}Z" fill="#ece5c8" stroke="none"/>` + a.S.circle(x, y, r, {c: a.C.ink2, w: 1.6});
+    return s;
+  }
+
+  /* ---------- onglet 1 : la Terre vue du pôle Nord ---------- */
+  function drawTerre(a) {
+    const {S, C, k, p, fmt} = a, P = a.panels.terre, w = P.w, h = P.h, dec = p.champ === 'decomp';
+    const cx = w * .40, cy = h * .5, re = Math.min(h * .27, w * .19), Ro = Math.max(re * 3, w - cx - 46 * k);
+    const sol = p.soleil1 && !dec, s = sAz(a), EX = EXAG(a);
+    const mx = cx + Ro, Rs = Math.min(Ro * .8, h * .42), sx = cx + Rs * Math.cos(s), sy = cy - Rs * Math.sin(s);
+    const rot = dec ? 0 : TAU * a.t / MM.TJL_H;                                  // azimuth du port par rapport à la direction de la Lune
+    let g = '';
+    if (!dec) g += S.poly(contour(cx, cy, f => re * (1 + EX * MM.dz(f, sol, s) / MM.RT)), {close: true, fill: C.cSoft, c: C.cInk, w: 1.8, dash: '6 5'});
+    g += S.circle(cx, cy, re, {fill: C.card, c: C.cInk, w: 2.2});
+    for (const lat of [30, 60]) g += S.circle(cx, cy, re * Math.cos(lat * DEG), {c: C.ink2, w: 1, op: .3});
+    for (let j = 1; j < 12; j++) { const f = rot + j * TAU / 12; g += S.line(cx, cy, cx + re * Math.cos(f), cy - re * Math.sin(f), {c: C.ink2, w: 1, op: .3}); }
+    g += S.arc(cx, cy, re * .3, 20 * DEG, 100 * DEG, {c: C.ink2, w: 1.6, arrow: true}) + lab(a, cx + re * .44 * Math.cos(60 * DEG), cy - re * .44 * Math.sin(60 * DEG), S.v('Ω', 'T'), {anchor: 'middle', c: C.ink2, size: 13});
+    // direction des astres
+    g += S.line(cx + 1.15 * re, cy, mx - 16 * k, cy, {c: C.ink2, w: 1.2, dash: '2 5', op: .7});
+    g += lune(a, mx, cy, 10 * k, false) + lab(a, mx, cy + 24 * k, 'Lune', {anchor: 'middle', c: C.ink2});
+    if (sol) {
+      g += S.line(cx + 1.15 * re * Math.cos(s), cy - 1.15 * re * Math.sin(s), sx - 18 * k * Math.cos(s), sy + 18 * k * Math.sin(s), {c: C.hot, w: 1.2, dash: '2 5', op: .7});
+      g += soleil(a, sx, sy, 8 * k, C.hot) + lab(a, sx, sy + (sy > cy + 10 * k ? 28 : -28) * k, 'Soleil', {anchor: 'middle', c: C.hot, weight: 600});
+    }
+    // port
+    const rp = re * Math.cos(p.lat * DEG), px = cx + rp * Math.cos(rot), py = cy - rp * Math.sin(rot);
+    if (!dec) {
+      g += S.line(cx, cy, cx + re * Math.cos(rot), cy - re * Math.sin(rot), {c: C.cInk, w: 2});
+      g += S.circle(px, py, 5.5 * k, {fill: C.cInk, c: C.card, w: 1.5}) + lab(a, cx + (re + 14 * k) * Math.cos(rot), cy - (re + 14 * k) * Math.sin(rot) - 2 * k, 'port', {anchor: 'middle', c: C.cInk, weight: 600});
+    }
+    g += S.circle(cx, cy, 2.5 * k, {fill: C.ink});
+    if (!dec) {
+      const sc = .55 * re / MM.CL_AXE;
+      for (let j = 0; j < 24; j++) {
+        const f = j * TAU / 24, c = MM.termeTotal(MM.RT * Math.cos(f), MM.RT * Math.sin(f), sol, s), X0 = cx + re * Math.cos(f), Y0 = cy - re * Math.sin(f);
+        g += S.arrow(X0, Y0, X0 + sc * c[0], Y0 - sc * c[1], {c: C.F, w: 2.2});
+      }
+      g += vecLabel(a, cx + re + (sol ? .85 : .6) * re + 8 * k, cy - 14 * k, 'C', sol ? 'L+S' : 'L', {c: C.F, weight: 600});
+    } else {
+      const D = p.dloupe * MM.RT, gO = MM.gravite(0, 0, MM.ML, D)[0], scG = .62 * re / gO, scC = .55 * re / (2 * MM.G * MM.ML * MM.RT / D ** 3);
+      let gg = '', cc = '', c1 = '';
+      for (let j = 0; j < 8; j++) {
+        const f = j * TAU / 8, x = MM.RT * Math.cos(f), y = MM.RT * Math.sin(f), X0 = cx + re * Math.cos(f), Y0 = cy - re * Math.sin(f);
+        const G = MM.gravite(x, y, MM.ML, D), Ce = MM.termeExact(x, y, MM.ML, D), C1 = MM.terme1(x, y, MM.ML, D, 0);
+        gg += S.arrow(X0, Y0, X0 + scG * G[0], Y0 - scG * G[1], {c: C.B, w: 2});
+        cc += S.arrow(X0, Y0, X0 + scC * Ce[0], Y0 - scC * Ce[1], {c: C.F, w: 2.4});
+        c1 += S.arrow(X0, Y0, X0 + scC * C1[0], Y0 - scC * C1[1], {c: C.ink, w: 1.2, dash: '3 3', op: .9, head: 5 * k});
+      }
+      g += gg + S.arrow(cx, cy, cx + scG * gO, cy, {c: C.B, w: 3.2}) + cc + c1;
+      g += vecLabel(a, cx + scG * gO + 6 * k, cy - 8 * k, 'G', 'L', {c: C.B, weight: 600, tail: '(O)'});
+      g += lab(a, (cx + 1.15 * re + mx) / 2, cy - 16 * k, S.v('d', 'L') + ' = ' + fmt.fix(p.dloupe, 1) + ' ' + S.v('R', 'T'), {anchor: 'middle', c: C.ink2});
+    }
+    a.svg('terre', g);
+    const L = [];
+    if (!dec) { L.push({label: vecH('C', 'L') + (sol ? ' + ' + vecH('C', 'S') : '') + ' (terme de marée)', c: C.F}, {label: 'surface des océans (dénivellation très exagérée)', c: C.cInk, dash: true}); }
+    else { L.push({label: vecH('G', 'L') + '(M) et ' + vecH('G', 'L') + '(O) (échelle propre)', c: C.B}, {label: vecH('C', 'L') + ' = ' + vecH('G', 'L') + '(M) − ' + vecH('G', 'L') + '(O) exact (échelle propre)', c: C.F}, {label: vecH('C', 'L') + ' au premier ordre (cours)', c: C.ink, dash: true}); }
+    a.legend(L);
+  }
+  const vecH = (s, sub) => M.vec(M.v(s, sub));
+
+  function drawPort1(a) {
+    const {S, C, k, p} = a, P = a.panels.port1, sol = p.soleil1, s = sAz(a), t = Math.min(a.t, T0MAX);
+    const G = S.graph({x: 0, y: 0, w: P.w, h: P.h, padL: 62 * k, padR: 14 * k, padT: 26 * k, padB: 44 * k, xmin: 0, xmax: T0MAX, ymin: -40, ymax: 40,
+      xlab: 't (h)', ylab: 'h (cm)', xticks: [0, 12, 24, 36, 48], yticks: [-40, -20, 0, 20, 40]});
+    const n = Math.max(2, Math.ceil(t / T0MAX * 300)), pts = [];
+    for (let i = 0; i <= n; i++) { const tt = t * i / n; pts.push([tt, MM.hPortH(p.lat, tt, sol, s)]); }
+    let inner = S.curve(pts, G, {c: C.cInk, w: 2.6});
+    inner += S.line(G.X(t), G.y0, G.X(t), G.y0 + G.h, {c: C.ink2, w: 1.2, dash: '3 4', op: .8}) + S.circle(G.X(t), G.Y(MM.hPortH(p.lat, t, sol, s)), 5 * k, {fill: C.cInk, c: C.card, w: 1.5});
+    a.svg('port1', G.svg + clipped(S, G, 'mc1m-g1', inner));
+  }
+
+  function metrics0(a) {
+    const {fmt, p} = a, dec = p.champ === 'decomp', sol = p.soleil1 && !dec, s = sAz(a), out = [];
+    if (!dec) {
+      let mn = 1e9, mx = -1e9; for (let i = 0; i < 360; i++) { const d = MM.dz(i * DEG, sol, s); mn = Math.min(mn, d); mx = Math.max(mx, d); }
+      out.push({label: 'Terme de marée de la Lune, sur l’axe Terre-Lune', value: fmt.sci(MM.CL_AXE, 2), unit: 'm.s⁻²', hint: '2 ' + M.v('G') + M.v('M', 'L') + M.v('R', 'T') + ' / ' + M.v('d', 'L') + '³'});
+      out.push({label: 'En unité de g', value: fmt.sci(MM.CL_AXE / MM.G0, 2), unit: '', hint: 'de l’ordre de 10⁻⁷ g'});
+      out.push({label: 'Dénivellation entre bourrelet et creux (modèle statique)', value: fmt.fix(mx - mn, 2), unit: 'm', hint: sol ? 'Lune et Soleil à l’âge choisi' : 'Lune seule : (3/2) ' + M.v('a', 'L')});
+    } else {
+      const D = p.dloupe * MM.RT, ex = MM.termeExact(MM.RT, 0, MM.ML, D)[0], c1 = MM.terme1(MM.RT, 0, MM.ML, D, 0)[0], gO = MM.gravite(0, 0, MM.ML, D)[0];
+      out.push({label: M.v('C', 'L') + ' / ' + M.v('G', 'L') + '(O), sur l’axe', value: fmt.sig(ex / gO, 3), unit: '', hint: 'environ 2 ' + M.v('R', 'T') + ' / ' + M.v('d', 'L')});
+      out.push({label: 'Exact / premier ordre, sur l’axe', value: fmt.sig(ex / c1, 4), unit: '', hint: 'écart du développement limité du cours'});
+    }
+    a.metrics(out);
+  }
+
+  /* ---------- onglet 2 : Lune et Soleil ---------- */
+  function drawOrbite(a) {
+    const {S, C, k, p} = a, P = a.panels.orbite, w = P.w, h = P.h, age = clamp(a.t, 0, TMOIS), th = TAU * age / TMOIS, EX = EXAG(a);
+    const cx = w * .40, cy = h * .5, re = Math.min(h * .25, w * .16), xs = w - 34 * k, Ro = Math.max(re * 1.6, Math.min(h * .37, xs - cx - 70 * k, cx - 36 * k));
+    let g = '';
+    g += S.circle(cx, cy, Ro, {c: C.ink2, w: 1, dash: '3 5', op: .5});
+    const fL = f => MM.aL * MM.P2(Math.cos(f - th)), fS = f => MM.aS * MM.P2(Math.cos(f));
+    const R = f => re * (1 + EX * (fL(f)) / MM.RT), R2 = f => re * (1 + EX * fS(f) / MM.RT), R3 = f => re * (1 + EX * (fL(f) + fS(f)) / MM.RT);
+    g += S.poly(contour(cx, cy, R3), {close: true, fill: C.cSoft, c: C.cInk, w: 2.6});
+    g += S.poly(contour(cx, cy, R), {close: true, c: C.B, w: 1.8, dash: '7 5'});
+    g += S.poly(contour(cx, cy, R2), {close: true, c: C.hot, w: 1.8, dash: '2 4'});
+    g += S.circle(cx, cy, re, {fill: C.card, c: C.cInk, w: 2.2}) + S.circle(cx, cy, 2.5 * k, {fill: C.ink});
+    g += lab(a, cx, cy + re * .55, 'Terre', {anchor: 'middle', c: C.ink2, size: 13});
+    // Soleil : direction fixe, rayons parallèles
+    g += soleil(a, xs, cy, 11 * k, C.hot) + lab(a, xs, cy + 34 * k, 'Soleil', {anchor: 'middle', c: C.hot, weight: 600});
+    for (const dy of [-2, -1, 1, 2]) g += S.arrow(xs - 24 * k, cy + dy * 22 * k, xs - 54 * k, cy + dy * 22 * k, {c: C.hot, w: 1.4, op: .75});
+    // Lune
+    const mx = cx + Ro * Math.cos(th), my = cy - Ro * Math.sin(th);
+    g += S.line(cx + re * 1.1 * Math.cos(th), cy - re * 1.1 * Math.sin(th), mx - 14 * k * Math.cos(th), my + 14 * k * Math.sin(th), {c: C.ink2, w: 1.2, dash: '2 5', op: .7});
+    g += lune(a, mx, my, 10 * k, true) + lab(a, Math.max(mx, 26 * k), my + (Math.sin(th) >= 0 ? -26 : 26) * k, 'Lune', {anchor: 'middle', c: C.ink2, weight: 600});
+    a.svg('orbite', g);
+    a.legend([{label: 'bourrelet dû à la Lune', c: C.B, dash: true}, {label: 'bourrelet dû au Soleil', c: C.hot, dot: true}, {label: 'surface des océans (somme)', c: C.cInk}]);
+  }
+  function drawMarnage(a) {
+    const {S, C, k, p} = a, P = a.panels.marnage, age = clamp(a.t, 0, TMOIS);
+    const G = S.graph({x: 0, y: 0, w: P.w, h: P.h, padL: 62 * k, padR: 14 * k, padT: 26 * k, padB: 44 * k, xmin: 0, xmax: TMOIS, ymin: 0, ymax: 100,
+      xlab: 'âge de la Lune (j)', ylab: 'marnage à l’équateur (cm)', xticks: [0, 5, 10, 15, 20, 25], yticks: [0, 25, 50, 75, 100]});
+    const mar = ag => MM.marnage(0, TAU * ag / TMOIS, true);
+    let inner = '';
+    if (p.niveaux) {
+      const lv = [[MM.vives(0), 'vives-eaux'], [MM.mortes(0), 'mortes-eaux'], [MM.marnage(0, 0, false), 'Lune seule']];
+      lv.forEach(([v, nom], i) => { inner += S.line(G.x0, G.Y(v), G.x0 + G.w, G.Y(v), {c: C.ink2, w: 1.2, dash: i === 2 ? '2 5' : '6 5', op: .85}) + lab(a, G.x0 + G.w - 6 * k, G.Y(v) - 10 * k, nom + ' : ' + a.fmt.fix(v, 0) + ' cm', {anchor: 'end', c: C.ink2, size: 13}); });
+    }
+    const n = Math.max(2, Math.ceil(age / TMOIS * 300)), pts = [];
+    for (let i = 0; i <= n; i++) { const ag = age * i / n; pts.push([ag, mar(ag)]); }
+    inner += S.curve(pts, G, {c: C.cInk, w: 2.6}) + S.line(G.X(age), G.y0, G.X(age), G.y0 + G.h, {c: C.ink2, w: 1.2, dash: '3 4', op: .8}) + S.circle(G.X(age), G.Y(mar(age)), 5 * k, {fill: C.cInk, c: C.card, w: 1.5});
+    let top = ''; [['NL', 0], ['PQ', TMOIS / 4], ['PL', TMOIS / 2], ['DQ', 3 * TMOIS / 4], ['NL', TMOIS]].forEach(([nom, ag]) => { top += lab(a, G.X(ag), G.y0 + G.h - 12 * k, nom, {anchor: ag === 0 ? 'start' : ag === TMOIS ? 'end' : 'middle', c: C.ink2, size: 12.5, weight: 600}); });
+    a.svg('marnage', G.svg + clipped(S, G, 'mc1m-g2', inner) + top);
+  }
+  function metrics1(a) {
+    const {fmt, p} = a, age = clamp(a.t, 0, TMOIS), D = TAU * age / TMOIS;
+    a.metrics(!p.valeurs ? [] : [
+      {label: 'Angle Lune–Soleil vu de la Terre', value: fmt.fix(((D / DEG + 180) % 360) - 180, 0), unit: '°', hint: '0° ou 180° : syzygie ; ±90° : quadrature'},
+      {label: 'Marnage à l’équateur (modèle statique)', value: fmt.fix(MM.marnage(0, D, true), 0), unit: 'cm', hint: '(3/2) √(' + M.v('a', 'L') + '² + ' + M.v('a', 'S') + '² + 2 ' + M.v('a', 'L') + M.v('a', 'S') + ' cos 2Δ)'},
+      {label: 'Vives-eaux / mortes-eaux', value: fmt.fix(MM.vives(0) / MM.mortes(0), 2), unit: '', hint: '(' + M.v('a', 'L') + ' + ' + M.v('a', 'S') + ') / (' + M.v('a', 'L') + ' − ' + M.v('a', 'S') + ')'}
+    ]);
+  }
+
+  /* ---------- onglet 3 : marée en un port ---------- */
+  const SC3 = a => a.p.bassin ? {u: 'm', f: .01, ymax: 10, yt: [-10, -5, 0, 5, 10]} : {u: 'cm', f: 1, ymax: 40, yt: [-40, -20, 0, 20, 40]};
+  const hS = (a, t) => MM.hPort(a.p.lat, t, a.p.soleil3);
+  const hB = (a, t) => MM.hBassin(a.p.lat, t, a.p.soleil3, a.p.amp, a.p.retard);
+  const hShow = (a, t) => a.p.bassin ? hB(a, t) : hS(a, t);
+  function jalons(G, a, ymax) {                                         // phases de la Lune en haut du graphe
+    let s = ''; [['NL', 0], ['PQ', TMOIS / 4], ['PL', TMOIS / 2], ['DQ', 3 * TMOIS / 4], ['NL', TMOIS]].forEach(([nom, ag]) => { s += lab(a, G.X(ag), G.y0 + G.h - 12 * a.k, nom, {anchor: ag === 0 ? 'start' : ag === TMOIS ? 'end' : 'middle', c: a.C.ink2, size: 12.5, weight: 600}); });
+    return s;
+  }
+  function drawMois(a) {
+    const {S, C, k, p} = a, P = a.panels.mois, sc = SC3(a), t = clamp(a.t, 0, TMOIS);
+    const G = S.graph({x: 0, y: 0, w: P.w, h: P.h, padL: 62 * k, padR: 14 * k, padT: 26 * k, padB: 44 * k, xmin: 0, xmax: TMOIS, ymin: -sc.ymax, ymax: sc.ymax,
+      xlab: 't (j)', ylab: 'h (' + sc.u + ')', xticks: [0, 5, 10, 15, 20, 25], yticks: sc.yt});
+    const n = Math.max(2, Math.ceil(t / TMOIS * 900)), a1 = [], a2 = [];
+    for (let i = 0; i <= n; i++) { const tt = t * i / n; a1.push([tt, hS(a, tt) * sc.f]); if (p.bassin) a2.push([tt, hB(a, tt) * sc.f]); }
+    let inner = '';
+    if (p.enveloppe) {
+      const e1 = [], e2 = [], amp = p.bassin ? p.amp : 1;
+      for (let i = 0; i <= 400; i++) { const ag = TMOIS * i / 400, e = amp * MM.marnage(p.lat, TAU * ag / TMOIS, p.soleil3) / 2 * sc.f; e1.push([ag, e]); e2.push([ag, -e]); }
+      inner += S.curve(e1, G, {c: C.ink2, w: 1.3, dash: '6 5', op: .9}) + S.curve(e2, G, {c: C.ink2, w: 1.3, dash: '6 5', op: .9});
+    }
+    if (p.bassin) inner += S.curve(a1, G, {c: C.ink2, w: 1.4}) + S.curve(a2, G, {c: C.cInk, w: 2.2});
+    else inner += S.curve(a1, G, {c: C.cInk, w: 2.2});
+    inner += S.line(G.X(t), G.y0, G.X(t), G.y0 + G.h, {c: C.ink2, w: 1.2, dash: '3 4', op: .8}) + S.circle(G.X(t), G.Y(hShow(a, t) * sc.f), 5 * k, {fill: C.cInk, c: C.card, w: 1.5});
+    a.svg('mois', G.svg + clipped(S, G, 'mc1m-g3', inner) + jalons(G, a));
+  }
+  function drawJours(a) {
+    const {S, C, k, p} = a, P = a.panels.jours, sc = SC3(a), t = clamp(a.t, 0, TMOIS), w0 = clamp(t - 1.5, 0, TMOIS - 3);
+    const G = S.graph({x: 0, y: 0, w: P.w, h: P.h, padL: 62 * k, padR: 14 * k, padT: 26 * k, padB: 44 * k, xmin: w0, xmax: w0 + 3, ymin: -sc.ymax, ymax: sc.ymax,
+      xlab: 't (j), fenêtre de trois jours', ylab: 'h (' + sc.u + ')', xticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29].filter(x => x >= w0 - 1e-9 && x <= w0 + 3 + 1e-9), yticks: sc.yt});
+    const n = Math.max(2, Math.ceil((t - w0) * 80)), pts = [], pts0 = [];
+    for (let i = 0; i <= n; i++) { const tt = w0 + (t - w0) * i / n; pts.push([tt, hShow(a, tt) * sc.f]); if (p.bassin) pts0.push([tt, hS(a, tt) * sc.f]); }
+    let inner = '';
+    if (p.bassin) inner += S.curve(pts0, G, {c: C.ink2, w: 1.4});
+    inner += S.curve(pts, G, {c: C.cInk, w: 2.6});
+    if (p.pm) {                                                         // pleines mers : maxima locaux de la courbe tracée
+      const hh = tt => hShow(a, tt), dt = 1 / 2880;
+      for (let tt = w0 + dt; tt < t - dt; tt += dt) {
+        const y0 = hh(tt - dt), y1 = hh(tt), y2 = hh(tt + dt);
+        if (y1 > y0 && y1 >= y2 && y1 > 0) {
+          const hd = ((tt * 24) % 24 + 24) % 24;
+          inner += S.circle(G.X(tt), G.Y(y1 * sc.f), 4.5 * k, {fill: C.cInk, c: C.card, w: 1.2}) + lab(a, G.X(tt), G.Y(y1 * sc.f) - 12 * k, hm(hd), {anchor: 'middle', c: C.ink, size: 12.5});
+          tt += .25;
+        }
+      }
+    }
+    inner += S.line(G.X(t), G.y0, G.X(t), G.y0 + G.h, {c: C.ink2, w: 1.2, dash: '3 4', op: .8}) + S.circle(G.X(t), G.Y(hShow(a, t) * sc.f), 5 * k, {fill: C.cInk, c: C.card, w: 1.5});
+    a.svg('jours', G.svg + clipped(S, G, 'mc1m-g4', inner));
+  }
+  function metrics2(a) {
+    const {fmt, p} = a, t = clamp(a.t, 0, TMOIS), D = TAU * t / TMOIS, f = p.bassin ? p.amp : 1;
+    a.metrics(!p.valeurs ? [] : [
+      {label: 'Âge de la Lune', value: fmt.fix(t, 1), unit: 'j', hint: MM.phase(t)},
+      {label: 'Marnage de la journée (calcul)', value: fmt.sig(f * MM.marnage(p.lat, D, p.soleil3) / (p.bassin ? 100 : 1), 3), unit: p.bassin ? 'm' : 'cm', hint: p.bassin ? 'amplification × modèle statique' : 'modèle statique, port de latitude λ'},
+      {label: 'Facteur de latitude cos²λ', value: fmt.sig(Math.cos(p.lat * DEG) ** 2, 3), unit: '', hint: 'amplitude de la marée en fonction de λ'}
+    ]);
+  }
+
+  /* ---------- horloge ---------- */
+  function horloge(a) {
+    if (a.tab === 0) a.clock('t = ' + hm(clamp(a.t, 0, T0MAX)) + ' min');
+    else { const ph = MM.phase(clamp(a.t, 0, TMOIS)); a.clock('âge de la Lune : ' + a.fmt.fix(clamp(a.t, 0, TMOIS), 1) + ' j' + (ph ? ' · ' + ph : '')); }
+  }
+
+  /* ---------- application ---------- */
+  const tMax = a => a.tab === 0 ? T0MAX : TMOIS;
+  const rate = a => a.tab === 0 ? 2 : a.tab === 1 ? 1.4 : 1.2;          // heures (onglet 1) ou jours simulés par seconde réelle (vitesse ×1)
+  const PH = (age) => ({label: age === 0 ? 'Nouvelle lune' : age < 10 ? 'Premier quartier' : age < 18 ? 'Pleine lune' : 'Dernier quartier', valeurs: {}, action: a => { a.t = age; }});
+  AnimKit.app({
+    code: 'MC1', partie: 'RougeGrenat', chapitre: 'MC1 Référentiels non galiléens',
+    titre: 'Champ de marée',
+    titreFenetre: 'Champ de marée · MC1 · MP',
+    menuCommun: true, fichier: 'Champ_Maree',
+    onglets: ['Champ de marée', 'Lune et Soleil', 'Marée en un port'],
+    panneaux: [
+      {id: 'terre', titre: 'La Terre vue du pôle Nord : terme de marée et surface des océans', poids: 1.5, onglets: [0], ratioTel: 1},
+      {id: 'port1', titre: 'Hauteur d’eau au port, sur deux jours lunaires', poids: .85, onglets: [0], ratioTel: .6},
+      {id: 'orbite', titre: 'Terre, Lune et Soleil vus du pôle Nord (échelles non respectées)', poids: 1.35, onglets: [1], ratioTel: 1},
+      {id: 'marnage', titre: 'Marnage en fonction de l’âge de la Lune', poids: .95, onglets: [1], ratioTel: .65},
+      {id: 'mois', titre: 'Hauteur d’eau au port sur un mois (modèle statique)', poids: 1.1, onglets: [2], ratioTel: .7},
+      {id: 'jours', titre: 'Zoom sur trois jours', poids: 1, onglets: [2], ratioTel: .7}
+    ],
+    temps: true, pas: 1 / 24, vitesses: [.25, .5, 1, 2, 4], vitesse: 1,
+    curseur: {max: a => tMax(a), get: a => a.t, set: (a, v) => {a.t = v;}},
+    peutLire: a => {if (a.t >= tMax(a) - 1e-9) a.t = 0; return true;},
+    step(a, dt) {
+      const tm = tMax(a);
+      a.t = Math.min(tm, a.t + dt * rate(a));
+      if (a.t >= tm - 1e-9) a.play(false);
+    },
+    reset(a) {a.t = 0;},
+    onglet(a) {a.t = 0;},
+    reglages: [
+      {titre: 'Situations', onglets: [0], presets: [
+        {label: 'Lune seule', valeurs: {soleil1: false, champ: 'maree'}, lecture: true},
+        {label: 'Lune et Soleil, nouvelle lune', valeurs: {soleil1: true, age: 0, champ: 'maree'}, lecture: true},
+        {label: 'Lune et Soleil, premier quartier', valeurs: {soleil1: true, age: 7.38, champ: 'maree'}, lecture: true},
+        {label: 'Loupe : G(M) − G(O)', valeurs: {champ: 'decomp', dloupe: 60.3}},
+        {label: 'Lune rapprochée (8 rayons terrestres)', valeurs: {champ: 'decomp', dloupe: 8}}
+      ]},
+      {titre: 'Situations', onglets: [1], presets: [PH(0), PH(7.38265), PH(14.7653), PH(22.1479)]},
+      {titre: 'Situations', onglets: [2], presets: [
+        {label: 'Brest (48.4°)', valeurs: {lat: 48.4, soleil3: true, bassin: false}, lecture: true},
+        {label: 'Équateur', valeurs: {lat: 0, soleil3: true, bassin: false}, lecture: true},
+        {label: 'Lune seule', valeurs: {soleil3: false, bassin: false}, lecture: true},
+        {label: 'Avec la réponse du bassin', valeurs: {soleil3: true, bassin: true, amp: 15, retard: 3}, lecture: true}
+      ]},
+      {titre: 'Affichage', onglets: [0, 1], items: [
+        {id: 'champ', type: 'seg', label: 'Champ tracé', options: [['maree', 'terme de marée'], ['decomp', 'G(M), G(O), C']], value: 'maree', onglets: [0]},
+        {id: 'exag', type: 'range', label: 'Exagération de la dénivellation (en millions)', min: 1, max: 8, step: .1, dec: 1, value: 4, unit: '', si: a => a.tab === 1 || a.p.champ === 'maree'},
+        {id: 'dloupe', type: 'range', label: 'Distance Terre-Lune ' + M.v('d', 'L') + ' / ' + M.v('R', 'T') + ' (réelle : 60.3)', min: 4, max: 60.3, step: .1, dec: 1, value: 60.3, unit: '', si: a => a.tab === 0 && a.p.champ === 'decomp'}
+      ]},
+      {titre: 'Astres', onglets: [0], items: [
+        {id: 'soleil1', type: 'check', label: 'Ajouter le Soleil', value: false, si: a => a.p.champ === 'maree'},
+        {id: 'age', type: 'range', label: 'Âge de la Lune (fixe la direction du Soleil)', min: 0, max: 29.5, step: .1, dec: 1, value: 0, unit: 'j', si: a => a.p.champ === 'maree' && a.p.soleil1}
+      ]},
+      {titre: 'Astres', onglets: [2], items: [
+        {id: 'soleil3', type: 'check', label: 'Ajouter le Soleil', value: true}
+      ]},
+      {titre: 'Port', onglets: [0, 2], items: [
+        {id: 'lat', type: 'range', label: 'Latitude du port ' + M.v('λ'), min: 0, max: 90, step: .1, dec: 1, value: 48.4, unit: '°'},
+        {type: 'note', html: 'Astres dans le plan de l’équateur : l’amplitude de la marée varie comme cos²<i>λ</i>.'}
+      ]},
+      {titre: 'Bassin océanique', onglets: [2], items: [
+        {id: 'bassin', type: 'check', label: 'Réponse du bassin (hors modèle statique)', value: false},
+        {id: 'amp', type: 'range', label: 'Amplification', min: 1, max: 25, step: .5, dec: 1, value: 15, unit: '', si: a => a.p.bassin},
+        {id: 'retard', type: 'range', label: 'Retard sur le modèle statique', min: 0, max: 12, step: .25, dec: 2, value: 3, unit: 'h', si: a => a.p.bassin}
+      ]},
+      {titre: 'À faire apparaître', onglets: [0, 1, 2], items: [
+        {id: 'niveaux', type: 'check', label: 'Marnages de vives-eaux et de mortes-eaux (calcul)', value: false, onglets: [1]},
+        {id: 'enveloppe', type: 'check', label: 'Enveloppe de la marée (calcul)', value: false, onglets: [2]},
+        {id: 'pm', type: 'check', label: 'Pleines mers et leur heure (jour de la Lune au méridien : 0 h)', value: false, onglets: [2]},
+        {id: 'valeurs', type: 'check', label: 'Valeurs calculées', value: false}
+      ]}
+    ],
+    aide: {
+      voit: '<ul><li><b>Champ de marée.</b> Dans le référentiel géocentrique, la Lune attire la Terre et chacun de ses points. Le terme de marée <i>C</i><sub>L</sub> = <i>G</i><sub>L</sub>(M) − <i>G</i><sub>L</sub>(O) est la différence entre l’attraction en M et au centre O : dirigé vers l’extérieur sur l’axe Terre-Lune, des deux côtés, vers le centre dans le plan orthogonal. La surface des océans, orthogonale à la pesanteur, forme deux bourrelets alignés avec la Lune (dénivellation très exagérée). La Terre tourne sous eux : le port passe sous un bourrelet deux fois par jour lunaire, d’où deux pleines mers par jour, séparées de 12 h 25 min.</li><li><b>Lune et Soleil.</b> Le Soleil crée un bourrelet plus petit (environ 0.46 fois celui de la Lune). Les deux bourrelets s’ajoutent à la nouvelle et à la pleine lune (vives-eaux) et se contrarient aux quartiers (mortes-eaux) : le marnage oscille avec une période de 14.8 jours. NL : nouvelle lune, PQ : premier quartier, PL : pleine lune, DQ : dernier quartier.</li><li><b>Marée en un port.</b> Hauteur d’eau sur un mois : deux marées par jour, qui reculent d’environ 50 min d’un jour au suivant, et le cycle de quinze jours. Le réglage « Réponse du bassin » montre que le modèle statique donne l’ordre de grandeur des forces mais pas les marnages observés.</li></ul>',
+      faire: '<ul><li>Onglet 1 : activer « Loupe : G(M) − G(O) » pour voir que l’attraction de la Lune est presque la même en tout point de la Terre ; le terme de marée n’en est qu’une petite différence. Avec « Lune rapprochée », comparer le terme exact et le premier ordre du cours.</li><li>Onglet 1 : ajouter le Soleil pour un âge de 0 puis de 7.4 jours ; suivre la hauteur d’eau au port.</li><li>Onglet 2 : lancer la lecture d’un mois lunaire ; relever le marnage maximal et minimal, afficher « Marnages de vives-eaux et de mortes-eaux » et calculer leur rapport (2.7 dans le modèle, environ 2 observé à Brest).</li><li>Onglet 3 : afficher les pleines mers ; vérifier le décalage de 50 min par jour ; passer à l’équateur puis à 70° de latitude.</li><li>Onglet 3 : activer la réponse du bassin et régler l’amplification pour obtenir un marnage de quelques mètres, comme en Manche.</li></ul>',
+      modele: '<p>Modèle statique du cours (III.5). Le référentiel géocentrique est en translation d’accélération <i>G</i><sub>L</sub>(O) + <i>G</i><sub>S</sub>(O). Au premier ordre en <i>R</i><sub>T</sub>/<i>d</i>, le terme de marée d’un astre de masse <i>M</i> à la distance <i>d</i>, dans la direction du vecteur unitaire <i>e</i>, vaut (<i>G</i><i>M</i>/<i>d</i>³)(3(OM·<i>e</i>)<i>e</i> − OM). Il dérive d’un potentiel ; la surface libre des océans, orthogonale à la pesanteur terme de marée compris, a pour dénivellation δ<i>z</i> = <i>a</i> (3cos²ψ − 1)/2, avec <i>a</i> = <i>G</i><i>M</i><i>R</i><sub>T</sub>²/(<i>d</i>³<i>g</i>) : 0.36 m pour la Lune, 0.16 m pour le Soleil (ψ : angle entre OM et la direction de l’astre). La dénivellation entre bourrelet et creux vaut 3<i>a</i>/2 : 0.54 m et 0.24 m. Le niveau moyen est conservé.</p><p>Au port de latitude λ, avec les astres dans le plan de l’équateur, l’écart au niveau moyen est (3/4) cos²λ [<i>a</i><sub>L</sub> cos 2φ<sub>L</sub> + <i>a</i><sub>S</sub> cos 2φ<sub>S</sub>], où φ<sub>L</sub> et φ<sub>S</sub> sont les angles horaires de la Lune et du Soleil. Jour lunaire : 24 h 50 min ; mois synodique : 29.53 j. Données : <i>M</i><sub>L</sub> = 7.35 × 10²² kg, <i>d</i><sub>L</sub> = 3.84 × 10⁸ m, <i>M</i><sub>S</sub> = 1.99 × 10³⁰ kg, <i>d</i><sub>S</sub> = 1.50 × 10¹¹ m, <i>R</i><sub>T</sub> = 6370 km.</p><p><b>Limites.</b> Les océans ne sont pas à l’équilibre : la marée est une onde qui se propage dans des bassins de formes variées (marées dynamiques, hors programme). Le réglage « Réponse du bassin » multiplie simplement la hauteur statique et la retarde ; ce n’est pas un modèle. Ni la déclinaison de la Lune et du Soleil, ni l’excentricité des orbites ne sont prises en compte (pas d’inégalité diurne). Les dénivellations sont exagérées de plusieurs millions dans les schémas ; les tailles et les distances des astres ne sont pas à l’échelle.</p>',
+      cours: 'MC1 MP : III.5 (marées : terme de marée, résultat sur l’axe, deux marées par jour, limites du modèle statique), expérience « Marégramme d’un port », application 9 « Lune ou Soleil ? ».'
+    },
+    draw(a) {
+      if (a.tab === 0) { drawTerre(a); drawPort1(a); metrics0(a); }
+      else if (a.tab === 1) { drawOrbite(a); drawMarnage(a); metrics1(a); }
+      else { drawMois(a); drawJours(a); metrics2(a); a.legend(a.p.bassin ? [{label: 'avec réponse du bassin', c: a.C.cInk}, {label: 'modèle statique', c: a.C.ink2}] : (a.p.enveloppe ? [{label: 'hauteur d’eau', c: a.C.cInk}, {label: 'enveloppe', c: a.C.ink2, dash: true}] : [])); }
+      horloge(a);
+    }
+  });
+})();
+
+</script>
+</body>
+</html>
