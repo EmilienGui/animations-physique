@@ -1093,6 +1093,9 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const sub=(s,i)=>M.v(s,i);
 const nomGrandeur=(t,repli='y')=>String(t.nom??'').trim()||repli;
 const axeGrandeur=(nom,unite)=>unite.trim()?`${nom} [${esc(unite.trim())}]`:nom;
+const nomsRegression=t=>[String(t.xnom??'').trim()||'x',String(t.ynom??'').trim()||'y'].map(esc);
+const incGrandeur=(nom,symbole='u')=>`${M.v(symbole)}(${M.v(nom)})`;
+const barreMoyenne=nom=>`<span style="text-decoration:overline">${nom}</span>`;
 /* ---------- lecture de nombres : point ou virgule décimale acceptés ---------- */
 function lire(s){
   if(typeof s==='number')return s;
@@ -1216,7 +1219,7 @@ const defaut=()=>({
   t0:{nom:'T',unite:'s',rows:['1.52','1.49','1.51','1.50','1.53','1.48','1.51','1.50','1.52','1.49'].map(x=>[x]),B:false,modeB:'D',delta:'0.01',bmin:'1.49',bmax:'1.51',pct:'0.5',dgt:'2',res:'0.01',lec:'',ref:false,xref:'1.50',uref:'0'},
   t1:{type:'somme',nom:'d',unite:'mm',k:'1',vars:[V('x1',10,'u',.5,-1),V('x2',30,'u',.5,1)],mute:[false,false],ref:false,xref:'21.5',uref:'0'},
   t2:{formule:'4*pi^2*L/T^2',nom:'g',unite:'m·s⁻²',vars:[V('L',1.000,'u',.002,1),V('T',2.012,'u',.005,1)],mute:[false,false],N:100000,graine:1,lin:false,ref:false,xref:'9.81',uref:'0'},
-  t3:{xnom:'I',xun:'A',ynom:'U',yun:'V',rows:OHM.map(r=>r.slice()),loi:'unif',M:10000,histos:false,zones:true,zoomU:0,ref:false,xref:'100',uref:'0'}
+  t3:{xnom:'I',xun:'A',xkind:'u',ynom:'U',yun:'V',ykind:'u',rows:OHM.map(r=>r.slice()),loi:'unif',M:10000,histos:false,zones:true,zoomU:0,ref:false,xref:'100',uref:'0'}
 });
 const VIDE={
   t0:t=>{t.rows=[];t.lec='';t.bmin='';t.bmax=''},
@@ -1232,8 +1235,19 @@ function charger(){try{const j=JSON.parse(localStorage.getItem(CLE));if(!j||j.v!
   while(ST.t1.mute.length<ST.t1.vars.length)ST.t1.mute.push(false);while(ST.t2.mute.length<ST.t2.vars.length)ST.t2.mute.push(false)}catch(e){}}
 function sauver(){try{localStorage.setItem(CLE,JSON.stringify({v:1,t0:ST.t0,t1:ST.t1,t2:ST.t2,t3:ST.t3}))}catch(e){}}
 charger();
-const lignesReg=rows=>{const L=[];rows.forEach((r,i)=>{const c=r.map(v=>String(v??'').trim());if(c.every(v=>v===''))return;const q=c.map(lire),ux=c[1]===''?0:q[1],uy=c[3]===''?0:q[3];L.push(isFinite(q[0])&&isFinite(q[2])&&isFinite(ux)&&isFinite(uy)?{x:q[0],ux:Math.abs(ux),y:q[2],uy:Math.abs(uy),i}:null)});return L};
-const regSans=()=>{const P=lignesReg(ST.t3.rows).filter(Boolean);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
+function lignesReg(t){
+  const dx=t.xkind==='D'?SQ3:1,dy=t.ykind==='D'?SQ3:1;
+  const lignes=[];
+  t.rows.forEach((r,i)=>{
+    const c=r.map(v=>String(v??'').trim());
+    if(c.every(v=>v===''))return;
+    const q=c.map(lire);
+    const ux=c[1]===''?0:Math.abs(q[1])/dx,uy=c[3]===''?0:Math.abs(q[3])/dy;
+    lignes.push(finis(q[0],q[2],ux,uy)?{x:q[0],ux,y:q[2],uy,i}:null);
+  });
+  return lignes;
+}
+const regSans=()=>{const P=lignesReg(ST.t3).filter(Boolean);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
 const colonne=(rows,j)=>Float64Array.from(rows.map(r=>String(r[j]??'').trim()).filter(Boolean).map(lire).filter(isFinite));
 const finis=(...v)=>v.every(isFinite);
 
@@ -1255,10 +1269,10 @@ function seg(opts,obj,key,onchg){
     b.onclick=()=>{obj[key]=v;[...d.children].forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');change();if(onchg)onchg()};d.append(b)});
   return d;
 }
-function selNum(label,opts,obj,key){
-  const d=h('div',{class:'ph-f'},`<label>${label}</label>`),s=h('select');
+function selecteur(label,opts,obj,key,onchg){
+  const d=h('label',{class:'ph-f'},`<span>${label}</span>`),s=h('select');
   opts.forEach(([v,l])=>{const o=h('option',{value:v},l);if(obj[key]===v)o.selected=true;s.append(o)});
-  s.onchange=()=>{obj[key]=+s.value;change()};d.append(s);return d;
+  s.onchange=()=>{obj[key]=opts[s.selectedIndex][0];if(onchg)onchg();change()};d.append(s);return d;
 }
 function blocRef(t,libelle){
   const box=h('div',{class:'ph-ref'}),f=h('div');
@@ -1268,11 +1282,12 @@ function blocRef(t,libelle){
 /** tableau à remplir : on peut y coller des colonnes depuis un tableur ; une ligne vide est toujours ajoutée en fin */
 function grille(rows,cols,titreLigne,map2){
   const root=h('div',{class:'ph-grid'}),nc=cols.length,vide=()=>Array(nc).fill('');
-  let tb=null;
+  let tb=null,entetes=[];
+  const libelle=(i,j)=>`${titreLigne||'Ligne'} ${i+1}, ${entetes[j].textContent}`;
   const ligne=(r,i)=>{
     const tr=h('tr');tr.append(h('td',{class:'n'},String(i+1)));
     for(let j=0;j<nc;j++){
-      const inp=h('input',{type:'text',inputmode:'decimal',value:r[j]??'',spellcheck:'false',autocomplete:'off','aria-label':`${titreLigne||'Ligne'} ${i+1}, ${cols[j].replace(/<[^>]+>/g,'')}`});
+      const inp=h('input',{type:'text',inputmode:'decimal',value:r[j]??'',spellcheck:'false',autocomplete:'off','aria-label':libelle(i,j)});
       inp.oninput=()=>{r[j]=inp.value;if(r===rows[rows.length-1]&&inp.value.trim()!==''){rows.push(vide());tb.append(ligne(rows[rows.length-1],rows.length-1))}change()};
       inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const nx=tb.children[i+1];if(nx)nx.children[j+1].firstChild.focus()}};
       inp.onpaste=e=>{
@@ -1290,7 +1305,15 @@ function grille(rows,cols,titreLigne,map2){
   const build=()=>{
     if(!rows.length||rows[rows.length-1].some(c=>String(c).trim()!==''))rows.push(vide());
     root.innerHTML='';const t=h('table');t.innerHTML=`<thead><tr><th>#</th>${cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead>`;
+    entetes=[...t.querySelectorAll('th')].slice(1,-1);
     tb=h('tbody');rows.forEach((r,i)=>tb.append(ligne(r,i)));t.append(tb);root.append(t);
+  };
+  root.nommer=nouveaux=>{
+    cols=nouveaux;
+    entetes.forEach((th,j)=>{th.innerHTML=cols[j]});
+    [...tb.rows].forEach((tr,i)=>entetes.forEach((_,j)=>{
+      tr.cells[j+1].firstChild.setAttribute('aria-label',libelle(i,j));
+    }));
   };
   build();root.build=build;return root;
 }
@@ -1357,7 +1380,7 @@ const A=AnimKit.app({
   ],
   aide:{
     voit:'<ul><li><b>À gauche</b> : vos mesures (tableaux à remplir ou à coller depuis un tableur) et les paramètres.</li><li><b>À droite</b> : le résultat avec son incertitude-type, prêt à copier, puis le graphique. « Voir le calcul » détaille les formules.</li></ul>',
-    faire:'<ul><li><b>Mesure directe</b> : coller la série ; ajouter si besoin une évaluation de type B (Δ lue ou notice « % + digits »).</li><li><b>Propagation</b>, sous-onglets Somme et Produit : saisir les grandeurs avec leur incertitude ; cliquer une barre du graphique met cette incertitude à zéro.</li><li><b>Propagation, Fonction quelconque</b> : écrire la formule avec les noms des grandeurs (<code>4*pi^2*L/T^2</code> ; <code>sqrt</code>, <code>exp</code>, <code>ln</code>, <code>sin</code>… ; <code>^</code> pour les puissances) : simulation de Monte-Carlo.</li><li><b>Régression</b> : coller les colonnes <i class="m">x</i> et <i class="m">y</i> (<i class="m">u</i>(<i class="m">x</i>) et <i class="m">u</i>(<i class="m">y</i>) facultatives) ; les points se déplacent à la souris.</li><li>Dans chaque onglet : comparaison à une valeur de référence par l\'écart normalisé. Les saisies sont mémorisées dans le navigateur.</li></ul>',
+    faire:'<ul><li><b>Mesure directe</b> : coller la série ; ajouter si besoin une évaluation de type B (Δ lue ou notice « % + digits »).</li><li><b>Propagation</b>, sous-onglets Somme et Produit : saisir les grandeurs avec leur incertitude ; cliquer une barre du graphique met cette incertitude à zéro.</li><li><b>Propagation, Fonction quelconque</b> : écrire la formule avec les noms des grandeurs (<code>4*pi^2*L/T^2</code> ; <code>sqrt</code>, <code>exp</code>, <code>ln</code>, <code>sin</code>… ; <code>^</code> pour les puissances) : simulation de Monte-Carlo.</li><li><b>Régression</b> : coller les colonnes d’abscisses et d’ordonnées, avec leurs incertitudes si elles sont connues. Les points se déplacent à la souris.</li><li>Dans chaque onglet : comparaison à une valeur de référence par l\'écart normalisé. Les saisies sont mémorisées dans le navigateur.</li></ul>',
     modele:'Incertitude-type = écart-type. Type A : <i class="m">u</i>(x̄) = <i class="m">s</i>/√<i class="m">N</i> (<i class="m">s</i> avec <i class="m">N</i> − 1). Type B : loi uniforme sur [<i class="m">x</i> − Δ, <i class="m">x</i> + Δ], <i class="m">u</i> = Δ/√3 ; composition quadratique, qui suppose des contributions indépendantes (une erreur commune à toutes les mesures n\'est pas réduite par la moyenne). Grandeurs non corrélées. Monte-Carlo : tirages gaussiens (<i class="m">u</i>) ou uniformes (Δ) ; graine fixe, donc résultat reproductible. Résultat : <i class="m">u</i> arrondie par excès à 2 chiffres significatifs, valeur au même rang.',
     cours:'PH2 Mesures et incertitudes : incertitude-type, types A et B, incertitudes composées, algorithme de Monte-Carlo, écart normalisé <i class="m">Z</i> = |<i class="m">x</i> − <i class="m">x</i><sub>réf</sub>| / √(<i class="m">u</i>² + <i class="m">u</i><sub>réf</sub>²), régression linéaire et validation par les écarts normalisés.',
     touches:'<kbd>1</kbd>–<kbd>3</kbd> onglets (hors saisie)'
@@ -1402,21 +1425,37 @@ const A=AnimKit.app({
       formule.querySelector('label').htmlFor='ph-formule';
       p.append(barre('t2'),sousOnglets(),fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),formule);
       p.append(h('div',{class:'ph-err',id:'ph-e2'}),h('div',{class:'ph-sub'},'Grandeurs mesurées (noms utilisés dans la formule)'),tableVars(t,null));
-      p.append(selNum('Nombre de tirages',[[10000,'10 000'],[100000,'100 000'],[1000000,'1 000 000']],t,'N'));
+      p.append(selecteur('Nombre de tirages',[[10000,'10 000'],[100000,'100 000'],[1000000,'1 000 000']],t,'N'));
       const nb=h('button',{class:'mini',type:'button'},'Nouveaux tirages');nb.onclick=()=>{t.graine++;change()};p.append(nb);
       p.append(chk('Superposer l\'incertitude linéarisée (dérivées partielles)',t,'lin'),blocRef(t));
     };
     /* ----- onglet 4 ----- */
     PANES.t3=()=>{const t=ST.t3,p=panes.t3;
+      const colonnes=()=>{
+        const [nx,ny]=nomsRegression(t);
+        return [M.v(nx),incGrandeur(nx,t.xkind==='D'?'Δ':'u'),M.v(ny),incGrandeur(ny,t.ykind==='D'?'Δ':'u')];
+      };
+      const g=grille(t.rows,colonnes(),'Point',[0,2]);
+      const majColonnes=()=>g.nommer(colonnes());
       const nx=h('div',{class:'ph-axes'});
       const dup=(lab,k1,k2)=>{const r=h('div',{class:'ph-row'},`<label>${lab}</label>`);
-        for(const[k,l]of[[k1,null],[k2,'Unité']]){if(l)r.append(h('label',{},l));const i=h('input',{type:'text',value:t[k]??'',spellcheck:'false',autocomplete:'off'});i.oninput=()=>{t[k]=i.value;change()};r.append(i)}return r};
+        for(const[k,l]of[[k1,null],[k2,'Unité']]){
+          if(l)r.append(h('label',{},l));
+          const i=h('input',{type:'text',value:t[k]??'',spellcheck:'false',autocomplete:'off'});
+          i.oninput=()=>{t[k]=i.value;if(k===k1)majColonnes();change()};
+          r.append(i);
+        }
+        return r;
+      };
       nx.append(dup('Abscisse','xnom','xun'),dup('Ordonnée','ynom','yun'));
-      p.append(barre('t3'),nx,h('div',{class:'ph-sub'},'Points : coller depuis le tableur les colonnes x et y (2 colonnes), ou x, u(x), y, u(y). Les incertitudes sont facultatives. Les points se déplacent dans le graphique.'),
-        grille(t.rows,[`${M.v('x')}`,`${M.v('u')}(${M.v('x')})`,`${M.v('y')}`,`${M.v('u')}(${M.v('y')})`],'Point',[0,2]));
+      const natures=[['u','u'],['D','Δ']];
+      p.append(barre('t3'),nx,
+        selecteur('Incertitude d’abscisse',natures,t,'xkind',majColonnes),
+        selecteur('Incertitude d’ordonnée',natures,t,'ykind',majColonnes),
+        h('div',{class:'ph-sub'},'Saisissez une incertitude-type u ou une demi-largeur Δ. Les calculs utilisent u = Δ/√3 pour une demi-largeur. Collez deux colonnes (abscisse, ordonnée) ou quatre (valeur et incertitude pour chaque grandeur).'),g);
       p.append(h('div',{class:'ph-sub'},'Monte-Carlo sur a et b'),seg([['unif','Tirages uniformes'],['gauss','Tirages gaussiens']],t,'loi'),
-        selNum('Nombre de tirages',[[1000,'1 000'],[10000,'10 000'],[50000,'50 000']],t,'M'),
-        chk('Histogrammes Monte-Carlo de a et b',t,'histos'),chk('Zones de tirage des points (rectangles ou gaussiennes)',t,'zones'),selNum('Agrandissement (affichage)',[[0,'Auto'],[1,'×1'],[10,'×10'],[100,'×100']],t,'zoomU'),blocRef(t,'Valeur de référence de a'));
+        selecteur('Nombre de tirages',[[1000,'1 000'],[10000,'10 000'],[50000,'50 000']],t,'M'),
+        chk('Histogrammes Monte-Carlo de a et b',t,'histos'),chk('Zones de tirage des points (rectangles ou gaussiennes)',t,'zones'),selecteur('Agrandissement (affichage)',[[0,'Auto'],[1,'×1'],[10,'×10'],[100,'×100']],t,'zoomU'),blocRef(t,'Valeur de référence de a'));
     };
     ['t0','t1','t2','t3'].forEach((k,i)=>{const p=h('div',{class:'ph-pane'});p.hidden=i!==0;panes[k]=p;Z.saisie.append(p);PANES[k]()});
     a.panes=panes;
@@ -1442,7 +1481,7 @@ const calcZone=()=>A.zones.detail.firstChild;
 function d0(a){
   const t=ST.t0,P=a.panels.h0,nom=esc(nomGrandeur(t,'x')),unite=t.unite||'';
   const xlab=axeGrandeur(nom,unite),moyenne=`<tspan text-decoration="overline">${nom}</tspan>`;
-  const incertitudeMoyenne=`u(<span style="text-decoration:overline">${nom}</span>)`;
+  const incertitudeMoyenne=`u(${barreMoyenne(nom)})`;
   const data=colonne(t.rows,0),N=data.length,Aa=N>=2?PH2.typeA(data):null;
   const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&bmax>bmin;
   const lecture=Aa?Aa.mean:(N===1?data[0]:bornes?(bmin+bmax)/2:lire(t.lec));
@@ -1575,19 +1614,20 @@ function pointProche(x,y){
 }
 function d3(a){
   const t=ST.t3,S=a.S,C=a.C,K=a.k;
+  const [nx,ny]=nomsRegression(t),ux=t.xun||'',uy=t.yun||'';
+  const incX=incGrandeur(nx,t.xkind==='D'?'Δ':'u'),incY=incGrandeur(ny,t.ykind==='D'?'Δ':'u');
   const P1=a.panels.reg3,P2=a.panels.z3,P3=a.panels.ab3;
   const pts=[],idx=[];let partiel=0;
-  lignesReg(t.rows).forEach(q=>{if(q){pts.push({x:q.x,ux:q.ux,y:q.y,uy:q.uy});idx.push(q.i)}else partiel++});
+  lignesReg(t).forEach(q=>{if(q){pts.push({x:q.x,ux:q.ux,y:q.y,uy:q.uy});idx.push(q.i)}else partiel++});
   IDX3=idx;
   const n=pts.length;
-  if(n<2){manque(a,'reg3','Entrez au moins deux points : x et y (u(x) et u(y) facultatives).');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;
-    setZone(a.zones.resultat,note(partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:'Entrez vos points : x et y, avec u(x) et u(y) si vous les connaissez.','gr'));setZone(calcZone(),'');return}
+  if(n<2){manque(a,'reg3','Entrez au moins deux points.');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;
+    setZone(a.zones.resultat,note(partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:`Saisissez ${M.v(nx)} et ${M.v(ny)} pour chaque point, avec ${incX} et ${incY} si ces incertitudes sont connues.`,'gr'));setZone(calcZone(),'');return}
   const X=pts.map(q=>q.x),Y=pts.map(q=>q.y),fit=PH2.fit(X,Y),z0=PH2.zReg(pts,fit.a,fit.b);
   const sans=pts.every(q=>q.ux===0&&q.uy===0);
   let sres=NaN,ua0=NaN,ub0=NaN;
   if(sans&&n>=3){const mx=PH2.mean(X);let sxx=0,ss=0;X.forEach(v=>{sxx+=(v-mx)*(v-mx)});X.forEach((v,i)=>{const e=Y[i]-fit.a*v-fit.b;ss+=e*e});sres=Math.sqrt(ss/(n-2));ua0=sres/Math.sqrt(sxx);ub0=sres*Math.sqrt(1/n+mx*mx/sxx)}
   const z=sans?Y.map((v,i)=>sres>0?(v-fit.a*X[i]-fit.b)/sres:0):z0,dg=sans?{bad:[],trop:false,motif:false}:PH2.diagnostic(z);
-  const nx=esc(t.xnom||'x'),ny=esc(t.ynom||'y'),ux=t.xun||'',uy=t.yun||'';
   let rg=ST.gel3||null;
   if(!rg){
     const ext=(arr,errs)=>{let lo=Infinity,hi=-Infinity;arr.forEach((v,i)=>{lo=Math.min(lo,v-errs[i]);hi=Math.max(hi,v+errs[i])});const sp=(hi-lo)||Math.abs(hi)||1;lo-=.12*sp;hi+=.12*sp;if(lo>0&&lo<.6*hi)lo=0;if(hi<0&&hi>.6*lo)hi=0;return[lo,hi]};
@@ -1595,7 +1635,7 @@ function d3(a){
     rg={x0,x1,y0:Math.min(y0,fit.a*x0+fit.b,fit.a*x1+fit.b),y1:Math.max(y1,fit.a*x0+fit.b,fit.a*x1+fit.b)};
   }
   RG3=rg;const f=echelle(rg.x0,rg.x1),fy=echelle(rg.y0,rg.y1);
-  const G=S.graph({x:0,y:0,w:P1.w,h:P1.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:rg.y0/fy,ymax:rg.y1/fy,xlab:`${nx} [${esc(ux)}]`+suffixe(f),ylab:`${ny} [${esc(uy)}]`+suffixe(fy)});
+  const G=S.graph({x:0,y:0,w:P1.w,h:P1.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:rg.y0/fy,ymax:rg.y1/fy,xlab:axeGrandeur(nx,ux)+suffixe(f),ylab:axeGrandeur(ny,uy)+suffixe(fy)});
   GEL3={G,f,fy,pts};
   const pxy=pts.map(q=>Math.max(Math.abs(G.X((q.x+q.ux)/f)-G.X(q.x/f)),Math.abs(G.Y((q.y+q.uy)/fy)-G.Y(q.y/fy)))).sort((p,r)=>p-r),med=pxy[n>>1];
   let kzm=+t.zoomU||0;if(!kzm){kzm=1;for(const c of[2,5,10,20,50,100,200,500,1000]){if(!(med>0)||med*kzm>=9)break;kzm=c}}
@@ -1623,7 +1663,7 @@ function d3(a){
     const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B),w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w];
     if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
     const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:`${S.v('a')} [${esc(uy)}/${esc(ux)}]`,ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
-    if(zi)oa.ref=zi.ref;
+    if(zi){oa.ref=zi.ref;oa.refNom='a'}
     const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:hB.lo,xhi:hB.lo+hB.nb*hB.w,xlab:`${S.v('b')} [${esc(uy)}]`,ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
     a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
   }
@@ -1631,7 +1671,7 @@ function d3(a){
   /* résultats */
   const un=`${uy}${ux?'/'+ux:''}`;
   let r=ligneRes(`Pente ${M.v('a')}`,ecrire(fit.a,mc.ua,un,M.v('a')))+ligneRes(`Ordonnée ${M.v('b')}`,ecrire(fit.b,mc.ub,uy,M.v('b')));
-  if(sans)r+=note(n>=3?`Sans incertitudes sur les mesures : ${M.v('u')}(${M.v('a')}) et ${M.v('u')}(${M.v('b')}) sont estimées à partir de la dispersion des points (${n} − 2 degrés de liberté). Ajoutez ${M.v('u')}(${M.v('x')}) et ${M.v('u')}(${M.v('y')}) pour valider le modèle avec les écarts normalisés.`:'Il faut au moins 3 points pour estimer u(a) et u(b) à partir de la dispersion.','gr');
+  if(sans)r+=note(n>=3?`Sans incertitudes sur les mesures : ${incGrandeur('a')} et ${incGrandeur('b')} sont estimées à partir de la dispersion des points (${n} − 2 degrés de liberté). Ajoutez ${incX} et ${incY} pour valider le modèle avec les écarts normalisés.`:'Il faut au moins 3 points pour estimer u(a) et u(b) à partir de la dispersion.','gr');
   else if(dg.bad.length)r+=note(`${dg.bad.length===1?`Le point ${dg.bad[0]+1} s'écarte`:`Les points ${dg.bad.map(i=>i+1).join(', ')} s'écartent`} du modèle (|${sub('z','i')}| &gt; 2) : le modèle affine n'est pas validé.`,'ko');
   else r+=note(`Tous les |${sub('z','i')}| ≤ 2 : le modèle affine est compatible avec les mesures.`,'ok');
   if(dg.trop)r+=note('Tous les écarts sont très petits (|z| &lt; 0.5) : les incertitudes sont peut-être surestimées.','gr');
@@ -1639,10 +1679,30 @@ function d3(a){
   if(partiel)r+=note(`${partiel} ligne(s) incomplète(s) ignorée(s).`,'gr');
   r+=zLigne(zi);setZone(a.zones.resultat,r);
   const sg=v=>F.sig(v,3);
-  let c=`${M.v('y')} = ${M.v('a')} ${M.v('x')} + ${M.v('b')} (moindres carrés, ${n} points)<br>${M.v('a')} = ${sg(fit.a)} ${esc(un)} ; ${M.v('b')} = ${sg(fit.b)} ${esc(uy)}<br><b>Monte-Carlo</b> (${mc.A.length} tirages, loi ${t.loi==='unif'?'uniforme':'gaussienne'})<br>${M.v('u')}(${M.v('a')}) = <span class="res">${sg(mc.ua)}</span> ; ${M.v('u')}(${M.v('b')}) = <span class="res">${sg(mc.ub)}</span> ; corrélation ${F.fix(mc.corr,2)}<br><b>Écarts normalisés</b><br>${M.v('z','i')} = ${M.frac(`${sub('y','i')} − ${M.v('a')}${sub('x','i')} − ${M.v('b')}`,M.sqrt(`${M.v('u')}(${sub('y','i')})² + ${M.v('a')}²${M.v('u')}(${sub('x','i')})²`))}`;
-  c+=`<table>${z.map((v,i)=>`<tr><td>Point ${i+1}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${sub('z',i+1)} = ${F.sig(v,3)}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${Math.abs(v)>2?'hors de ±2':'dans ±2'}</td></tr>`).join('')}</table>`;
-  if(sans)c=`${M.v('y')} = ${M.v('a')} ${M.v('x')} + ${M.v('b')} (moindres carrés, ${n} points)<br>${M.v('a')} = ${M.frac(`Σ(${sub('x','i')} − ${M.v('x̄')})(${sub('y','i')} − ${M.v('ȳ')})`,`Σ(${sub('x','i')} − ${M.v('x̄')})²`)} = ${sg(fit.a)} ${esc(un)} ; ${M.v('b')} = ${M.v('ȳ')} − ${M.v('a')} ${M.v('x̄')} = ${sg(fit.b)} ${esc(uy)}`+(isFinite(sres)?`<br><b>Dispersion des points</b><br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${sub('y','i')} − ${M.v('a')}${sub('x','i')} − ${M.v('b')})²`,`${M.v('N')} − 2`))} = ${sg(sres)} ${esc(uy)}<br><span class="lien">donc</span>${M.v('u')}(${M.v('a')}) = ${M.frac(M.v('s'),M.sqrt(`Σ(${sub('x','i')} − ${M.v('x̄')})²`))} = <span class="res">${sg(ua0)} ${esc(un)}</span><br>${M.v('u')}(${M.v('b')}) = ${M.v('s')} ${M.sqrt(`${M.frac('1',M.v('N'))} + ${M.frac(`${M.v('x̄')}²`,`Σ(${sub('x','i')} − ${M.v('x̄')})²`)}`)} = <span class="res">${sg(ub0)} ${esc(uy)}</span>`:'')+zCalc(zi,M.v('a'));
-  else c+=zCalc(zi,M.v('a'));
+  const aNom=M.v('a'),bNom=M.v('b'),xi=sub(nx,'i'),yi=sub(ny,'i');
+  const residu=`${yi} − ${aNom}${xi} − ${bNom}`;
+  let c=`${M.v(ny)} = ${aNom} ${M.v(nx)} + ${bNom} (moindres carrés, ${n} points)<br>`;
+  if(sans){
+    const xMoy=M.v(barreMoyenne(nx)),yMoy=M.v(barreMoyenne(ny));
+    const sxx=`Σ(${xi} − ${xMoy})²`;
+    c+=`${aNom} = ${M.frac(`Σ(${xi} − ${xMoy})(${yi} − ${yMoy})`,sxx)} = ${sg(fit.a)} ${esc(un)}`;
+    c+=` ; ${bNom} = ${yMoy} − ${aNom} ${xMoy} = ${sg(fit.b)} ${esc(uy)}`;
+    if(isFinite(sres)){
+      c+=`<br><b>Dispersion des points</b><br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${residu})²`,`${M.v('N')} − 2`))} = ${sg(sres)} ${esc(uy)}`;
+      c+=`<br><span class="lien">donc</span>${incGrandeur('a')} = ${M.frac(M.v('s'),M.sqrt(sxx))} = <span class="res">${sg(ua0)} ${esc(un)}</span>`;
+      c+=`<br>${incGrandeur('b')} = ${M.v('s')} ${M.sqrt(`${M.frac('1',M.v('N'))} + ${M.frac(`${xMoy}²`,sxx)}`)} = <span class="res">${sg(ub0)} ${esc(uy)}</span>`;
+    }
+  }else{
+    c+=`${aNom} = ${sg(fit.a)} ${esc(un)} ; ${bNom} = ${sg(fit.b)} ${esc(uy)}`;
+    const conversions=[[t.xkind,nx],[t.ykind,ny]].filter(([kind])=>kind==='D')
+      .map(([,nom])=>`${incGrandeur(nom)} = ${M.frac(incGrandeur(nom,'Δ'),M.sqrt('3'))}`);
+    if(conversions.length)c+=`<br><b>Conversion des demi-largeurs</b><br>${conversions.join(' ; ')}`;
+    c+=`<br><b>Monte-Carlo</b> (${mc.A.length} tirages, loi ${t.loi==='unif'?'uniforme':'gaussienne'})<br>`;
+    c+=`${incGrandeur('a')} = <span class="res">${sg(mc.ua)}</span> ; ${incGrandeur('b')} = <span class="res">${sg(mc.ub)}</span> ; corrélation ${F.fix(mc.corr,2)}`;
+    c+=`<br><b>Écarts normalisés</b><br>${M.v('z','i')} = ${M.frac(residu,M.sqrt(`${M.v('u')}(${yi})² + ${aNom}²${M.v('u')}(${xi})²`))}`;
+    c+=`<table>${z.map((v,i)=>`<tr><td>Point ${i+1}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${sub('z',i+1)} = ${F.sig(v,3)}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${Math.abs(v)>2?'hors de ±2':'dans ±2'}</td></tr>`).join('')}</table>`;
+  }
+  c+=zCalc(zi,aNom,'a');
   setZone(calcZone(),c);
 }
 
