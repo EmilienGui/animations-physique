@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo et régression linéaire sur les mesures saisies, avec écart normalisé.">
+<meta name="description" content="Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo, régression linéaire avec transformations d&#x27;axes et comparaison de résultats.">
 <meta name="generator" content="AnimKit · E. Guillaume">
 <title>Calculs et incertitudes · PH2 · MPSI</title>
 <style>
@@ -246,6 +246,43 @@ sub,sup{line-height:0}
 .ak-toast.show{opacity:1}
 @media print{.ak-tools,.ak-side,.ak-transport{display:none}}
 
+/* Bandeau commun du guide de création des animations. */
+.ak-menu-commun .ak-top {flex-wrap:wrap;gap:6px 12px}
+.ak-menu-commun .ak-tools {
+  flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:100%;
+}
+.ak-menu-commun .ak-tools .ib {min-height:40px;padding:0 10px;font-size:15px}
+.ak-menu-commun .ak-tools [data-act="fs"] {width:40px;padding:0}
+.ak-menu-commun .ak-tools .ak-btn-settings {display:none}
+@media(max-width:820px){
+  .ak-menu-commun .ak-tools {margin-left:0;flex:1 0 100%;justify-content:flex-start}
+}
+@media(max-width:640px){
+  .ak-menu-commun .ak-tools {gap:4px}
+  .ak-menu-commun .ak-tools .ib {min-height:44px;padding:0 6px;font-size:13px}
+  .ak-menu-commun .ak-tools .ak-lbl {display:inline}
+  .ak-menu-commun .ak-tools .ib svg {display:none}
+  .ak-menu-commun .ak-tools [data-act="fs"] {width:44px;padding:0}
+  .ak-menu-commun .ak-tools [data-act="fs"] svg {display:block}
+  .ak-menu-commun .ak-tools [data-act="image"],
+  .ak-menu-commun .ak-tools [data-act="proj"],
+  .ak-menu-commun:not(.is-proj) .ak-tools .ak-btn-settings {display:inline-flex}
+}
+
+/* Retour au sommaire GitHub Pages. */
+.ak-sommaire{text-decoration:none}
+.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
+@media(max-width:960px){
+  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
+  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
+  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
+}
+@media(max-width:640px){
+  .ak-tools .ak-sommaire .ak-lbl{display:none}
+  .ak-tools .ak-sommaire.ib svg{display:block}
+  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
+}
+
 /* PH2 · Calculs et incertitudes : champs de saisie dans la colonne des réglages */
 .ak-atelier{--ph-actif:#3a343e;--switch-on:var(--ph-actif)}
 .ph-slot{margin:.15em 0}
@@ -263,10 +300,9 @@ sub,sup{line-height:0}
 .ph-var input.nom{width:4.2em;text-align:left}
 .ph-var select{max-width:7.2em}
 .ph-var .sp{flex:1}
-.ph-x{border:0;background:none;color:var(--ink2);cursor:pointer;font-size:1.15em;line-height:1;padding:0 .2em}
-.ph-x:hover{color:var(--q-F)}
 .ph-err{color:var(--q-F);font-size:.82em;margin:.2em 0}
 .ph-err:empty{display:none}
+.ph-hint{font-size:.78em;color:var(--ink2);margin:-.25em 0 .15em}
 .ph-calc{font-size:.86em;line-height:1.75;color:var(--ink)}
 .ph-calc .lien{color:var(--ink2);font-style:italic;margin:0 .3em}
 .ph-calc .res{font-weight:650;color:var(--c-ink)}
@@ -274,34 +310,44 @@ sub,sup{line-height:0}
 .ph-calc .ko{color:var(--q-F)}
 .ph-calc .gr{color:var(--ink2);font-size:.92em}
 .ph-calc table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
-.ph-calc td{padding:.05em .3em .05em 0}
+.ph-calc td,.ph-calc th{padding:.08em .35em .08em 0}
 .ph-calc td:last-child{text-align:right}
+.ph-calc table.ph-zmat th,.ph-calc table.ph-zmat td{text-align:center;border-bottom:1px solid var(--rule);padding:.2em .35em}
+.ph-calc table.ph-zmat th:first-child,.ph-calc table.ph-zmat td:first-child{text-align:left;font-weight:600}
 
 /* ---- atelier : tableaux de saisie, résultats ---- */
 .ph-pane{display:flex;flex-direction:column;gap:.55em}
 .ph-pane[hidden]{display:none}
 .ph-sub{font-size:.85em;font-weight:600;color:var(--ink2,inherit);margin-top:.3em}
-.ph-bar{display:flex;gap:.4em;justify-content:flex-end}
+.ph-bar{display:flex;gap:.35em;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.ph-bar .ph-sp{flex:1}
 .ph-2{display:grid;grid-template-columns:1fr 1fr;gap:.4em .6em}
 .ph-ref{display:flex;flex-direction:column;gap:.45em;padding-top:.4em;border-top:1px solid var(--rule,#8884)}
 .ph-seg{display:flex;flex-wrap:wrap;gap:.3em}
 .ph-seg button{flex:1 1 auto;padding:.35em .6em;border:1px solid var(--rule,#8886);border-radius:.4em;background:transparent;color:inherit;font:inherit;font-size:.88em;cursor:pointer}
 .ph-seg button[aria-pressed=true]{background:var(--ph-actif);color:#fff;border-color:#827986}
-.ph-grid{max-height:16em;overflow:auto}
+.ph-grid{max-height:17em;overflow:auto;border-radius:.4em;transition:outline-color .15s}
+.ph-grid.ph-drop{outline:2px dashed var(--c-ink);outline-offset:2px}
 .ph-grid table{border-collapse:collapse;width:100%}
-.ph-grid th{font-size:.78em;font-weight:600;text-align:center;padding:.15em .2em;position:sticky;top:0;background:var(--card)}
+.ph-grid th{font-size:.78em;font-weight:600;text-align:center;padding:.15em .2em;position:sticky;top:0;background:var(--card);z-index:1}
 .ph-grid td{padding:.1em .15em}
 .ph-grid td.n{width:1.6em;text-align:right;font-size:.78em;opacity:.6}
-.ph-grid input,.ph-grid select{width:100%;min-width:3.4em;box-sizing:border-box;padding:.28em .35em;border:1px solid var(--rule,#8886);border-radius:.3em;background:transparent;color:inherit;font:inherit;font-size:.92em;text-align:right}
-.ph-grid input.nom{text-align:left;min-width:2.6em}
+.ph-grid td.cb{width:1.5em;text-align:center}
+.ph-grid td.cb input{width:auto;min-width:0;cursor:pointer;accent-color:var(--c-ink)}
+.ph-grid tr.off td{opacity:.42}
+.ph-grid tr.off input[type=text]{text-decoration:line-through}
+.ph-grid tr.ph-hl td{background:color-mix(in srgb,var(--c-ink) 16%,transparent)}
+.ph-grid input[type=text],.ph-grid select{width:100%;min-width:3.2em;box-sizing:border-box;padding:.28em .35em;border:1px solid var(--rule,#8886);border-radius:.3em;background:transparent;color:inherit;font:inherit;font-size:.92em;text-align:right}
+.ph-grid input.nom{text-align:left;min-width:2.8em}
 .ph-vt{max-height:none}
-.ph-x{border:0;background:transparent;color:inherit;opacity:.55;cursor:pointer;font-size:1.1em;padding:0 .3em}
-.ph-x:hover{opacity:1}
-.res-l{display:flex;align-items:center;gap:.6em;flex-wrap:wrap}
+.ph-x{border:0;background:transparent;color:inherit;opacity:.55;cursor:pointer;font-size:1.1em;padding:0 .3em;line-height:1}
+.ph-x:hover{opacity:1;color:var(--q-F)}
+.res-l{display:flex;align-items:center;gap:.45em;flex-wrap:wrap}
 .res-k{font-size:.8em;opacity:.7;min-width:5.5em}
-.res-v{font-size:1.45em;font-weight:600;flex:1 1 auto}
+.res-v{font-size:clamp(1.05em,2.1vw,1.38em);font-weight:600;flex:1 1 auto;min-width:0}
+.res-acts{display:flex;gap:.3em;flex-wrap:wrap;align-items:center}
 .res-n{font-size:.88em;margin-top:.25em}
-.res-n.gr{opacity:.7}.res-n.ok{color:#3fb950}.res-n.ko{color:#f85149}
+.res-n.gr{opacity:.75}.res-n.ok{color:var(--q-v)}.res-n.ko{color:var(--q-F)}.res-n.warn{color:var(--q-E,#da6c00)}
 .ak-panel[data-id=ab3]:not([hidden]){animation:phCoulisse .3s ease-out}
 @keyframes phCoulisse{from{opacity:0;transform:translateX(2.5em)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.ak-panel[data-id=ab3]:not([hidden]){animation:none}}
@@ -309,25 +355,55 @@ sub,sup{line-height:0}
 .ph-f:not(.long):not(.formule){display:grid;grid-template-columns:11.5em minmax(5em,9em);justify-content:start;column-gap:.6em}
 .ph-f:not(.long):not(.formule) input,.ph-f:not(.long):not(.formule) select{min-width:0;text-align:left}
 .ph-f.long{flex-direction:column;align-items:stretch}
-.ph-axes{display:flex;flex-direction:column;gap:.5em}
+.ph-axes{display:flex;flex-direction:column;gap:.45em}
 .ph-row{display:grid;grid-template-columns:5.6em 5em 4.6em 5em;justify-content:start;column-gap:.6em;align-items:center;font-size:.88em}
-.ph-row input{min-width:0;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);color:var(--ink);font:inherit;font-size:.95em;text-align:left}
+.ph-row input,.ph-row select{min-width:0;border:1px solid var(--rule);border-radius:.35em;padding:.15em .3em;background:var(--paper);color:var(--ink);font:inherit;font-size:.95em;text-align:left}
 .ph-row label:nth-of-type(2){padding-left:.9em}
 
+/* ---- incertitude par colonne & transformations d'axes ---- */
+.ph-ucol{display:flex;flex-direction:column;gap:.28em;padding:.35em .45em;border:1px solid var(--rule);border-radius:.4em;background:var(--paper)}
+.ph-ucol-h{display:flex;align-items:center;gap:.4em;font-size:.84em;flex-wrap:wrap}
+.ph-ucol-h label{font-weight:600;min-width:5.4em}
+.ph-ucol-h select{border:1px solid var(--rule);border-radius:.3em;padding:.15em .3em;background:var(--card);color:var(--ink);font:inherit;font-size:.95em;flex:1 1 auto;min-width:0}
+.ph-ucol-p{display:flex;gap:.35em;align-items:center;flex-wrap:wrap;font-size:.84em}
+.ph-ucol-p label{display:flex;align-items:center;gap:.25em}
+.ph-ucol-p input{width:5.2em;border:1px solid var(--rule);border-radius:.3em;padding:.15em .3em;background:var(--card);color:var(--ink);font:inherit;text-align:right;font-variant-numeric:tabular-nums}
+.ph-tr{display:grid;grid-template-columns:1fr 1fr;gap:.4em .5em;font-size:.85em}
+.ph-tr-box{display:flex;flex-direction:column;gap:.22em}
+.ph-tr-box label{font-size:.9em;color:var(--ink2);font-weight:600}
+.ph-tr-box select,.ph-tr-box input{width:100%;box-sizing:border-box;border:1px solid var(--rule);border-radius:.3em;padding:.18em .3em;background:var(--paper);color:var(--ink);font:inherit}
+.ph-tr-box input{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
 
-/* Retour au sommaire GitHub Pages. */
-.ak-sommaire{text-decoration:none}
-.ak-sommaire:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
-@media(max-width:960px){
-  .ak.is-proj:not(.ak-menu-commun) .ak-top{flex-wrap:wrap}
-  .ak.is-proj:not(.ak-menu-commun) .ak-titles{flex:1}
-  .ak.is-proj:not(.ak-menu-commun) .ak-tools{max-width:100%;flex-wrap:wrap;justify-content:flex-end}
-}
-@media(max-width:640px){
-  .ak-tools .ak-sommaire .ak-lbl{display:none}
-  .ak-tools .ak-sommaire.ib svg{display:block}
-  .ak-menu-commun .ak-tools .ak-sommaire{width:44px;padding:0}
-}
+/* ---- import CSV multi-colonnes ---- */
+.ph-csv-map{border:1px solid var(--c-ink);border-radius:.45em;padding:.45em .55em;background:var(--paper);display:flex;flex-direction:column;gap:.35em;font-size:.84em}
+.ph-csv-map .ph-csv-g{display:grid;grid-template-columns:1fr 1fr;gap:.3em .5em}
+.ph-csv-map label{display:flex;flex-direction:column;gap:.15em;font-size:.92em}
+.ph-csv-map select{border:1px solid var(--rule);border-radius:.3em;padding:.15em .25em;background:var(--card);color:var(--ink);font:inherit}
+
+/* ---- carnet de séance ---- */
+.ph-carnet{border:1px solid var(--rule);border-radius:.45em;padding:.2em .5em;margin-bottom:.45em;background:var(--paper);font-size:.85em}
+.ph-carnet summary{cursor:pointer;padding:.2em 0;font-weight:600;color:var(--c-ink);display:flex;align-items:center;gap:.4em;list-style:none}
+.ph-carnet summary::-webkit-details-marker{display:none}
+.ph-carnet summary::before{content:'▸';font-size:.85em;transition:transform .15s}
+.ph-carnet[open] summary::before{transform:rotate(90deg)}
+.ph-carnet-badge{background:var(--ph-actif);color:#fff;border-radius:99px;padding:.05em .5em;font-size:.82em;font-weight:600}
+.ph-carnet-list{display:flex;flex-direction:column;gap:.3em;padding:.3em 0 .2em;max-height:11em;overflow:auto}
+.ph-carnet-item{display:flex;align-items:center;gap:.35em;flex-wrap:wrap;padding:.25em .35em;border-radius:.35em;background:var(--card);border:1px solid var(--rule)}
+.ph-carnet-val{flex:1 1 auto;min-width:0;font-variant-numeric:tabular-nums;font-size:.93em}
+.ph-carnet-acts{display:flex;gap:.2em;align-items:center}
+.ph-carnet-empty{font-size:.88em;color:var(--ink2);padding:.2em 0}
+
+/* ---- boutons rapides formule & bloc repliable prédiction ---- */
+.ph-qbtns{display:flex;flex-wrap:wrap;gap:.25em;margin:-.1em 0 .1em}
+.ph-qbtns button{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8em;padding:.12em .45em;border:1px solid var(--rule);border-radius:.3em;background:var(--paper);color:var(--ink);cursor:pointer}
+.ph-qbtns button:hover{border-color:var(--c-ink);color:var(--c-ink)}
+.ph-opt{border:1px solid var(--rule);border-radius:.45em;padding:.2em .5em;background:var(--paper);font-size:.88em}
+.ph-opt summary{cursor:pointer;padding:.2em 0;font-weight:600;color:var(--c-ink);list-style:none;display:flex;align-items:center;gap:.35em}
+.ph-opt summary::-webkit-details-marker{display:none}
+.ph-opt summary::before{content:'▸';font-size:.85em;transition:transform .15s}
+.ph-opt[open] summary::before{transform:rotate(90deg)}
+.ph-opt-body{display:flex;flex-direction:column;gap:.35em;padding:.3em 0 .25em}
+
 </style>
 </head>
 <body>
@@ -547,7 +623,7 @@ function app(cfg){
   document.title=cfg.titreFenetre||`${cfg.titre} · ${cfg.code} · MPSI`;
 
   /* ---------- structure ---------- */
-  const ak=el('div',{class:'ak',id:'ak'});
+  const ak=el('div',{class:cfg.menuCommun?'ak ak-menu-commun':'ak',id:'ak'});
   const top=el('header',{class:'ak-top'});
   top.innerHTML=`<span class="ak-badge">${cfg.code}</span><div class="ak-titles"><h1 class="ak-title">${cfg.titre}</h1></div>
   <nav class="ak-tools" aria-label="Outils">
@@ -558,6 +634,30 @@ function app(cfg){
    <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
    <button class="ib" data-act="fs" title="Plein écran (F)">${IC.fs}</button>
   </nav>`;
+  const nav=$('.ak-tools',top);
+  const themeButton=$('[data-act=theme]',nav);
+  const projButton=$('[data-act=proj]',nav);
+  const fullButton=$('[data-act=fs]',nav);
+  if(cfg.menuCommun){
+    nav.insertBefore($('[data-act=settings]',nav),fullButton);
+    $('[data-act=image]',nav).title='Enregistrer une image PNG (I)';
+  }
+  function syncMenu(){
+    if(!cfg.menuCommun)return;
+    const dark=root.dataset.theme==='dark', projected=ak.classList.contains('is-proj');
+    const full=Boolean(document.fullscreenElement);
+    themeButton.title=dark?'Passer au thème clair (T)':'Passer au thème sombre (T)';
+    $('.ak-lbl',projButton).textContent=projected?'Réglages':'Projection';
+    projButton.title=projected?'Rétablir les réglages (P)':'Agrandir la scène et masquer les réglages (P)';
+    projButton.setAttribute('aria-pressed',String(projected));
+    const fullscreenLabel=full?'Quitter le plein écran':'Plein écran';
+    fullButton.setAttribute('aria-label',fullscreenLabel);
+    fullButton.title=fullscreenLabel+' (F)';
+  }
+  if(cfg.menuCommun){
+    syncMenu();
+    document.addEventListener('fullscreenchange',syncMenu);
+  }
   $('[data-act=help]',top).before(el('a',{
     class:'ib ak-sommaire',href:'https://emiliengui.github.io/animations-physique/',
     'aria-label':'Sommaire des animations',title:'Retour au sommaire des animations'
@@ -811,12 +911,22 @@ function app(cfg){
   A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
-  A.setTheme=t=>{root.dataset.theme=t;readColors();A.renderNow()};
-  A.setProj=on=>{ak.classList.toggle('is-proj',on);ak.classList.remove('drawer-open');$('[data-act=proj]',top).classList.toggle('on',on);A.render()};
+  A.setTheme=t=>{root.dataset.theme=t;readColors();syncMenu();A.renderNow()};
+  A.setProj=on=>{
+    ak.classList.toggle('is-proj',on);
+    ak.classList.remove('drawer-open');
+    projButton.classList.toggle('on',on);
+    syncMenu();
+    A.render();
+  };
   const acts={
     play:()=>A.play(),step:()=>A.stepOnce(),reset:()=>A.reset(),
     help:()=>{dlg.showModal()},theme:()=>A.setTheme(root.dataset.theme==='dark'?'light':'dark'),
-    image:()=>A.exportImage(),proj:()=>A.setProj(!ak.classList.contains('is-proj')),
+    image:()=>A.exportImage(),proj:()=>{
+      const projected=ak.classList.contains('is-proj');
+      A.setProj(!projected);
+      if(cfg.menuCommun&&projected&&A.narrow)ak.classList.add('drawer-open');
+    },
     fs:()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.().catch(()=>A.toast('Plein écran refusé par le navigateur'))},
     settings:()=>{ak.classList.toggle('drawer-open');A.render()}
   };
@@ -949,17 +1059,69 @@ window.AnimKit={app,fmt,M,ticks,niceStep,FONT,MATH,interrupteur};
 <script>
 'use strict';
 /* =====================================================================
-   PH2 · Outils statistiques (sans dépendance, testés par Verifier_Modele.mjs)
+   PH2 · Outils statistiques (sans dépendance, testés par Verifier_Modele.cjs)
    Incertitude-type : type A (s/√N), type B (Δ/√3), composition, propagation (somme,
-   produit, formule quelconque par Monte-Carlo), écart normalisé, régression linéaire.
+   produit, formule quelconque par Monte-Carlo), écart normalisé, régression linéaire
+   (avec transformations d'axes), comparaison multi-mesures, parseur de tableaux/CSV.
    ===================================================================== */
 const PH2=(function(){
 const P={};
 const SQ3=Math.sqrt(3);
 
-/* ---------- tirages (générateur à graine : mêmes tirages tant que la graine est la même) ---------- */
+/* ---------- tirages (générateur à graine : reproductible ; Box-Muller par paire) ---------- */
 P.rng=function(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
-P.gauss=function(r){let u=0;while(u===0)u=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*r())};
+P.gauss=function(r){
+  if(r._has){r._has=false;return r._sp}
+  let u=0;while(u===0)u=r();
+  const mag=Math.sqrt(-2*Math.log(u)),ang=2*Math.PI*r();
+  r._sp=mag*Math.sin(ang);r._has=true;
+  return mag*Math.cos(ang);
+};
+
+/* ---------- lecture de nombres et parseur CSV / tableur ---------- */
+P.lire=function(s){
+  if(typeof s==='number')return s;
+  s=String(s??'').trim().replace(/[\s\u00A0\u202F]/g,'').replace(/,/g,'.').replace(/[−–]/g,'-').replace(/[×x]10\^?/i,'e');
+  return s===''?NaN:Number(s);
+};
+P.parseEntete=function(s){
+  const t=String(s??'').trim().replace(/^["']|["']$/g,'').trim();
+  const m=t.match(/^(.+?)\s*[\[(]([^\]()]+)[\])]\s*$/);
+  if(m)return{nom:m[1].trim(),unite:m[2].trim()};
+  return{nom:t,unite:''};
+};
+P.parseTableau=function(text){
+  const brut=String(text??'').replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
+  const lignes=brut.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lignes.length)return{rows:[],headers:[],delim:'',skippedHeaders:0};
+  const hasTab=lignes.some(l=>l.includes('\t'));
+  const hasSemi=!hasTab&&lignes.some(l=>l.includes(';'));
+  let delim='';
+  if(hasTab)delim='\t';
+  else if(hasSemi)delim=';';
+  else{
+    const hasComma=lignes.some(l=>l.includes(','));
+    if(hasComma){
+      const multiComma=lignes.some(l=>(l.match(/,/g)||[]).length>=2);
+      const dotAndComma=lignes.some(l=>/\.\d*\s*,|,\s*-?\d*\./.test(l));
+      const commaSpace=lignes.some(l=>/,\s+/.test(l));
+      const headerComma=!/^[\d\s.,+\-eE]+$/.test(lignes[0])&&lignes[0].includes(',');
+      if(multiComma||dotAndComma||commaSpace||headerComma)delim=',';
+    }
+  }
+  const splitLigne=l=>{
+    if(!delim)return l.split(/\s+/).filter(Boolean);
+    return l.split(delim).map(c=>c.trim().replace(/^["']|["']$/g,'').trim());
+  };
+  const parsed=lignes.map(splitLigne);
+  const estNumerique=cells=>cells.some(c=>c!==''&&isFinite(P.lire(c)));
+  let headers=[],skippedHeaders=0,idx=0;
+  while(idx<parsed.length&&!estNumerique(parsed[idx])){
+    if(idx===0)headers=parsed[idx];
+    skippedHeaders++;idx++;
+  }
+  return{rows:parsed.slice(idx),headers,delim:delim||' ',skippedHeaders};
+};
 
 /* ---------- statistiques d'une série ---------- */
 P.mean=v=>{let s=0;for(let i=0;i<v.length;i++)s+=v[i];return v.length?s/v.length:NaN};
@@ -972,10 +1134,29 @@ P.ecartNorm=(x1,u1,x2,u2)=>{const d=Math.sqrt(u1*u1+u2*u2);return d>0?Math.abs(x
 
 /* arrondi : u par excès à 2 chiffres significatifs, valeur arrondie au même rang */
 P.arrondi=function(x,u){
-  if(!(u>0)||!isFinite(u))return null;
+  if(!(u>0)||!isFinite(u)||!isFinite(x))return null;
   let e=Math.floor(Math.log10(u)),q=Math.pow(10,e-1),m=Math.ceil(u/q-1e-9);
   if(m>=100){m=10;e+=1;q=Math.pow(10,e-1)}
-  return{x:Math.round(x/q)*q,u:m*q,d:Math.max(0,1-e),e};
+  let rx=Math.round(x/q)*q;
+  if(Object.is(rx,-0)||rx===0)rx=0;
+  return{x:rx,u:m*q,d:Math.max(0,1-e),e};
+};
+/** mise en forme (fixe ou scientifique cohérente avec le rang de u) */
+P.formater=function(x,u){
+  const r=P.arrondi(x,u);
+  if(!r)return null;
+  const eu=r.e,ex=r.x!==0?Math.floor(Math.log10(Math.abs(r.x))):eu;
+  const sci=ex<-3||ex>5||eu<-3||eu>5;
+  if(sci){
+    const fu=Math.pow(10,eu);
+    if(r.x===0)return{sci:true,xStr:'0.0',ex:eu,uStr:(r.u/fu).toFixed(1),eu,r};
+    const f=Math.pow(10,ex),dx=Math.max(0,ex-(eu-1));
+    let xm=r.x/f,eUse=ex;
+    if(Math.abs(Number(xm.toFixed(dx)))>=10){eUse++;xm=r.x/Math.pow(10,eUse)}
+    const dxUse=Math.max(0,eUse-(eu-1));
+    return{sci:true,xStr:xm.toFixed(dxUse),ex:eUse,uStr:(r.u/fu).toFixed(1),eu,r};
+  }
+  return{sci:false,xStr:r.x.toFixed(r.d),ex:0,uStr:r.u.toFixed(r.d),eu:0,r};
 };
 
 /* ---------- histogramme à classes « rondes » ---------- */
@@ -985,6 +1166,7 @@ P.hist=function(v,n){
   n=n===undefined?v.length:n;
   if(n<1)return null;
   let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(v[i]<mn)mn=v[i];if(v[i]>mx)mx=v[i]}
+  if(!isFinite(mn)||!isFinite(mx))return null;
   if(!(mx>mn)){const w=Math.abs(mn)*0.01||1;return{w,lo:mn-w,c:[0,n,0],nb:3,max:n}}
   const w=nice((mx-mn)/P.classes(n)),lo=Math.floor(mn/w+1e-9)*w,nb=Math.floor((mx-lo)/w+1e-9)+1,c=new Array(nb).fill(0);
   for(let i=0;i<n;i++){let k=Math.floor((v[i]-lo)/w+1e-9);if(k>=nb)k=nb-1;if(k<0)k=0;c[k]++}
@@ -996,50 +1178,152 @@ P.pdf=(x,m,s)=>Math.exp(-0.5*((x-m)/s)*((x-m)/s))/(s*Math.sqrt(2*Math.PI));
 P.bandes=function(v,n,m,s){const out=[0,0,0];for(let i=0;i<n;i++){const d=Math.abs(v[i]-m);for(let k=0;k<3;k++)if(d<=(k+1)*s)out[k]++}return out};
 P.modeleBandes=[0.682689492,0.954499736,0.997300204];
 
-/* ---------- formule libre ---------- */
-const FONCTIONS={sqrt:'Math.sqrt',exp:'Math.exp',ln:'Math.log',log:'Math.log10',sin:'Math.sin',cos:'Math.cos',tan:'Math.tan',asin:'Math.asin',acos:'Math.acos',atan:'Math.atan',abs:'Math.abs',sinh:'Math.sinh',cosh:'Math.cosh',tanh:'Math.tanh'};
+/* ---------- formule libre (parseur récursif sûr : gère -x^2, 2pi*f, sind/cosd/tand/rad/deg) ---------- */
+const FONCTIONS={
+  sqrt:'Math.sqrt',exp:'Math.exp',ln:'Math.log',log:'Math.log10',log10:'Math.log10',
+  sin:'Math.sin',cos:'Math.cos',tan:'Math.tan',asin:'Math.asin',acos:'Math.acos',atan:'Math.atan',
+  abs:'Math.abs',sinh:'Math.sinh',cosh:'Math.cosh',tanh:'Math.tanh',
+  rad:'((__a)=>__a*Math.PI/180)',deg:'((__a)=>__a*180/Math.PI)',
+  sind:'((__a)=>Math.sin(__a*Math.PI/180))',cosd:'((__a)=>Math.cos(__a*Math.PI/180))',tand:'((__a)=>Math.tan(__a*Math.PI/180))',
+  asind:'((__a)=>Math.asin(__a)*180/Math.PI)',acosd:'((__a)=>Math.acos(__a)*180/Math.PI)',atand:'((__a)=>Math.atan(__a)*180/Math.PI)'
+};
 P.nomValide=s=>/^[A-Za-z_][A-Za-z_0-9]*$/.test(s)&&!(s in FONCTIONS)&&s!=='pi'&&!/^(Math|Function|window|document|this|eval|constructor|prototype|globalThis)$/.test(s);
+
 P.compiler=function(expr,noms){
-  let s=String(expr).trim().replace(/,/g,'.').replace(/\^/g,'**').replace(/[×·]/g,'*').replace(/[−–]/g,'-').replace(/π/g,'pi').replace(/√/g,'sqrt');
+  let s=String(expr??'').trim().replace(/,/g,'.').replace(/[×·]/g,'*').replace(/[−–]/g,'-').replace(/π/g,'pi').replace(/√/g,'sqrt').replace(/\*\*/g,'^');
   if(!s)return{err:'Formule vide.'};
-  if(!/^[0-9A-Za-z_\s+\-*/().]*$/.test(s))return{err:'Caractère non accepté dans la formule.'};
-  let inconnu=null;
-  const js=s.replace(/\d+\.?\d*(?:e[+-]?\d+)?|[A-Za-z_]\w*/gi,t=>{
-    if(/^\d/.test(t))return t;
-    if(FONCTIONS[t])return FONCTIONS[t];
-    if(t==='pi')return 'Math.PI';
-    if(noms.includes(t))return t;
-    inconnu=inconnu||t;return t});
-  if(inconnu)return{err:'Symbole inconnu : '+inconnu+'.'};
+  if(!/^[0-9A-Za-z_\s+\-*/^().]*$/.test(s))return{err:'Caractère non accepté dans la formule.'};
+  /* tokenisation */
+  const raw=[];let i=0;
+  while(i<s.length){
+    const ch=s[i];
+    if(/\s/.test(ch)){i++;continue}
+    if(/\d/.test(ch)||(ch==='.'&&/\d/.test(s[i+1]||''))){
+      const m=s.slice(i).match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/);
+      raw.push({t:'num',v:m[0]});i+=m[0].length;continue;
+    }
+    if(/[A-Za-z_]/.test(ch)){
+      const m=s.slice(i).match(/^[A-Za-z_]\w*/);
+      const id=m[0];
+      if(id in FONCTIONS)raw.push({t:'fn',v:FONCTIONS[id],n:id});
+      else if(id==='pi')raw.push({t:'val',v:'Math.PI',n:'pi'});
+      else if(noms.includes(id))raw.push({t:'val',v:id,n:id});
+      else return{err:'Symbole inconnu : '+id+'.'};
+      i+=id.length;continue;
+    }
+    if('+-*/^()'.includes(ch)){raw.push({t:ch,v:ch});i++;continue}
+    return{err:'Caractère non accepté : '+ch+'.'};
+  }
+  /* multiplication implicite : 2pi, 2(x+1), (a+b)(c+d), 2sqrt(x), a(b+c), pi L */
+  const tok=[];
+  for(let k=0;k<raw.length;k++){
+    const c=raw[k],p=tok[tok.length-1];
+    if(p){
+      const pFin=p.t==='num'||p.t==='val'||p.t===')';
+      const cDeb=c.t==='val'||c.t==='fn'||c.t==='('||c.t==='num';
+      if(pFin&&cDeb)tok.push({t:'*',v:'*'});
+    }
+    tok.push(c);
+  }
+  /* analyseur récursif : expr → term → unary → power → primary (-x^2 ≡ -(x**2), b^-1 ≡ b**(-1)) */
+  let pos=0;
+  const peek=()=>tok[pos];
+  function parseExpr(){
+    let left=parseTerm();
+    while(peek()&&(peek().t==='+'||peek().t==='-')){const op=tok[pos++].t;left=`(${left}${op}${parseTerm()})`}
+    return left;
+  }
+  function parseTerm(){
+    let left=parseUnary();
+    while(peek()&&(peek().t==='*'||peek().t==='/')){const op=tok[pos++].t;left=`(${left}${op}${parseUnary()})`}
+    return left;
+  }
+  function parseUnary(){
+    if(peek()&&(peek().t==='+'||peek().t==='-')){const op=tok[pos++].t;return `(${op}${parseUnary()})`}
+    return parsePower();
+  }
+  function parsePower(){
+    let base=parsePrimary();
+    if(peek()&&peek().t==='^'){pos++;return `((${base})**(${parseUnary()}))`}
+    return base;
+  }
+  function parsePrimary(){
+    const c=peek();
+    if(!c)throw new Error('Fin de formule inattendue.');
+    if(c.t==='num'||c.t==='val'){pos++;return c.v}
+    if(c.t==='fn'){
+      pos++;
+      if(!peek()||peek().t!=='(')throw new Error(`Parenthèses attendues après ${c.n}.`);
+      pos++;
+      const arg=parseExpr();
+      if(!peek()||peek().t!==')')throw new Error(`Parenthèse fermante manquante après ${c.n}.`);
+      pos++;
+      return `${c.v}(${arg})`;
+    }
+    if(c.t==='('){
+      pos++;
+      const e=parseExpr();
+      if(!peek()||peek().t!==')')throw new Error('Parenthèse fermante manquante.');
+      pos++;
+      return `(${e})`;
+    }
+    throw new Error('Formule non valide.');
+  }
+  let js;
+  try{
+    js=parseExpr();
+    if(pos<tok.length)return{err:'Formule non valide (expression incomplète).'};
+  }catch(e){return{err:e.message||'Formule non valide.'}}
   let fn;
   try{fn=new Function(...noms,'"use strict";return ('+js+');')}catch(e){return{err:'Formule non valide.'}}
   return{fn};
 };
 
 /* ---------- propagation ---------- */
-/** u d'une grandeur : kind 'u' (écart-type) ou 'D' (demi-largeur Δ, loi uniforme) */
-P.uEff=v=>v.kind==='D'?v.p/SQ3:v.p;
-/** tirages Monte-Carlo de f(x1, x2, …) : gaussienne (kind u) ou uniforme sur [x − Δ, x + Δ] (kind D) */
+/** demi-largeur effective (pour kind 'D' ou 'Dp') et incertitude-type effective (u, Δ, u %, Δ %) */
+P.deltaEff=v=>v.kind==='D'?v.p:v.kind==='Dp'?v.p/100*Math.abs(v.val):NaN;
+P.uEff=v=>{
+  if(v.kind==='D')return v.p/SQ3;
+  if(v.kind==='up')return v.p/100*Math.abs(v.val);
+  if(v.kind==='Dp')return(v.p/100*Math.abs(v.val))/SQ3;
+  return v.p;
+};
+/** tirages Monte-Carlo de f(x1, x2, …) : gaussienne (u, u%) ou uniforme sur [x − Δ, x + Δ] (Δ, Δ%) */
 P.mc=function(fn,vars,N,seed){
   const r=P.rng(seed),ys=new Float64Array(N),args=new Array(vars.length);
+  const meta=vars.map(v=>{const unif=v.kind==='D'||v.kind==='Dp';return{unif,amp:unif?P.deltaEff(v):P.uEff(v),val:v.val}});
   let ok=0;
   for(let i=0;i<N;i++){
-    for(let j=0;j<vars.length;j++){const v=vars[j];args[j]=v.p>0?(v.kind==='D'?v.val+v.p*(2*r()-1):v.val+v.p*P.gauss(r)):v.val}
+    for(let j=0;j<meta.length;j++){const m=meta[j];args[j]=m.amp>0?(m.unif?m.val+m.amp*(2*r()-1):m.val+m.amp*P.gauss(r)):m.val}
     const y=fn(...args);if(isFinite(y))ys[ok++]=y;
   }
   return ys.subarray(0,ok);
 };
-/** contributions linéarisées (∂f/∂xi · u(xi))² par différence centrée ; u_lin = √Σ */
-P.budget=function(fn,vars){
-  const vals=vars.map(v=>v.val),y0=fn(...vals),c=[];
+/** contributions linéarisées (∂f/∂xi · u(xi))² par différence centrée (secours variance MC 1D si dérivée nulle) */
+P.budget=function(fn,vars,seed){
+  const vals=vars.map(v=>v.val),y0=fn(...vals),c=[],cLin=[];
+  let mcFallback=false;
   vars.forEach((v,i)=>{
     const u=P.uEff(v);
-    if(!(u>0)){c.push(0);return}
-    const h=1e-4*u,a=vals.slice(),b=vals.slice();a[i]+=h;b[i]-=h;
-    const d=(fn(...a)-fn(...b))/(2*h);c.push((d*u)*(d*u));
+    if(!(u>0)){c.push(0);cLin.push(0);return}
+    const h=Math.max(1e-4*u,1e-6*Math.abs(vals[i]),1e-12);
+    const a=vals.slice(),b=vals.slice();a[i]+=h;b[i]-=h;
+    const fa=fn(...a),fb=fn(...b);
+    let d=NaN;
+    if(isFinite(fa)&&isFinite(fb))d=(fa-fb)/(2*h);
+    else if(isFinite(fa)&&isFinite(y0))d=(fa-y0)/h;
+    else if(isFinite(fb)&&isFinite(y0))d=(y0-fb)/h;
+    const vLin=isFinite(d)?(d*u)*(d*u):0;
+    cLin.push(vLin);
+    if(vLin>0){c.push(vLin);return}
+    /* dérivée nulle au point nominal (ex. cos(0), x² en 0) : variance univariée par MC 1D */
+    const r=P.rng((seed||1)+101*(i+1)),unif=v.kind==='D'||v.kind==='Dp',amp=unif?P.deltaEff(v):u;
+    const M1=2000,ys=new Float64Array(M1),arg=vals.slice();let ok=0;
+    for(let k=0;k<M1;k++){arg[i]=unif?vals[i]+amp*(2*r()-1):vals[i]+amp*P.gauss(r);const y=fn(...arg);if(isFinite(y))ys[ok++]=y}
+    const s1=ok>1?P.sd(ys.subarray(0,ok)):0;
+    if(s1>0){mcFallback=true;c.push(s1*s1)}else c.push(0);
   });
-  const s=c.reduce((x,y)=>x+y,0);
-  return{y0,c,uLin:Math.sqrt(s)};
+  return{y0,c,uLin:Math.sqrt(cLin.reduce((x,y)=>x+y,0)),mcFallback};
 };
 /** somme y = Σ ci xi : contributions (ci u(xi))² */
 P.budgetSomme=(vars)=>{const c=vars.map(v=>{const u=P.uEff(v);return(v.coef*u)*(v.coef*u)});const y0=vars.reduce((s,v)=>s+v.coef*v.val,0);return{y0,c,uLin:Math.sqrt(c.reduce((a,b)=>a+b,0))}};
@@ -1050,6 +1334,50 @@ P.budgetProduit=(vars,k)=>{
   return{y0,c,uLin:Math.sqrt(c.reduce((a,b)=>a+b,0))};
 };
 
+/* ---------- transformations d'axes pour la régression ---------- */
+P.transfo=function(code,expr,varNom){
+  const v=varNom||'x';
+  if(!code||code==='id')return{fn:z=>z,id:true};
+  if(code==='sq')return{fn:z=>z*z,id:false};
+  if(code==='cu')return{fn:z=>z*z*z,id:false};
+  if(code==='sqrt')return{fn:z=>z>=0?Math.sqrt(z):NaN,id:false};
+  if(code==='inv')return{fn:z=>z!==0?1/z:NaN,id:false};
+  if(code==='inv2')return{fn:z=>z!==0?1/(z*z):NaN,id:false};
+  if(code==='ln')return{fn:z=>z>0?Math.log(z):NaN,id:false};
+  if(code==='log')return{fn:z=>z>0?Math.log10(z):NaN,id:false};
+  if(code==='expr'){
+    const noms=v==='x'?['x']:[v,'x'];
+    const cp=P.compiler(expr,noms);
+    if(cp.err)return{err:cp.err,fn:null,id:false};
+    return{fn:v==='x'?cp.fn:(z=>cp.fn(z,z)),id:false};
+  }
+  return{fn:z=>z,id:true};
+};
+function deriv1(fn,x,u){
+  const h=Math.max(1e-4*(u||0),1e-6*Math.abs(x),1e-10);
+  const a=fn(x+h),b=fn(x-h);
+  if(isFinite(a)&&isFinite(b))return(a-b)/(2*h);
+  const y0=fn(x);
+  if(isFinite(a)&&isFinite(y0))return(a-y0)/h;
+  if(isFinite(b)&&isFinite(y0))return(y0-b)/h;
+  return NaN;
+}
+/** transforme les points bruts (x, ux, y, uy) en (X, uX, Y, uY) ; exclut les hors-domaine */
+P.transformPts=function(pts,tx,ty){
+  const fx=tx&&tx.fn?tx.fn:(z=>z),fy=ty&&ty.fn?ty.fn:(z=>z);
+  const idX=!tx||tx.id,idY=!ty||ty.id;
+  const out=[];let rejet=0;
+  for(const p of pts){
+    const X=fx(p.x),Y=fy(p.y);
+    if(!isFinite(X)||!isFinite(Y)){rejet++;continue}
+    const uX=p.ux>0?(idX?p.ux:Math.abs(deriv1(fx,p.x,p.ux))*p.ux):0;
+    const uY=p.uy>0?(idY?p.uy:Math.abs(deriv1(fy,p.y,p.uy))*p.uy):0;
+    if(!isFinite(uX)||!isFinite(uY)){rejet++;continue}
+    out.push({...p,rawX:p.x,rawUx:p.ux,rawY:p.y,rawUy:p.uy,x:X,ux:uX,y:Y,uy:uY});
+  }
+  return{pts:out,rejet};
+};
+
 /* ---------- régression linéaire y = a x + b ---------- */
 P.fit=function(x,y){
   const n=x.length,mx=P.mean(x),my=P.mean(y);let sxx=0,sxy=0;
@@ -1057,25 +1385,111 @@ P.fit=function(x,y){
   const a=sxx>0?sxy/sxx:NaN;return{a,b:my-a*mx};
 };
 P.zReg=function(pts,a,b){return pts.map(p=>{const d=Math.sqrt(p.uy*p.uy+a*a*p.ux*p.ux);return d>0?(p.y-a*p.x-b)/d:0})};
-P.mcReg=function(pts,loi,M,seed){
+P.mcReg=function(pts,loi,M,seed,tx,ty){
   const r=P.rng(seed),n=pts.length,A=new Float64Array(M),B=new Float64Array(M),x=new Array(n),y=new Array(n);
+  const fx=tx&&tx.fn&&!tx.id?tx.fn:null,fy=ty&&ty.fn&&!ty.id?ty.fn:null;
+  let ok=0;
   for(let k=0;k<M;k++){
-    for(let i=0;i<n;i++){const p=pts[i];
-      if(loi==='unif'){x[i]=p.x+SQ3*p.ux*(2*r()-1);y[i]=p.y+SQ3*p.uy*(2*r()-1)}
-      else{x[i]=p.x+p.ux*P.gauss(r);y[i]=p.y+p.uy*P.gauss(r)}}
-    const f=P.fit(x,y);A[k]=f.a;B[k]=f.b;
+    let valid=true;
+    for(let i=0;i<n;i++){
+      const p=pts[i];
+      const bx=fx?p.rawX:p.x,bux=fx?p.rawUx:p.ux,by=fy?p.rawY:p.y,buy=fy?p.rawUy:p.uy;
+      let xi,yi;
+      if(loi==='unif'){xi=bux>0?bx+SQ3*bux*(2*r()-1):bx;yi=buy>0?by+SQ3*buy*(2*r()-1):by}
+      else{xi=bux>0?bx+bux*P.gauss(r):bx;yi=buy>0?by+buy*P.gauss(r):by}
+      if(fx)xi=fx(xi);
+      if(fy)yi=fy(yi);
+      if(!isFinite(xi)||!isFinite(yi)){valid=false;break}
+      x[i]=xi;y[i]=yi;
+    }
+    if(!valid)continue;
+    const f=P.fit(x,y);
+    if(isFinite(f.a)&&isFinite(f.b)){A[ok]=f.a;B[ok]=f.b;ok++}
   }
-  const ua=P.sd(A),ub=P.sd(B),ma=P.mean(A),mb=P.mean(B);let c=0;for(let k=0;k<M;k++)c+=(A[k]-ma)*(B[k]-mb);
-  return{A,B,ua,ub,corr:c/((M-1)*ua*ub)};
+  const As=A.subarray(0,ok),Bs=B.subarray(0,ok);
+  const ua=ok>1?P.sd(As):NaN,ub=ok>1?P.sd(Bs):NaN,ma=P.mean(As),mb=P.mean(Bs);
+  let cov=NaN,corr=NaN;
+  if(ok>1){let c=0;for(let k=0;k<ok;k++)c+=(As[k]-ma)*(Bs[k]-mb);cov=c/(ok-1);if(ua>0&&ub>0)corr=cov/(ua*ub)}
+  return{A:As,B:Bs,ua,ub,cov,corr,ok,rejected:M-ok};
 };
-/** diagnostic des écarts normalisés : points hors de ±2, écarts tous très petits, structure en signe */
-P.diagnostic=function(z){
-  const n=z.length,bad=[];let mx=0,ch=0,prev=0;
-  z.forEach((v,i)=>{if(Math.abs(v)>2)bad.push(i);mx=Math.max(mx,Math.abs(v));const s=Math.sign(v);if(s!==0){if(prev!==0&&s!==prev)ch++;prev=s}});
+/** enveloppe d'incertitude ±σ(x) autour de y = a x + b à partir de Var(a), Var(b) et Cov(a, b) */
+P.enveloppeReg=function(fit,ua,ub,cov,xs){
+  if(!isFinite(ua)||!isFinite(ub))return[];
+  const vA=ua*ua,vB=ub*ub,cAB=isFinite(cov)?cov:0;
+  return xs.map(x=>({x,y:fit.a*x+fit.b,s:Math.sqrt(Math.max(0,x*x*vA+2*x*cAB+vB))}));
+};
+/** prédiction corrélée sur les tirages (A_k, B_k) : mode 'y' (Y(X0)), 'x' (étalonnage inverse X(Y0)), 'fab' (f(a,b)) */
+P.predReg=function(fit,mc,mode,o,seed){
+  const K=mc&&mc.A?mc.A.length:0;
+  let As=mc&&mc.A,Bs=mc&&mc.B;
+  /* repli si régression sans incertitudes : tirages gaussiens bivariés avec Cov(a,b) OLS */
+  if(K<2){
+    if(!isFinite(mc.ua)||!isFinite(mc.ub))return{err:'Il faut au moins 3 points (ou des incertitudes) pour estimer l\'incertitude.'};
+    const M0=5000,r0=P.rng((seed||1)+7919);
+    const rho=isFinite(mc.corr)?Math.max(-0.999999,Math.min(0.999999,mc.corr)):0,s2=Math.sqrt(1-rho*rho);
+    As=new Float64Array(M0);Bs=new Float64Array(M0);
+    for(let k=0;k<M0;k++){const z1=P.gauss(r0),z2=P.gauss(r0);As[k]=fit.a+mc.ua*z1;Bs[k]=fit.b+mc.ub*(rho*z1+s2*z2)}
+  }
+  const N=As.length,r=P.rng((seed||1)+3571),out=new Float64Array(N);let ok=0;
+  if(mode==='y'){
+    const x0=o.val,ux0=Math.max(0,o.u||0);
+    if(!isFinite(x0))return{err:'Saisissez une abscisse X₀.'};
+    const val=fit.a*x0+fit.b;
+    for(let k=0;k<N;k++){const xk=ux0>0?x0+ux0*P.gauss(r):x0;const yk=As[k]*xk+Bs[k];if(isFinite(yk))out[ok++]=yk}
+    const s=out.subarray(0,ok);return{val,u:ok>1?P.sd(s):NaN,mean:P.mean(s),ok,rejected:N-ok};
+  }
+  if(mode==='x'){
+    const y0=o.val,uy0=Math.max(0,o.u||0);
+    if(!isFinite(y0))return{err:'Saisissez une ordonnée Y₀.'};
+    if(fit.a===0)return{err:'Pente nulle : inversion impossible.'};
+    const val=(y0-fit.b)/fit.a;
+    for(let k=0;k<N;k++){const yk=uy0>0?y0+uy0*P.gauss(r):y0;const xk=As[k]!==0?(yk-Bs[k])/As[k]:NaN;if(isFinite(xk))out[ok++]=xk}
+    const s=out.subarray(0,ok);return{val,u:ok>1?P.sd(s):NaN,mean:P.mean(s),ok,rejected:N-ok};
+  }
+  if(mode==='fab'){
+    const cp=P.compiler(o.expr,['a','b']);
+    if(cp.err)return{err:cp.err};
+    const val=cp.fn(fit.a,fit.b);
+    if(!isFinite(val))return{err:'La formule ne donne pas un nombre fini.'};
+    for(let k=0;k<N;k++){const vk=cp.fn(As[k],Bs[k]);if(isFinite(vk))out[ok++]=vk}
+    const s=out.subarray(0,ok);return{val,u:ok>1?P.sd(s):NaN,mean:P.mean(s),ok,rejected:N-ok};
+  }
+  return{err:'Mode inconnu.'};
+};
+/** diagnostic des écarts normalisés : points hors de ±2, écarts tous très petits, structure en signe (triée par x si xs fourni) */
+P.diagnostic=function(z,xs){
+  const n=z.length,bad=[];let mx=0;
+  z.forEach((v,i)=>{if(Math.abs(v)>2)bad.push(i);mx=Math.max(mx,Math.abs(v))});
+  const ord=xs&&xs.length===n?Array.from({length:n},(_,i)=>i).sort((i,j)=>xs[i]-xs[j]):Array.from({length:n},(_,i)=>i);
+  let ch=0,prev=0;
+  for(const i of ord){const s=Math.sign(z[i]);if(s!==0){if(prev!==0&&s!==prev)ch++;prev=s}}
   return{bad,max:mx,changes:ch,
     trop:n>=6&&mx<0.5,
     motif:n>=7&&ch<=2&&mx>=1.2&&bad.length===0};
 };
+
+/* ---------- comparaison multi-mesures & moyenne pondérée ---------- */
+P.comparer=function(items){
+  const n=items.length,Z=Array.from({length:n},()=>new Array(n).fill(0)),paires=[];
+  let zMax=0;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+    const z=P.ecartNorm(items[i].x,items[i].u,items[j].x,items[j].u);
+    Z[i][j]=Z[j][i]=z;
+    if(z>zMax)zMax=z;
+    paires.push({i,j,z,ok:z<=2});
+  }
+  const ponderables=items.filter(m=>m.u>0);
+  let xMoy=NaN,uMoy=NaN,chi2=NaN,chi2Red=NaN;
+  if(ponderables.length>=2){
+    let W=0,Wx=0;
+    for(const m of ponderables){const w=1/(m.u*m.u);W+=w;Wx+=w*m.x}
+    xMoy=Wx/W;uMoy=1/Math.sqrt(W);
+    chi2=ponderables.reduce((s,m)=>s+Math.pow((m.x-xMoy)/m.u,2),0);
+    chi2Red=chi2/(ponderables.length-1);
+  }
+  return{Z,paires,zMax,compatible:zMax<=2,xMoy,uMoy,chi2,chi2Red};
+};
+
 return P;
 })();
 if(typeof module!=='undefined')module.exports=PH2;
@@ -1084,16 +1498,17 @@ if(typeof module!=='undefined')module.exports=PH2;
 // @sortie ../PH2_Incertitudes/PH2_Incertitudes.html
 // @inclure PH2_stats.js
 // @style PH2_Incertitudes.css
-// @description Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo et régression linéaire sur les mesures saisies, avec écart normalisé.
+// @description Outil de TP : incertitude-type (A et B), propagation, Monte-Carlo, régression linéaire avec transformations d'axes et comparaison de résultats.
 'use strict';
 /* PH2 · Calculs et incertitudes : outil de TP (disposition « atelier »).
-   Modèle : PH2_stats.js. L'élève saisit ses mesures ; écart normalisé Z = |x − x_ref| / √(u² + u_ref²) dans chaque onglet. */
+   Modèle : PH2_stats.js. 4 onglets : Mesure directe, Propagation, Régression linéaire, Comparer + Carnet de séance. */
 const M=AnimKit.M, F=AnimKit.fmt, SQ3=Math.sqrt(3), BLEU='#58a6ff';
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const sub=(s,i)=>M.v(s,i);
 const nomGrandeur=(t,repli='y')=>String(t.nom??'').trim()||repli;
-const axeGrandeur=(nom,unite)=>unite.trim()?`${nom} [${esc(unite.trim())}]`:nom;
+const axeGrandeur=(nom,unite)=>String(unite??'').trim()?`${nom} [${esc(String(unite).trim())}]`:nom;
 const suffixeUnite=unite=>unite?'&nbsp;'+esc(unite):'';
+const parenUnite=u=>(/[\/·\s]/.test(u)?`(${u})`:u);
 function uniteCalculee(saisie){
   const unite=String(saisie??'').trim().replace(/\s*([/·])\s*/g,'$1');
   const quotient=unite.match(/^\(([^()]+)\)\s*\/\s*\(([^()]+)\)$/) || unite.match(/^([^/]+)\/([^/]+)$/);
@@ -1103,39 +1518,45 @@ function uniteCalculee(saisie){
 const nomsRegression=t=>[String(t.xnom??'').trim()||'x',String(t.ynom??'').trim()||'y'].map(esc);
 const incGrandeur=(nom,symbole='u')=>`${M.v(symbole)}(${M.v(nom)})`;
 const barreMoyenne=nom=>`<span style="text-decoration:overline">${nom}</span>`;
-/* ---------- lecture de nombres : point ou virgule décimale acceptés ---------- */
-function lire(s){
-  if(typeof s==='number')return s;
-  s=String(s).trim().replace(/\s/g,'').replace(/,/g,'.').replace(/[−–]/g,'-').replace(/[×x]10\^?/i,'e');
-  return s===''?NaN:Number(s);
-}
-function lireSerie(t){return Float64Array.from(String(t).split(/[\s;]+/).filter(Boolean).map(lire).filter(isFinite))}
-function lirePoints(t){
-  const pts=[];
-  for(const l of String(t).split(/\r?\n/)){const c=l.trim().split(/[\t; ]+/).filter(Boolean).map(lire);if(c.length===4&&c.every(isFinite))pts.push({x:c[0],ux:Math.abs(c[1]),y:c[2],uy:Math.abs(c[3])})}
-  return pts;
-}
+const lire=PH2.lire;
 const nbTexte=x=>!isFinite(x)?'':String(+x.toPrecision(8));
+const finis=(...v)=>v.every(isFinite);
 
-/* ---------- écriture d'un résultat : (valeur ± u) unité, u arrondie par excès à 2 chiffres ---------- */
+/* ---------- écriture d'un résultat : valeur et u arrondie par excès à 2 chiffres ---------- */
 function ecrire(x,u,unite,nom){
   const nm=nom||'x', un=suffixeUnite(unite), neg=s=>s.replace('-','−');
-  const r=PH2.arrondi(x,u);
-  if(!r)return `${nm} = ${F.sig(x,4)}${un}`;
-  const e=Math.floor(Math.log10(Math.abs(r.x)||1)),eu=Math.floor(Math.log10(r.u)),ex=k=>`${String(k).replace('-','−')}`;
-  if(e<-3||e>5){const d=Math.max(0,r.d+e),f=Math.pow(10,e),fu=Math.pow(10,eu);
-    return `${nm} = ${neg((r.x/f).toFixed(d))} × 10<sup>${ex(e)}</sup>${un} , u(${nm}) = ${(r.u/fu).toFixed(1)} × 10<sup>${ex(eu)}</sup>${un}`}
-  return `${nm} = ${neg(r.x.toFixed(r.d))}${un} , u(${nm}) = ${r.u.toFixed(r.d)}${un}`;
+  const fm=PH2.formater(x,u);
+  if(!fm)return `${nm} = ${F.sig(x,4)}${un}`;
+  const ex=k=>String(k).replace('-','−');
+  if(fm.sci){
+    return `${nm} = ${neg(fm.xStr)} × 10<sup>${ex(fm.ex)}</sup>${un} , u(${nm}) = ${fm.uStr} × 10<sup>${ex(fm.eu)}</sup>${un}`;
+  }
+  return `${nm} = ${neg(fm.xStr)}${un} , u(${nm}) = ${fm.uStr}${un}`;
 }
-const lienz=(z)=>z<=2?`<span class="ok">compatible</span>`:`<span class="ko">incompatible</span>`;
-/** échelle d'affichage d'un axe : puissance de dix pour éviter les graduations illisibles */
+const lienz=z=>z<=2?`<span class="ok">compatible</span>`:`<span class="ko">incompatible</span>`;
 function echelle(lo,hi){const m=Math.max(Math.abs(lo),Math.abs(hi));if(!(m>0))return 1;const e=Math.floor(Math.log10(m));return(e<-3||e>5)?Math.pow(10,e):1}
-const suffixe=f=>f===1?'':` ×10<tspan font-size="72%" dy="-0.55em">${String(Math.round(Math.log10(f))).replace('-','−')}</tspan><tspan dy="0.4em">​</tspan>`;
+const suffixe=f=>f===1?'':` ×10<tspan font-size="72%" dy="-0.55em">${String(Math.round(Math.log10(f))).replace('-','−')}</tspan><tspan dy="0.4em">\u200B</tspan>`;
 
-/* ---------- dessin d'un histogramme (style des figures PH2) ----------
-   o : lay (classes), counts, n (nombre de valeurs comptées), mode 'eff' | 'dens',
-       xlo, xhi (étendue de l'axe), modele {m,s}, lin {m,s}, ombre, bandes, unif {c,D},
-       ref {x,u}, moy, xlab, ylab, hauteur (effectif ou densité à inclure)                      */
+/* ---------- transformations d'axes : libellés et unités ---------- */
+const TRANSFOS=[
+  ['id','Aucune (x)'],['sq','x²'],['cu','x³'],['sqrt','√x'],
+  ['inv','1 / x'],['inv2','1 / x²'],['ln','ln(x)'],['log','log(x)'],['expr','Formule libre…']
+];
+function transfoInfo(code,expr,nom,unite,varNom){
+  const u=uniteCalculee(unite),pu=u?parenUnite(u):'';
+  if(!code||code==='id')return{label:nom,unite:u,svg:nom};
+  if(code==='sq')return{label:`${nom}²`,unite:u?`${pu}²`:'',svg:`${nom}²`};
+  if(code==='cu')return{label:`${nom}³`,unite:u?`${pu}³`:'',svg:`${nom}³`};
+  if(code==='sqrt')return{label:`√${nom}`,unite:u?`√${pu}`:'',svg:`√${nom}`};
+  if(code==='inv')return{label:`1/${nom}`,unite:u?`${pu}⁻¹`:'',svg:`1/${nom}`};
+  if(code==='inv2')return{label:`1/${nom}²`,unite:u?`${pu}⁻²`:'',svg:`1/${nom}²`};
+  if(code==='ln')return{label:`ln(${nom})`,unite:'',svg:`ln(${nom})`};
+  if(code==='log')return{label:`log(${nom})`,unite:'',svg:`log(${nom})`};
+  const ex=esc(String(expr||'').trim()||varNom||'x');
+  return{label:ex,unite:'',svg:ex};
+}
+
+/* ---------- dessin d'un histogramme (clip appliqué au cadre du graphique) ---------- */
 function histo(a,R,o){
   const S=a.S,K=a.k,C=a.C,f=echelle(o.xlo,o.xhi);
   const lay=o.lay,n=o.n||0,mode=o.mode||'eff',w=lay?lay.w:1;
@@ -1159,8 +1580,7 @@ function histo(a,R,o){
     xfmt:(v,st)=>F.fix(v,Math.max(0,-Math.floor(Math.log10(st)+1e-9))),
     xlab:(o.xlab||'')+suffixe(f),ylab:o.ylab||''});
   const clip='c_'+(o.cid||'x');
-  let s=S.clip(clip,G)+G.svg,X=x=>G.X(x/f),Y=G.Y;
-  const aire=(m,sig,col,op)=>{const x1=Math.max(m-sig*1,0);return S.rect(X(m-sig),G.y0,X(m+sig)-X(m-sig),G.h,{fill:col,fop:op})};
+  let s=S.clip(clip,G)+G.svg+`<g clip-path="url(#${clip})">`,X=x=>G.X(x/f),Y=G.Y;
   if(o.bandes&&o.moyenne!==undefined){const m=o.moyenne,sg=o.sigma;
     [3,2,1].forEach((k,i)=>{s+=S.rect(X(m-k*sg),G.y0,X(m+k*sg)-X(m-k*sg),G.h,{fill:C.cInk,fop:[.07,.1,.15][i]})});
     ['±σ','±2σ','±3σ'].forEach((t,i)=>{const yy=Y(ymax*(0.93-0.085*i));
@@ -1173,7 +1593,7 @@ function histo(a,R,o){
   const courbe=(m,sg,col,dash,w2)=>{const pts=[];const a0=Math.max(xmin*f,m-4.2*sg),b0=Math.min(xmax*f,m+4.2*sg);
     for(let i=0;i<=160;i++){const x=a0+(b0-a0)*i/160;pts.push([x/f,mY(pdf(x,m,sg))])}
     return S.curve(pts,G,{c:col,w:w2||2.2,dash})};
-  if(o.ombre&&o.modele){const m=o.modele.m,sg=o.modele.s,pts=[[ (m-sg)/f,0]];
+  if(o.ombre&&o.modele){const m=o.modele.m,sg=o.modele.s,pts=[[(m-sg)/f,0]];
     for(let i=0;i<=40;i++){const x=m-sg+2*sg*i/40;pts.push([x/f,mY(pdf(x,m,sg))])}pts.push([(m+sg)/f,0]);
     s+=S.poly(pts.map(([x,y])=>[G.X(x),Y(y)]),{close:true,fill:C.cInk,fop:.3,c:'none',w:0})}
   if(o.unif){const{c:c0,D}=o.unif,h0=hU;
@@ -1194,6 +1614,7 @@ function histo(a,R,o){
     s+=S.line(X(m),G.y0,X(m),G.y0+G.h,{c:C.ink,w:1.6,dash:'6 4'});
     const aGauche=etiquettesEnHaut||o.ref&&o.ref.x>m;
     s+=S.text(X(m)+(aGauche?-6*K:6*K),yEtiquette,S.v(o.moyNom||'x̄'),{size:14,c:C.ink,weight:600,anchor:aGauche?'end':'start'})}
+  s+='</g>';
   return{svg:s,G};
 }
 
@@ -1217,54 +1638,106 @@ function budget(a,R,vars,c,mute,uy,titre){
 
 /* ---------- état : tout ce que saisit l'élève (mémorisé dans le navigateur) ---------- */
 const V=(nom,val,kind,p,coef)=>({nom,val,kind,p,coef});
-const uV=v=>v.kind==='D'?v.p/SQ3:v.p;
+const uV=PH2.uEff;
 const vEff=(vars,mute)=>vars.map((v,i)=>mute[i]?{...v,p:0}:v);
 const CACHE={};
 function memo(nom,cle,fn){const c=CACHE[nom];if(c&&c.cle===cle)return c.val;const val=fn();CACHE[nom]={cle,val};return val}
 const OHM=[[0.010,1.01],[0.020,1.98],[0.030,3.03],[0.040,3.99],[0.050,5.02],[0.060,5.97]].map(([x,y])=>[x,5e-4,y,0.02].map(nbTexte));
+const exProduit=()=>({type:'produit',nom:'c',unite:'m·s⁻¹',k:'1',vars:[V('lambda',0.0085,'u',0.0001,1),V('f',40000,'u',200,1)],mute:[false,false],ref:false,xref:'340',uref:'0'});
 const defaut=()=>({
   t0:{nom:'T',unite:'s',rows:['1.52','1.49','1.51','1.50','1.53','1.48','1.51','1.50','1.52','1.49'].map(x=>[x]),B:false,modeB:'D',delta:'0.01',bmin:'1.49',bmax:'1.51',pct:'0.5',dgt:'2',res:'0.01',lec:'',ref:false,xref:'1.50',uref:'0'},
   t1:{type:'somme',nom:'d',unite:'mm',k:'1',vars:[V('x1',10,'u',.5,-1),V('x2',30,'u',.5,1)],mute:[false,false],ref:false,xref:'21.5',uref:'0'},
   t2:{formule:'4*pi^2*L/T^2',nom:'g',unite:'m·s⁻²',vars:[V('L',1.000,'u',.002,1),V('T',2.012,'u',.005,1)],mute:[false,false],N:100000,graine:1,lin:false,ref:false,xref:'9.81',uref:'0'},
-  t3:{xnom:'I',xun:'A',xkind:'u',ynom:'U',yun:'V',ykind:'u',rows:OHM.map(r=>r.slice()),loi:'unif',M:10000,histos:false,zones:true,zoomU:0,ref:false,xref:'100',uref:'0'}
+  t3:{xnom:'I',xun:'A',xmode:'pt',xkind:'u',xcst:'0.0005',xpct:'1',xdgt:'2',xres:'0.001',xtr:'id',xtrExpr:'',
+      ynom:'U',yun:'V',ymode:'pt',ykind:'u',ycst:'0.02',ypct:'1',ydgt:'2',yres:'0.01',ytr:'id',ytrExpr:'',
+      rows:OHM.map(r=>r.slice()),off:OHM.map(()=>false),loi:'unif',M:10000,graine:1,histos:false,zones:true,enveloppe:false,deplacer:false,zoomU:0,
+      predMode:'off',predVal:'',predU:'0',predExpr:'',predNom:'',predUn:'',
+      ref:false,xref:'100',uref:'0',refB:false,bref:'0',ubref:'0'},
+  t4:{nom:"f'",unite:'mm',items:[{nom:'Autocollimation',val:100.4,kind:'u',p:1.1,on:true},{nom:'Bessel',val:99.6,kind:'u',p:0.9,on:true},{nom:'Silbermann',val:101.5,kind:'u',p:1.8,on:true}],moyPond:true,ref:true,xref:'100.0',uref:'0.5'},
+  carnet:[]
 });
 const VIDE={
-  t0:t=>{t.rows=[];t.lec='';t.bmin='';t.bmax=''},
-  t1:t=>{t.vars=[V('x1',NaN,'u',NaN,1)];t.mute=[false]},
-  t2:t=>{t.formule='';t.vars=[V('x',NaN,'u',NaN,1)];t.mute=[false]},
-  t3:t=>{t.rows=[]}
+  t0:t=>{t.rows=[];t.lec='';t.bmin='';t.bmax='';t.B=false;t.ref=false},
+  t1:t=>{t.k='1';t.vars=[V('x1',NaN,'u',NaN,1)];t.mute=[false];t.ref=false},
+  t2:t=>{t.formule='';t.vars=[V('x',NaN,'u',NaN,1)];t.mute=[false];t.ref=false},
+  t3:t=>{t.rows=[];t.off=[];t.ref=false;t.refB=false;t.predMode='off';t.xtr='id';t.ytr='id';t.xtrExpr='';t.ytrExpr=''},
+  t4:t=>{t.items=[{nom:'Méthode 1',val:NaN,kind:'u',p:NaN,on:true},{nom:'Méthode 2',val:NaN,kind:'u',p:NaN,on:true}];t.ref=false}
 };
 let ST=defaut();
 const CLE='PH2_Incertitudes_v1';
 function charger(){try{const j=JSON.parse(localStorage.getItem(CLE));if(!j||j.v!==1)return;
-  for(const k of['t0','t1','t2','t3'])if(j[k])Object.assign(ST[k],j[k]);
+  for(const k of['t0','t1','t2','t3','t4'])if(j[k])Object.assign(ST[k],j[k]);
+  if(Array.isArray(j.carnet))ST.carnet=j.carnet.filter(e=>e&&isFinite(e.x)&&isFinite(e.u));
   for(const k of['t1','t2'])ST[k].vars.forEach(v=>{for(const c of['val','p','coef'])if(v[c]===null)v[c]=NaN});
-  while(ST.t1.mute.length<ST.t1.vars.length)ST.t1.mute.push(false);while(ST.t2.mute.length<ST.t2.vars.length)ST.t2.mute.push(false)}catch(e){}}
-function sauver(){try{localStorage.setItem(CLE,JSON.stringify({v:1,t0:ST.t0,t1:ST.t1,t2:ST.t2,t3:ST.t3}))}catch(e){}}
+  if(ST.t4&&Array.isArray(ST.t4.items))ST.t4.items.forEach(it=>{if(it.val===null)it.val=NaN;if(it.p===null)it.p=NaN;if(it.on===undefined)it.on=true});
+  while(ST.t1.mute.length<ST.t1.vars.length)ST.t1.mute.push(false);
+  while(ST.t2.mute.length<ST.t2.vars.length)ST.t2.mute.push(false);
+  if(!Array.isArray(ST.t3.off))ST.t3.off=[];
+  while(ST.t3.off.length<ST.t3.rows.length)ST.t3.off.push(false);
+}catch(e){}}
+function sauver(){try{localStorage.setItem(CLE,JSON.stringify({v:1,t0:ST.t0,t1:ST.t1,t2:ST.t2,t3:ST.t3,t4:ST.t4,carnet:ST.carnet}))}catch(e){}}
 charger();
+
+/* ---------- historique d'annulation (anti-perte en TP) ---------- */
+const UNDO=[];
+const cloneST=()=>JSON.parse(JSON.stringify({t0:ST.t0,t1:ST.t1,t2:ST.t2,t3:ST.t3,t4:ST.t4,carnet:ST.carnet}));
+function pushUndo(label){UNDO.push({label,snap:cloneST()});if(UNDO.length>12)UNDO.shift()}
+function doUndo(){
+  const u=UNDO.pop();if(!u)return;
+  const s=u.snap;
+  for(const k of['t0','t1','t2','t3','t4'])Object.assign(ST[k],s[k]);
+  ST.carnet=s.carnet||[];
+  for(const k of['t1','t2'])ST[k].vars.forEach(v=>{for(const c of['val','p','coef'])if(v[c]===null)v[c]=NaN});
+  ST.t4.items.forEach(it=>{if(it.val===null)it.val=NaN;if(it.p===null)it.p=NaN});
+  sauver();if(A.toutReconstruire)A.toutReconstruire();A.toast('Annulé : '+u.label);A.refresh();A.render();
+}
+
+/* ---------- debounce léger pour les gros Monte-Carlo pendant la frappe ---------- */
+let RAPIDE=false,TMR=null;
+function planifierComplet(){
+  RAPIDE=true;
+  if(TMR)clearTimeout(TMR);
+  TMR=setTimeout(()=>{RAPIDE=false;TMR=null;A.render()},210);
+}
+
+/* ---------- calcul des points de régression (modes d'incertitude par colonne + points actifs/exclus) ---------- */
+function uColonne(mode,kind,cst,pct,dgt,res,cell,val){
+  const div=kind==='D'?SQ3:1;
+  if(mode==='pt')return cell===''?0:Math.abs(lire(cell))/div;
+  if(mode==='cst'){if(String(cst??'').trim()==='')return 0;const v=Math.abs(lire(cst));return isFinite(v)?v/div:NaN}
+  if(mode==='pct'){if(String(pct??'').trim()==='')return 0;const p=Math.abs(lire(pct));return isFinite(p)?(p/100*Math.abs(val))/div:NaN}
+  if(mode==='not'){
+    const sp=String(pct??'').trim(),sd=String(dgt??'').trim(),sr=String(res??'').trim();
+    if(sp===''&&sd==='')return 0;
+    const p=sp===''?0:Math.abs(lire(sp)),d=sd===''?0:Math.abs(lire(sd)),r=sr===''?0:Math.abs(lire(sr));
+    return finis(p,d,r)?PH2.notice(val,p,d,r)/SQ3:NaN;
+  }
+  return 0;
+}
 function lignesReg(t){
-  const dx=t.xkind==='D'?SQ3:1,dy=t.ykind==='D'?SQ3:1;
   const lignes=[];
+  while(t.off.length<t.rows.length)t.off.push(false);
   t.rows.forEach((r,i)=>{
-    const c=r.map(v=>String(v??'').trim());
+    const c=[0,1,2,3].map(j=>String(r[j]??'').trim());
     if(c.every(v=>v===''))return;
-    const q=c.map(lire);
-    const ux=c[1]===''?0:Math.abs(q[1])/dx,uy=c[3]===''?0:Math.abs(q[3])/dy;
-    lignes.push(finis(q[0],q[2],ux,uy)?{x:q[0],ux,y:q[2],uy,i}:null);
+    const x=lire(c[0]),y=lire(c[2]);
+    if(!finis(x,y)){lignes.push(null);return}
+    const ux=uColonne(t.xmode||'pt',t.xkind,t.xcst,t.xpct,t.xdgt,t.xres,c[1],x);
+    const uy=uColonne(t.ymode||'pt',t.ykind,t.ycst,t.ypct,t.ydgt,t.yres,c[3],y);
+    lignes.push(finis(ux,uy)?{x,ux,y,uy,i,off:!!t.off[i]}:null);
   });
   return lignes;
 }
-const regSans=()=>{const P=lignesReg(ST.t3).filter(Boolean);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
+const regSans=()=>{const P=lignesReg(ST.t3).filter(q=>q&&!q.off);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
 const colonne=(rows,j)=>Float64Array.from(rows.map(r=>String(r[j]??'').trim()).filter(Boolean).map(lire).filter(isFinite));
-const finis=(...v)=>v.every(isFinite);
 
 /* ---------- petits constructeurs de champs ---------- */
 const h=(tag,attrs,html)=>{const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{}))e.setAttribute(k,v);if(html!==undefined)e.innerHTML=html;return e};
-const change=()=>{sauver();A.refresh();A.render()};
+const change=(rapide)=>{sauver();if(rapide)planifierComplet();A.refresh();A.render()};
 function fld(label,obj,key,o={}){
   const d=h('div',{class:'ph-f'+(o.long?' long':'')+(o.cls?' '+o.cls:'')},`<label>${label}</label>`);
   const i=h('input',{type:'text',value:obj[key]??'',inputmode:o.texte?'text':'decimal',spellcheck:'false',autocomplete:'off',class:o.nom?'nom':''});
-  i.oninput=()=>{obj[key]=i.value;change()};d.append(i);return d;
+  i.oninput=()=>{obj[key]=i.value;change(!!o.rapide)};d.append(i);return d;
 }
 function chk(label,obj,key,onchg){
   const l=AnimKit.interrupteur(label),i=l.querySelector('input');i.checked=!!obj[key];
@@ -1281,80 +1754,145 @@ function selecteur(label,opts,obj,key,onchg){
   opts.forEach(([v,l])=>{const o=h('option',{value:v},l);if(obj[key]===v)o.selected=true;s.append(o)});
   s.onchange=()=>{obj[key]=opts[s.selectedIndex][0];if(onchg)onchg();change()};d.append(s);return d;
 }
-function blocRef(t,libelle){
+function blocRef(t,libelle,keys={}){
+  const kr=keys.ref||'ref',kx=keys.x||'xref',ku=keys.u||'uref',chkLab=keys.chk||'Comparer à une valeur de référence (écart normalisé)';
   const box=h('div',{class:'ph-ref'}),f=h('div');
-  const rendre=()=>{f.innerHTML='';if(t.ref){f.append(fld(libelle||'Valeur de référence',t,'xref'),fld('Incertitude-type de la référence (0 si exacte)',t,'uref'))}};
-  box.append(chk('Comparer à une valeur de référence (écart normalisé)',t,'ref',rendre),f);rendre();return box;
+  const rendre=()=>{f.innerHTML='';if(t[kr]){f.append(fld(libelle||'Valeur de référence',t,kx),fld('Incertitude-type de la référence (0 si exacte)',t,ku))}};
+  box.append(chk(chkLab,t,kr,rendre),f);rendre();return box;
 }
-/** tableau à remplir : on peut y coller des colonnes depuis un tableur ; une ligne vide est toujours ajoutée en fin */
-function grille(rows,cols,titreLigne,map2){
-  const root=h('div',{class:'ph-grid'}),nc=cols.length,vide=()=>Array(nc).fill('');
+
+/* ---------- tableau éditable avec collage intelligent (CSV/TSV/en-têtes/3 col.) & glisser-déposer CSV ---------- */
+function grille(rows,cols,opts={}){
+  const root=h('div',{class:'ph-grid'}),titreLigne=opts.titreLigne||'Ligne';
+  let colMap=opts.colMap||cols.map((_,j)=>j);
+  const fullNc=opts.fullNc||cols.length;
+  const vide=()=>Array(fullNc).fill('');
   let tb=null,entetes=[];
-  const libelle=(i,j)=>`${titreLigne||'Ligne'} ${i+1}, ${entetes[j].textContent}`;
+  const libelle=(i,j)=>`${titreLigne} ${i+1}, ${entetes[j]?entetes[j].textContent:''}`;
+  const syncOff=()=>{if(opts.off)while(opts.off.length<rows.length)opts.off.push(false)};
   const ligne=(r,i)=>{
-    const tr=h('tr');tr.append(h('td',{class:'n'},String(i+1)));
-    for(let j=0;j<nc;j++){
-      const inp=h('input',{type:'text',inputmode:'decimal',value:r[j]??'',spellcheck:'false',autocomplete:'off','aria-label':libelle(i,j)});
-      inp.oninput=()=>{r[j]=inp.value;if(r===rows[rows.length-1]&&inp.value.trim()!==''){rows.push(vide());tb.append(ligne(rows[rows.length-1],rows.length-1))}change()};
-      inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const nx=tb.children[i+1];if(nx)nx.children[j+1].firstChild.focus()}};
+    const isOff=opts.off&&opts.off[i];
+    const tr=h('tr',isOff?{class:'off'}:{});
+    tr.dataset.row=String(i);
+    if(opts.onHoverRow){
+      tr.addEventListener('mouseenter',()=>opts.onHoverRow(i));
+      tr.addEventListener('mouseleave',()=>opts.onHoverRow(-1));
+      tr.addEventListener('focusin',()=>opts.onHoverRow(i));
+    }
+    if(opts.off){
+      const tdc=h('td',{class:'cb'}),cb=h('input',{type:'checkbox','aria-label':`Inclure ${titreLigne} ${i+1}`,title:'Inclure dans l\'ajustement'});
+      cb.checked=!isOff;
+      cb.onchange=()=>{opts.off[i]=!cb.checked;tr.classList.toggle('off',!cb.checked);change(!!opts.rapide)};
+      tdc.append(cb);tr.append(tdc);
+    }
+    tr.append(h('td',{class:'n'},String(i+1)));
+    colMap.forEach((rawJ,visJ)=>{
+      const inp=h('input',{type:'text',inputmode:'decimal',value:r[rawJ]??'',spellcheck:'false',autocomplete:'off','aria-label':libelle(i,visJ)});
+      inp.oninput=()=>{
+        r[rawJ]=inp.value;
+        if(r===rows[rows.length-1]&&inp.value.trim()!==''){rows.push(vide());syncOff();tb.append(ligne(rows[rows.length-1],rows.length-1))}
+        change(!!opts.rapide);
+      };
+      inp.onkeydown=e=>{
+        const dir=e.key==='Enter'||e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0;
+        if(dir){e.preventDefault();const nx=tb.children[i+dir];if(nx){const offC=opts.off?2:1;const cell=nx.children[visJ+offC];if(cell&&cell.firstChild)cell.firstChild.focus()}}
+      };
       inp.onpaste=e=>{
-        const txt=(e.clipboardData||window.clipboardData).getData('text');if(!txt)return;e.preventDefault();
-        let tok=txt.replace(/\r/g,'').split('\n').filter(l=>l.trim()!=='').map(l=>l.trim().split(/[\t;]+|\s+/).filter(s=>s!==''));
-        if(nc===1)tok=tok.flat().map(s=>[s]);
-        tok.forEach((cells,k)=>{const ri=i+k;while(rows.length<=ri)rows.push(vide());cells.forEach((c,m)=>{const jj=(map2&&cells.length===2&&j===0)?map2[m]:j+m;if(jj<nc)rows[ri][jj]=c})});
-        build();change();
+        const txt=(e.clipboardData||window.clipboardData).getData('text');if(!txt)return;
+        if(!/[\n\t;,]/.test(txt)&&!/\s+\S/.test(txt.trim()))return; // collage d'un seul nombre : comportement natif
+        e.preventDefault();
+        const pt=PH2.parseTableau(txt);
+        if(!pt.rows.length){A.toast('Aucune valeur numérique reconnue');return}
+        let data=pt.rows;
+        if(colMap.length===1)data=data.flat().filter(Boolean).map(s=>[s]);
+        data.forEach((cells,k)=>{
+          const ri=i+k;while(rows.length<=ri)rows.push(vide());syncOff();
+          const m2=opts.map2&&cells.length===2&&visJ===0&&colMap.length===4?opts.map2:null;
+          const m3=opts.map3&&cells.length===3&&visJ===0&&colMap.length===4?opts.map3:null;
+          cells.forEach((c,m)=>{
+            const targetRaw=m2?m2[m]:m3?m3[m]:colMap[visJ+m];
+            if(targetRaw!==undefined&&targetRaw<fullNc)rows[ri][targetRaw]=c;
+          });
+        });
+        if(pt.skippedHeaders>0)A.toast(`${data.length} ligne(s) collée(s) (en-tête ignoré)`);
+        build();change(!!opts.rapide);
       };
       const td=h('td');td.append(inp);tr.append(td);
-    }
-    const td=h('td'),x=h('button',{class:'ph-x',type:'button',title:'Supprimer la ligne','aria-label':'Supprimer la ligne'},'×');
-    x.onclick=()=>{rows.splice(i,1);build();change()};td.append(x);tr.append(td);return tr;
+    });
+    const td=h('td'),x=h('button',{class:'ph-x',type:'button',tabindex:'-1',title:'Supprimer la ligne','aria-label':'Supprimer la ligne'},'×');
+    x.onclick=()=>{pushUndo('supprimer une ligne');rows.splice(i,1);if(opts.off)opts.off.splice(i,1);build();if(A.majUndo)A.majUndo();change()};td.append(x);tr.append(td);return tr;
   };
   const build=()=>{
-    if(!rows.length||rows[rows.length-1].some(c=>String(c).trim()!==''))rows.push(vide());
-    root.innerHTML='';const t=h('table');t.innerHTML=`<thead><tr><th>#</th>${cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead>`;
-    entetes=[...t.querySelectorAll('th')].slice(1,-1);
+    if(!rows.length||rows[rows.length-1].some(c=>String(c??'').trim()!==''))rows.push(vide());
+    syncOff();
+    root.innerHTML='';const t=h('table');
+    t.innerHTML=`<thead><tr>${opts.off?'<th title="Inclure dans l\'ajustement">✓</th>':''}<th>#</th>${cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead>`;
+    const ths=[...t.querySelectorAll('th')];
+    entetes=ths.slice(opts.off?2:1,-1);
     tb=h('tbody');rows.forEach((r,i)=>tb.append(ligne(r,i)));t.append(tb);root.append(t);
   };
-  root.nommer=nouveaux=>{
+  if(opts.onDropFile){
+    root.addEventListener('dragover',e=>{e.preventDefault();root.classList.add('ph-drop')});
+    root.addEventListener('dragleave',()=>root.classList.remove('ph-drop'));
+    root.addEventListener('drop',e=>{e.preventDefault();root.classList.remove('ph-drop');const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)opts.onDropFile(f)});
+  }
+  root.nommer=(nouveaux,nouvMap)=>{
     cols=nouveaux;
-    entetes.forEach((th,j)=>{th.innerHTML=cols[j]});
+    if(nouvMap){colMap=nouvMap;build();return}
+    entetes.forEach((th,j)=>{if(th)th.innerHTML=cols[j]});
+    const offC=opts.off?2:1;
     [...tb.rows].forEach((tr,i)=>entetes.forEach((_,j)=>{
-      tr.cells[j+1].firstChild.setAttribute('aria-label',libelle(i,j));
+      const el=tr.cells[j+offC]&&tr.cells[j+offC].firstChild;if(el)el.setAttribute('aria-label',libelle(i,j));
     }));
+  };
+  root.highlightRow=idx=>{
+    if(!tb)return;
+    [...tb.rows].forEach((tr,i)=>tr.classList.toggle('ph-hl',i===idx));
   };
   build();root.build=build;return root;
 }
-/** tableau des grandeurs mesurées : nom, valeur, nature de l'incertitude (u ou Δ), incertitude, coefficient */
-function tableVars(t,coefTitre){
+
+/** tableau des grandeurs mesurées (jusqu'à 12 grandeurs) : nom, valeur, u / Δ / u % / Δ %, incertitude, coefficient */
+function tableVars(t,coefTitre,rapide){
   const root=h('div',{class:'ph-grid ph-vt'});
   const build=()=>{
     root.innerHTML='';const tab=h('table');
-    tab.innerHTML=`<thead><tr><th>Nom</th><th>Valeur</th><th title="u : écart-type · Δ : demi-largeur (loi uniforme, u = Δ/√3)">u ou Δ</th><th>Incertitude</th>${coefTitre?`<th>${coefTitre()}</th>`:''}<th></th></tr></thead>`;
+    tab.innerHTML=`<thead><tr><th>Nom</th><th>Valeur</th><th title="u : écart-type · Δ : demi-largeur (Δ/√3) · u % / Δ % : incertitude relative en %">Type</th><th>Incertitude</th>${coefTitre?`<th>${coefTitre()}</th>`:''}<th></th></tr></thead>`;
     const tb=h('tbody');
     t.vars.forEach((v,i)=>{
       const tr=h('tr'),cell=(node)=>{const td=h('td');td.append(node);tr.append(td)};
       const inp=(val,fn,{cls='',clavier='decimal'}={})=>{
         const e=h('input',{type:'text',value:val,inputmode:clavier,spellcheck:'false',autocomplete:'off',class:cls});
-        e.oninput=()=>{fn(e.value);change()};return e;
+        e.oninput=()=>{fn(e.value);change(!!rapide)};return e;
       };
       cell(inp(v.nom,x=>{v.nom=x},{cls:'nom',clavier:'text'}));cell(inp(nbTexte(v.val),x=>{v.val=lire(x)}));
-      const s=h('select',{'aria-label':'Nature de l\'incertitude'});[['u','u'],['D','Δ']].forEach(([val,l])=>{const o=h('option',{value:val},l);if(v.kind===val)o.selected=true;s.append(o)});
-      s.onchange=()=>{v.kind=s.value;change()};cell(s);
+      const s=h('select',{'aria-label':'Nature de l\'incertitude'});[['u','u'],['D','Δ'],['up','u %'],['Dp','Δ %']].forEach(([val,l])=>{const o=h('option',{value:val},l);if(v.kind===val)o.selected=true;s.append(o)});
+      s.onchange=()=>{v.kind=s.value;change(!!rapide)};cell(s);
       cell(inp(nbTexte(v.p),x=>{v.p=Math.abs(lire(x))}));
       if(coefTitre)cell(inp(nbTexte(v.coef),x=>{v.coef=lire(x)},{clavier:'text'}));
-      const td=h('td');if(t.vars.length>1){const x=h('button',{class:'ph-x',type:'button',title:'Supprimer','aria-label':'Supprimer cette grandeur'},'×');x.onclick=()=>{t.vars.splice(i,1);t.mute.splice(i,1);build();change()};td.append(x)}tr.append(td);
+      const td=h('td');if(t.vars.length>1){const x=h('button',{class:'ph-x',type:'button',tabindex:'-1',title:'Supprimer','aria-label':'Supprimer cette grandeur'},'×');x.onclick=()=>{pushUndo('supprimer une grandeur');t.vars.splice(i,1);t.mute.splice(i,1);build();if(A.majUndo)A.majUndo();change()};td.append(x)}tr.append(td);
       tb.append(tr);
     });
     tab.append(tb);root.append(tab);
-    if(t.vars.length<6){const b=h('button',{class:'mini',type:'button'},'+ Ajouter une grandeur');b.onclick=()=>{t.vars.push(V('x'+(t.vars.length+1),NaN,'u',NaN,1));t.mute.push(false);build();change()};root.append(b)}
+    if(t.vars.length<12){const b=h('button',{class:'mini',type:'button'},'+ Ajouter une grandeur');b.onclick=()=>{t.vars.push(V('x'+(t.vars.length+1),NaN,'u',NaN,1));t.mute.push(false);build();change()};root.append(b)}
   };
   build();root.build=build;return root;
 }
 
-/* ---------- résultats : lignes copiables ---------- */
-const plain=s=>s.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&amp;/g,'&');
+/* ---------- résultats : lignes copiables + Carnet de séance + chaînage ---------- */
+const plain=s=>s.replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 const attr=s=>s.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-const ligneRes=(label,html)=>`<div class="res-l"><span class="res-k">${label}</span><span class="res-v">${html}</span><button class="mini" type="button" data-copy="${attr(plain(html))}" title="Copier dans le presse-papiers">Copier</button></div>`;
+let RES_SAVE=[];
+function resetResSave(){RES_SAVE=[]}
+function ligneRes(label,html,save){
+  let btns=`<button class="mini" type="button" data-copy="${attr(plain(html))}" title="Copier dans le presse-papiers">Copier</button>`;
+  if(save&&isFinite(save.x)&&isFinite(save.u)&&save.u>=0){
+    const idx=RES_SAVE.length;RES_SAVE.push(save);
+    btns+=`<button class="mini" type="button" data-carnet="${idx}" title="Enregistrer dans le carnet de séance">+ Carnet</button>`;
+    if(save.versPropag)btns+=`<button class="mini" type="button" data-propag="${idx}" title="Réutiliser cette grandeur dans Propagation">→ Propag.</button>`;
+  }
+  return `<div class="res-l"><span class="res-k">${label}</span><span class="res-v">${html}</span><span class="res-acts">${btns}</span></div>`;
+}
 const note=(html,cls)=>`<div class="res-n${cls?' '+cls:''}">${html}</div>`;
 function copier(texte){
   const ok=()=>A.toast('Copié : '+texte);
@@ -1362,23 +1900,80 @@ function copier(texte){
   function repli(){const t=h('textarea',{style:'position:fixed;opacity:0'});t.value=texte;document.body.append(t);t.select();try{document.execCommand('copy');ok()}catch(e){A.toast('Copie impossible : sélectionner le texte à la main')}t.remove()}
 }
 const setZone=(z,html)=>{if(z._h!==html){z.innerHTML=html;z._h=html}};
-function zInfo(t,x,u){
-  if(!t.ref)return null;
-  const xr=lire(t.xref),ur=Math.max(0,lire(t.uref)||0);
+function zInfo(t,x,u,keys={}){
+  const kr=keys.ref||'ref',kx=keys.x||'xref',ku=keys.u||'uref';
+  if(!t[kr])return null;
+  const xr=lire(t[kx]),ur=Math.max(0,lire(t[ku])||0);
   if(!finis(xr,x)||!(u>=0))return null;
   const z=PH2.ecartNorm(x,u,xr,ur);return{z,ref:{x:xr,u:ur},ok:z<=2};
 }
-const zLigne=zi=>zi?note(`Écart normalisé ${M.v('Z')} = <b>${F.sig(zi.z,3)}</b> : ${lienz(zi.z)} (${M.v('Z')} ${zi.ok?'≤':'&gt;'} 2)`):'';
-const zCalc=(zi,nom,ref='x')=>zi?`<br><b>Écart normalisé</b><br>${M.v('Z')} = ${M.frac(`|${nom} − ${sub(ref,'réf')}|`,M.sqrt(`${M.v('u')}² + ${sub('u','réf')}²`))} = <span class="res">${F.sig(zi.z,3)}</span><span class="lien">donc</span>${lienz(zi.z)}<div class="gr">On compare ${M.v('Z')} à 2 ; le chevauchement visuel de deux distributions n'est pas un critère.</div>`:'';
+const zLigne=(zi,prefix)=>zi?note(`${prefix?prefix+' — ':''}Écart normalisé ${M.v('Z')} = <b>${F.sig(zi.z,3)}</b> : ${lienz(zi.z)} (${M.v('Z')} ${zi.ok?'≤':'&gt;'} 2)`):'';
+const zCalc=(zi,nom,ref='x',titre)=>zi?`<br><b>${titre||'Écart normalisé'}</b><br>${M.v('Z')} = ${M.frac(`|${nom} − ${sub(ref,'réf')}|`,M.sqrt(`${M.v('u')}² + ${sub('u','réf')}²`))} = <span class="res">${F.sig(zi.z,3)}</span><span class="lien">donc</span>${lienz(zi.z)}<div class="gr">On compare ${M.v('Z')} à 2 ; le chevauchement visuel de deux distributions n'est pas un critère.</div>`:'';
 const manque=(a,id,txt)=>{a.svg(id,a.S.text(a.panels[id].w/2,a.panels[id].h/2,txt,{anchor:'middle',size:15,c:a.C.ink2,halo:false}))};
-let HIT_BUD_ID='';
+
+/* ---------- helpers Carnet & chaînage ---------- */
+function nomSymbole(s){
+  let n=String(s||'x').trim().replace(/[^A-Za-z0-9_]/g,'');
+  if(!n||!/^[A-Za-z_]/.test(n))n='x';
+  if(!PH2.nomValide(n))n='v_'+n;
+  return n;
+}
+function ajouterCarnet(item){
+  const entry={nom:String(item.nom||'x').trim()||'x',x:item.x,u:item.u,unite:String(item.unite||'').trim()};
+  const existe=ST.carnet.findIndex(e=>e.nom===entry.nom&&Math.abs(e.x-entry.x)<=1e-12*Math.max(1,Math.abs(entry.x))&&Math.abs(e.u-entry.u)<=1e-12*Math.max(1,Math.abs(entry.u)));
+  if(existe>=0){A.toast(`Déjà dans le carnet : ${entry.nom}`);return}
+  ST.carnet.push(entry);sauver();
+  if(A.majCarnet)A.majCarnet();
+  A.toast(`Ajouté au carnet : ${entry.nom}`);
+}
+function envoyerVersPropag(item){
+  const cible=ST.t1.type==='formule'?ST.t2:ST.t1;
+  const sym=nomSymbole(item.nom);
+  const v=V(sym,item.x,'u',item.u,1);
+  if(cible.vars.length===1&&!isFinite(cible.vars[0].val)){cible.vars[0]=v;cible.mute[0]=false}
+  else{
+    const idx=cible.vars.findIndex(q=>q.nom===sym);
+    if(idx>=0){cible.vars[idx].val=item.x;cible.vars[idx].kind='u';cible.vars[idx].p=item.u;cible.mute[idx]=false}
+    else if(cible.vars.length<12){cible.vars.push(v);cible.mute.push(false)}
+    else{A.toast('Maximum 12 grandeurs dans Propagation');return}
+  }
+  sauver();
+  if(A.recon)A.recon();
+  A.setTab(1);
+  A.toast(`${sym} envoyé dans Propagation`);
+}
+function envoyerVersComparer(item){
+  const t=ST.t4;
+  const videIdx=t.items.findIndex(q=>!isFinite(q.val));
+  const nv={nom:item.nom,val:item.x,kind:'u',p:item.u,on:true};
+  if(videIdx>=0)t.items[videIdx]=nv;else t.items.push(nv);
+  if(!t.unite&&item.unite)t.unite=item.unite;
+  sauver();if(A.construireTab)A.construireTab('t4');
+  A.setTab(3);A.toast(`${item.nom} ajouté dans Comparer`);
+}
+function envoyerVersRef(item){
+  const map=[ST.t0,ST.t1.type==='formule'?ST.t2:ST.t1,ST.t3,ST.t4];
+  const t=map[A.tab];if(!t)return;
+  t.ref=true;t.xref=nbTexte(item.x);t.uref=nbTexte(item.u);
+  sauver();if(A.toutReconstruire)A.toutReconstruire();A.refresh();A.render();
+  A.toast(`${item.nom} défini comme référence`);
+}
+
+/* ---------- lecture de fichier CSV / TXT (100 % hors-ligne via FileReader) ---------- */
+function lireFichierTexte(file,cb){
+  if(!file)return;
+  const rd=new FileReader();
+  rd.onload=()=>{cb(String(rd.result||''),file.name)};
+  rd.onerror=()=>A.toast('Lecture du fichier impossible');
+  rd.readAsText(file);
+}
 
 /* ---------- application ---------- */
 const PANES={};
 const A=AnimKit.app({
   code:'PH2',partie:'Anthracite',chapitre:'PH2 Mesures et incertitudes',
-  titre:'Calculs d\'incertitudes',sousTitre:'Incertitude-type, propagation, Monte-Carlo et régression linéaire sur vos mesures',
-  onglets:['Mesure directe','Propagation des incertitudes','Régression linéaire'],
+  titre:'Calculs d\'incertitudes',sousTitre:'Incertitude-type, propagation, Monte-Carlo, régression linéaire et comparaison de mesures',
+  onglets:['Mesure directe','Propagation','Régression linéaire','Comparer'],
   atelier:{saisie:'Mes mesures',detail:'Voir le calcul'},
   temps:false,reglages:[],
   panneaux:[
@@ -1386,30 +1981,96 @@ const A=AnimKit.app({
     {id:'bud1',onglets:[1],poids:.8,ratioTel:.55,si:()=>ST.t1.type!=='formule'},{id:'res1',onglets:[1],poids:1.2,ratioTel:.7,si:()=>ST.t1.type!=='formule'},
     {id:'res2',onglets:[1],poids:1.4,ratioTel:.8,si:()=>ST.t1.type==='formule'},{id:'bud2',onglets:[1],poids:.7,ratioTel:.5,si:()=>ST.t1.type==='formule'},
     {id:'reg3',onglets:[2],poids:1.5,ratioTel:.85,si:()=>!(ST.t3.histos&&!regSans())},{id:'z3',onglets:[2],poids:.9,ratioTel:.6,si:()=>!(ST.t3.histos&&!regSans())},
-    {id:'ab3',onglets:[2],poids:1,ratioTel:.8,si:()=>ST.t3.histos&&!regSans()}
+    {id:'ab3',onglets:[2],poids:1,ratioTel:.8,si:()=>ST.t3.histos&&!regSans()},
+    {id:'cmp4',onglets:[3],poids:1,ratioTel:.85}
   ],
   aide:{
-    voit:'<ul><li><b>À gauche</b> : vos mesures (tableaux à remplir ou à coller depuis un tableur) et les paramètres.</li><li><b>À droite</b> : le résultat avec son incertitude-type, prêt à copier, puis le graphique. « Voir le calcul » détaille les formules.</li></ul>',
-    faire:'<ul><li><b>Mesure directe</b> : coller la série ; ajouter si besoin une évaluation de type B (Δ lue ou notice « % + digits »).</li><li><b>Propagation</b>, sous-onglets Somme et Produit : saisir les grandeurs avec leur incertitude ; cliquer une barre du graphique met cette incertitude à zéro.</li><li><b>Propagation, Fonction quelconque</b> : écrire la formule avec les noms des grandeurs (<code>4*pi^2*L/T^2</code> ; <code>sqrt</code>, <code>exp</code>, <code>ln</code>, <code>sin</code>… ; <code>^</code> pour les puissances) : simulation de Monte-Carlo.</li><li><b>Régression</b> : coller les colonnes d’abscisses et d’ordonnées, avec leurs incertitudes si elles sont connues. Les points se déplacent à la souris.</li><li>Dans chaque onglet : comparaison à une valeur de référence par l\'écart normalisé. Les saisies sont mémorisées dans le navigateur.</li></ul>',
-    modele:'Incertitude-type = écart-type. Type A : <i class="m">u</i>(x̄) = <i class="m">s</i>/√<i class="m">N</i> (<i class="m">s</i> avec <i class="m">N</i> − 1). Type B : loi uniforme sur [<i class="m">x</i> − Δ, <i class="m">x</i> + Δ], <i class="m">u</i> = Δ/√3 ; composition quadratique, qui suppose des contributions indépendantes (une erreur commune à toutes les mesures n\'est pas réduite par la moyenne). Grandeurs non corrélées. Monte-Carlo : tirages gaussiens (<i class="m">u</i>) ou uniformes (Δ) ; graine fixe, donc résultat reproductible. Résultat : <i class="m">u</i> arrondie par excès à 2 chiffres significatifs, valeur au même rang.',
-    cours:'PH2 Mesures et incertitudes : incertitude-type, types A et B, incertitudes composées, algorithme de Monte-Carlo, écart normalisé <i class="m">Z</i> = |<i class="m">x</i> − <i class="m">x</i><sub>réf</sub>| / √(<i class="m">u</i>² + <i class="m">u</i><sub>réf</sub>²), régression linéaire et validation par les écarts normalisés.',
-    touches:'<kbd>1</kbd>–<kbd>3</kbd> onglets (hors saisie)'
+    voit:'<ul><li><b>À gauche</b> : le carnet de séance, vos mesures (tableaux à remplir, coller depuis un tableur ou importer en CSV) et les paramètres.</li><li><b>À droite</b> : le résultat avec son incertitude-type (prêt à copier ou mémoriser dans le carnet), puis les graphiques. « Voir le calcul » détaille les formules.</li></ul>',
+    faire:'<ul><li><b>Mesure directe</b> : coller ou importer une série ; ajouter si besoin une évaluation de type B (Δ, bornes ou notice « % + digits »).</li><li><b>Propagation</b> : Somme, Produit ou Fonction quelconque par Monte-Carlo (jusqu\'à 12 grandeurs ; incertitudes <code>u</code>, <code>Δ</code>, <code>u %</code>, <code>Δ %</code> ; <code>-x^2</code>, <code>2pi*f</code>, <code>sind/cosd/tand</code>). Cliquer une barre du budget met cette incertitude à zéro.</li><li><b>Régression</b> : incertitude par colonne, linéarisation d\'axes, points décochables sans suppression, import CSV, enveloppe ±1σ/±2σ, prédiction / étalonnage inverse / <i>f</i>(<i>a</i>, <i>b</i>) corrélés et références sur <i>a</i> et <i>b</i>. Points verrouillés par défaut en TP.</li><li><b>Comparer</b> : comparer plusieurs méthodes ou résultats sur un diagramme de compatibilité (matrice des <i>Z</i> et moyenne pondérée).</li><li><b>Carnet de séance</b> : mémoriser un résultat (<code>+ Carnet</code>) ou l\'envoyer vers Propagation / Comparer / Référence.</li></ul>',
+    modele:'Incertitude-type = écart-type. Type A : <i class="m">u</i>(x̄) = <i class="m">s</i>/√<i class="m">N</i> (<i class="m">s</i> avec <i class="m">N</i> − 1). Type B : loi uniforme sur [<i class="m">x</i> − Δ, <i class="m">x</i> + Δ], <i class="m">u</i> = Δ/√3. Monte-Carlo : tirages gaussiens (<i class="m">u</i>, <i class="m">u</i> %) ou uniformes (Δ, Δ %) ; en régression, la prédiction, l\'étalonnage inverse et l\'enveloppe exploitent les couples corrélés (<i class="m">a</i>, <i class="m">b</i>). Résultat : <i class="m">u</i> arrondie par excès à 2 chiffres significatifs.',
+    cours:'PH2 Mesures et incertitudes : incertitude-type, types A et B, incertitudes composées, Monte-Carlo, écart normalisé <i class="m">Z</i> = |<i class="m">x</i> − <i class="m">x</i><sub>réf</sub>| / √(<i class="m">u</i>² + <i class="m">u</i><sub>réf</sub>²), régression linéaire et validation par les écarts normalisés <i class="m">z</i><sub>i</sub>.',
+    touches:'<kbd>1</kbd>–<kbd>4</kbd> onglets · <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd> annuler (hors saisie)'
   },
   init(a){
     const Z=a.zones;
-    /* barre d'actions d'un onglet : exemple, vider */
-    const barre=(k)=>{const b=h('div',{class:'ph-bar'});
-      const ex=h('button',{class:'mini',type:'button',title:'Remplacer par un exemple'},'Exemple'),vd=h('button',{class:'mini',type:'button',title:'Effacer les saisies de cet onglet'},'Vider');
-      ex.onclick=()=>{const ty=ST.t1.type;ST[k]=defaut()[k];if(k==='t1')ST.t1.type=ty;construire(k);change()};vd.onclick=()=>{VIDE[k](ST[k]);construire(k);change()};
-      b.append(ex,vd);return b};
+    /* ----- carnet de séance (en haut de la colonne de saisie) ----- */
+    const carnetBox=h('details',{class:'ph-carnet'});
+    const majCarnet=()=>{
+      const open=carnetBox.open,n=ST.carnet.length;
+      carnetBox.innerHTML=`<summary>Carnet de séance <span class="ph-carnet-badge">${n}</span></summary>`;
+      const list=h('div',{class:'ph-carnet-list'});
+      if(!n){list.append(h('div',{class:'ph-carnet-empty'},'Cliquez « + Carnet » sur un résultat pour le mémoriser et le réutiliser dans un autre onglet.'))}
+      else{
+        ST.carnet.forEach((it,idx)=>{
+          const row=h('div',{class:'ph-carnet-item'});
+          row.append(h('span',{class:'ph-carnet-val'},ecrire(it.x,it.u,it.unite,esc(it.nom))));
+          const acts=h('span',{class:'ph-carnet-acts'});
+          const bP=h('button',{class:'mini',type:'button',title:'Insérer comme variable dans Propagation'},'→ Prop.');
+          bP.onclick=()=>envoyerVersPropag(it);
+          const bC=h('button',{class:'mini',type:'button',title:'Ajouter dans Comparer'},'→ Comp.');
+          bC.onclick=()=>envoyerVersComparer(it);
+          const bR=h('button',{class:'mini',type:'button',title:'Utiliser comme référence de l\'onglet actif'},'→ Réf.');
+          bR.onclick=()=>envoyerVersRef(it);
+          const bX=h('button',{class:'ph-x',type:'button',title:'Retirer du carnet','aria-label':'Retirer du carnet'},'×');
+          bX.onclick=()=>{ST.carnet.splice(idx,1);sauver();majCarnet()};
+          acts.append(bP,bC,bR,bX);row.append(acts);list.append(row);
+        });
+        const foot=h('div',{class:'ph-bar'});
+        const clr=h('button',{class:'mini',type:'button'},'Vider le carnet');
+        clr.onclick=()=>{pushUndo('vider le carnet');ST.carnet=[];sauver();majCarnet();a.majUndo()};
+        foot.append(clr);list.append(foot);
+      }
+      carnetBox.append(list);carnetBox.open=open;
+    };
+    a.majCarnet=majCarnet;
+    Z.saisie.append(carnetBox);
+
+    /* barre d'actions d'un onglet : import CSV facultatif, annuler, exemple, vider */
+    const undoBtns=[];
+    a.majUndo=()=>{const dis=UNDO.length===0;undoBtns.forEach(b=>{b.hidden=dis;if(!dis)b.title='Annuler : '+UNDO[UNDO.length-1].label})};
+    const barre=(k,extra)=>{
+      const b=h('div',{class:'ph-bar'});
+      if(extra)extra.forEach(n=>b.append(n));
+      b.append(h('span',{class:'ph-sp'}));
+      const un=h('button',{class:'mini',type:'button'},'Annuler');un.hidden=UNDO.length===0;un.onclick=doUndo;undoBtns.push(un);
+      const ex=h('button',{class:'mini',type:'button',title:'Remplacer par un exemple'},'Exemple');
+      const vd=h('button',{class:'mini',type:'button',title:'Effacer les saisies de cet onglet'},'Vider');
+      ex.onclick=()=>{
+        pushUndo('charger exemple');
+        if(k==='t1'){const ty=ST.t1.type;ST.t1=ty==='produit'?exProduit():defaut().t1;ST.t1.type=ty}
+        else ST[k]=defaut()[k];
+        construire(k);a.majUndo();change();
+      };
+      vd.onclick=()=>{pushUndo('vider l\'onglet');VIDE[k](ST[k]);construire(k);a.majUndo();change()};
+      b.append(un,ex,vd);return b;
+    };
+    const boutonCSV=(onFile)=>{
+      const inp=h('input',{type:'file',accept:'.csv,.txt,.tsv,text/csv,text/plain',hidden:'true'});
+      inp.onchange=()=>{if(inp.files&&inp.files[0])onFile(inp.files[0]);inp.value=''};
+      const btn=h('button',{class:'mini',type:'button',title:'Importer un fichier CSV ou texte (hors-ligne)'},'Importer CSV');
+      btn.onclick=()=>inp.click();
+      return[btn,inp];
+    };
+
     const panes={};
-    const construire=k=>{const p=panes[k];p.innerHTML='';PANES[k]();};
-    a.montrer=()=>{const T=a.tab,f=ST.t1.type==='formule';panes.t0.hidden=T!==0;panes.t1.hidden=!(T===1&&!f);panes.t2.hidden=!(T===1&&f);panes.t3.hidden=T!==2};
+    const construire=k=>{const p=panes[k];if(!p)return;p.innerHTML='';PANES[k]();a.majUndo()};
+    a.construireTab=construire;
+    a.toutReconstruire=()=>{['t0','t1','t2','t3','t4'].forEach(construire);majCarnet();a.montrer()};
+    a.montrer=()=>{const T=a.tab,f=ST.t1.type==='formule';
+      panes.t0.hidden=T!==0;panes.t1.hidden=!(T===1&&!f);panes.t2.hidden=!(T===1&&f);panes.t3.hidden=T!==2;panes.t4.hidden=T!==3};
     a.recon=()=>{construire('t1');construire('t2');a.montrer()};
-    /* ----- onglet 1 ----- */
+
+    /* ----- onglet 1 : mesure directe ----- */
     PANES.t0=()=>{const t=ST.t0,p=panes.t0;
-      p.append(barre('t0'),fld('Grandeur mesurée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
-      p.append(h('div',{class:'ph-sub'},'Valeurs mesurées (coller une colonne depuis le tableur)'),grille(t.rows,['Valeur'],'Mesure'));
+      const importer0=file=>lireFichierTexte(file,(txt,nomF)=>{
+        const pt=PH2.parseTableau(txt);if(!pt.rows.length){A.toast('Aucune donnée numérique dans '+nomF);return}
+        pushUndo('import CSV');
+        t.rows=pt.rows.map(r=>[r[0]||'']).filter(r=>r[0]!=='');
+        if(pt.headers[0]){const e=PH2.parseEntete(pt.headers[0]);if(e.nom)t.nom=e.nom;if(e.unite)t.unite=e.unite}
+        construire('t0');change();A.toast(`${t.rows.length} valeurs importées (${nomF})`);
+      });
+      p.append(barre('t0',boutonCSV(importer0)),fld('Grandeur mesurée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
+      p.append(h('div',{class:'ph-sub'},'Valeurs mesurées (coller ou déposer un fichier CSV)'),grille(t.rows,['Valeur'],{titreLigne:'Mesure',onDropFile:importer0}));
       const bB=h('div'),rb=()=>{bB.innerHTML='';if(t.B){
         bB.append(seg([['D','Δ directement'],['B','Bornes min / max'],['N','Notice de l\'appareil']],t,'modeB',rb));
         if(t.modeB==='D')bB.append(fld('Demi-largeur Δ',t,'delta'));
@@ -1419,89 +2080,313 @@ const A=AnimKit.app({
       p.append(chk('Ajouter une évaluation de type B (précision de l\'appareil)',t,'B',rb),bB);rb();
       p.append(blocRef(t));
     };
-    /* ----- onglet 2 ----- */
+
+    /* ----- onglet 2 : propagation (somme / produit) ----- */
     const sousOnglets=()=>seg([['somme','Somme'],['produit','Produit'],['formule','Fonction quelconque']],ST.t1,'type',()=>a.recon());
     PANES.t1=()=>{const t=ST.t1,p=panes.t1;
-      const tv=tableVars(t,()=>t.type==='somme'?`Coef. ${M.v('c')}`:`Expos. ${M.v('α')}`);
+      const tv=tableVars(t,()=>t.type==='somme'?`Coef. ${M.v('c')}`:`Expos. ${M.v('α')}`,false);
       p.append(barre('t1'),sousOnglets(),h('div',{class:'ph-sub'},t.type==='somme'?'y = Σ cᵢ xᵢ (somme, différence)':'y = k Π xᵢ^αᵢ (produit, quotient, puissances)'),
         fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}));
       const kb=h('div');kb.append(fld('Facteur constant k (exact)',t,'k',{texte:true}));kb.hidden=t.type!=='produit';p.append(kb);
       p.append(h('div',{class:'ph-sub'},'Grandeurs mesurées'),tv,blocRef(t));
     };
-    /* ----- onglet 3 ----- */
+
+    /* ----- onglet 2b : propagation (fonction quelconque, Monte-Carlo) ----- */
     PANES.t2=()=>{const t=ST.t2,p=panes.t2;
-      const formule=fld(`${esc(nomGrandeur(t))} =`,t,'formule',{cls:'formule',texte:true});
-      formule.querySelector('input').id='ph-formule';
+      const formule=fld(`${esc(nomGrandeur(t))} =`,t,'formule',{cls:'formule',texte:true,rapide:true});
+      const finp=formule.querySelector('input');
+      finp.id='ph-formule';
       formule.querySelector('label').htmlFor='ph-formule';
-      p.append(barre('t2'),sousOnglets(),fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),formule);
-      p.append(h('div',{class:'ph-err',id:'ph-e2'}),h('div',{class:'ph-sub'},'Grandeurs mesurées (noms utilisés dans la formule)'),tableVars(t,null));
+      const qbar=h('div',{class:'ph-qbtns'});
+      ['pi','sqrt()','ln()','exp()','^','sind()','cosd()','tand()'].forEach(tok=>{
+        const b=h('button',{type:'button',title:'Insérer '+tok},tok);
+        b.onclick=()=>{
+          const s0=finp.selectionStart??finp.value.length,s1=finp.selectionEnd??finp.value.length;
+          const v=finp.value;
+          finp.value=v.slice(0,s0)+tok+v.slice(s1);
+          t.formule=finp.value;
+          const pos=tok.endsWith('()')?s0+tok.length-1:s0+tok.length;
+          if(finp.focus)finp.focus();
+          if(finp.setSelectionRange)finp.setSelectionRange(pos,pos);
+          change(true);
+        };
+        qbar.append(b);
+      });
+      p.append(barre('t2'),sousOnglets(),fld('Grandeur calculée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),formule,qbar);
+      p.append(h('div',{class:'ph-hint'},'Angles en radians · sind / cosd / tand en degrés · ^ pour puissance · 2pi*f accepté'));
+      p.append(h('div',{class:'ph-err',id:'ph-e2'}),h('div',{class:'ph-sub'},'Grandeurs mesurées (noms utilisés dans la formule)'),tableVars(t,null,true));
       p.append(selecteur('Nombre de tirages',[[10000,'10 000'],[100000,'100 000'],[1000000,'1 000 000']],t,'N'));
       const nb=h('button',{class:'mini',type:'button'},'Nouveaux tirages');nb.onclick=()=>{t.graine++;change()};p.append(nb);
       p.append(chk('Superposer l\'incertitude linéarisée (dérivées partielles)',t,'lin'),blocRef(t));
     };
-    /* ----- onglet 4 ----- */
+
+    /* ----- onglet 3 : régression linéaire (2.1 incertitudes colonne, 2.2 transfos, 2.3 points actifs, 2.4 CSV) ----- */
     PANES.t3=()=>{const t=ST.t3,p=panes.t3;
-      const colonnes=()=>{
-        const [nx,ny]=nomsRegression(t);
-        return [M.v(nx),incGrandeur(nx,t.xkind==='D'?'Δ':'u'),M.v(ny),incGrandeur(ny,t.ykind==='D'?'Δ':'u')];
+      const csvMapBox=h('div');
+      const appliquerCSV=(pt,nomF,ix,iux,iy,iuy)=>{
+        pushUndo('import CSV');
+        t.rows=pt.rows.map(r=>[r[ix]??'',iux>=0?(r[iux]??''):'',r[iy]??'',iuy>=0?(r[iuy]??''):'']);
+        t.off=t.rows.map(()=>false);
+        if(pt.headers[ix]){const e=PH2.parseEntete(pt.headers[ix]);if(e.nom)t.xnom=e.nom;if(e.unite)t.xun=e.unite}
+        if(pt.headers[iy]){const e=PH2.parseEntete(pt.headers[iy]);if(e.nom)t.ynom=e.nom;if(e.unite)t.yun=e.unite}
+        if(iux>=0)t.xmode='pt';
+        if(iuy>=0)t.ymode='pt';
+        construire('t3');change();A.toast(`${t.rows.length} points importés (${nomF})`);
       };
-      const g=grille(t.rows,colonnes(),'Point',[0,2]);
-      const majColonnes=()=>g.nommer(colonnes());
-      const nx=h('div',{class:'ph-axes'});
+      const importer3=file=>lireFichierTexte(file,(txt,nomF)=>{
+        const pt=PH2.parseTableau(txt);
+        if(!pt.rows.length){A.toast('Aucune donnée numérique dans '+nomF);return}
+        const nc=Math.max(...pt.rows.map(r=>r.length));
+        if(nc===2){appliquerCSV(pt,nomF,0,-1,1,-1);return}
+        if(nc===4&&t.xmode==='pt'&&t.ymode==='pt'){appliquerCSV(pt,nomF,0,1,2,3);return}
+        /* sélecteur de colonnes pour CSV multi-colonnes */
+        csvMapBox.innerHTML='';
+        const box=h('div',{class:'ph-csv-map'});
+        box.append(h('div',{},`<b>Import ${esc(nomF)}</b> (${pt.rows.length} lignes, ${nc} colonnes)`));
+        const colNom=k=>pt.headers[k]?`Col. ${k+1} — ${pt.headers[k]}`:`Colonne ${k+1}`;
+        const mkSel=(lab,optVide,def)=>{
+          const l=h('label',{},lab),s=h('select');
+          if(optVide)s.append(h('option',{value:'-1'},'Aucune'));
+          for(let k=0;k<nc;k++){const o=h('option',{value:String(k)},esc(colNom(k)));if(k===def)o.selected=true;s.append(o)}
+          l.append(s);return{l,s};
+        };
+        const sx=mkSel('Abscisse',false,0),sy=mkSel('Ordonnée',false,Math.min(1,nc-1));
+        const sux=mkSel('Incertitude X',true,-1),suy=mkSel('Incertitude Y',true,nc===3?2:-1);
+        const gr=h('div',{class:'ph-csv-g'});gr.append(sx.l,sy.l,sux.l,suy.l);box.append(gr);
+        const bar=h('div',{class:'ph-bar'});
+        const bOk=h('button',{class:'mini',type:'button'},'Importer'),bNo=h('button',{class:'mini',type:'button'},'Annuler');
+        bOk.onclick=()=>appliquerCSV(pt,nomF,+sx.s.value,+sux.s.value,+sy.s.value,+suy.s.value);
+        bNo.onclick=()=>{csvMapBox.innerHTML=''};
+        bar.append(bNo,bOk);box.append(bar);csvMapBox.append(box);
+      });
+
+      const colConfig=()=>{
+        const [nx,ny]=nomsRegression(t),cols=[],map=[];
+        cols.push(M.v(nx));map.push(0);
+        if((t.xmode||'pt')==='pt'){cols.push(incGrandeur(nx,t.xkind==='D'?'Δ':'u'));map.push(1)}
+        cols.push(M.v(ny));map.push(2);
+        if((t.ymode||'pt')==='pt'){cols.push(incGrandeur(ny,t.ykind==='D'?'Δ':'u'));map.push(3)}
+        return{cols,map};
+      };
+      const cfg0=colConfig();
+      const g=grille(t.rows,cfg0.cols,{titreLigne:'Point',colMap:cfg0.map,fullNc:4,map2:[0,2],map3:[0,2,3],off:t.off,rapide:true,onDropFile:importer3,
+        onHoverRow:rawI=>{
+          const actI=rawI<0?-1:IDX3.indexOf(rawI);
+          if(HOVER3!==actI){HOVER3=actI;A.render()}
+        }});
+      a.grid3=g;
+      const majColonnes=(rebuild)=>{const c=colConfig();g.nommer(c.cols,rebuild?c.map:null)};
+
+      /* axes : noms et unités */
+      const nxBox=h('div',{class:'ph-axes'});
       const dup=(lab,k1,k2)=>{const r=h('div',{class:'ph-row'},`<label>${lab}</label>`);
         for(const[k,l]of[[k1,null],[k2,'Unité']]){
           if(l)r.append(h('label',{},l));
           const i=h('input',{type:'text',value:t[k]??'',spellcheck:'false',autocomplete:'off'});
-          i.oninput=()=>{t[k]=i.value;if(k===k1)majColonnes();change()};
+          i.oninput=()=>{t[k]=i.value;if(k===k1)majColonnes(false);change()};
           r.append(i);
         }
         return r;
       };
-      nx.append(dup('Abscisse','xnom','xun'),dup('Ordonnée','ynom','yun'));
-      const natures=[['u','u'],['D','Δ']];
-      p.append(barre('t3'),nx,
-        selecteur('Incertitude d’abscisse',natures,t,'xkind',majColonnes),
-        selecteur('Incertitude d’ordonnée',natures,t,'ykind',majColonnes),
-        h('div',{class:'ph-sub'},'Saisissez une incertitude-type u ou une demi-largeur Δ. Les calculs utilisent u = Δ/√3 pour une demi-largeur. Collez deux colonnes (abscisse, ordonnée) ou quatre (valeur et incertitude pour chaque grandeur).'),g);
+      nxBox.append(dup('Abscisse','xnom','xun'),dup('Ordonnée','ynom','yun'));
+
+      /* 2.2 : transformations / linéarisation X et Y */
+      const trRow=h('div',{class:'ph-tr'});
+      const mkTransfo=(titre,key,exprKey,varLettre)=>{
+        const box=h('div',{class:'ph-tr-box'});
+        box.append(h('label',{},titre));
+        const s=h('select');
+        TRANSFOS.forEach(([v,l])=>{const o=h('option',{value:v},l.replace(/x/g,varLettre));if((t[key]||'id')===v)o.selected=true;s.append(o)});
+        const inp=h('input',{type:'text',placeholder:`ex. 1/${varLettre}^2`,value:t[exprKey]??'',spellcheck:'false',autocomplete:'off'});
+        inp.hidden=(t[key]||'id')!=='expr';
+        inp.oninput=()=>{t[exprKey]=inp.value;change(true)};
+        s.onchange=()=>{t[key]=s.value;inp.hidden=s.value!=='expr';change(true)};
+        box.append(s,inp);return box;
+      };
+      trRow.append(mkTransfo('Linéarisation X','xtr','xtrExpr','x'),mkTransfo('Linéarisation Y','ytr','ytrExpr','y'));
+
+      /* 2.1 : incertitude par colonne (Par point / Constante / Relative % / Notice) */
+      const uColBloc=(titre,pref)=>{
+        const box=h('div',{class:'ph-ucol'}),hd=h('div',{class:'ph-ucol-h'}),par=h('div',{class:'ph-ucol-p'});
+        hd.append(h('label',{},titre));
+        const modeSel=h('select');
+        [['pt','Par point'],['cst','Constante'],['pct','Relative (%)'],['not','Notice (% + dgt)']].forEach(([v,l])=>{
+          const o=h('option',{value:v},l);if((t[pref+'mode']||'pt')===v)o.selected=true;modeSel.append(o);
+        });
+        const kindSel=h('select',{'aria-label':'Nature u ou Δ'});
+        [['u','u'],['D','Δ']].forEach(([v,l])=>{const o=h('option',{value:v},l);if(t[pref+'kind']===v)o.selected=true;kindSel.append(o)});
+        const miniInp=(lab,k)=>{
+          const l=h('label',{},lab),i=h('input',{type:'text',inputmode:'decimal',value:t[pref+k]??'',spellcheck:'false',autocomplete:'off'});
+          i.oninput=()=>{t[pref+k]=i.value;change(true)};l.append(i);return l;
+        };
+        const renderPar=()=>{
+          const m=t[pref+'mode']||'pt';
+          kindSel.hidden=m==='not';
+          par.innerHTML='';
+          if(m==='cst')par.append(miniInp(t[pref+'kind']==='D'?'Δ =':'u =','cst'));
+          else if(m==='pct')par.append(miniInp(t[pref+'kind']==='D'?'Δ (%) =':'u (%) =','pct'));
+          else if(m==='not')par.append(miniInp('%','pct'),miniInp('dgt','dgt'),miniInp('pas','res'));
+          par.hidden=m==='pt';
+        };
+        modeSel.onchange=()=>{t[pref+'mode']=modeSel.value;renderPar();majColonnes(true);change(true)};
+        kindSel.onchange=()=>{t[pref+'kind']=kindSel.value;renderPar();majColonnes(false);change(true)};
+        hd.append(modeSel,kindSel);box.append(hd,par);renderPar();return box;
+      };
+
+      const actTout=h('button',{class:'mini',type:'button',title:'Réactiver tous les points décochés'},'Tout réactiver');
+      actTout.id='ph-react3';
+      actTout.hidden=!t.off.some(Boolean);
+      actTout.onclick=()=>{t.off=t.rows.map(()=>false);g.build();actTout.hidden=true;change()};
+
+      /* 3.3 : bloc repliable prédiction / étalonnage inverse / f(a, b) avec corrélation (a, b) */
+      const predDet=h('details',{class:'ph-opt'});
+      if(t.predMode&&t.predMode!=='off')predDet.open=true;
+      predDet.append(h('summary',{},'Prédiction, étalonnage inverse ou f(a, b)'));
+      const predBody=h('div',{class:'ph-opt-body'}),predFields=h('div');
+      const renderPred=()=>{
+        predFields.innerHTML='';
+        if(t.predMode==='y')predFields.append(fld('Abscisse X₀',t,'predVal',{rapide:true}),fld('Incertitude u(X₀) (0 si exacte)',t,'predU',{rapide:true}));
+        else if(t.predMode==='x')predFields.append(fld('Ordonnée mesurée Y₀',t,'predVal',{rapide:true}),fld('Incertitude u(Y₀) (0 si exacte)',t,'predU',{rapide:true}));
+        else if(t.predMode==='fab')predFields.append(
+          fld('Grandeur calculée',t,'predNom',{nom:true,texte:true}),
+          fld('Unité',t,'predUn',{nom:true,texte:true}),
+          fld('Formule en a et b',t,'predExpr',{cls:'formule',texte:true,rapide:true}),
+          h('div',{class:'ph-hint'},'Ex. 4*pi^2/a , 1/b , exp(a) — corrélation (a, b) conservée'));
+      };
+      predBody.append(seg([['off','Aucun'],['y','Y(X₀)'],['x','X(Y₀)'],['fab','f(a, b)']],t,'predMode',renderPred),predFields);
+      renderPred();predDet.append(predBody);
+
+      const nb3=h('button',{class:'mini',type:'button'},'Nouveaux tirages');nb3.onclick=()=>{t.graine=(t.graine||1)+1;change()};
+      p.append(barre('t3',[...boutonCSV(importer3),actTout]),csvMapBox,nxBox,trRow,
+        uColBloc('Incertitude X','x'),uColBloc('Incertitude Y','y'),
+        h('div',{class:'ph-sub'},'Collez 2, 3 ou 4 colonnes depuis un tableur, ou déposez un fichier CSV. Décochez un point pour l\'exclure sans le supprimer.'),g);
       p.append(h('div',{class:'ph-sub'},'Monte-Carlo sur a et b'),seg([['unif','Tirages uniformes'],['gauss','Tirages gaussiens']],t,'loi'),
-        selecteur('Nombre de tirages',[[1000,'1 000'],[10000,'10 000'],[50000,'50 000']],t,'M'),
-        chk('Histogrammes Monte-Carlo de a et b',t,'histos'),chk('Zones de tirage des points (rectangles ou gaussiennes)',t,'zones'),selecteur('Agrandissement (affichage)',[[0,'Auto'],[1,'×1'],[10,'×10'],[100,'×100']],t,'zoomU'),blocRef(t,'Valeur de référence de a'));
+        selecteur('Nombre de tirages',[[1000,'1 000'],[10000,'10 000'],[50000,'50 000']],t,'M'),nb3,
+        chk('Enveloppe d\'incertitude (±1σ, ±2σ)',t,'enveloppe'),
+        chk('Histogrammes Monte-Carlo de a et b',t,'histos'),
+        chk('Zones de tirage des points (rectangles ou gaussiennes)',t,'zones'),
+        selecteur('Agrandissement (affichage)',[[0,'Auto'],[1,'×1'],[10,'×10'],[100,'×100']],t,'zoomU'),
+        chk('Déplacer les points à la souris (exploration)',t,'deplacer'),
+        predDet,
+        blocRef(t,'Valeur de référence de a',{chk:'Comparer la pente a à une référence (écart normalisé)'}),
+        blocRef(t,'Valeur de référence de b',{ref:'refB',x:'bref',u:'ubref',chk:'Comparer l\'ordonnée b à une référence (écart normalisé)'}));
     };
-    ['t0','t1','t2','t3'].forEach((k,i)=>{const p=h('div',{class:'ph-pane'});p.hidden=i!==0;panes[k]=p;Z.saisie.append(p);PANES[k]()});
+
+    /* ----- onglet 4 : comparer plusieurs résultats (2.6) ----- */
+    PANES.t4=()=>{const t=ST.t4,p=panes.t4;
+      const root=h('div',{class:'ph-grid ph-vt'});
+      const buildCmp=()=>{
+        root.innerHTML='';const tab=h('table');
+        tab.innerHTML='<thead><tr><th title="Inclure">✓</th><th>Méthode / Mesure</th><th>Valeur</th><th>u / Δ</th><th>Incertitude</th><th></th></tr></thead>';
+        const tb=h('tbody');
+        t.items.forEach((it,i)=>{
+          const tr=h('tr',it.on===false?{class:'off'}:{});
+          const tdc=h('td',{class:'cb'}),cb=h('input',{type:'checkbox','aria-label':`Inclure mesure ${i+1}`});
+          cb.checked=it.on!==false;
+          cb.onchange=()=>{it.on=cb.checked;tr.classList.toggle('off',!cb.checked);change()};
+          tdc.append(cb);tr.append(tdc);
+          const cell=n=>{const td=h('td');td.append(n);tr.append(td)};
+          const inp=(val,fn,{cls='',clavier='decimal'}={})=>{
+            const e=h('input',{type:'text',value:val,inputmode:clavier,spellcheck:'false',autocomplete:'off',class:cls});
+            e.oninput=()=>{fn(e.value);change()};return e;
+          };
+          cell(inp(it.nom??'',x=>{it.nom=x},{cls:'nom',clavier:'text'}));
+          cell(inp(nbTexte(it.val),x=>{it.val=lire(x)}));
+          const s=h('select',{'aria-label':'Nature u ou Δ'});[['u','u'],['D','Δ']].forEach(([v,l])=>{const o=h('option',{value:v},l);if((it.kind||'u')===v)o.selected=true;s.append(o)});
+          s.onchange=()=>{it.kind=s.value;change()};cell(s);
+          cell(inp(nbTexte(it.p),x=>{it.p=Math.abs(lire(x))}));
+          const td=h('td');
+          if(t.items.length>2){const x=h('button',{class:'ph-x',type:'button',tabindex:'-1',title:'Supprimer','aria-label':'Supprimer cette mesure'},'×');x.onclick=()=>{t.items.splice(i,1);buildCmp();change()};td.append(x)}
+          tr.append(td);tb.append(tr);
+        });
+        tab.append(tb);root.append(tab);
+        if(t.items.length<10){const b=h('button',{class:'mini',type:'button'},'+ Ajouter une mesure');b.onclick=()=>{t.items.push({nom:'Méthode '+(t.items.length+1),val:NaN,kind:'u',p:NaN,on:true});buildCmp();change()};root.append(b)}
+      };
+      buildCmp();
+      p.append(barre('t4'),fld('Grandeur comparée',t,'nom',{nom:true,texte:true}),fld('Unité',t,'unite',{nom:true,texte:true}),
+        h('div',{class:'ph-sub'},'Résultats à comparer (ou importez depuis le Carnet de séance)'),root,
+        chk('Afficher la moyenne pondérée',t,'moyPond'),blocRef(t,'Valeur de référence'));
+    };
+
+    ['t0','t1','t2','t3','t4'].forEach((k,i)=>{const p=h('div',{class:'ph-pane'});p.hidden=i!==0;panes[k]=p;Z.saisie.append(p);PANES[k]()});
     a.panes=panes;
+    majCarnet();a.majUndo();
     Z.detail.append(h('div',{class:'ph-calc'}));
-    Z.resultat.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b)copier(b.dataset.copy)});
+    Z.resultat.addEventListener('click',e=>{
+      const bc=e.target.closest('[data-copy]');if(bc){copier(bc.dataset.copy);return}
+      const bk=e.target.closest('[data-carnet]');if(bk){const it=RES_SAVE[+bk.dataset.carnet];if(it)ajouterCarnet(it);return}
+      const bp=e.target.closest('[data-propag]');if(bp){const it=RES_SAVE[+bp.dataset.propag];if(it)envoyerVersPropag(it)}
+    });
     /* clic dans le budget : mettre u à zéro */
     for(const id of['bud1','bud2'])a.drag(id,{hit:(x,y)=>HIT_BUD.some(r=>y>=r.y0&&y<r.y1),
       start:(x,y)=>{const r=HIT_BUD.find(r=>y>=r.y0&&y<r.y1);if(!r)return;const m=ST[id==='bud1'?'t1':'t2'].mute;m[r.i]=!m[r.i];sauver()},move:()=>{}});
-    /* déplacement des points de la régression */
-    a.drag('reg3',{hit:(x,y)=>pointProche(x,y)>=0,
-      start:(x,y)=>{ST.drag3=pointProche(x,y);ST.gel3=RG3},
-      move:(x,y)=>{const g=GEL3&&GEL3.G,i=ST.drag3;if(!g||i<0||!IDX3[i]&&IDX3[i]!==0)return;const r=ST.t3.rows[IDX3[i]];r[0]=nbTexte(+(g.xv(x)*GEL3.f).toPrecision(4));r[2]=nbTexte(+(g.yv(y)*GEL3.fy).toPrecision(4))},
-      end:()=>{ST.drag3=-1;ST.gel3=null;sauver();const g=a.zones.saisie.querySelector('.ph-pane:nth-child(4) .ph-grid');if(g&&g.build)g.build()}});
+    /* déplacement des points de la régression (verrouillé par défaut en TP ; actif si case cochée et sans transformation) */
+    a.drag('reg3',{hit:(x,y)=>ST.t3.deplacer&&ST.t3.xtr==='id'&&ST.t3.ytr==='id'&&pointProche(x,y)>=0,
+      start:(x,y)=>{pushUndo('déplacer un point');ST.drag3=pointProche(x,y);ST.gel3=RG3;a.majUndo()},
+      move:(x,y)=>{const g=GEL3&&GEL3.G,i=ST.drag3;if(!g||i<0||(!IDX3[i]&&IDX3[i]!==0))return;const r=ST.t3.rows[IDX3[i]];r[0]=nbTexte(+(g.xv(x)*GEL3.f).toPrecision(4));r[2]=nbTexte(+(g.yv(y)*GEL3.fy).toPrecision(4))},
+      end:()=>{ST.drag3=-1;ST.gel3=null;sauver();const g=a.panes.t3.querySelector('.ph-grid');if(g&&g.build)g.build()}});
+    /* surbrillance croisée au survol sur reg3 et z3 */
+    const setHov=idx=>{
+      if(HOVER3===idx)return;
+      HOVER3=idx;
+      if(a.grid3&&a.grid3.highlightRow)a.grid3.highlightRow(idx>=0&&IDX3[idx]!==undefined?IDX3[idx]:-1);
+      a.render();
+    };
+    const wireHover=(id,finder)=>{
+      const P=a.panels[id],N=P&&P.node;
+      if(!N||!N.addEventListener)return;
+      N.addEventListener('pointermove',e=>{
+        if(a.tab!==2||ST.drag3>=0)return;
+        const r=N.getBoundingClientRect(),sx=e.clientX-r.left,sy=e.clientY-r.top;
+        const x=P.vue==='svg'?P.vx+sx/P.vz:sx,y=P.vue==='svg'?P.vy+sy/P.vz:sy;
+        setHov(finder(x,y));
+      });
+      N.addEventListener('pointerleave',()=>setHov(-1));
+    };
+    wireHover('reg3',pointProche);
+    wireHover('z3',pointProcheZ);
+    /* raccourci Ctrl+Z / ⌘Z hors saisie */
+    if(typeof window!=='undefined'&&window.addEventListener){
+      window.addEventListener('keydown',e=>{
+        if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key&&e.key.toLowerCase()==='z'){
+          if(e.target&&e.target.matches&&e.target.matches('input,textarea,select'))return;
+          if(UNDO.length){e.preventDefault();doUndo()}
+        }
+      });
+    }
   },
-  onglet(a){a.montrer()},
-  draw(a){const f=[d0,a2=>ST.t1.type==='formule'?d2(a2):d1(a2),d3][a.tab];f(a)}
+  onglet(a){HOVER3=-1;a.montrer()},
+  draw(a){resetResSave();const f=[d0,a2=>ST.t1.type==='formule'?d2(a2):d1(a2),d3,d4][a.tab];f(a)}
 });
 ST.drag3=-1;ST.gel3=null;
+let HOVER3=-1;
 const calcZone=()=>A.zones.detail.firstChild;
 
 /* ===================================================================== */
 /* Onglet 1 : mesure directe                                              */
 function d0(a){
-  const t=ST.t0,P=a.panels.h0,nom=esc(nomGrandeur(t,'x')),unite=t.unite||'';
+  const t=ST.t0,P=a.panels.h0,nomBrut=nomGrandeur(t,'x'),nom=esc(nomBrut),unite=t.unite||'';
   const xlab=axeGrandeur(nom,unite),moyenne=`<tspan text-decoration="overline">${nom}</tspan>`;
   const incertitudeMoyenne=`u(${barreMoyenne(nom)})`;
   const data=colonne(t.rows,0),N=data.length,Aa=N>=2?PH2.typeA(data):null;
   const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&bmax>bmin;
   const lecture=Aa?Aa.mean:(N===1?data[0]:bornes?(bmin+bmax)/2:lire(t.lec));
-  let Delta=NaN,uB=0;
-  if(t.B){Delta=t.modeB==='D'?Math.abs(lire(t.delta)):t.modeB==='B'?(bornes?(bmax-bmin)/2:NaN):PH2.notice(lecture,Math.abs(lire(t.pct)),Math.abs(lire(t.dgt)),Math.abs(lire(t.res)));uB=PH2.uniforme(Delta)}
+  let Delta=NaN,uB=0,pctVal=0,dgtVal=0,resVal=0;
+  if(t.B){
+    if(t.modeB==='D')Delta=Math.abs(lire(t.delta));
+    else if(t.modeB==='B')Delta=bornes?(bmax-bmin)/2:NaN;
+    else{
+      const sp=String(t.pct??'').trim(),sd=String(t.dgt??'').trim(),sr=String(t.res??'').trim();
+      pctVal=sp===''?0:Math.abs(lire(sp));dgtVal=sd===''?0:Math.abs(lire(sd));resVal=sr===''?0:Math.abs(lire(sr));
+      Delta=(sp===''&&sd==='')?NaN:(finis(pctVal,dgtVal,resVal)?PH2.notice(lecture,pctVal,dgtVal,resVal):NaN);
+    }
+    uB=PH2.uniforme(Delta);
+  }
   const uA=Aa?Aa.u:0,x=lecture,okB=t.B&&isFinite(uB)&&isFinite(x);
   const u=(Aa||okB)&&isFinite(x)?PH2.compose(uA,okB?uB:0):NaN;
   const zi=zInfo(t,x,isFinite(u)?u:0);
-  /* graphique */
-  if(N>=1){
+  /* graphique : si N===1 + Type B, afficher la distribution uniforme de type B */
+  if(N>=2||(N===1&&!okB)){
     const full=PH2.hist(data,N),sF=Aa?Aa.s:0,mF=PH2.mean(data);
     const lo=[full.lo,mF-3*(sF||full.w)],hi=[full.lo+full.nb*full.w,mF+3*(sF||full.w)];
     if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
@@ -1514,33 +2399,35 @@ function d0(a){
     if(zi){o.xlo=Math.min(o.xlo,zi.ref.x-3*zi.ref.u,zi.ref.x);o.xhi=Math.max(o.xhi,zi.ref.x+3*zi.ref.u,zi.ref.x);o.ref=zi.ref}
     a.svg('h0',histo(a,{x:0,y:0,w:P.w,h:P.h},o).svg);
   }else manque(a,'h0','Collez vos mesures dans le tableau pour tracer l\'histogramme.');
-  a.legend(N<1?[okB&&{c:a.C.E,label:`Loi uniforme sur [${nom} − Δ ; ${nom} + Δ]`,dash:true},okB&&{c:a.C.ink,label:'Loi normale de même u'},zi&&{c:a.C.v,label:'Référence'}]:[{c:BLEU,label:'Mesures (histogramme)'},Aa&&{c:a.C.ink,label:`Moyenne de ${nom}`,dash:true},Aa&&{c:a.C.E,label:`${incertitudeMoyenne} composée`},zi&&{c:a.C.v,label:'Référence'}]);
+  const modeUnif=N<2&&okB;
+  a.legend(modeUnif?[okB&&{c:a.C.E,label:`Loi uniforme sur [${nom} − Δ ; ${nom} + Δ]`,dash:true},okB&&{c:a.C.ink,label:'Loi normale de même u'},zi&&{c:a.C.v,label:'Référence'}]:[{c:BLEU,label:'Mesures (histogramme)'},Aa&&{c:a.C.ink,label:`Moyenne de ${nom}`,dash:true},Aa&&{c:a.C.E,label:`${incertitudeMoyenne} composée`},zi&&{c:a.C.v,label:'Référence'}]);
   /* résultats */
   let r='';
-  if(isFinite(u)){r+=ligneRes('Résultat',ecrire(x,u,unite,nom));
+  if(isFinite(u)){
+    r+=ligneRes('Résultat',ecrire(x,u,unite,nom),{nom:nomBrut,x,u,unite,versPropag:true});
     if(okB&&Delta>0)r+=note(`type B : ${M.v('Δ')} = ${F.sig(Delta,3)}${unite?'&nbsp;'+esc(unite):''}, ${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = ${F.sig(uB,3)}${unite?'&nbsp;'+esc(unite):''}`,'gr');
-    r+=note(Aa&&okB?`type A (${M.v('N')} = ${N}) et type B composés`:Aa?`type A, ${M.v('N')} = ${N} mesures`:'type B seul');}
-  else r+=note('Entrez au moins deux mesures, ou une valeur lue avec une évaluation de type B.','gr');
+    r+=note(Aa&&okB?`type A (${M.v('N')} = ${N}) et type B composés`:Aa?`type A, ${M.v('N')} = ${N} mesures`:'type B seul');
+  }else r+=note('Entrez au moins deux mesures, ou une valeur lue avec une évaluation de type B.','gr');
   r+=zLigne(zi);
   setZone(a.zones.resultat,r);
-  /* calcul détaillé */
-  const U=`&nbsp;${esc(unite)}`,sg=v=>F.sig(v,3);let c='';
-  if(Aa)c+=`<b>Type A</b> (${M.v('N')} = ${N})<br>${M.v('x̄')} = ${M.frac('1',M.v('N'))} Σ ${sub('x','i')} = ${sg(Aa.mean)}${U}<br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${sub('x','i')} − ${M.v('x̄')})²`,`${M.v('N')} − 1`))} = ${sg(Aa.s)}${U}<br><span class="lien">donc</span>${sub('u','A')} = ${M.frac(M.v('s'),M.sqrt(M.v('N')))} = <span class="res">${sg(Aa.u)}${U}</span><br>`;
-  if(t.B&&isFinite(Delta))c+=`<b>Type B</b><br>${t.modeB==='B'?`Δ = ${M.frac('max − min','2')} = ${M.frac(`${sg(bmax)} − ${sg(bmin)}`,'2')} = ${sg(Delta)}${U}<br>`:t.modeB==='N'?`Δ = ${sg(Math.abs(lire(t.pct)))} % × ${sg(Math.abs(lecture))} + ${sg(lire(t.dgt))} × ${sg(lire(t.res))} = ${sg(Delta)}${U}<br>`:`Δ = ${sg(Delta)}${U}<br>`}<span class="lien">ainsi</span>${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = <span class="res">${sg(uB)}${U}</span><br>`;
+  /* calcul détaillé (utilise le vrai nom de la grandeur) */
+  const U=suffixeUnite(unite),sg=v=>F.sig(v,3),nMoy=M.v(barreMoyenne(nom)),ni=sub(nom,'i');let c='';
+  if(Aa)c+=`<b>Type A</b> (${M.v('N')} = ${N})<br>${nMoy} = ${M.frac('1',M.v('N'))} Σ ${ni} = ${sg(Aa.mean)}${U}<br>${M.v('s')} = ${M.sqrt(M.frac(`Σ(${ni} − ${nMoy})²`,`${M.v('N')} − 1`))} = ${sg(Aa.s)}${U}<br><span class="lien">donc</span>${sub('u','A')} = ${M.frac(M.v('s'),M.sqrt(M.v('N')))} = <span class="res">${sg(Aa.u)}${U}</span><br>`;
+  if(t.B&&isFinite(Delta))c+=`<b>Type B</b><br>${t.modeB==='B'?`Δ = ${M.frac('max − min','2')} = ${M.frac(`${sg(bmax)} − ${sg(bmin)}`,'2')} = ${sg(Delta)}${U}<br>`:t.modeB==='N'?`Δ = ${sg(pctVal)} % × ${sg(Math.abs(lecture))} + ${sg(dgtVal)} × ${sg(resVal)} = ${sg(Delta)}${U}<br>`:`Δ = ${sg(Delta)}${U}<br>`}<span class="lien">ainsi</span>${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = <span class="res">${sg(uB)}${U}</span><br>`;
   if(Aa&&okB)c+=`<b>Composition</b><br>${M.v('u')} = ${M.sqrt(`${sub('u','A')}² + ${sub('u','B')}²`)} = <span class="res">${sg(u)}${U}</span><br>`;
   if(isFinite(u))c+=`<b>Résultat</b><br><span class="res">${ecrire(x,u,unite,nom)}</span><div class="gr">u arrondie par excès à 2 chiffres significatifs.</div>`;
-  c+=zCalc(zi,M.v('x̄'));
+  c+=zCalc(zi,Aa?nMoy:M.v(nom),nom);
   if(Aa)c+=`<br><b>Dans l'intervalle</b><table>${(b=>[0,1,2].map(i=>`<tr><td>${['±s','±2s','±3s'][i]}</td><td>${b[i]} sur ${N} (${F.fix(100*b[i]/N,0)} %)</td><td class="gr">loi normale : ${['68','95','99.7'][i]} %</td></tr>`).join(''))(PH2.bandes(data,N,Aa.mean,Aa.s))}</table>`;
   setZone(calcZone(),c);
 }
 
 /* ===================================================================== */
-/* Propagation : somme ou produit                                            */
+/* Propagation : somme ou produit                                         */
 function d1(a){
   const t=ST.t1,vars=t.vars,mute=t.mute;
   while(mute.length<vars.length)mute.push(false);
-  const ve=vEff(vars,mute),k=lire(t.k),somme=t.type==='somme',nom=esc(nomGrandeur(t)),unite=uniteCalculee(t.unite);
-  const incertitude=`u(${nom})`;
+  const ve=vEff(vars,mute),k=lire(t.k),somme=t.type==='somme',nomBrut=nomGrandeur(t),nom=esc(nomBrut),unite=uniteCalculee(t.unite);
+  const incertitude=`u(${nom})`,sym=M.v(nom),uSym=`${M.v('u')}(${sym})`;
   const P1=a.panels.bud1,P2=a.panels.res1;
   const ok=vars.length&&vars.every(v=>finis(v.val,v.p,v.coef))&&(somme||finis(k)&&vars.every(v=>v.val!==0));
   if(!ok){manque(a,'bud1','Complétez les valeurs, incertitudes et coefficients.');a.svg('res1','');a.legend([]);
@@ -1554,30 +2441,31 @@ function d1(a){
   if(zi)o.ref=zi.ref;
   a.svg('res1',u>0?histo(a,{x:0,y:0,w:P2.w,h:P2.h},o).svg:a.S.text(P2.w/2,P2.h/2,`${incertitude} = 0`,{anchor:'middle',size:16,c:a.C.ink2,halo:false}));
   a.legend([{c:a.C.cInk,label:`Part dans ${incertitude}²`},{c:a.C.ink,label:`Loi normale N(${nom}, ${incertitude})`},zi&&{c:a.C.v,label:'Référence'}]);
-  let r=ligneRes('Résultat',ecrire(y,u,unite,nom))+note(mute.some(Boolean)?'certaines incertitudes sont mises à zéro (clic sur une barre)':'incertitude-type composée',mute.some(Boolean)?'gr':'')+zLigne(zi);
+  let r=ligneRes('Résultat',ecrire(y,u,unite,nom),{nom:nomBrut,x:y,u,unite})+note(mute.some(Boolean)?'certaines incertitudes sont mises à zéro (clic sur une barre)':'incertitude-type composée',mute.some(Boolean)?'gr':'')+zLigne(zi);
   setZone(a.zones.resultat,r);
   const sg=v=>F.sig(v,3),cf=v=>Number.isInteger(v)?String(v).replace('-','−'):F.sig(v,3),U=suffixeUnite(unite);let c='';
   if(somme){
     const t1=ve.map(v=>`${cf(v.coef)} × ${sg(v.val)}`).join(' + '),t2=ve.map(v=>`(${cf(v.coef)} × ${sg(uV(v))})²`).join(' + ');
-    c+=`${M.v('y')} = Σ ${sub('c','i')}${sub('x','i')} = ${t1} = ${sg(y)}${U}<br><span class="lien">ainsi</span>${M.v('u')}(${M.v('y')}) = ${M.sqrt(`Σ (${sub('c','i')} ${M.v('u')}(${sub('x','i')}))²`)}<br><span class="lien">soit</span>${M.v('u')}(${M.v('y')}) = ${M.sqrt(t2)} = <span class="res">${sg(u)}${U}</span>`;
+    c+=`${sym} = Σ ${sub('c','i')}${sub('x','i')} = ${t1} = ${sg(y)}${U}<br><span class="lien">ainsi</span>${uSym} = ${M.sqrt(`Σ (${sub('c','i')} ${M.v('u')}(${sub('x','i')}))²`)}<br><span class="lien">soit</span>${uSym} = ${M.sqrt(t2)} = <span class="res">${sg(u)}${U}</span>`;
   }else{
     const t2=ve.map(v=>`(${cf(v.coef)} × ${sg(uV(v))}/${sg(v.val)})²`).join(' + '),rel=y!==0?u/Math.abs(y):NaN;
-    c+=`${M.v('y')} = ${M.v('k')} Π ${sub('x','i')}<sup>${M.v('α','i')}</sup> = ${sg(y)}${U}<br><span class="lien">ainsi</span>${M.frac(`${M.v('u')}(${M.v('y')})`,`|${M.v('y')}|`)} = ${M.sqrt(`Σ (${M.v('α','i')} ${M.frac(`${M.v('u')}(${sub('x','i')})`,sub('x','i'))})²`)}<br><span class="lien">soit</span>${M.frac(`${M.v('u')}(${M.v('y')})`,`|${M.v('y')}|`)} = ${M.sqrt(t2)} = ${sg(rel)}<br><span class="lien">donc</span>${M.v('u')}(${M.v('y')}) = <span class="res">${sg(u)}${U}</span>`;
+    c+=`${sym} = ${M.v('k')} Π ${sub('x','i')}<sup>${M.v('α','i')}</sup> = ${sg(y)}${U}<br><span class="lien">ainsi</span>${M.frac(uSym,`|${sym}|`)} = ${M.sqrt(`Σ (${M.v('α','i')} ${M.frac(`${M.v('u')}(${sub('x','i')})`,sub('x','i'))})²`)}<br><span class="lien">soit</span>${M.frac(uSym,`|${sym}|`)} = ${M.sqrt(t2)} = ${sg(rel)}<br><span class="lien">donc</span>${uSym} = <span class="res">${sg(u)}${U}</span>`;
   }
   if(vars.some(v=>v.kind==='D'))c+=`<br><span class="gr">Pour une demi-largeur Δ : ${M.v('u')} = Δ/√3.</span>`;
-  c+=`<br><b>Résultat</b><br><span class="res">${ecrire(y,u,unite,nom)}</span>`+zCalc(zi,M.v('y'));
+  if(vars.some(v=>v.kind==='up'||v.kind==='Dp'))c+=`<br><span class="gr">Pour une incertitude relative en % : ${M.v('u')} = p % × |x| (et /√3 pour Δ %).</span>`;
+  c+=`<br><b>Résultat</b><br><span class="res">${ecrire(y,u,unite,nom)}</span>`+zCalc(zi,sym,nom);
   setZone(calcZone(),c);
 }
 
 /* ===================================================================== */
-/* Propagation : fonction quelconque (Monte-Carlo)                            */
+/* Propagation : fonction quelconque (Monte-Carlo)                        */
 function d2(a){
   const t=ST.t2,vars=t.vars,mute=t.mute;
   while(mute.length<vars.length)mute.push(false);
-  const P1=a.panels.res2,P2=a.panels.bud2,nom=esc(nomGrandeur(t)),unite=uniteCalculee(t.unite);
+  const P1=a.panels.res2,P2=a.panels.bud2,nomBrut=nomGrandeur(t),nom=esc(nomBrut),unite=uniteCalculee(t.unite);
   const libelle=a.panes.t2.querySelector('label[for="ph-formule"]');
-  const formuleNom=`${nomGrandeur(t)} =`;
-  if(libelle.textContent!==formuleNom)libelle.textContent=formuleNom;
+  const formuleNom=`${nomBrut} =`;
+  if(libelle&&libelle.textContent!==formuleNom)libelle.textContent=formuleNom;
   const noms=vars.map(v=>(v.nom||'').trim());
   let err='';
   const dup=noms.find((n,i)=>noms.indexOf(n)!==i),mauvais=noms.find(n=>!PH2.nomValide(n));
@@ -1588,12 +2476,12 @@ function d2(a){
   if(!cp.err){const y0=cp.fn(...vars.map(v=>v.val));if(!isFinite(y0))cp={err:'La formule ne donne pas un nombre pour ces valeurs.'}}
   const e2=document.getElementById('ph-e2');if(e2)e2.textContent=cp.err||'';
   if(cp.err){manque(a,'res2',cp.err);a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('Corrigez la formule ou les grandeurs.','gr'));setZone(calcZone(),'');return}
-  const ve=vEff(vars,mute),N=+t.N;
+  const ve=vEff(vars,mute),N=RAPIDE?Math.min(+t.N,5000):+t.N;
   const ys=memo('mc2',JSON.stringify([t.formule,ve,N,t.graine]),()=>{const y=PH2.mc(cp.fn,ve,N,t.graine),n=y.length,m=PH2.mean(y);return{y,n,m,s:n>1?PH2.sd(y,m):NaN,lay:n>0?PH2.hist(y):null}});
-  if(ys.n<2){manque(a,'res2','Aucune valeur simulée exploitable.');a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('La formule ne donne pas de valeur exploitable pour ces tirages.','gr'));setZone(calcZone(),'');return}
-  const B=PH2.budget(cp.fn,ve),y0=B.y0,sd=ys.s,zi=zInfo(t,y0,sd);
+  if(ys.n<2||!ys.lay){manque(a,'res2','Aucune valeur simulée exploitable.');a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('La formule ne donne pas de valeur exploitable pour ces tirages.','gr'));setZone(calcZone(),'');return}
+  const B=PH2.budget(cp.fn,ve,t.graine),y0=B.y0,sd=ys.s,zi=zInfo(t,y0,sd);
   const incertitude=`u(${nom})`,symbole=M.v(nom),uSymbole=`${M.v('u')}(${symbole})`;
-  a.svg('bud2',budget(a,{x:0,y:0,w:P2.w,h:P2.h},vars,B.c,mute,B.uLin,`Part dans ${incertitude}² (linéarisée)`));
+  a.svg('bud2',budget(a,{x:0,y:0,w:P2.w,h:P2.h},vars,B.c,mute,B.uLin,`Part dans ${incertitude}² (${B.mcFallback?'linéarisée + MC 1D':'linéarisée'})`));
   const lo=[ys.lay.lo,ys.m-3.8*sd],hi=[ys.lay.lo+ys.lay.nb*ys.lay.w,ys.m+3.8*sd];
   if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
   const xlo=Math.min(...lo),xhi=Math.max(...hi);
@@ -1603,95 +2491,237 @@ function d2(a){
   if(zi){o.ref=zi.ref;o.refNom=nom}
   a.svg('res2',histo(a,{x:0,y:0,w:P1.w,h:P1.h},o).svg);
   a.legend([{c:BLEU,label:`Valeurs simulées de ${nom}`},{c:a.C.ink,label:`Valeur calculée de ${nom}`,dash:true},{c:a.C.E,label:`${incertitude} (Monte-Carlo)`},t.lin&&{c:a.C.E,label:'Linéarisation',dash:true},zi&&{c:a.C.v,label:'Référence'}]);
-  const sp=v=>v.toLocaleString('fr-FR').replace(/[  ]/g,' ');
-  let r=ligneRes('Résultat',ecrire(y0,sd,unite,nom))+note(`Monte-Carlo, ${sp(ys.n)} tirages : ${incertitude} = écart-type des valeurs simulées`);
-  if(t.lin&&B.uLin>0)r+=note(`Linéarisation : ${incertitude} = ${F.sig(B.uLin,2)}${suffixeUnite(unite)} (écart ${F.fix(100*(B.uLin-sd)/sd,1)} % avec Monte-Carlo)`,'gr');
+  const sp=v=>v.toLocaleString('fr-FR').replace(/[\u202F\u00A0]/g,' ');
+  let r=ligneRes('Résultat',ecrire(y0,sd,unite,nom),{nom:nomBrut,x:y0,u:sd,unite})+note(`Monte-Carlo, ${sp(ys.n)} tirages : ${incertitude} = écart-type des valeurs simulées`);
+  if(ys.n<N)r+=note(`${sp(N-ys.n)} tirage(s) hors domaine de définition écarté(s) (${F.fix(100*(N-ys.n)/N,1)} %).`,'warn');
+  if(sd>0&&Math.abs(ys.m-y0)/sd>0.2)r+=note(`Non-linéarité marquée : la moyenne Monte-Carlo (${F.sig(ys.m,4)}) s'écarte de la valeur nominale (${F.sig(y0,4)}).`,'warn');
+  if(sd>0&&B.uLin>0&&Math.abs(B.uLin-sd)/sd>0.1)r+=note(`Écart de ${F.fix(100*(B.uLin-sd)/sd,1)} % entre linéarisation (${F.sig(B.uLin,2)}) et Monte-Carlo (${F.sig(sd,2)}) : la linéarisation atteint ses limites.`,'warn');
+  else if(t.lin&&B.uLin>0)r+=note(`Linéarisation : ${incertitude} = ${F.sig(B.uLin,2)}${suffixeUnite(unite)} (écart ${F.fix(100*(B.uLin-sd)/sd,1)} % avec Monte-Carlo)`,'gr');
   r+=zLigne(zi);setZone(a.zones.resultat,r);
   const sg=v=>F.sig(v,3),U=suffixeUnite(unite);
   let c=`${symbole} = ${esc(t.formule)}<br>${symbole}(valeurs mesurées) = ${sg(y0)}${U}<br><b>Monte-Carlo</b> (${sp(ys.n)} tirages)<br>${sub(nom,'moy')} = ${sg(ys.m)}${U}<br>${uSymbole} = ${M.v('s')} = <span class="res">${sg(sd)}${U}</span><br><b>Résultat</b><br><span class="res">${ecrire(y0,sd,unite,nom)}</span>`;
   c+=`<br><b>Linéarisation</b><br>${uSymbole} ≃ ${M.sqrt(`Σ (${M.frac('∂'+symbole,'∂'+sub('x','i'))} ${M.v('u')}(${sub('x','i')}))²`)} = ${sg(B.uLin)}${U}`;
+  if(B.mcFallback)c+=`<div class="gr">Au moins une dérivée partielle est nulle au point nominal : part estimée par variance Monte-Carlo 1D.</div>`;
   c+=zCalc(zi,symbole,nom);
   setZone(calcZone(),c);
 }
 
 /* ===================================================================== */
 /* Onglet 3 : régression linéaire                                         */
-let GEL3=null,RG3=null,IDX3=[];
+let GEL3=null,GELZ3=null,RG3=null,IDX3=[];
 function pointProche(x,y){
   if(!GEL3)return -1;const g=GEL3.G;let best=-1,d0=18*A.k;
   GEL3.pts.forEach((p,i)=>{const d=Math.hypot(g.X(p.x/GEL3.f)-x,g.Y(p.y/GEL3.fy)-y);if(d<d0){d0=d;best=i}});
   return best;
 }
+function pointProcheZ(x,y){
+  if(!GELZ3)return -1;const g=GELZ3.G;let best=-1,d0=18*A.k;
+  GELZ3.pts.forEach((p,i)=>{const d=Math.hypot(g.X(p.x/GELZ3.f)-x,g.Y(GELZ3.zClip[i])-y);if(d<d0){d0=d;best=i}});
+  return best;
+}
 function d3(a){
   const t=ST.t3,S=a.S,C=a.C,K=a.k;
-  const [nx,ny]=nomsRegression(t),ux=uniteCalculee(t.xun),uy=uniteCalculee(t.yun);
-  const un=ux===uy?'':ux?`${uy||'1'}/${ux.includes('/')?'('+ux+')':ux}`:uy;
-  const incX=incGrandeur(nx,t.xkind==='D'?'Δ':'u'),incY=incGrandeur(ny,t.ykind==='D'?'Δ':'u');
+  const [nxBrut,nyBrut]=nomsRegression(t);
+  const tx=PH2.transfo(t.xtr||'id',t.xtrExpr,'x'),ty=PH2.transfo(t.ytr||'id',t.ytrExpr,'y');
+  if(tx.err||ty.err){
+    const msg=tx.err?`Transformation X : ${tx.err}`:`Transformation Y : ${ty.err}`;
+    manque(a,'reg3',msg);a.svg('z3','');if(a.panels.ab3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    setZone(a.zones.resultat,note(msg,'ko'));setZone(calcZone(),'');return;
+  }
+  const infoX=transfoInfo(t.xtr||'id',t.xtrExpr,nxBrut,t.xun,'x');
+  const infoY=transfoInfo(t.ytr||'id',t.ytrExpr,nyBrut,t.yun,'y');
+  const nx=infoX.label,ny=infoY.label,ux=infoX.unite,uy=infoY.unite;
+  const un=ux===uy?'':ux?`${uy||'1'}/${parenUnite(ux)}`:uy;
+  const incX=incGrandeur(nxBrut,t.xkind==='D'?'Δ':'u'),incY=incGrandeur(nyBrut,t.ykind==='D'?'Δ':'u');
   const P1=a.panels.reg3,P2=a.panels.z3,P3=a.panels.ab3;
-  const pts=[],idx=[];let partiel=0;
-  lignesReg(t).forEach(q=>{if(q){pts.push({x:q.x,ux:q.ux,y:q.y,uy:q.uy});idx.push(q.i)}else partiel++});
-  IDX3=idx;
+  const btnReact=document.getElementById('ph-react3');if(btnReact)btnReact.hidden=!t.off.some(Boolean);
+
+  const brutsActifs=[],brutsExclus=[],idxActifs=[];let partiel=0;
+  lignesReg(t).forEach(q=>{
+    if(!q){partiel++;return}
+    if(q.off)brutsExclus.push(q);
+    else{brutsActifs.push(q);idxActifs.push(q.i)}
+  });
+  const trAct=PH2.transformPts(brutsActifs,tx,ty),trExc=PH2.transformPts(brutsExclus,tx,ty);
+  const pts=trAct.pts,ptsOff=trExc.pts;
+  IDX3=pts.map(p=>p.i);
   const n=pts.length;
-  if(n<2){manque(a,'reg3','Entrez au moins deux points.');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;
-    setZone(a.zones.resultat,note(partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:`Saisissez ${M.v(nx)} et ${M.v(ny)} pour chaque point, avec ${incX} et ${incY} si ces incertitudes sont connues.`,'gr'));setZone(calcZone(),'');return}
-  const X=pts.map(q=>q.x),Y=pts.map(q=>q.y),fit=PH2.fit(X,Y),z0=PH2.zReg(pts,fit.a,fit.b);
+  if(n<2){
+    manque(a,'reg3',trAct.rejet?'Points hors domaine de la transformation.':'Entrez au moins deux points actifs.');
+    a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    setZone(a.zones.resultat,note(trAct.rejet?`${trAct.rejet} point(s) hors domaine de la transformation (ex. ln ou 1/x sur ≤ 0).`:partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:`Saisissez ${M.v(nxBrut)} et ${M.v(nyBrut)} pour chaque point, avec ${incX} et ${incY} si ces incertitudes sont connues.`,'gr'));
+    setZone(calcZone(),'');return;
+  }
+  const X=pts.map(q=>q.x),Y=pts.map(q=>q.y),fit=PH2.fit(X,Y);
+  if(!isFinite(fit.a)||!isFinite(fit.b)){
+    manque(a,'reg3','Abscisses toutes identiques : régression impossible.');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    setZone(a.zones.resultat,note('Toutes les abscisses actives sont égales : impossible de déterminer une pente.','ko'));setZone(calcZone(),'');return;
+  }
+  const z0=PH2.zReg(pts,fit.a,fit.b);
   const sans=pts.every(q=>q.ux===0&&q.uy===0);
-  let sres=NaN,ua0=NaN,ub0=NaN;
-  if(sans&&n>=3){const mx=PH2.mean(X);let sxx=0,ss=0;X.forEach(v=>{sxx+=(v-mx)*(v-mx)});X.forEach((v,i)=>{const e=Y[i]-fit.a*v-fit.b;ss+=e*e});sres=Math.sqrt(ss/(n-2));ua0=sres/Math.sqrt(sxx);ub0=sres*Math.sqrt(1/n+mx*mx/sxx)}
-  const z=sans?Y.map((v,i)=>sres>0?(v-fit.a*X[i]-fit.b)/sres:0):z0,dg=sans?{bad:[],trop:false,motif:false}:PH2.diagnostic(z);
+  let sres=NaN,ua0=NaN,ub0=NaN,cov0=NaN,corr0=NaN;
+  if(sans&&n>=3){
+    const mx=PH2.mean(X);let sxx=0,ss=0;
+    X.forEach(v=>{sxx+=(v-mx)*(v-mx)});X.forEach((v,i)=>{const e=Y[i]-fit.a*v-fit.b;ss+=e*e});
+    sres=Math.sqrt(ss/(n-2));ua0=sres/Math.sqrt(sxx);ub0=sres*Math.sqrt(1/n+mx*mx/sxx);
+    cov0=-mx*ua0*ua0;corr0=ua0>0&&ub0>0?cov0/(ua0*ub0):NaN;
+  }
+  const z=sans?Y.map((v,i)=>sres>0?(v-fit.a*X[i]-fit.b)/sres:0):z0;
+  const dg=sans?{bad:[],trop:false,motif:false}:PH2.diagnostic(z,X);
+  const chi2Red=(!sans&&n>=3)?z.reduce((acc,v)=>acc+v*v,0)/(n-2):NaN;
+
+  /* Monte-Carlo sur a et b (calculé avant le tracé pour l'enveloppe ±1σ/±2σ et la prédiction corrélée) */
+  const M3=(ST.drag3>=0||RAPIDE)?Math.min(+t.M,2000):+t.M,gr3=t.graine||1;
+  const mc=sans?{A:[],B:[],ua:ua0,ub:ub0,cov:cov0,corr:corr0,ok:0,rejected:0}:memo('mc3',JSON.stringify([pts,t.loi,M3,gr3,t.xtr,t.xtrExpr,t.ytr,t.ytrExpr]),()=>PH2.mcReg(pts,t.loi,M3,gr3,tx,ty));
+  const zi=zInfo(t,fit.a,mc.ua);
+  const ziB=zInfo(t,fit.b,mc.ub,{ref:'refB',x:'bref',u:'ubref'});
+
+  /* prédiction / étalonnage inverse / f(a, b) avec corrélation exacte (a, b) */
+  let pred=null;
+  if(t.predMode&&t.predMode!=='off'){
+    const pVal=lire(t.predVal),pU=Math.max(0,lire(t.predU)||0);
+    if(t.predMode==='fab')pred=String(t.predExpr||'').trim()?PH2.predReg(fit,mc,'fab',{expr:t.predExpr},gr3):null;
+    else if(isFinite(pVal))pred=PH2.predReg(fit,mc,t.predMode,{val:pVal,u:pU},gr3);
+  }
+
+  /* bornes du graphe reg3 (inclut points exclus et point prédit éventuel) */
   let rg=ST.gel3||null;
   if(!rg){
+    const allPts=pts.concat(ptsOff);
+    const allX=allPts.map(q=>q.x),allUx=allPts.map(q=>q.ux),allY=allPts.map(q=>q.y),allUy=allPts.map(q=>q.uy);
+    if(pred&&!pred.err&&isFinite(pred.val)){
+      const pv=lire(t.predVal),pu=Math.max(0,lire(t.predU)||0);
+      if(t.predMode==='y'){allX.push(pv);allUx.push(pu);allY.push(pred.val);allUy.push(isFinite(pred.u)?pred.u:0)}
+      else if(t.predMode==='x'){allX.push(pred.val);allUx.push(isFinite(pred.u)?pred.u:0);allY.push(pv);allUy.push(pu)}
+    }
     const ext=(arr,errs)=>{let lo=Infinity,hi=-Infinity;arr.forEach((v,i)=>{lo=Math.min(lo,v-errs[i]);hi=Math.max(hi,v+errs[i])});const sp=(hi-lo)||Math.abs(hi)||1;lo-=.12*sp;hi+=.12*sp;if(lo>0&&lo<.6*hi)lo=0;if(hi<0&&hi>.6*lo)hi=0;return[lo,hi]};
-    const kz=t.zones&&!sans?(t.loi==='unif'?SQ3:2):1,[x0,x1]=ext(X,pts.map(q=>q.ux*kz)),[y0,y1]=ext(Y,pts.map(q=>q.uy*kz));
+    const kz=t.zones&&!sans?(t.loi==='unif'?SQ3:2):1;
+    const [x0,x1]=ext(allX,allUx.map(v=>v*kz)),[y0,y1]=ext(allY,allUy.map(v=>v*kz));
     rg={x0,x1,y0:Math.min(y0,fit.a*x0+fit.b,fit.a*x1+fit.b),y1:Math.max(y1,fit.a*x0+fit.b,fit.a*x1+fit.b)};
   }
   RG3=rg;const f=echelle(rg.x0,rg.x1),fy=echelle(rg.y0,rg.y1);
-  const G=S.graph({x:0,y:0,w:P1.w,h:P1.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:rg.y0/fy,ymax:rg.y1/fy,xlab:axeGrandeur(nx,ux)+suffixe(f),ylab:axeGrandeur(ny,uy)+suffixe(fy)});
+  const G=S.graph({x:0,y:0,w:P1.w,h:P1.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:rg.y0/fy,ymax:rg.y1/fy,xlab:axeGrandeur(infoX.svg,ux)+suffixe(f),ylab:axeGrandeur(infoY.svg,uy)+suffixe(fy)});
   GEL3={G,f,fy,pts};
   const pxy=pts.map(q=>Math.max(Math.abs(G.X((q.x+q.ux)/f)-G.X(q.x/f)),Math.abs(G.Y((q.y+q.uy)/fy)-G.Y(q.y/fy)))).sort((p,r)=>p-r),med=pxy[n>>1];
   let kzm=+t.zoomU||0;if(!kzm){kzm=1;for(const c of[2,5,10,20,50,100,200,500,1000]){if(!(med>0)||med*kzm>=9)break;kzm=c}}
-  let s=S.clip('creg',G)+G.svg+`<g clip-path="url(#creg)">`+S.line(G.X(rg.x0/f),G.Y((fit.a*rg.x0+fit.b)/fy),G.X(rg.x1/f),G.Y((fit.a*rg.x1+fit.b)/fy),{c:C.ink,w:2})+'</g>';
+  let s=S.clip('creg',G)+G.svg+`<g clip-path="url(#creg)">`;
+  /* enveloppe d'incertitude ±2σ et ±1σ (forme en sablier due à Cov(a, b)) */
+  if(t.enveloppe&&isFinite(mc.ua)&&isFinite(mc.ub)&&(mc.ua>0||mc.ub>0)){
+    const nE=50,xsE=Array.from({length:nE+1},(_,j)=>rg.x0+(rg.x1-rg.x0)*j/nE);
+    const env=PH2.enveloppeReg(fit,mc.ua,mc.ub,mc.cov,xsE);
+    for(const[kSig,op]of[[2,.09],[1,.18]]){
+      const haut=env.map(p=>[G.X(p.x/f),G.Y((p.y+kSig*p.s)/fy)]);
+      const bas=env.slice().reverse().map(p=>[G.X(p.x/f),G.Y((p.y-kSig*p.s)/fy)]);
+      s+=S.poly(haut.concat(bas),{close:true,fill:C.E,fop:op,c:kSig===1?C.E:'none',w:kSig===1?1:0,dash:kSig===1?'4 4':undefined});
+    }
+  }
+  s+=S.line(G.X(rg.x0/f),G.Y((fit.a*rg.x0+fit.b)/fy),G.X(rg.x1/f),G.Y((fit.a*rg.x1+fit.b)/fy),{c:C.ink,w:2});
   if(t.zones&&!sans){
-    s+=`<g clip-path="url(#creg)">`;
     pts.forEach(q=>{const cx=G.X(q.x/f),cy=G.Y(q.y/fy),px=Math.abs(G.X((q.x+q.ux*kzm)/f)-cx),py=Math.abs(G.Y((q.y+q.uy*kzm)/fy)-cy);
       if(t.loi==='unif'){const w=Math.max(1,2*SQ3*px),hh=Math.max(1,2*SQ3*py);s+=`<rect x="${cx-w/2}" y="${cy-hh/2}" width="${w}" height="${hh}" fill="${C.cInk}" fill-opacity=".22" stroke="${C.cInk}" stroke-opacity=".5" stroke-width="1"/>`}
       else for(const[k,o]of[[2,.12],[1,.22]])s+=`<ellipse cx="${cx}" cy="${cy}" rx="${Math.max(.5,k*px)}" ry="${Math.max(.5,k*py)}" fill="${C.cInk}" fill-opacity="${o}" stroke="${C.cInk}" stroke-opacity="${k===1?.6:.4}" stroke-width="1"/>`});
-    s+='</g>'}
-  pts.forEach((q,i)=>{const bad=!sans&&Math.abs(z[i])>2,col=bad?C.F:BLEU,cx=G.X(q.x/f),cy=G.Y(q.y/fy);
-    s+=S.line(cx,G.Y((q.y-q.uy*kzm)/fy),cx,G.Y((q.y+q.uy*kzm)/fy),{c:col,w:2})+S.line(G.X((q.x-q.ux*kzm)/f),cy,G.X((q.x+q.ux*kzm)/f),cy,{c:col,w:2});
-    s+=S.circle(cx,cy,(ST.drag3===i?8:6)*K,{fill:col,c:C.card,w:1.2,style:'cursor:grab'})});
-  a.svg('reg3',s);
-  const zm=Math.max(3,Math.ceil(Math.max(...z.map(Math.abs))+.4)),Gz=S.graph({x:0,y:0,w:P2.w,h:P2.h,padB:36*K,xmin:.4,xmax:n+.6,ymin:-zm,ymax:zm,xticks:n>12?undefined:pts.map((_,i)=>i+1),yticks:AnimKit.ticks(-zm,zm,Math.min(8,2*zm)),xlab:'Numéro du point',ylab:sans?'Résidu / s':`Écart normalisé ${S.v('z','i')}`});
-  let sz=Gz.svg+S.rect(Gz.x0,Gz.Y(2),Gz.w,Gz.Y(-2)-Gz.Y(2),{fill:C.cInk,fop:.1})+S.line(Gz.x0,Gz.Y(2),Gz.x0+Gz.w,Gz.Y(2),{c:C.ink2,w:1.2,dash:'6 4'})+S.line(Gz.x0,Gz.Y(-2),Gz.x0+Gz.w,Gz.Y(-2),{c:C.ink2,w:1.2,dash:'6 4'});
-  z.forEach((v,i)=>{const bad=!sans&&Math.abs(v)>2,cx=Gz.X(i+1);sz+=S.line(cx,Gz.Y(0),cx,Gz.Y(v),{c:bad?C.F:BLEU,w:1.6})+S.circle(cx,Gz.Y(v),6*K,{fill:bad?C.F:BLEU,c:C.card,w:1.2})});
-  sz+=S.text(Gz.x0+Gz.w-4*K,Gz.Y(2)-9*K,'+2',{anchor:'end',size:13,c:C.ink2,halo:false})+S.text(Gz.x0+Gz.w-4*K,Gz.Y(-2)+9*K,'−2',{anchor:'end',size:13,c:C.ink2,halo:false});
-  a.svg('z3',sz);
-  /* Monte-Carlo sur a et b (toujours calculé) */
-  const M3=ST.drag3>=0?Math.min(t.M,2000):t.M;
-  const mc=sans?{A:[],B:[],ua:ua0,ub:ub0,corr:NaN}:memo('mc3',JSON.stringify([pts,t.loi,M3]),()=>PH2.mcReg(pts,t.loi,M3,1));
-  const zi=zInfo(t,fit.a,mc.ua);
-  if(t.histos&&!sans&&P3){
-    const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B),w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w];
-    if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
-    const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:axeGrandeur(S.v('a'),un),ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
-    if(zi){oa.ref=zi.ref;oa.refNom='a'}
-    const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:hB.lo,xhi:hB.lo+hB.nb*hB.w,xlab:axeGrandeur(S.v('b'),uy),ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
-    a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
   }
-  a.legend(t.histos&&!sans?[{c:BLEU,label:'Tirages Monte-Carlo'},{c:C.ink,label:'Valeur ajustée',dash:true},zi&&{c:C.v,label:'Référence de a'}]:[{c:BLEU,label:sans?'Point de mesure':'Point (|zᵢ| ≤ 2)',dot:true},t.zones&&!sans&&{c:C.cInk,label:(t.loi==='unif'?'Zone de tirage':'Zone de tirage 1σ, 2σ')+(kzm>1?` (u ×${kzm})`:'')},!sans&&{c:C.F,label:'Point (|zᵢ| > 2)',dot:true},{c:C.ink,label:'Régression'},zi&&{c:C.v,label:'Référence de a'}]);
+  /* point prédit / étalonnage inverse sur le graphe */
+  if(pred&&!pred.err&&isFinite(pred.val)&&(t.predMode==='y'||t.predMode==='x')){
+    const pv=lire(t.predVal),pu=Math.max(0,lire(t.predU)||0);
+    const px=t.predMode==='y'?pv:pred.val,py=t.predMode==='y'?pred.val:pv;
+    const pux=t.predMode==='y'?pu:(isFinite(pred.u)?pred.u:0),puy=t.predMode==='y'?(isFinite(pred.u)?pred.u:0):pu;
+    const cx=G.X(px/f),cy=G.Y(py/fy);
+    s+=S.line(cx,cy,cx,G.y0+G.h,{c:C.v,w:1.3,dash:'5 4'})+S.line(G.x0,cy,cx,cy,{c:C.v,w:1.3,dash:'5 4'});
+    if(puy>0)s+=S.line(cx,G.Y((py-puy)/fy),cx,G.Y((py+puy)/fy),{c:C.v,w:2.6});
+    if(pux>0)s+=S.line(G.X((px-pux)/f),cy,G.X((px+pux)/f),cy,{c:C.v,w:2.6});
+    s+=S.circle(cx,cy,6.5*K,{fill:C.v,c:C.card,w:1.6});
+  }
+  /* points exclus : visibles en grisé creux */
+  ptsOff.forEach(q=>{const cx=G.X(q.x/f),cy=G.Y(q.y/fy);
+    s+=S.circle(cx,cy,5.5*K,{fill:'none',c:C.ink2,w:1.6,dash:'2 2'})});
+  /* points actifs + surbrillance croisée */
+  const dragOk=t.deplacer&&tx.id&&ty.id;
+  pts.forEach((q,i)=>{
+    const bad=!sans&&Math.abs(z[i])>2,col=bad?C.F:BLEU,cx=G.X(q.x/f),cy=G.Y(q.y/fy),hl=HOVER3===i;
+    s+=S.line(cx,G.Y((q.y-q.uy*kzm)/fy),cx,G.Y((q.y+q.uy*kzm)/fy),{c:col,w:hl?2.8:2})+S.line(G.X((q.x-q.ux*kzm)/f),cy,G.X((q.x+q.ux*kzm)/f),cy,{c:col,w:hl?2.8:2});
+    if(hl)s+=S.circle(cx,cy,11*K,{fill:'none',c:C.E,w:2});
+    s+=S.circle(cx,cy,(ST.drag3===i||hl?8:6)*K,{fill:col,c:C.card,w:1.2,style:dragOk?'cursor:grab':''});
+  });
+  s+='</g>';
+  /* infobulle SVG propre pour le point survolé */
+  if(HOVER3>=0&&HOVER3<n){
+    const q=pts[HOVER3],cx=G.X(q.x/f),cy=G.Y(q.y/fy);
+    const tip=`#${q.i+1} : ${F.sig(q.x,4)} , ${F.sig(q.y,4)}${sans?'':` · z = ${F.sig(z[HOVER3],2)}`}`;
+    const anchor=cx>G.x0+G.w*.62?'end':'start',txp=cx+(anchor==='end'?-12*K:12*K),typ=Math.max(G.y0+16*K,cy-12*K);
+    s+=S.text(txp,typ,tip,{anchor,size:12.5,c:C.ink,weight:600});
+  }
+  a.svg('reg3',s);
+
+  /* graphe des résidus normalisés z_i en fonction de X (trié visuellement sur X, plafond ±10 si outlier extrême) */
+  const zMaxAbs=Math.max(...z.map(Math.abs),0);
+  const zm=Math.min(10,Math.max(3,Math.ceil(zMaxAbs+.4)));
+  const Gz=S.graph({x:0,y:0,w:P2.w,h:P2.h,padB:36*K,xmin:rg.x0/f,xmax:rg.x1/f,ymin:-zm,ymax:zm,
+    yticks:AnimKit.ticks(-zm,zm,Math.min(8,2*zm)),xlab:axeGrandeur(infoX.svg,ux)+suffixe(f),ylab:sans?'Résidu / s':`Écart normalisé ${S.v('z','i')}`});
+  const zClip=z.map(v=>Math.max(-zm*.96,Math.min(zm*.96,v)));
+  GELZ3={G:Gz,f,pts,zClip};
+  let sz=S.clip('cz3',Gz)+Gz.svg+`<g clip-path="url(#cz3)">`+S.rect(Gz.x0,Gz.Y(2),Gz.w,Gz.Y(-2)-Gz.Y(2),{fill:C.cInk,fop:.1})+S.line(Gz.x0,Gz.Y(2),Gz.x0+Gz.w,Gz.Y(2),{c:C.ink2,w:1.2,dash:'6 4'})+S.line(Gz.x0,Gz.Y(-2),Gz.x0+Gz.w,Gz.Y(-2),{c:C.ink2,w:1.2,dash:'6 4'})+S.line(Gz.x0,Gz.Y(0),Gz.x0+Gz.w,Gz.Y(0),{c:C.rule,w:1});
+  z.forEach((v,i)=>{
+    const bad=!sans&&Math.abs(v)>2,col=bad?C.F:BLEU,cx=Gz.X(X[i]/f),clipV=zClip[i],hors=Math.abs(v)>zm,hl=HOVER3===i;
+    sz+=S.line(cx,Gz.Y(0),cx,Gz.Y(clipV),{c:col,w:hl?2.6:1.6});
+    if(hl)sz+=S.circle(cx,Gz.Y(clipV),10.5*K,{fill:'none',c:C.E,w:2});
+    sz+=S.circle(cx,Gz.Y(clipV),(hl?7.5:6)*K,{fill:col,c:C.card,w:1.2});
+    if(hors)sz+=S.text(cx,Gz.Y(clipV)+(v>0?14*K:-12*K),F.sig(v,2),{anchor:'middle',size:12,c:C.F,weight:600});
+    else if(n<=14||hl)sz+=S.text(cx,Gz.Y(clipV)+(v>=0?-11*K:14*K),hl?`#${pts[i].i+1} (${F.sig(v,2)})`:String(pts[i].i+1),{anchor:'middle',size:12,c:hl?C.ink:C.ink2,weight:hl?600:400,halo:hl});
+  });
+  sz+='</g>'+S.text(Gz.x0+Gz.w-4*K,Gz.Y(2)-9*K,'+2',{anchor:'end',size:13,c:C.ink2,halo:false})+S.text(Gz.x0+Gz.w-4*K,Gz.Y(-2)+9*K,'−2',{anchor:'end',size:13,c:C.ink2,halo:false});
+  a.svg('z3',sz);
+
+  if(t.histos&&!sans&&P3&&mc.A.length>=2){
+    const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B);
+    if(hA&&hB){
+      const w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w],rb=[hB.lo,hB.lo+hB.nb*hB.w];
+      if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
+      if(ziB){rb[0]=Math.min(rb[0],ziB.ref.x-3*ziB.ref.u,ziB.ref.x);rb[1]=Math.max(rb[1],ziB.ref.x+3*ziB.ref.u,ziB.ref.x)}
+      const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:axeGrandeur(S.v('a'),un),ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
+      if(zi){oa.ref=zi.ref;oa.refNom='a'}
+      const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:rb[0],xhi:rb[1],xlab:axeGrandeur(S.v('b'),uy),ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
+      if(ziB){ob.ref=ziB.ref;ob.refNom='b'}
+      a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
+    }
+  }
+  a.legend(t.histos&&!sans?[{c:BLEU,label:'Tirages Monte-Carlo'},{c:C.ink,label:'Valeur ajustée',dash:true},(zi||ziB)&&{c:C.v,label:'Référence'}]:[{c:BLEU,label:sans?'Point de mesure':'Point (|zᵢ| ≤ 2)',dot:true},ptsOff.length&&{c:C.ink2,label:'Point exclu',dot:true},t.zones&&!sans&&{c:C.cInk,label:(t.loi==='unif'?'Zone de tirage':'Zone de tirage 1σ, 2σ')+(kzm>1?` (u ×${kzm})`:'')},t.enveloppe&&isFinite(mc.ua)&&{c:C.E,label:'Enveloppe ±1σ, ±2σ',dash:true},!sans&&{c:C.F,label:'Point (|zᵢ| > 2)',dot:true},{c:C.ink,label:'Régression'},pred&&!pred.err&&(t.predMode==='y'||t.predMode==='x')&&{c:C.v,label:t.predMode==='y'?'Prévision Y(X₀)':'Étalonnage X(Y₀)',dot:true}]);
+
   /* résultats */
-  let r=ligneRes(`Pente ${M.v('a')}`,ecrire(fit.a,mc.ua,un,M.v('a')))+ligneRes(`Ordonnée ${M.v('b')}`,ecrire(fit.b,mc.ub,uy,M.v('b')));
+  let r=ligneRes(`Pente ${M.v('a')}`,ecrire(fit.a,mc.ua,un,M.v('a')),{nom:'a',x:fit.a,u:mc.ua,unite:un,versPropag:true})
+       +ligneRes(`Ordonnée ${M.v('b')}`,ecrire(fit.b,mc.ub,uy,M.v('b')),{nom:'b',x:fit.b,u:mc.ub,unite:uy,versPropag:true});
+  if(pred){
+    if(pred.err)r+=note(esc(pred.err),'ko');
+    else{
+      const pLab=t.predMode==='y'?`Prévision ${ny}`:t.predMode==='x'?`Étalonnage ${nx}`:esc(String(t.predNom||'').trim()||'f(a,b)');
+      const pNomBrut=t.predMode==='y'?nyBrut+'_0':t.predMode==='x'?nxBrut+'_0':(String(t.predNom||'').trim()||'f');
+      const pUn=t.predMode==='y'?uy:t.predMode==='x'?ux:uniteCalculee(t.predUn);
+      r+=ligneRes(pLab,ecrire(pred.val,pred.u,pUn,pLab),{nom:pNomBrut,x:pred.val,u:pred.u,unite:pUn,versPropag:true});
+      r+=note(`Corrélation (a, b) prise en compte (${pred.ok} tirages${pred.rejected?`, ${pred.rejected} hors domaine`:''}).`,'gr');
+    }
+  }
+  if(isFinite(mc.ub)&&mc.ub>0){
+    const zb0=Math.abs(fit.b)/mc.ub;
+    r+=note(`Test ${M.v('b')} = 0 : ${M.v('Z')} = <b>${F.sig(zb0,2)}</b> (${zb0<=2?'compatible avec 0':'incompatible avec 0'})`,'gr');
+  }
   if(sans)r+=note(n>=3?`Sans incertitudes sur les mesures : ${incGrandeur('a')} et ${incGrandeur('b')} sont estimées à partir de la dispersion des points (${n} − 2 degrés de liberté). Ajoutez ${incX} et ${incY} pour valider le modèle avec les écarts normalisés.`:'Il faut au moins 3 points pour estimer u(a) et u(b) à partir de la dispersion.','gr');
-  else if(dg.bad.length)r+=note(`${dg.bad.length===1?`Le point ${dg.bad[0]+1} s'écarte`:`Les points ${dg.bad.map(i=>i+1).join(', ')} s'écartent`} du modèle (|${sub('z','i')}| &gt; 2) : le modèle affine n'est pas validé.`,'ko');
+  else if(dg.bad.length)r+=note(`${dg.bad.length===1?`Le point ${pts[dg.bad[0]].i+1} s'écarte`:`Les points ${dg.bad.map(k=>pts[k].i+1).join(', ')} s'écartent`} du modèle (|${sub('z','i')}| &gt; 2) : le modèle affine n'est pas validé.`,'ko');
   else r+=note(`Tous les |${sub('z','i')}| ≤ 2 : le modèle affine est compatible avec les mesures.`,'ok');
   if(dg.trop)r+=note('Tous les écarts sont très petits (|z| &lt; 0.5) : les incertitudes sont peut-être surestimées.','gr');
-  if(dg.motif)r+=note('Les écarts sont regroupés par signe (structure en U ou en S) : le modèle est peut-être inadapté, même si tous les |z| ≤ 2.','gr');
+  if(dg.motif)r+=note('Les écarts sont regroupés par signe en fonction de l\'abscisse (structure en U ou en S) : le modèle est peut-être inadapté, même si tous les |z| ≤ 2.','gr');
+  if(ptsOff.length)r+=note(`${ptsOff.length} point(s) décoché(s), exclu(s) de l'ajustement.`,'gr');
+  if(trAct.rejet)r+=note(`${trAct.rejet} point(s) hors domaine de la transformation ignoré(s).`,'ko');
+  if(mc.rejected>0)r+=note(`${mc.rejected} tirage(s) Monte-Carlo hors domaine écarté(s).`,'gr');
   if(partiel)r+=note(`${partiel} ligne(s) incomplète(s) ignorée(s).`,'gr');
-  r+=zLigne(zi);setZone(a.zones.resultat,r);
+  r+=zLigne(zi,ziB?`Pente ${M.v('a')}`:'')+zLigne(ziB,`Ordonnée ${M.v('b')}`);
+  setZone(a.zones.resultat,r);
+
+  /* détail du calcul */
   const sg=v=>F.sig(v,3),Ua=suffixeUnite(un),Ub=suffixeUnite(uy);
   const aNom=M.v('a'),bNom=M.v('b'),xi=sub(nx,'i'),yi=sub(ny,'i');
   const residu=`${yi} − ${aNom}${xi} − ${bNom}`;
-  let c=`${M.v(ny)} = ${aNom} ${M.v(nx)} + ${bNom} (moindres carrés, ${n} points)<br>`;
+  let c=`${M.v(ny)} = ${aNom} ${M.v(nx)} + ${bNom} (moindres carrés, ${n} points actifs)<br>`;
+  if(!tx.id||!ty.id)c+=`<span class="gr">Transformation appliquée : X = ${nx}, Y = ${ny} (tirages Monte-Carlo sur les mesures brutes).</span><br>`;
   if(sans){
     const xMoy=M.v(barreMoyenne(nx)),yMoy=M.v(barreMoyenne(ny));
     const sxx=`Σ(${xi} − ${xMoy})²`;
@@ -1704,15 +2734,137 @@ function d3(a){
     }
   }else{
     c+=`${aNom} = ${sg(fit.a)}${Ua} ; ${bNom} = ${sg(fit.b)}${Ub}`;
-    const conversions=[[t.xkind,nx],[t.ykind,ny]].filter(([kind])=>kind==='D')
-      .map(([,nom])=>`${incGrandeur(nom)} = ${M.frac(incGrandeur(nom,'Δ'),M.sqrt('3'))}`);
+    const conversions=[[t.xkind,nxBrut,t.xmode],[t.ykind,nyBrut,t.ymode]].filter(([kind,_,m])=>kind==='D'||m==='not')
+      .map(([,nom0])=>`${incGrandeur(nom0)} = ${M.frac(incGrandeur(nom0,'Δ'),M.sqrt('3'))}`);
     if(conversions.length)c+=`<br><b>Conversion des demi-largeurs</b><br>${conversions.join(' ; ')}`;
-    c+=`<br><b>Monte-Carlo</b> (${mc.A.length} tirages, loi ${t.loi==='unif'?'uniforme':'gaussienne'})<br>`;
-    c+=`${incGrandeur('a')} = <span class="res">${sg(mc.ua)}${Ua}</span> ; ${incGrandeur('b')} = <span class="res">${sg(mc.ub)}${Ub}</span> ; corrélation ${F.fix(mc.corr,2)}`;
+    c+=`<br><b>Monte-Carlo</b> (${mc.A.length} tirages, loi ${t.loi==='unif'?'uniforme':'gaussienne'}, graine ${gr3})<br>`;
+    c+=`${incGrandeur('a')} = <span class="res">${sg(mc.ua)}${Ua}</span> ; ${incGrandeur('b')} = <span class="res">${sg(mc.ub)}${Ub}</span>`+(isFinite(mc.corr)?` ; corrélation ${F.fix(mc.corr,2)}`:'');
     c+=`<br><b>Écarts normalisés</b><br>${M.v('z','i')} = ${M.frac(residu,M.sqrt(`${M.v('u')}(${yi})² + ${aNom}²${M.v('u')}(${xi})²`))}`;
-    c+=`<table>${z.map((v,i)=>`<tr><td>Point ${i+1}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${sub('z',i+1)} = ${F.sig(v,3)}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${Math.abs(v)>2?'hors de ±2':'dans ±2'}</td></tr>`).join('')}</table>`;
+    if(isFinite(chi2Red))c+=`<div class="gr">χ² réduit = Σ z<sub>i</sub>² / (N − 2) = <b>${F.fix(chi2Red,2)}</b> (${n-2} degré(s) de liberté).</div>`;
+    c+=`<table>${z.map((v,i)=>`<tr><td>Point ${pts[i].i+1}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${sub('z',pts[i].i+1)} = ${F.sig(v,3)}</td><td class="${Math.abs(v)>2?'ko':'ok'}">${Math.abs(v)>2?'hors de ±2':'dans ±2'}</td></tr>`).join('')}</table>`;
   }
-  c+=zCalc(zi,aNom,'a');
+  if(pred&&!pred.err){
+    const pUn=t.predMode==='y'?uy:t.predMode==='x'?ux:uniteCalculee(t.predUn);
+    const pExpr=t.predMode==='y'?`${aNom} X₀ + ${bNom}`:t.predMode==='x'?`${M.frac(`Y₀ − ${bNom}`,aNom)}`:esc(t.predExpr);
+    c+=`<br><b>Calcul corrélé sur les tirages (${aNom}, ${bNom})</b><br>${pExpr} = <span class="res">${ecrire(pred.val,pred.u,pUn,t.predMode==='y'?'Y₀':t.predMode==='x'?'X₀':esc(t.predNom||'f'))}</span>`;
+  }
+  c+=zCalc(zi,aNom,'a','Écart normalisé sur la pente a')+zCalc(ziB,bNom,'b','Écart normalisé sur l\'ordonnée b');
+  setZone(calcZone(),c);
+}
+
+/* ===================================================================== */
+/* Onglet 4 : comparer plusieurs résultats (diagramme de compatibilité)   */
+function d4(a){
+  const t=ST.t4,S=a.S,C=a.C,K=a.k,P=a.panels.cmp4;
+  const nomBrut=nomGrandeur(t,'x'),nom=esc(nomBrut),unite=t.unite||'';
+  const actifs=t.items.filter(it=>it.on!==false&&finis(it.val,it.p)&&it.p>=0).map((it,idx)=>({
+    nom:String(it.nom||'').trim()||`Mesure ${idx+1}`,x:it.val,u:it.kind==='D'?it.p/SQ3:it.p
+  }));
+  if(actifs.length<2){
+    manque(a,'cmp4','Entrez au moins deux résultats avec leurs incertitudes pour les comparer.');
+    a.legend([]);setZone(a.zones.resultat,note('Saisissez au moins deux valeurs et leurs incertitudes (ou importez depuis le Carnet de séance).','gr'));
+    setZone(calcZone(),'');return;
+  }
+  const cmp=PH2.comparer(actifs);
+  const xr=t.ref?lire(t.xref):NaN,ur=t.ref?Math.max(0,lire(t.uref)||0):0;
+  const hasRef=t.ref&&isFinite(xr);
+  const zRefs=hasRef?actifs.map(m=>PH2.ecartNorm(m.x,m.u,xr,ur)):null;
+  const zMoyRef=hasRef&&isFinite(cmp.xMoy)?PH2.ecartNorm(cmp.xMoy,cmp.uMoy,xr,ur):NaN;
+
+  /* diagramme de compatibilité (forest plot horizontal) */
+  const los=actifs.map(m=>m.x-2.4*m.u),his=actifs.map(m=>m.x+2.4*m.u);
+  if(hasRef){los.push(xr-2.4*ur,xr);his.push(xr+2.4*ur,xr)}
+  let xlo=Math.min(...los),xhi=Math.max(...his);
+  if(!(xhi>xlo)){const d=Math.abs(xlo)*0.05||1;xlo-=d;xhi+=d}
+  const pad=0.08*(xhi-xlo);xlo-=pad;xhi+=pad;
+  const f=echelle(xlo,xhi);
+  const padL=Math.min(P.w*.30,145*K),padR=hasRef?84*K:26*K,padT=24*K,padB=44*K;
+  const nRows=actifs.length+(t.moyPond&&isFinite(cmp.xMoy)?1:0);
+  const G=S.graph({x:0,y:0,w:P.w,h:P.h,padL,padR,padT,padB,xmin:xlo/f,xmax:xhi/f,ymin:0,ymax:nRows+1,
+    yticks:[],nx:Math.max(3,Math.round((P.w-padL-padR)/(80*K))),
+    xfmt:(v,st)=>F.fix(v,Math.max(0,-Math.floor(Math.log10(st)+1e-9))),
+    xlab:axeGrandeur(nom,unite)+suffixe(f),ylab:''});
+  const X=v=>G.X(v/f);
+  let s=S.clip('ccmp4',G)+G.svg+`<g clip-path="url(#ccmp4)">`;
+  if(hasRef){
+    if(ur>0)s+=S.rect(X(xr-ur),G.y0,X(xr+ur)-X(xr-ur),G.h,{fill:C.v,fop:.14});
+    s+=S.line(X(xr),G.y0,X(xr),G.y0+G.h,{c:C.v,w:2.8});
+  }
+  if(t.moyPond&&isFinite(cmp.xMoy)){
+    s+=S.rect(X(cmp.xMoy-cmp.uMoy),G.y0,X(cmp.xMoy+cmp.uMoy)-X(cmp.xMoy-cmp.uMoy),G.h,{fill:C.E,fop:.12});
+    s+=S.line(X(cmp.xMoy),G.y0,X(cmp.xMoy),G.y0+G.h,{c:C.E,w:1.8,dash:'6 4'});
+  }
+  actifs.forEach((m,i)=>{
+    const y=G.Y(nRows-i),bad=hasRef?zRefs[i]>2:(isFinite(cmp.xMoy)&&PH2.ecartNorm(m.x,m.u,cmp.xMoy,0)>2);
+    const col=bad?C.F:BLEU;
+    if(m.u>0){
+      s+=S.line(X(m.x-2*m.u),y,X(m.x+2*m.u),y,{c:col,w:2,op:.4});
+      s+=S.line(X(m.x-m.u),y,X(m.x+m.u),y,{c:col,w:4.5});
+      s+=S.line(X(m.x-m.u),y-5*K,X(m.x-m.u),y+5*K,{c:col,w:2})+S.line(X(m.x+m.u),y-5*K,X(m.x+m.u),y+5*K,{c:col,w:2});
+    }
+    s+=S.circle(X(m.x),y,6*K,{fill:col,c:C.card,w:1.5});
+  });
+  if(t.moyPond&&isFinite(cmp.xMoy)){
+    const y=G.Y(1),col=C.E;
+    s+=S.line(X(cmp.xMoy-2*cmp.uMoy),y,X(cmp.xMoy+2*cmp.uMoy),y,{c:col,w:2,op:.4});
+    s+=S.line(X(cmp.xMoy-cmp.uMoy),y,X(cmp.xMoy+cmp.uMoy),y,{c:col,w:5});
+    s+=S.circle(X(cmp.xMoy),y,6.5*K,{fill:col,c:C.card,w:1.5});
+  }
+  s+='</g>';
+  /* libellés à gauche et scores Z à droite (hors clip) */
+  actifs.forEach((m,i)=>{
+    const y=G.Y(nRows-i);
+    s+=S.text(G.x0-10*K,y,esc(m.nom),{anchor:'end',size:13.5,c:C.ink,halo:false});
+    if(hasRef)s+=S.text(G.x0+G.w+8*K,y,`Z = ${F.sig(zRefs[i],2)}`,{anchor:'start',size:12.5,c:zRefs[i]<=2?C.v:C.F,weight:600,halo:false});
+  });
+  if(t.moyPond&&isFinite(cmp.xMoy)){
+    const y=G.Y(1);
+    s+=S.text(G.x0-10*K,y,'Moy. pondérée',{anchor:'end',size:13.5,c:C.E,weight:600,halo:false});
+    if(hasRef&&isFinite(zMoyRef))s+=S.text(G.x0+G.w+8*K,y,`Z = ${F.sig(zMoyRef,2)}`,{anchor:'start',size:12.5,c:zMoyRef<=2?C.v:C.F,weight:600,halo:false});
+  }
+  if(hasRef)s+=S.text(X(xr)+5*K,G.y0+13*K,S.v(nom,'réf'),{anchor:'start',size:13,c:C.v,weight:600});
+  a.svg('cmp4',s);
+  a.legend([{c:BLEU,label:'Mesure (±u épais, ±2u fin)',dot:true},t.moyPond&&isFinite(cmp.xMoy)&&{c:C.E,label:'Moyenne pondérée',dash:true},hasRef&&{c:C.v,label:'Référence'}]);
+
+  /* résultats */
+  let r='';
+  if(t.moyPond&&isFinite(cmp.xMoy)){
+    r+=ligneRes('Moy. pondérée',ecrire(cmp.xMoy,cmp.uMoy,unite,nom),{nom:nomBrut+'_pond',x:cmp.xMoy,u:cmp.uMoy,unite,versPropag:true});
+  }
+  if(cmp.compatible)r+=note(`Écart normalisé maximal entre mesures : ${M.v('Z')}<sub>max</sub> = <b>${F.sig(cmp.zMax,3)}</b> ≤ 2 — les ${actifs.length} résultats sont mutuellement compatibles.`,'ok');
+  else{
+    const koP=cmp.paires.filter(p=>!p.ok).map(p=>`${esc(actifs[p.i].nom)} / ${esc(actifs[p.j].nom)} (${M.v('Z')} = ${F.sig(p.z,3)})`).join(', ');
+    r+=note(`Incompatibilité entre mesures : ${koP}.`,'ko');
+    if(t.moyPond&&isFinite(cmp.xMoy))r+=note('Attention : la moyenne pondérée suppose des mesures compatibles et indépendantes.','gr');
+  }
+  if(hasRef){
+    const badR=actifs.filter((_,i)=>zRefs[i]>2).map((m,_,arr)=>esc(m.nom));
+    r+=note(badR.length?`Référence : écart > 2 pour ${actifs.map((m,i)=>zRefs[i]>2?`${esc(m.nom)} (Z = ${F.sig(zRefs[i],3)})`:'').filter(Boolean).join(', ')}.`:`Tous les résultats sont compatibles avec la référence (Z ≤ 2).`,badR.length?'ko':'ok');
+  }
+  setZone(a.zones.resultat,r);
+
+  /* calcul détaillé : matrice Z_ij + référence + moyenne pondérée */
+  const U=suffixeUnite(unite),sg=v=>F.sig(v,3);
+  let c=`<b>Écarts normalisés entre mesures</b><br>${M.v('Z')}<sub>ij</sub> = ${M.frac(`|${sub(nom,'i')} − ${sub(nom,'j')}|`,M.sqrt(`${sub('u','i')}² + ${sub('u','j')}²`))}`;
+  c+=`<table class="ph-zmat"><thead><tr><th></th>${actifs.map(m=>`<th>${esc(m.nom)}</th>`).join('')}</tr></thead><tbody>`;
+  actifs.forEach((mi,i)=>{
+    c+=`<tr><td>${esc(mi.nom)}</td>${actifs.map((_,j)=>{
+      if(i===j)return '<td class="gr">—</td>';
+      const zv=cmp.Z[i][j];return `<td class="${zv<=2?'ok':'ko'}">${F.sig(zv,3)}</td>`;
+    }).join('')}</tr>`;
+  });
+  c+='</tbody></table>';
+  if(hasRef){
+    c+=`<br><b>Comparaison à la référence</b> (${sg(xr)}${ur>0?` ± ${sg(ur)}`:''}${U})<table>`;
+    actifs.forEach((m,i)=>{c+=`<tr><td>${esc(m.nom)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">Z = ${F.sig(zRefs[i],3)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">${zRefs[i]<=2?'compatible':'incompatible'}</td></tr>`});
+    c+='</table>';
+  }
+  if(isFinite(cmp.xMoy)){
+    c+=`<br><b>Moyenne pondérée par l'inverse des variances</b> (w<sub>i</sub> = 1/u<sub>i</sub>²)<br>`;
+    c+=`${M.v(barreMoyenne(nom))}<sub>pond</sub> = ${M.frac(`Σ ${sub(nom,'i')}/${sub('u','i')}²`,`Σ 1/${sub('u','i')}²`)} = ${sg(cmp.xMoy)}${U}<br>`;
+    c+=`${M.v('u')}(${M.v(barreMoyenne(nom))}<sub>pond</sub>) = ${M.frac('1',M.sqrt(`Σ 1/${sub('u','i')}²`))} = <span class="res">${sg(cmp.uMoy)}${U}</span><br>`;
+    c+=`<span class="gr">χ² réduit = ${F.fix(cmp.chi2Red,2)} (pour ${actifs.length-1} degré(s) de liberté).</span>`;
+  }
   setZone(calcZone(),c);
 }
 
