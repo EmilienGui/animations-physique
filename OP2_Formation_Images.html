@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1322,7 +1323,9 @@ function calcEp(a){
   const {ap,off,source,n,autofocus,sensor,mode}=a.p, key=[ap,off,source,n,autofocus,sensor,mode].join('|');
   if(ep.key===key)return ep.val;
   const o={u:source,y0:off,ap,n}, rs=O.bundle(o), best=O.bestPlane(rs), x=autofocus?best:sensor, sp=O.spot(rs,x);
-  const par=O.bundle({...o,ap:.15},2,8), xp=O.bestPlane(par), yp=O.spot(par,xp).cy;
+  // image paraxiale exacte de Gauss (matrice ABCD de la lentille épaisse R1=+50, R2=-50, t=8)
+  const M1=[1,0,-(n-1)/50,1], Md=[1,8/n,0,1], M2=[1,0,(n-1)/-50,1], T=O.mat(O.mat(M2,O.mat(Md,M1)),O.prop(source-4));
+  const d2=-T[1]/T[3], xp=4+d2, yp=(T[0]+d2*T[2])*off;
   const pts=mode==='aplan'?[off-8,off,off+8].map(y0=>{const r=O.bundle({...o,y0},3,12),b=O.bestPlane(r);return{y0,x:b,y:O.spot(r,b).cy}}):[];
   ep={key,val:{o,rs,best,x,sp,xp,yp,pts}}; return ep.val;
 }

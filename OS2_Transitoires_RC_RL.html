@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1190,7 +1191,7 @@ function valAt(p,t,pr,dm){
   return{tau,initial:0,final:yf,y:yy,i,uc,ul,ur,e,dy,energy:rc?.5*p.C*yy*yy:.5*p.L*yy*yy};
 }
 const ref=(a,p=pm(a))=>{const m=MD.solve(p,0),f=MD.solve(p,Infinity);return stepOf(a)?Math.abs(f.y)||1:Math.abs(m.y)||1};
-const span=a=>per(a)?Math.max(6,5*demi(a)):6;
+const span=a=>{const base=per(a)?Math.max(6,5*demi(a)):6;return st.ghost?Math.max(base,Math.ceil(6*tauOf(st.ghost.p)/tauOf(pm(a)))):base};
 const tNow=a=>a.t*tauOf(pm(a));        /* secondes */
 function cursorState(a){return st.minus&&a.t<1e-9?-1:tNow(a)}
 
@@ -1204,8 +1205,8 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:1,ratioTel:.95},{id:'courbes',poids:1.25,ratioTel:1.1}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Exemple du cours',titre:'RC : 4.8 kΩ, 420 µF (τ = 2.016 s) · RL : 50 Ω, 100 mH (τ = 2 ms) · I₀ = 100 mA',onglets:[0,1],valeurs:{R:4800,C:420,E:5,U0:5}},
-      {label:'Exemple du cours',onglets:[2,3],valeurs:{R:50,L:100,E:5,I0:100}},
+      {label:'Exemple du cours',titre:'RC : 4.8 kΩ, 420 µF (τ = 2.016 s) · RL : 50 Ω, 100 mH (τ = 2 ms) · I₀ = 100 mA',onglets:[0,1],valeurs:{R:4800,C:420,E:5,U0:5,per:false,marks:false}},
+      {label:'Exemple du cours',onglets:[2,3],valeurs:{R:50,L:100,E:5,I0:100,per:false,marks:false}},
       {label:'Créneau trop rapide',titre:'Demi-période 0.3 τ : le régime permanent n\'est jamais atteint',onglets:[0,2],valeurs:{per:true,demi:.3}},
       {label:'Créneau lent',titre:'Demi-période 5 τ : chaque échelon atteint son régime final',onglets:[0,2],valeurs:{per:true,demi:5}}],items:[]},
     {titre:'Paramètres physiques',items:[
@@ -1225,17 +1226,17 @@ const A=AnimKit.app({
     {titre:'Instants remarquables',items:[
       {type:'boutons',items:[{label:'0⁻',action:a=>{a.play(false);a.t=0;st.minus=true}},{label:'0⁺',action:a=>{a.play(false);a.t=0;st.minus=false}},{label:'État final',action:a=>{a.play(false);a.t=span(a);st.minus=false}}]},
       {type:'note',html:a=>rcOf(a)?'u<sub>C</sub> est continue en 0 ; i peut sauter.':'i est continue en 0 ; u<sub>L</sub> peut sauter.'}]},
-    {titre:'Déterminer τ',items:[
-      {id:'outil',type:'select',options:[['none','Observer la réponse'],['tangent','Tangente initiale'],['level','Niveau caractéristique']],value:'none',si:a=>!per(a)},
-      {id:'est',label:'Intersection tangente / asymptote',min:.1,max:3,step:.01,value:.5,unit:'τ',si:a=>a.p.outil==='tangent'&&!per(a),onglets:[0,1,2,3]},
-      {id:'level',label:'Niveau',min:1,max:99,step:.1,value:50,unit:'%',si:a=>a.p.outil==='level'&&!per(a)},
-      {type:'boutons',si:a=>a.p.outil==='level'&&!per(a),items:[
+    {titre:'Déterminer τ',si:a=>!per(a)&&a.p.vue!=='portrait',items:[
+      {id:'outil',type:'select',options:[['none','Observer la réponse'],['tangent','Tangente initiale'],['level','Niveau caractéristique']],value:'none'},
+      {id:'est',label:'Intersection tangente / asymptote',min:.1,max:3,step:.01,value:.5,unit:'τ',si:a=>a.p.outil==='tangent'&&(!a.p.exo||st.revealed),onglets:[0,1,2,3]},
+      {id:'level',label:'Niveau',min:1,max:99,step:.1,value:50,unit:'%',si:a=>a.p.outil==='level'},
+      {type:'boutons',si:a=>a.p.outil==='level',items:[
         {label:'τ',title:'63 % (montée) ou 37 % (décroissance)',action:a=>a.set('level',stepOf(a)?63.2:36.8)},
         {label:'3 τ',title:'95 % ou 5 %',action:a=>a.set('level',stepOf(a)?95:5)},
         {label:'5 τ',title:'99 % ou 1 %',action:a=>a.set('level',stepOf(a)?99:1)}]},
-      {type:'note',si:a=>a.p.outil==='tangent'&&!per(a),html:'Glisser la poignée sur l\'asymptote : la tangente exacte passe par t = τ.'},
-      {type:'note',si:a=>a.p.outil==='level'&&!per(a),html:a=>{const m=MD.solve(pm(a),0),f=MD.solve(pm(a),Infinity),lev=levelValue(a),tl=MD.levelTime(m.y,f.y,lev,m.tau);return tl===null?'Niveau hors de la plage atteinte.':'t(niveau) = '+K.qty(a,tl,'s')+(a.p.exo&&!st.revealed?'':` = ${a.fmt.sig(tl/m.tau,3)} τ`)}},
-      {type:'boutons',si:a=>a.p.exo&&!st.revealed&&!per(a),items:[{label:'Vérifier ma mesure',action:a=>{st.revealed=true}}]},
+      {type:'note',si:a=>a.p.outil==='tangent',html:a=>a.p.exo&&!st.revealed?`Glisser la poignée sur l'asymptote : intersection à <i class="m">t</i> = ${K.qty(a,a.p.est*tauOf(pm(a)),'s')}.`:'Glisser la poignée sur l\'asymptote : la tangente exacte passe par t = τ.'},
+      {type:'note',si:a=>a.p.outil==='level',html:a=>{const m=MD.solve(pm(a),0),f=MD.solve(pm(a),Infinity),lev=levelValue(a),tl=MD.levelTime(m.y,f.y,lev,m.tau);return tl===null?'Niveau hors de la plage atteinte.':'t(niveau) = '+K.qty(a,tl,'s')+(a.p.exo&&!st.revealed?'':` = ${a.fmt.sig(tl/m.tau,3)} τ`)}},
+      {type:'boutons',si:a=>a.p.exo&&!st.revealed,items:[{label:'Vérifier ma mesure',action:a=>{st.revealed=true}}]},
       {type:'note',si:a=>a.p.exo&&st.revealed,html:a=>{const m=MD.solve(pm(a),0),s=submitted(a);return 'τ théorique = '+K.qty(a,m.tau,'s')+(s===null?'.':`. Ma mesure : ${K.qty(a,s,'s')}, écart ${a.fmt.fix(100*Math.abs(s-m.tau)/m.tau,1)} %.`)}}]},
     {titre:'Affichages',items:[
       {id:'vue',type:'seg',options:[['temps','Temps'],['bilan','Bilan d\'énergie'],['portrait','Portrait de phase']],value:'temps'},
@@ -1259,7 +1260,7 @@ const A=AnimKit.app({
     if(['R','C','L','E','U0','I0'].includes(id))st.fin=true;
     st.minus=false;
   },
-  onglet(a){a.play(false);a.t=0;st.minus=false;st.revealed=false;st.ghost=null;st.frame=null;a.set('outil','none',{silent:true})},
+  onglet(a){a.play(false);a.t=0;st.minus=false;st.revealed=false;st.ghost=null;st.frame=null;a.set('outil','none',{silent:true});a.set('marks',false,{silent:true});a.set('eq',false,{silent:true})},
   reset(a){a.t=0;st.minus=false;st.revealed=false},
   step(a,dt){a.t=Math.min(span(a),a.t+dt*.75);if(a.t>=span(a))a.play(false)},
   peutLire:a=>{if(a.t>=span(a)-1e-9)a.t=0;st.minus=false;return true},
@@ -1303,7 +1304,7 @@ function drawScene(a,p,m,tn){
   if(hasSw)s+=E.W(a,xl,yt,xs1,yt)+E.sw(a,xs1,yt,xs2,open)+E.W(a,xs2,yt,xr1,yt);else s+=E.W(a,xl,yt,xr1,yt);
   s+=E.res(a,xr1,yt,xr2,yt,{len:Math.min(48*k,(xr2-xr1)*.75)})+E.W(a,xr2,yt,xr,yt)+E.W(a,xl,yb,xr,yb);
   s+=S.text((xr1+xr2)/2,yt-28*k,v(a,'R'),{anchor:'middle',size:15});
-  s+=E.volt(a,xr1,yt+26*k,xr2,yt+26*k,v(a,'u','R'),{c:C.F,dx:0,dy:18*k,anchor:'middle'});
+  s+=E.volt(a,xr2,yt+26*k,xr1,yt+26*k,v(a,'u','R'),{c:C.F,dx:0,dy:18*k,anchor:'middle'});
   /* dipôle */
   if(rc)s+=E.cap(a,xr,yt,xr,yb)+S.text(xr-16*k,ym-26*k,v(a,'C'),{anchor:'end',size:15});else s+=E.ind(a,xr,yt,xr,yb,{side:-1})+S.text(xr-16*k,ym-26*k,v(a,'L'),{anchor:'end',size:15});
   const x2=xr+36*k;
@@ -1363,6 +1364,7 @@ function drawCourbes(a,p,m0){
   let s='';
   /* ---------- portrait de phase ---------- */
   if(vue==='portrait'){
+    st.G=null;
     const ym2=Math.max(Math.abs(mf.y),Math.abs(m0s.y))*1.1,slope=1/tau;
     const dmax=Math.max(Math.abs(MD.solve(p,0).dy),1e-30)*1.1,uy=rc?{f:1,u:'V/s'}:K.unit(dmax,'A/s'),f2=rc?K.unit(dmax,'V/s'):uy;
     const ps=[];const ptsP=[];
@@ -1391,11 +1393,13 @@ function drawCourbes(a,p,m0){
     const tl=MD.levelTime(m.y,mf.y,lev,m.tau);if(tl!==null)marks.push({x:tl*xf,label:'',c:C.B});
   }
   const cursorX=norm?a.t:tcur*xf;
-  const main=K.plot(a,{box:z0,id:'m',xmin:0,xmax:norm?tmaxTau:winMax*xf,ymin:-ymax*.04,ymax:ymax,xlab:(second||bil)?'':xl,ylab:yTitle,xlabels:(second||bil)?false:undefined,
+  const main=K.plot(a,{box:z0,id:'m',xmin:0,xmax:norm?tmaxTau:winMax*xf,ymin:-ymax*.04,ymax:ymax,xlab:(second||bil)?'':xl,ylab,xlabels:(second||bil)?false:undefined,
     series:[...(gh?[{pts:gpts,c:C.pred,dash:true,w:2.2}]:[]),{pts:pts,c:rc?C.c:C.E,w:3}],hlines:hl,marks,cursor:cursorX,dots:[{x:cursorX,y:(rc?m0.uc:m0.i)*yu/yRef,c:C.F}],tangent:tang});
   st.G=main.G;st.tauX={tau,xf,norm};
   s=main.svg;
   if(tang)s+=S.circle(main.G.X(a.p.est*tau*xf),main.G.Y(mf.y*yu/yRef),8*k,{fill:C.card,c:C.B,w:2.4});
+  /* légende en surimpression : mesure de tangente (avant g2 / bilan pour ne pas être clippée au zoom) */
+  if(tang&&a.p.outil==='tangent'){const lab=a.p.exo&&!st.revealed?`intersection à t = ${K.qty(a,a.p.est*tau,'s')}`:`intersection à t = ${a.fmt.sig(a.p.est,3)} τ`;s+=S.text(main.G.x0+main.G.w-6*k,main.G.y0+main.G.h*.85,sv(a,lab),{anchor:'end',size:14,c:C.B})}
   if(second){
     const sers=[];let ylab2,u2;
     if(rc){const imax=Math.max(Math.abs(MD.solve(p,0).i),Math.abs(MD.solve(p,Infinity).i),pr?p.a/p.R:0)*1.12||1e-9,ui=K.unit(imax,'A');
@@ -1407,23 +1411,40 @@ function drawCourbes(a,p,m0){
       const g2=K.plot(a,{box:z1,id:'s',xmin:0,xmax:norm?tmaxTau:winMax*xf,ymin:-umax*(a.tab===3?1.1:.1),ymax:umax,xlab:xl,ylab:'tensions (V)',series:[{pts:sr,c:C.F,dash:true,w:2.2},{pts:sl,c:C.B,w:2.8}],cursor:cursorX,dots:[{x:cursorX,y:m0.ul||0,c:C.B}]});
       s+=g2.svg+S.text(g2.G.x0+g2.G.w-4*k,g2.G.y0+4*k,`${v(a,'u','L')}`,{anchor:'end',base:'top',size:14,c:C.B})+S.text(g2.G.x0+g2.G.w-4*k,g2.G.y0+22*k,`${v(a,'u','R')}`,{anchor:'end',base:'top',size:14,c:C.F});}
   }
-  if(bil)s+=bilan(a,p,z1,tcur,pr,dm);
-  /* légende en surimpression : mesure de tangente */
-  if(tang&&a.p.outil==='tangent'){const lab=a.p.exo&&!st.revealed?`intersection à t = ${K.qty(a,a.p.est*tau,'s')}`:`intersection à t = ${a.fmt.sig(a.p.est,3)} τ`;s+=S.text(main.G.x0+main.G.w-6*k,main.G.y0+main.G.h*.85,sv(a,lab),{anchor:'end',size:14,c:C.B})}
+  if(bil)s+='<g data-ak-hors-graphe="">'+bilan(a,p,z1,tcur,pr,dm)+'</g>';
   a.svg('courbes',s);
+}
+function bilanExact(p,tcur,pr,dm){
+  const tau=tauOf(p),rc=p.kind==='RC';
+  if(tcur<=0)return{W:0,dE:0,J:0};
+  const stepWork=(e,y0,dt)=>{
+    const yf=rc?e:e/p.R,a=-Math.expm1(-dt/tau),y1=y0+(yf-y0)*a;
+    const W=rc?e*p.C*(y1-y0):e*(yf*dt+(y0-yf)*tau*a);
+    return{y1,W};
+  };
+  let W=0,y=0;
+  const e0=valAt(p,0,pr,dm).energy;
+  if(!pr||p.mode!=='step'){
+    const m0=MD.solve(p,0),e=p.mode==='step'?p.a:0;
+    const r=stepWork(e,m0.y,tcur);W=r.W;y=r.y1;
+  }else{
+    const T=dm*tau;let t0=0,k=0;
+    while(t0+T<=tcur&&k<4000){const r=stepWork(k%2===0?p.a:0,y,T);W+=r.W;y=r.y1;t0+=T;k++}
+    if(tcur>t0){const r=stepWork(k%2===0?p.a:0,y,tcur-t0);W+=r.W;y=r.y1}
+  }
+  const e1=rc?.5*p.C*y*y:.5*p.L*y*y,dE=e1-e0,J=Math.max(0,W-dE);
+  return{W,dE,J};
 }
 function bilan(a,p,b,tcur,pr,dm){
   const S=a.S,C=a.C,k=a.k,rc=rcOf(a);
-  let W=0,J=0;const n=240,tau=tauOf(p),h=tcur/n;
-  let m=valAt(p,0,pr,dm),e0=m.energy;
-  for(let j=0;j<n;j++){const t=j*h,m1=valAt(p,t,pr,dm),m2=valAt(p,t+h,pr,dm);W+=h*(m1.e*m1.i+m2.e*m2.i)/2;J+=h*(p.R*m1.i*m1.i+p.R*m2.i*m2.i)/2}
-  const now=valAt(p,tcur,pr,dm),dE=now.energy-e0,er=rc?.5*p.C*gref(a)**2:.5*p.L*gref(a)**2,ref0=Math.max(er*2,Math.abs(W),Math.abs(J),1e-30);
+  const {W,dE,J}=bilanExact(p,tcur,pr,dm);
+  const er=rc?.5*p.C*gref(a)**2:.5*p.L*gref(a)**2,ref0=Math.max(er*2,Math.abs(W),Math.abs(dE),Math.abs(J),1e-30);
   const items=[['source',W,C.ink2,`${v(a,'W','source')}`],['stockée',dE,C.cInk,`Δ${v(a,'E','stockée')}`],['Joule',J,C.F,`${v(a,'W','Joule')}`]];
-  const x0=b.x+92*k,x1=b.x+b.w-100*k,rh=Math.min(26*k,(b.h-52*k)/3);
+  const x0=b.x+92*k,x1=b.x+b.w-100*k,signed=!stepOf(a),xc=signed?(x0+x1)/2:x0,half=signed?(x1-x0)/2:(x1-x0),rh=Math.min(26*k,(b.h-52*k)/3);
   let s=S.text(b.x+8*k,b.y+4*k,`${v(a,'W','source')} = Δ${v(a,'E','stockée')} + ${v(a,'W','Joule')}`,{base:'top',size:14,c:C.ink});
-  items.forEach(([_,val,col,lab],j)=>{const y=b.y+30*k+j*(rh+8*k),wd=(x1-x0)*val/ref0;
-    s+=S.text(x0-8*k,y+rh/2,lab,{anchor:'end',size:14,c:col})+S.rect(x0,y,Math.max(0,wd),rh,{fill:col,fop:.85})+S.text(x1+8*k,y+rh/2,sv(a,K.qty(a,val,'J')),{size:13,c:C.ink2});});
-  s+=S.line(x0,b.y+26*k,x0,b.y+30*k+3*(rh+8*k)-6*k,{c:C.ink2,w:1.2});
+  items.forEach(([_,val,col,lab],j)=>{const y=b.y+30*k+j*(rh+8*k),wd=half*val/ref0;
+    s+=S.text(x0-8*k,y+rh/2,lab,{anchor:'end',size:14,c:col})+S.rect(Math.min(xc,xc+wd),y,Math.abs(wd),rh,{fill:col,fop:.85})+S.text(x1+8*k,y+rh/2,sv(a,K.qty(a,val,'J')),{size:13,c:C.ink2});});
+  s+=S.line(xc,b.y+26*k,xc,b.y+30*k+3*(rh+8*k)-6*k,{c:C.ink2,w:1.2});
   if(a.tab===0||a.tab===2){const fr=W>1e-30?100*J/W:0;s+=S.text(b.x+8*k,b.y+b.h-8*k,`W_Joule / W_source = ${a.fmt.sig(fr,3)} %${a.tab===0&&!pr&&a.t>4.5?' : la moitié, quelle que soit R':''}`,{size:13,c:C.ink2});}
   return s;
 }
@@ -1431,12 +1452,12 @@ function bilan(a,p,b,tcur,pr,dm){
 /* ---------- mesures ---------- */
 function info(a,p,m,tn){
   const C=a.C,rc=rcOf(a),q=(x,u)=>K.qty(a,x,u),hide=a.p.exo&&!st.revealed;
-  a.clock(`${Mh.v('t')} = ${q(Math.max(0,tn),'s')}`);
-  const sp=s=>{const i=s.indexOf(' ');return i<0?{value:s,unit:''}:{value:s.slice(0,i),unit:s.slice(i+1)}};
+  a.clock(tn<0?`${Mh.v('t')} = 0<sup>−</sup>`:`${Mh.v('t')} = ${q(tn,'s')}`);
+  const sp=s=>{const i=s.lastIndexOf(' ');return i<0?{value:s,unit:''}:{value:s.slice(0,i),unit:s.slice(i+1)}};
   const mk=(label,s,hint)=>({label,...sp(s),hint});
   const main=rc?mk(`Tension ${Mh.v('u','C')}`,q(m.uc,'V')):mk(`Courant ${Mh.v('i')}`,q(m.i,'A'));
   const second=rc?mk(`Courant ${Mh.v('i')}`,q(m.i,'A')):mk(`Tension ${Mh.v('u','L')}`,q(m.ul||0,'V'));
-  const arr=[mk('Instant',q(Math.max(0,tn),'s')),main,second];
+  const arr=[tn<0?{label:'Instant',value:'0<sup>−</sup>',unit:''}:mk('Instant',q(tn,'s')),main,second];
   if(!hide)arr.push(mk(`Constante de temps τ`,q(m.tau,'s')));
   a.metrics(arr);
   const leg=[{c:rc?C.c:C.E,label:rc?`${Mh.v('u','C')}`:`${Mh.v('i')}`}];
@@ -1447,7 +1468,7 @@ function info(a,p,m,tn){
 
 /* ---------- poignée de tangente ---------- */
 A.drag('courbes',{
-  hit:(x,y)=>{if(A.p.outil!=='tangent'||!st.G||per(A))return false;const G=st.G,p=pm(A),mf=MD.solve(p,Infinity),yu=rcOf(A)?1:1;return false||near(x,y)},
+  hit:(x,y)=>{if(A.p.outil!=='tangent'||A.p.vue==='portrait'||!st.G||per(A))return false;return near(x,y)},
   start(x,y){st.drag=true;moveH(x)},
   move(x,y){if(st.drag)moveH(x)},
   end(){st.drag=false}

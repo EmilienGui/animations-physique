@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1249,14 +1250,14 @@ const A=AnimKit.app({
     {titre:'Situations',presets:[
       {label:'Objet à l\'infini',onglets:[0],valeurs:{infinity:true}},
       {label:'Objet à 25 cm',onglets:[0],valeurs:{infinity:false,distance:.25}},
-      {label:'Myope sans lunettes',onglets:[0],valeurs:{condition:'myopia',infinity:true}},
-      {label:'Hypermétrope qui lit',onglets:[0],valeurs:{condition:'hyper',infinity:false,distance:.25}},
-      {label:'Astigmate corrigé',onglets:[0],valeurs:{condition:'astig'},action:a=>corriger(a)},
+      {label:'Myope sans lunettes',onglets:[0],valeurs:{condition:'myopia',infinity:true,L:50/3}},
+      {label:'Hypermétrope qui lit',onglets:[0],valeurs:{condition:'hyper',infinity:false,distance:.25,L:50/3}},
+      {label:'Astigmate corrigé',onglets:[0],valeurs:{condition:'astig',L:50/3},action:a=>corriger(a)},
       {label:'Grand-angle 18 mm',onglets:[1],valeurs:{f:18,projection:'rectilinear'}},
       {label:'Standard 35 mm',onglets:[1],valeurs:{f:35,projection:'rectilinear'}},
       {label:'Fisheye 12 mm',onglets:[1],valeurs:{f:12,projection:'fisheye'}},
-      {label:'Portrait f/1.8',onglets:[1,2],valeurs:{f:50,N:1.8,focus:1.5}},
-      {label:'Paysage f/11',onglets:[1,2],valeurs:{f:24,N:11,focus:5}},
+      {label:'Portrait f/1.8',onglets:[1,2],valeurs:{f:50,N:1.8,focus:1.5,projection:'rectilinear'}},
+      {label:'Paysage f/11',onglets:[1,2],valeurs:{f:24,N:11,focus:5,projection:'rectilinear'}},
       {label:'Hyperfocale',onglets:[2],action:a=>{const d=O.depth(a.p.focus*1000,a.p.f,a.p.N,a.p.criterion/1000);a.set('focus',+K.clamp(d.hyperfocal/1000,.35,100).toFixed(2))}}]},
     /* ---------- œil ---------- */
     {titre:'L\'œil réduit',onglets:[0],items:[
@@ -1264,7 +1265,7 @@ const A=AnimKit.app({
       {id:'infinity',type:'check',label:'Objet à l\'infini',value:false},
       {id:'distance',label:'Distance de l\'objet',min:.15,max:10,step:.05,value:3,unit:'m',dec:2,si:a=>!a.p.infinity},
       {id:'acc',label:'Accommodation',min:0,max:4,step:.1,value:0,unit:'δ',dec:1},
-      {id:'L',label:`Distance lentille–rétine ${bar('OA′')}`,min:15,max:19,step:.05,value:+(50/3).toFixed(2),unit:'mm',dec:2},
+      {id:'L',label:`Distance lentille–rétine ${bar('OA′')}`,min:15,max:19,step:.05,value:50/3,unit:'mm',dec:2},
       {id:'cyl',label:'Écart des vergences des deux méridiens',min:.25,max:5,step:.25,value:2,unit:'δ',dec:2,si:a=>a.p.condition==='astig'},
       {id:'axis',label:'Axe de l\'astigmatisme',min:0,max:180,step:1,value:25,unit:'°',si:a=>a.p.condition==='astig'},
       {type:'note',html:'Accommodation maximale : 4 δ (1.5 δ pour l\'œil presbyte).'}]},
@@ -1301,7 +1302,7 @@ const A=AnimKit.app({
     {titre:'Affichage',items:[
       {id:'nr',type:'seg',label:'Étapes de la construction (touche C)',options:[[0,'Départ'],[1,'1'],[2,'2'],[3,'Complète']],value:3,onglets:[0,2]},
       {id:'view3d',type:'check',label:'Vue en perspective (3D)',value:false,onglets:[0],si:a=>a.p.condition!=='astig'},
-      {type:'boutons',onglets:[0],si:a=>vue3d(a),items:[{label:'Vue initiale',action:a=>{st.yaw=.42;st.pitch=.3;a.panels.oeil.zoom=1}}]},
+      {type:'boutons',onglets:[0],si:a=>vue3d(a),items:[{label:'Vue initiale',action:a=>{st.yaw=.42;st.pitch=.3;a.cadrer('oeil')}}]},
       {id:'res',type:'check',label:'Résultats numériques (masqués au départ)',value:false}]}
   ],
   aide:{
@@ -1375,12 +1376,13 @@ function oeil(a){
   }
   a.svg('oeil',s);
   retine(a,E);
-  const nat=E.pr>1e-6?`${sig(1/E.pr,3)} m`:Math.abs(E.pr)<=1e-6?'∞':'virtuel';
+  const reqVal=Math.abs(E.req)<.015?0:E.req;
+  const prTxt=Math.abs(E.pr)<.02?'∞':E.pr>0?sig(1/E.pr,2)+' m':'virtuel';
   a.metrics([
     {label:'Vergence de l\'œil et du verre',value:sig(E.V,3),unit:'δ'},
     {label:E.ast?`Images du point ${bar('OA′')}`:`Image du point ${bar('OA′')}`,value:cache(E.ast?E.foc.map(f=>sig(f,3)).join(' / '):sig(E.foc[0],3),p.res),unit:p.res?'mm':''},
-    {label:'Accommodation nécessaire',value:cache(sig(E.req,2),p.res),unit:p.res?'δ':'',warn:p.res&&(E.req<-1e-6||E.req>accMax(a)+1e-6)},
-    {label:'PR · PP au repos (distances)',value:cache(E.ast?'2 méridiens':`${E.pr>1e-6?sig(1/E.pr,2)+' m':Math.abs(E.pr)<.02?'∞':'virtuel'} · ${E.pp>0?sig(1/E.pp,2)+' m':'—'}`,p.res)}]);
+    {label:'Accommodation nécessaire',value:cache(sig(reqVal,2),p.res),unit:p.res?'δ':'',warn:p.res&&(E.req<-.02||E.req>accMax(a)+.02)},
+    {label:'PR · PP au repos (distances)',value:cache(E.ast?'2 méridiens':`${prTxt} · ${E.pp>0?sig(1/E.pp,2)+' m':'—'}`,p.res)}]);
   let msg;
   if(E.rms<.008)msg='Les rayons issus du point convergent sur la rétine : l\'image est nette.';
   else if(E.ast)msg='Les deux méridiens n\'ont pas la même vergence : deux focalisations F<sub>1</sub> et F<sub>2</sub>. Le verre cylindrique doit avoir le bon axe pour corriger.';
@@ -1395,7 +1397,7 @@ function urlCanvas(cv,key){if(urls[key]&&urls[key].cv===cv)return urls[key].url;
 let mireC={key:'',cv:null};
 function mireRecue(a,E){
   const key=JSON.stringify([E.K,E.u,E.L,a.C.card,a.C.ink]);
-  if(mireC.key!==key){const off=R.disk(5,128).map(([y,z])=>{const r=O.eyeRay(y/1000,z/1000,E.u,E.L,E.K);return[r.Y*1000/.6*192,-r.Z*1000/.6*192]});
+  if(mireC.key!==key){const off=R.disk(5,128).map(([y,z])=>{const r=O.eyeRay(y/1000,z/1000,E.u,E.L,E.K);return[r.Z*1000/.6*192,-r.Y*1000/.6*192]});
     mireC={key,cv:R.colorize(R.convolve(mire,off),a.C.card,a.C.ink)}}
   return urlCanvas(mireC.cv,'recue');
 }

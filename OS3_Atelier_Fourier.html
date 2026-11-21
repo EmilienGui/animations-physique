@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1245,14 +1246,13 @@ const sdelay=a=>a.tab===2?a.p.delay:0;
 function termsOf(a,N=a.p.N,full=false){
   const s={N,solo:a.tab<=3&&a.p.solo,n:Math.round(a.p.n),gain:a.p.gain,delay:sdelay(a),c:st.c};
   let ts=F.terms(s);
-  if(a.p.filt&&a.tab<=2)ts=ts.map(t=>{const r=t.n*1/Math.max(1e-9,a.p.fc);return{n:t.n,a:t.a/Math.sqrt(1+r*r),p:t.p-Math.atan(r)}});
+  if(a.p.filt&&a.tab===0)ts=ts.map(t=>{const r=t.n*1/Math.max(1e-9,a.p.fc);return{n:t.n,a:t.a/Math.sqrt(1+r*r),p:t.p-Math.atan(r)}});
   if(!full&&st.k!==null)ts=ts.slice(0,st.k);
   return ts;
 }
 const dcOf=a=>a.p.dc;
 const sumFn=(a,ts)=>u=>F.value(u,ts,dcOf(a));
-function target(a){const kind=a.p.kind==='free'?'mix':a.p.kind;const sg=F.preset(kind,a.p.duty);return u=>sg.value(u)*a.p.gain+(a.p.dc-sg.mean*0)}
-const tgtFn=a=>{const kind=a.p.kind==='free'?'mix':a.p.kind,sg=F.preset(kind,a.p.duty);return u=>sg.value(u)*a.p.gain+(a.p.dc-sg.mean)}
+const tgtFn=a=>{const kind=a.p.kind==='free'?'mix':a.p.kind,sg=F.preset(kind,a.p.duty);return u=>(sg.value(u)-sg.mean)*a.p.gain+a.p.dc};
 function eqm(a,ts){const f=sumFn(a,ts),g=tgtFn(a);let x=0,M=1024;for(let j=0;j<M;j++){const u=(j+.5)/M;x+=(f(u)-g(u))**2}return Math.sqrt(x/M)}
 const presentCount=a=>F.terms({N:a.p.N,solo:false,n:1,gain:a.p.gain,delay:0,c:st.c}).length;
 const sample=(fn,u0,u1,n=720)=>Array.from({length:n+1},(_,j)=>{const u=u0+(u1-u0)*j/n;return[u,fn(u)]});
@@ -1267,11 +1267,11 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:1,ratioTel:1.15}],
   reglages:[
     {titre:'Situations',onglets:[0,1,2,3],presets:[
-      {label:'Créneau, N = 9',onglets:[0,1,2,3],valeurs:{kind:'square',N:9,gibzoom:false,delay:0,filt:false,solo:false}},
-      {label:'Gibbs : N = 31',titre:'Le dépassement ne diminue pas quand N augmente',onglets:[0],valeurs:{kind:'square',N:31,gibzoom:true,detail:'spectra',filt:false,solo:false},action:a=>{a.t=.5}},
-      {label:'Triangle, N = 5',onglets:[0,1,2,3],valeurs:{kind:'triangle',N:5,gibzoom:false,delay:0,filt:false,solo:false}},
-      {label:'Créneau étroit α = 0.1',onglets:[0,1,2],valeurs:{kind:'pulse',duty:.1,N:31,gibzoom:false,delay:0,filt:false,solo:false}},
-      {label:'Retard T/4',titre:'Mêmes amplitudes, forme différente, même valeur efficace',onglets:[2],valeurs:{kind:'square',N:9,delay:.25,gibzoom:false,filt:false,solo:false}},
+      {label:'Créneau, N = 9',onglets:[0,1,2,3],valeurs:{kind:'square',N:9,gain:1,gibzoom:false,delay:0,filt:false,solo:false}},
+      {label:'Gibbs : N = 31',titre:'Le dépassement ne diminue pas quand N augmente',onglets:[0],valeurs:{kind:'square',N:31,gain:1,gibzoom:true,detail:'spectra',filt:false,solo:false},action:a=>{a.t=.5}},
+      {label:'Triangle, N = 5',onglets:[0,1,2,3],valeurs:{kind:'triangle',N:5,gain:1,gibzoom:false,delay:0,filt:false,solo:false}},
+      {label:'Créneau étroit α = 0.1',onglets:[0,1,2],valeurs:{kind:'pulse',duty:.1,N:31,gain:1,gibzoom:false,delay:0,filt:false,solo:false}},
+      {label:'Retard T/4',titre:'Mêmes amplitudes, forme différente, même valeur efficace',onglets:[2],valeurs:{kind:'square',N:9,gain:1,delay:.25,gibzoom:false,filt:false,solo:false}},
       ],items:[]},
     {titre:'Le signal commun aux vues 1D',onglets:[0,1,2,3],items:[
       {id:'kind',type:'select',options:KINDS,value:'square',label:'Signal cible'},
@@ -1341,14 +1341,14 @@ const A=AnimKit.app({
   },
   change(a,id,v){
     if(id==='kind'||id==='duty'){loadSig(a);return}
-    if(id==='n'){selSync(a);return}
-    if(id==='amp'||id==='phi'||id==='incl'){const c=st.c[Math.round(a.p.n)];if(id==='amp')c.a=Math.max(0,a.p.amp)/Math.max(1e-9,a.p.gain);if(id==='phi')c.p=a.p.phi*Math.PI/180;if(id==='incl')c.on=!!v;return}
+    if(id==='n'||id==='gain'){selSync(a);return}
+    if(id==='amp'||id==='phi'||id==='incl'){const c=st.c[Math.round(a.p.n)];if(id==='amp'&&a.p.gain>1e-9)c.a=Math.max(0,a.p.amp)/a.p.gain;if(id==='phi')c.p=a.p.phi*Math.PI/180;if(id==='incl')c.on=!!v;return}
     if(id==='N'){st.k=null}
     if(id==='shape'){st.cs=null;st.cache={};st.cum=0;a.t=0;a.set('terms',3,{silent:true})}
     if(id==='terms'||id==='sort'){st.cache={}}
   },
   onglet(a){a.play(false);st.k=null;stopAudio();st.drawing=false;a.t=a.tab===4?0:.17},
-  reset(a){st.cum=0;st.k=null;st.acc=0;if(!st.c)loadSig(a);a.t=a.tab===4?0:.17},
+  reset(a){stopAudio();st.cum=0;st.k=null;st.acc=0;if(!st.c)loadSig(a);a.t=a.tab===4?0:.17},
   init(a){loadSig(a)},
   step(a,dt){
     if(a.tab<=2){
@@ -1374,7 +1374,7 @@ function decompose(a){const g=tgtFn(a);let m=0;for(let n=1;n<=65;n++){if(n>a.p.N
 function randPhases(a){for(let n=1;n<=65;n++)st.c[n].p=(Math.random()*2-1)*Math.PI;selSync(a)}
 
 /* ---------- écoute (Web Audio) ---------- */
-function stopAudio(){if(st.audio){try{st.audio.o.stop();st.audio.ctx.close()}catch(e){}st.audio=null}}
+function stopAudio(){if(st.audioTimer){clearTimeout(st.audioTimer);st.audioTimer=null}if(st.audio){try{st.audio.o.stop();st.audio.ctx.close()}catch(e){}st.audio=null}}
 function listen(a){
   stopAudio();
   try{
@@ -1383,7 +1383,7 @@ function listen(a){
     if(ts.length===0){ctx.close();return}
     const w=ctx.createPeriodicWave(re,im),o=ctx.createOscillator(),g=ctx.createGain();
     o.setPeriodicWave(w);o.frequency.value=220;g.gain.value=.12;o.connect(g);g.connect(ctx.destination);o.start();
-    st.audio={ctx,o};setTimeout(stopAudio,6000);
+    st.audio={ctx,o};st.audioTimer=setTimeout(stopAudio,6000);
   }catch(e){}
 }
 
@@ -1475,11 +1475,11 @@ function view1(a,ts){
   const prod=u=>g(u)*ref(u);let pm=1e-6;for(let j=0;j<300;j++)pm=Math.max(pm,Math.abs(prod(j/300)));
   const upto=sample(prod,0,Math.max(1e-6,bd),Math.max(2,Math.round(900*bd)));
   const I=F.integrate(g,n,Math.max(1e-6,bd)),val=cosr?I.a/2:I.b/2,res=2*val;
-  const G2=K.plot(a,{box:b1,id:'d1',xmin:0,xmax:1,ymin:-pm*1.2,ymax:pm*1.2,xlab:T_AXIS(a),ylab:`${v(a,'s')} ${cosr?'cos':'sin'}(${v(a,'n')}ωt)`,series:[{pts:sample(prod,0,1,900),c:C.ink2,w:1,op:.4}],signed:{pts:upto,pos:C.v,neg:C.B},cursor:bd,hlines:[{y:val,label:`moyenne sur [0, ${a.fmt.sig(bd,2)}T]`,c:C.E}]});
-  s+=G2.svg+S.text(G2.G.x0+G2.G.w-4*k,G2.G.y0+G2.G.h-6*k,`${cosr?v(a,'a','n'):v(a,'b','n')} = 2⟨…⟩ = ${a.fmt.sig(res/Math.max(bd,1e-9)*bd,3)}`.replace('= 2⟨…⟩ =',bd>.999?'= 2⟨s·réf⟩ =':'(borne partielle) ='),{anchor:'end',size:14,c:C.E});
+  const G2=K.plot(a,{box:b1,id:'d1',xmin:0,xmax:1,ymin:-pm*1.2,ymax:pm*1.2,xlab:T_AXIS(a),ylab:`${v(a,'s')} ${cosr?'cos':'sin'}(${v(a,'n')}ωt)`,series:[{pts:sample(prod,0,1,900),c:C.ink2,w:1,op:.4}],signed:{pts:upto,pos:C.v,neg:C.B},cursor:bd,hlines:[{y:val,label:bd>.999?'moyenne sur [0, T]':`(1/T)∫ sur [0, ${a.fmt.sig(bd,2)}T]`,c:C.E}]});
+  s+=G2.svg+S.text(G2.G.x0+G2.G.w-4*k,G2.G.y0+G2.G.h-6*k,`${cosr?v(a,'a','n'):v(a,'b','n')} ${bd>.999?'= 2⟨s·réf⟩ =':'(borne partielle) ='} ${a.fmt.sig(res,3)}`,{anchor:'end',size:14,c:C.E});
   /* comparaison aₙ / bₙ : cible analysée et reconstruction */
   const nmax=Math.min(20,Math.max(8,a.p.N+2)),tab=Array.from({length:nmax},(_,j)=>{const m=j+1,Im=F.integrate(g,m);return{n:m,a:Im.a,b:Im.b}});
-  const cur=termsOf(a,65,true),rc=m=>{const t=cur.find(x=>x.n===m);return t?{a:t.a*Math.cos(t.p),b:-t.a*Math.sin(t.p)}:{a:0,b:0}};
+  const cur=termsOf(a,a.p.N,true),rc=m=>{const t=cur.find(x=>x.n===m);return t?{a:t.a*Math.cos(t.p),b:-t.a*Math.sin(t.p)}:{a:0,b:0}};
   let amax=.1;for(const t of tab)amax=Math.max(amax,Math.abs(cosr?t.a:t.b));amax*=1.15;
   const G3=K.plot(a,{box:b2,id:'d2',xmin:.4,xmax:nmax+.6,ymin:-amax,ymax:amax,xlab:`rang ${v(a,'n')}`,ylab:cosr?v(a,'a','n'):v(a,'b','n'),xticks:Array.from({length:nmax},(_,j)=>j+1).filter(j=>nmax<=14||j%2===0),series:[]});
   s+=G3.svg;const G=G3.G,bw=Math.min(12*k,G.w/(nmax+2)*.4);
@@ -1536,12 +1536,12 @@ function view3(a,ts){
   s+=S.circle(px,py,5*k,{fill:C.F});
   /* connecteur horizontal vers le graphe */
   const np=NP(a),gx=wl+30*k,gw=w-gx-10*k,y0=cy,X=u=>gx+gw*u/np,Y=v=>cy-v*sc;
-  s+=S.line(px,py,X(t),Y((px===0?0:(cy-py)/sc)),{c:C.F,w:1.2,dash:`${4*k} ${4*k}`});
+  s+=S.line(px,py,X(t),py,{c:C.F,w:1.2,dash:`${4*k} ${4*k}`});
   const f=u=>{let q=a.p.rmode==='one'?0:dcOf(a);for(const tm of list)q+=tm.a*Math.cos(TAU*tm.n*u+tm.p);return q};
   s+=S.line(gx,cy-ym*sc*1.05,gx,cy+ym*sc*1.05,{c:C.ink2,w:1})+S.line(gx,cy,gx+gw,cy,{c:C.ink2,w:1});
   s+=S.text(gx+gw,cy+14*k,T_AXIS(a),{anchor:'end',size:13,c:C.ink2})+S.text(gx+4*k,cy-ym*sc-6*k,`${v(a,'s')}(${v(a,'t')})`,{size:14,c:C.ink2,base:'bottom'});
-  if(a.p.target&&a.p.rmode==='all'){const g=tgtFn(a);s+=S.poly(Array.from({length:361*np},(_,j)=>[X(j/360),Y(g(j/360))]),{c:C.pred,w:1.6,dash:`${5*k} ${4*k}`})}
-  s+=S.poly(Array.from({length:361*np},(_,j)=>[X(j/360),Y(f(j/360))]),{c:C.c,w:3});
+  if(a.p.target&&a.p.rmode==='all'){const g=tgtFn(a);s+=S.poly(Array.from({length:360*np+1},(_,j)=>[X(j/360),Y(g(j/360))]),{c:C.pred,w:1.6,dash:`${5*k} ${4*k}`})}
+  s+=S.poly(Array.from({length:360*np+1},(_,j)=>[X(j/360),Y(f(j/360))]),{c:C.c,w:3});
   s+=S.line(X(t),cy+ym*sc,X(t),cy-ym*sc,{c:C.ink2,w:1,dash:`${3*k} ${4*k}`})+S.circle(X(t),Y(f(t)),5*k,{fill:C.F});
   /* repère de la projection : la hauteur de l'extrémité est s(t) */
   s+=S.text(wl/2,h-14*k,`${v(a,'s')}(${v(a,'t')}) = hauteur de l'extrémité`,{anchor:'middle',size:14,c:C.ink});
@@ -1583,7 +1583,7 @@ function shapePts(a){
 }
 function coeffs(a){
   const key=a.p.shape+'|'+(st.custom&&a.p.shape==='custom'?st.custom.length+':'+st.custom[3][0]:'')+'|'+a.p.sort;
-  if(st.cache.key!==key||!st.cache.cs){
+  if(st.cache.key!==key||!st.cache.ord){
     const pts=shapePts(a),cs=F.dft(pts);let ord=[...cs];
     if(a.p.sort==='amplitude'){ord.sort((p,q)=>q.a-p.a);const i0=ord.findIndex(c=>c.n===0);if(i0>0){const[z]=ord.splice(i0,1);ord.unshift(z)}}
     else ord.sort((p,q)=>Math.abs(p.n)-Math.abs(q.n)||q.n-p.n);
@@ -1639,8 +1639,12 @@ function drawDrawing(a){
     }
   }
   /* dessin libre en cours */
-  if(st.drawing){s+=S.text(w/2,22*k,'Tracer un contour d\'un seul geste, puis relâcher.',{anchor:'middle',size:15,c:C.F});if(st.pts)s+=S.poly(st.pts,{c:C.F,w:2.4})}
-  if(a.p.shape==='custom'&&!st.custom)s+=S.text(w/2,h/2,'Aucun contour dessiné : « Dessiner à la souris ».',{anchor:'middle',size:15,c:C.ink2});
+  if(st.drawing||a.p.shape==='custom'&&!st.custom){
+    s+='<g data-ak-hors-graphe="">';
+    if(st.drawing){s+=S.text(w/2,22*k,'Tracer un contour d\'un seul geste, puis relâcher.',{anchor:'middle',size:15,c:C.F});if(st.pts)s+=S.poly(st.pts,{c:C.F,w:2.4})}
+    if(a.p.shape==='custom'&&!st.custom)s+=S.text(w/2,h/2,'Aucun contour dessiné : « Dessiner à la souris ».',{anchor:'middle',size:15,c:C.ink2});
+    s+='</g>';
+  }
   st.dgeom={cx,cy,sc,wl};
   a.svg('scene',s);
   const f=a.fmt,errs=(()=>{let e=0,n=rec.length;const tp=co.pts;for(let j=0;j<n;j++){const q=tp[Math.floor(j*tp.length/n)],r=rec[j];e+=(q[0]-r[0])**2+(q[1]-r[1])**2}return Math.sqrt(e/n)/ext})();
@@ -1679,7 +1683,7 @@ function zoneAt(x,y){
 function applyDrag(x,y){
   const d=st.drag;if(!d)return;const G=d.z.G,c=st.c[d.n];
   const yv=G.yv?G.yv(y):G.ymax-(y-G.y0)/G.h*(G.ymax-G.ymin);
-  if(d.z.type==='amp')c.a=Math.max(0,yv)/Math.max(1e-9,A.p.gain);
+  if(d.z.type==='amp'){if(A.p.gain>1e-9)c.a=Math.min(4/A.p.gain,Math.max(0,yv)/A.p.gain)}
   else{c.p=Math.max(-180,Math.min(180,yv))*Math.PI/180}
   c.on=true;A.set('n',d.n,{silent:true});selSync(A);A.refresh();
 }

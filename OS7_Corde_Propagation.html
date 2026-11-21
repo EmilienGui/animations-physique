@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1113,15 +1114,15 @@ const A=AnimKit.app({
   panneaux:[{id:'profil',titre:'La corde à l\'instant t',poids:1.05,ratioTel:.62},{id:'histo',titre:'Ce que mesurent A et B',poids:1,ratioTel:.62}],
   reglages:[
     {titre:'Expériences rapides',presets:[
-      {label:'Mesurer un retard',titre:'Impulsion, extrémité infinie, A en 3 m et B en 7 m',valeurs:{mode:'pulse',end:'infinite',disp:false,c:3,side:'left',pa:3,pb:7},lecture:true},
-      {label:'Phase et λ',titre:'Sinusoïde de 0.8 Hz, A en 3 m et B en 6.75 m',valeurs:{mode:'sine',end:'infinite',disp:false,freq:.8,c:3,side:'left',pa:3,pb:6.75},lecture:true},
-      {label:'Réflexion fixe',titre:'Extrémité fixe : réflexion avec inversion',valeurs:{mode:'pulse',end:'fixed',disp:false,c:3,side:'left',pa:3,pb:7},lecture:true},
-      {label:'Réflexion libre',titre:'Extrémité libre : réflexion sans inversion',valeurs:{mode:'pulse',end:'free',disp:false,c:3,side:'left',pa:3,pb:7},lecture:true},
-      {label:'Déformer un signal',titre:'Trois harmoniques dans un milieu dispersif (f_c = 0.6 Hz)',valeurs:{mode:'rich',end:'infinite',disp:true,fc:.6,freq:.8,c:3,side:'left',pa:3,pb:7},lecture:true},
-      {label:'Sous la coupure',titre:'f = 0.5 Hz < f_c = 1 Hz : pas d\'onde progressive monochromatique',valeurs:{mode:'sine',end:'infinite',disp:true,fc:1,freq:.5,c:3,side:'left',pa:3,pb:7},lecture:true}],items:[]},
+      {label:'Mesurer un retard',titre:'Impulsion, extrémité infinie, A en 3 m et B en 7 m',valeurs:{mode:'pulse',end:'infinite',disp:false,c:3,side:'left',pa:3,pb:7,attendu:false,compare:false},lecture:true},
+      {label:'Phase et λ',titre:'Sinusoïde de 0.8 Hz, A en 3 m et B en 6.75 m',valeurs:{mode:'sine',end:'infinite',disp:false,freq:.8,c:3,side:'left',pa:3,pb:6.75,attendu:false,compare:false},lecture:true},
+      {label:'Réflexion fixe',titre:'Extrémité fixe : réflexion avec inversion',valeurs:{mode:'pulse',end:'fixed',disp:false,c:3,side:'left',pa:3,pb:7,attendu:false,compare:false},lecture:true},
+      {label:'Réflexion libre',titre:'Extrémité libre : réflexion sans inversion',valeurs:{mode:'pulse',end:'free',disp:false,c:3,side:'left',pa:3,pb:7,attendu:false,compare:false},lecture:true},
+      {label:'Déformer un signal',titre:'Trois harmoniques dans un milieu dispersif (f_c = 0.6 Hz)',valeurs:{mode:'rich',end:'infinite',disp:true,fc:.6,freq:.8,c:3,side:'left',pa:3,pb:7,attendu:false,compare:false},lecture:true},
+      {label:'Sous la coupure',titre:'f = 0.5 Hz < f_c = 1 Hz : pas d\'onde progressive monochromatique',valeurs:{mode:'sine',end:'infinite',disp:true,fc:1,freq:.5,c:3,side:'left',pa:3,pb:7,attendu:false,compare:false},lecture:true}],items:[]},
     {titre:'Source et extrémité',items:[
       {id:'mode',type:'select',label:'Excitation',value:'pulse',reinit:true,options:[['pulse','Impulsion asymétrique'],['sine','Sinusoïde'],['rich','Trois harmoniques'],['manual','Geste manuel (glisser S)']]},
-      {type:'boutons',id:'emit',si:a=>a.p.mode==='pulse',items:[{label:'Envoyer une impulsion',action:a=>{st.pulses.push(st.model.t+.02);a.play(true)}}]},
+      {type:'boutons',id:'emit',si:a=>a.p.mode==='pulse',items:[{label:'Envoyer une impulsion',action:a=>{a.t=st.model.t;st.pulses.push(st.model.t+.02);a.play(true)}}]},
       {id:'side',type:'select',label:'Position de la source',value:'left',reinit:true,options:[['left','À gauche · vers +x'],['right','À droite · vers −x']]},
       {id:'end',type:'select',label:'Extrémité opposée à la source',value:'infinite',reinit:true,options:[['infinite','Infinie · prolongement absorbant'],['fixed','Fixe · déplacement nul'],['free','Libre · pente nulle']]},
       {id:'amp',label:'Amplitude',type:'range',min:2,max:20,step:1,value:12,unit:'cm',reinit:true},
@@ -1157,7 +1158,7 @@ const A=AnimKit.app({
     for(const w of['pa','pb'])a.drag('profil',{hit:(x,y)=>{if(!st.G)return false;const xv=w==='pa'?a.p.pa:a.p.pb,i=idxAt(a.t);return near(x,y,st.G.X(xv),st.G.Y(at(st.snaps[i].p,xv)*100),22)},
       move:(x)=>{const v=Math.round(st.G.xv(x)*10)/10;a.set(w,w==='pa'?Math.max(.2,Math.min(a.p.pb-.2,v)):Math.min(11.8,Math.max(a.p.pa+.2,v)))}});
     for(const k of[0,1])a.drag('profil',{hit:(x)=>a.p.rulers&&st.G&&Math.abs(x-st.G.X(st.xm[k]))<10*a.k,move:(x)=>{st.xm[k]=Math.max(0,Math.min(12,st.G.xv(x)))}});
-    for(const k of[0,1])a.drag('histo',{hit:(x)=>a.p.rulers&&st.H&&Math.abs(x-st.H.X(st.tm[k]))<10*a.k,move:(x)=>{st.tm[k]=st.H.xv(x)}});
+    for(const k of[0,1])a.drag('histo',{hit:(x)=>a.p.rulers&&st.H&&Math.abs(x-st.H.X(st.tm[k]))<10*a.k,move:(x)=>{const lo=Math.max(0,st.H.xv(st.H.x0)),hi=st.H.xv(st.H.x0+st.H.w);st.tm[k]=Math.max(lo,Math.min(hi,st.H.xv(x)))}});
   },
   change(a,id){
     if(id==='pa'&&a.p.pa>a.p.pb-.2){a.p.pb=Math.min(11.8,a.p.pa+.2)}

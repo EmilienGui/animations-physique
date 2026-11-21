@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1200,6 +1201,7 @@ const sig=(x,n=3)=>A.fmt.sig(x,n), fix=(x,d)=>A.fmt.fix(x,d);
 const L1=`𝓛<sub>1</sub>`, L2=`𝓛<sub>2</sub>`;
 /* paramètres de l'onglet courant (chaque onglet garde ses propres réglages) */
 const PRE=['d_','g_','a_','m_'];
+const BORNES=[{e:[2,110],p:[-80,-.5],b:[.1,4]},{e:[5,110]},{e:[10,125]},{e:[6,30],p:[-10,-.5],b:[.05,1]}];
 function P(a){const q=PRE[a.tab],p=a.p,g=n=>p[q+n];
   const inf=a.tab===1||a.tab===2||(a.tab===0&&p.d_inf);
   return{f1:g('f1'),f2:g('f2'),e:g('e'),p:g('p'),b:g('b'),alpha:g('alpha'),inf};}
@@ -1215,10 +1217,10 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',zoom:true,ratioTel:1}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Permuter les focales',onglets:[0],action:a=>{const{f1,f2}=P(a);if(f2>0){setP(a,'f1',f2);setP(a,'f2',f1)}else a.toast('Permutation possible avec deux lentilles convergentes')}},
-      {label:'Réglage afocal',onglets:[0,1,2],action:a=>{const{f1,f2}=P(a);setP(a,'e',+(f1+f2).toFixed(1));if(a.tab===0)a.set('d_inf',true)}},
-      {label:'Dérégler l\'oculaire',onglets:[1,2],action:a=>setP(a,'e',+(P(a).e+3).toFixed(1))},
-      {label:'Image finale à l\'infini',onglets:[3],action:a=>{const{f1,f2,e}=P(a),q1=e-f2;if(q1<=f1){a.toast('Éloigner les lentilles : l\'image intermédiaire doit être après F′₁');return}setP(a,'p',+(f1*q1/(f1-q1)).toFixed(3))}}]},
+      {label:'Permuter les focales',onglets:[0],action:a=>{const{f1,f2}=P(a);if(f2>=2&&f1<=25){setP(a,'f1',f2);setP(a,'f2',f1)}else a.toast('Permutation possible pour 2 cm ≤ f′₁, f′₂ ≤ 25 cm')}},
+      {label:'Réglage afocal',onglets:[0,1,2],action:a=>{const{f1,f2}=P(a),be=BORNES[a.tab].e,ea=+(f1+f2).toFixed(1);if(ea<be[0]||ea>be[1]){a.toast(`Réglage afocal hors plage (${be[0]}–${be[1]} cm)`);return}setP(a,'e',ea);if(a.tab===0)a.set('d_inf',true)}},
+      {label:'Dérégler l\'oculaire',onglets:[1,2],action:a=>{const be=BORNES[a.tab].e,e=P(a).e;setP(a,'e',+(e+3<=be[1]?e+3:Math.max(be[0],e-3)).toFixed(1))}},
+      {label:'Image finale à l\'infini',onglets:[3],action:a=>{const{f1,f2,e}=P(a),q1=e-f2;if(q1<=f1){a.toast('Éloigner les lentilles : l\'image intermédiaire doit être après F′₁');return}const p0=f1*q1/(f1-q1);if(p0<-10||p0>-.5){a.toast('Position d\'objet hors de la plage de réglage');return}setP(a,'p',+p0.toFixed(4))}}]},
     {titre:'Les deux lentilles',items:[
       rg('d_f1',`Focale ${M.v('f')}′<sub>1</sub>`,2,80,.5,10,'cm',0,{dec:1}),
       rg('d_f2',`Focale ${M.v('f')}′<sub>2</sub>`,-25,25,.5,8,'cm',0,{dec:1}),
@@ -1329,10 +1331,10 @@ function dessin(a){
       s+=S.line(xe,ye,xe+L,ye,{c:C.ink2,w:1,dash:`${4*k} ${3*k}`});
       s+=angle(a,xe,ye,Math.atan2(-(Y(y2+o2*(xa-e+10))-ye),X(xa+10)-xe),'α′',C.ink,L*.8)}}
   // poignées
-  const hy=Y(-yl)+0*k;
-  s+=K.poignee(a,'scene',X(0),hy,(px)=>{const x=G.x(px);const ne=K.clamp(e-x,2,130);if(!inf)setP(a,'p',+(p-(e-ne)).toFixed(2));setP(a,'e',+ne.toFixed(1))});
-  s+=K.poignee(a,'scene',X(e),hy,(px)=>setP(a,'e',+G.x(px).toFixed(1)));
-  if(!inf)s+=K.poignee(a,'scene',X(p),Y(b),(px,py)=>{setP(a,'p',+Math.min(-.05,G.x(px)).toFixed(2));setP(a,'b',+Math.max(.05,G.y(py)).toFixed(2))});
+  const hy=Y(-yl)+0*k, bn=BORNES[t];
+  s+=K.poignee(a,'scene',X(0),hy,(px)=>{const x=G.x(px);let ne=K.clamp(e-x,bn.e[0],bn.e[1]);if(!inf){const np=K.clamp(p-(e-ne),bn.p[0],bn.p[1]);ne=K.clamp(e-(p-np),bn.e[0],bn.e[1]);setP(a,'p',+np.toFixed(2))}setP(a,'e',+ne.toFixed(1))});
+  s+=K.poignee(a,'scene',X(e),hy,(px)=>setP(a,'e',+K.clamp(G.x(px),bn.e[0],bn.e[1]).toFixed(1)));
+  if(!inf)s+=K.poignee(a,'scene',X(p),Y(b),(px,py)=>{setP(a,'p',+K.clamp(G.x(px),bn.p[0],bn.p[1]).toFixed(2));setP(a,'b',+K.clamp(G.y(py),bn.b[0],bn.b[1]).toFixed(2))});
   if(tel)s+=orientation(a,Pn,band,m);
   a.svg('scene',s);
   mesures(a,q,m,q1,g1);
@@ -1364,7 +1366,7 @@ function mesures(a,q,m,q1,g1){
     a.insight(af?`Réglage afocal (F′<sub>1</sub> = F<sub>2</sub>) : un faisceau parallèle ressort parallèle. ${R?`${M.v('G')} = −${M.frac(M.v('f')+'′<sub>1</sub>',M.v('f')+'′<sub>2</sub>')} = ${sig(G,3)} : image ${G>0?'droite':'renversée'}.`:'Prévoir le signe et la valeur du grossissement.'}`
       :'Les rayons ne ressortent plus parallèles : l\'œil devrait accommoder. Rétablir F′<sub>1</sub> = F<sub>2</sub>.');
     if(Math.abs(-f1/f2*alpha)>15)a.insight('Angle de sortie trop grand pour les conditions de Gauss : réduire α.');
-  }else if(t===3){const relax=Math.abs(q1-(e-f2))<1e-3, Pw=g1/(f2/100), Gc=Pw*.25;
+  }else if(t===3){const relax=!Number.isFinite(m.q)||Math.abs(m.q)>400, Pw=g1/(f2/100), Gc=Pw*.25;
     a.metrics([{label:`Grandissement de l'objectif ${M.v('γ','1')}`,...h(sig(g1,3))},
       {label:`Puissance ${M.v('P')} = ${M.frac(M.v('γ','1'),M.v('f')+'′<sub>2</sub>')}`,...(relax?h(sig(Pw,3),'m<sup>−1</sup>'):{value:'—',hint:'régler à l\'infini'})},
       {label:'Grossissement commercial',...(relax?h(sig(Gc,3)):{value:'—'})}]);

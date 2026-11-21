@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1239,6 +1240,7 @@ const A=AnimKit.app({
     cours:'OP2 Formation des images, « Projection de l\'image d\'un objet » : '+K.bar('OA')+'<sup>2</sup> + '+M.v('D')+K.bar('OA')+' + '+M.v('D')+M.v('f')+'′ = 0 et condition '+M.v('D')+' ≥ 4'+M.v('f')+'′. Méthodes de focométrie des travaux pratiques.'
   },
   change(a,id,v){
+    if(id==='D'||id==='f'){st.m1=st.m2=null}
     if(id==='D'&&a.p.pos>v-3)a.set('pos',+(v-3).toFixed(1),{silent:true});
     if(id==='pos'&&a.tab!==2&&v>a.p.D-3)a.set('pos',+(a.p.D-3).toFixed(1),{silent:true});
     if(id==='pos'&&a.tab===2&&v>40)a.set('pos',40,{silent:true});
@@ -1295,7 +1297,7 @@ function projection(a){
     s+=K.rayon(a,[[G.X(0),G.Y(H0)],[G.X(x),G.Y(h)],[G.X(D),G.Y(h+sd*out)]],cc.r[i],{w:1.8})});s+='</g>'}
   s+=lentilleBanc(a,G,x,f,p.sol);
   a.svg('banc',s);
-  if(a.panelVisible('ecran'))ecran(a,{titre:'écran',img:{h:img.g*H0,flou:diam,net}});
+  if(a.panelVisible('ecran'))ecran(a,{titre:'écran',img:{h:-H0*sd/x,flou:diam,net}});
   const d=st.m1!==null&&st.m2!==null?Math.abs(st.m2-st.m1):null;
   if(a.tab===0)a.metrics([
     {label:'Diamètre de la tache de flou',value:sig(diam*10,2),unit:'mm',hint:net?'image nette':''},
@@ -1304,7 +1306,7 @@ function projection(a){
   else a.metrics([
     {label:'Diamètre de la tache de flou',value:sig(diam*10,2),unit:'mm',hint:net?'image nette':''},
     {label:`Grandissement ${M.v('γ')}`,value:Number.isFinite(img.g)?fix(img.g,2):'∞'},
-    {label:`Focale ${M.v('f')}′ = ${M.frac(M.v('D'),'4')}`,value:p.sol?fix(D/4,2):'?',unit:p.sol?'cm':''}]);
+    {label:`Focale ${M.v('f')}′ = ${M.frac(M.v('D'),'4')}`,value:p.sol?fix(D/4,2):'?',unit:p.sol?'cm':'',hint:p.sol?(net&&Math.abs(img.g+1)<.03?'réglage trouvé':'valable si nette et γ = −1'):''}]);
   let msg;
   if(D<4*f-1e-9)msg=p.sol?`${M.v('D')} &lt; 4${M.v('f')}′ : aucune position de la lentille ne donne une image nette sur l'écran. Éloigner l'écran.`:'Aucune position de la lentille ne semble donner d\'image nette ? Éloigner l\'écran.';
   else if(a.tab===1)msg=net?(Math.abs(img.g+1)<.03?`Image nette et de même taille que l'objet, renversée : ${M.v('γ')} = −1. Alors ${M.v('D')} = 4${M.v('f')}′.`:'Image nette, mais de taille différente de l\'objet : déplacer à la fois la lentille et l\'écran.'):'Rechercher simultanément une image nette et un grandissement γ = −1.';
@@ -1340,7 +1342,7 @@ function autocol(a){
   a.metrics([
     {label:'Étalement de l\'image de retour',value:sig(etal*10,2),unit:'mm',hint:net?'retour net':''},
     {label:'Image de retour nette à la graduation',value:Number.isFinite(retu)?fix(x-retu,1):'∞',unit:Number.isFinite(retu)?'cm':'',hint:'objet à la graduation 0'},
-    {label:`Focale ${M.v('f')}′ = distance objet–lentille`,value:p.sol?fix(x,1):'?',unit:p.sol?'cm':''}]);
+    {label:`Focale ${M.v('f')}′ = distance objet–lentille`,value:p.sol?fix(x,1):'?',unit:p.sol?'cm':'',hint:p.sol?(net?'réglage trouvé':'valable si retour net'):''}]);
   a.insight(Math.abs(x-f)<.05?'Objet dans le plan focal objet : le faisceau est parallèle entre la lentille et le miroir, l\'image de retour, renversée, est nette dans le plan de l\'objet, quelle que soit la position du miroir.'
     :'Déplacer la lentille jusqu\'à obtenir une image de retour nette, renversée, dans le plan de l\'objet. Changer ensuite la distance au miroir pour vérifier le réglage.');
   a.legend(p.rayons?[{c:cc.r[0],label:'Aller'},{c:cc.r[1],label:'Retour après réflexion'},p.sol?{c:C.pred,dash:true,label:'Plan focal objet'}:null]:[]);

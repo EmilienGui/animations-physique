@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1102,10 +1103,10 @@ const A=AnimKit.app({
             {id:'ecran',titre:'Intensité sur un écran à la distance x_E',poids:1,ratioTel:.62}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'d = 8λ',valeurs:{lambda:1,width:8,dinc:false,regle:false}},
-      {label:'d = 3λ',valeurs:{lambda:1,width:3,dinc:false,regle:false}},
-      {label:'d = λ',titre:'Le premier minimum est rasant (90°)',valeurs:{lambda:1,width:1,dinc:false,regle:false}},
-      {label:'d = λ/2',valeurs:{lambda:1,width:.5,dinc:false,regle:false}},
+      {label:'d = 8λ',valeurs:{lambda:1,width:8,dinc:false,regle:false,prev:false}},
+      {label:'d = 3λ',valeurs:{lambda:1,width:3,dinc:false,regle:false,prev:false}},
+      {label:'d = λ',titre:'Le premier minimum est rasant (90°)',valeurs:{lambda:1,width:1,dinc:false,regle:false,prev:false}},
+      {label:'d = λ/2',valeurs:{lambda:1,width:.5,dinc:false,regle:false,prev:false}},
       {label:'Taille d\'une ouverture',titre:'Application du cours : estimer d à partir des fronts d\'onde',valeurs:{lambda:1,width:3,dinc:true,regle:true,prev:false},action:a=>{a.set('width',rnd(),{silent:true});a.set('dinc',true)}}],items:[]},
     {titre:'Onde et ouverture',items:[
       {id:'lambda',label:`Longueur d'onde λ`,type:'range',min:.6,max:2,step:.05,value:1,unit:'cm'},
@@ -1196,14 +1197,14 @@ const A=AnimKit.app({
     if(p.prev){body+=S.curve(prd,G,{c:C.pred,w:2,dash:'7 5'});
       if(t1!==null)for(const sg of[-1,1]){const yy=sg*xE*Math.tan(t1);if(Math.abs(yy)<YM){body+=S.line(G.X(yy),G.y0,G.X(yy),G.y0+G.h,{c:C.pred,w:1.4,dash:'4 5'})+S.text(G.X(yy)+(sg>0?5:-5)*k,G.y0+10*k,sg>0?'+θ':'−θ',{anchor:sg>0?'start':'end',size:13,c:C.ink2})}}}
     body+=S.curve(pts,G,{c:C.cInk,w:2.8});
-    let Ia=NaN;
-    if(p.rayon){const ya=xE*Math.tan(p.angle*Math.PI/180);const v=model.sample(xE,Math.max(-YM,Math.min(YM,ya)));Ia=v[0]*v[0]+v[1]*v[1];if(Math.abs(ya)<=YM){body+=S.line(G.X(ya),G.y0,G.X(ya),G.y0+G.h,{c:C.F,w:1.6,dash:'4 4'})+S.circle(G.X(ya),G.Y(Ia),5.5*k,{fill:C.card,c:C.F,w:2})}else body+=S.text(G.x0+G.w-6*k,G.y0+12*k,'α hors de l\'écran',{anchor:'end',size:13,c:C.F})}
-    a.svg('ecran',svg+`<g>${body}</g>`);
+    let Ia=NaN,inScr=false;
+    if(p.rayon){const ya=xE*Math.tan(p.angle*Math.PI/180);if(Math.abs(ya)<=YM){inScr=true;const v=model.sample(xE,ya);Ia=v[0]*v[0]+v[1]*v[1];body+=S.line(G.X(ya),G.y0,G.X(ya),G.y0+G.h,{c:C.F,w:1.6,dash:'4 4'})+S.circle(G.X(ya),G.Y(Ia),5.5*k,{fill:C.card,c:C.F,w:2})}else body+=S.text(G.x0+G.w-6*k,G.y0+12*k,'α hors de l\'écran',{anchor:'end',size:13,c:C.F})}
+    a.svg('ecran',svg+`<g clip-path="url(#ce)">${body}</g>`);
     a.legend([{label:'Intensité calculée',c:C.cInk},p.rayon?{label:'Direction de mesure α',c:C.F,dash:true}:null,p.prev?{label:'Prévisions du cours',c:C.pred,dash:true}:null,{label:'Perturbation positive',c:p.view==='wave'?palCss(a).pos:null,dot:true},{label:'négative',c:p.view==='wave'?palCss(a).neg:null,dot:true}].filter(l=>l&&l.c));
     a.clock(`<span class="m">t</span>/<span class="m">T</span> = ${a.fmt.fix(a.t,2)}`);
     const mets=[];
     if(!p.dinc)mets.push({label:'d / λ',value:a.fmt.sig(p.width/p.lambda,3)});
-    if(p.rayon&&isFinite(Ia))mets.push({label:`I / I(0) en α = ${a.fmt.fix(p.angle,1)}° (écran à ${a.fmt.fix(xE,1)} cm)`,value:a.fmt.sig(Ia/Math.max(Ic,1e-9),3)});
+    if(p.rayon)mets.push({label:`I / I(0) en α = ${a.fmt.fix(p.angle,1)}° (écran à ${a.fmt.fix(xE,1)} cm)`,value:inScr&&isFinite(Ia)?a.fmt.sig(Ia/Math.max(Ic,1e-9),3):'hors écran',hint:inScr?'':'|y| > 16 cm : rapprocher l\'écran ou réduire |α|'});
     if(p.prev)mets.push({label:'Demi-angle du premier minimum',value:t1===null?'aucun':a.fmt.fix(deg(t1),1),unit:t1===null?'':'°',hint:t1===null?'d < λ':'largeur du lobe central : 2θ = '+a.fmt.fix(2*deg(t1),1)+'°'});
     a.metrics(mets);
   }

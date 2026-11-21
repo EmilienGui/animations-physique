@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1060,7 +1061,7 @@ const nomMat=n=>({1:'air',1.33:'eau',1.5:'verre',2.42:'diamant'})[n]||'milieu';
 
 /* ---------- physique ---------- */
 /* coefficients de Fresnel en puissance, lumière non polarisée (moyenne des polarisations s et p) */
-function fresnel(n1,n2,i1){const s2=n1*Math.sin(i1)/n2;if(Math.abs(s2)>=1)return{R:1,T:0};
+function fresnel(n1,n2,i1){if(Math.abs(n1-n2)<1e-12)return{R:0,T:1};const s2=n1*Math.sin(i1)/n2;if(Math.abs(s2)>=1)return{R:1,T:0};
   const c1=Math.cos(i1),c2=Math.sqrt(1-s2*s2),rs=(n1*c1-n2*c2)/(n1*c1+n2*c2),rp=(n2*c1-n1*c2)/(n2*c1+n1*c2),Rr=(rs*rs+rp*rp)/2;return{R:Rr,T:1-Rr}}
 /* loi de Cauchy n(λ₀) = A + B/λ₀² ; ici n(589 nm) = indice réglé et B proportionnel à n − 1 (B = 4.2 × 10³ nm² pour n = 1.5) */
 const SPECTRE=[[400,'#8a4dff'],[450,'#3d6bff'],[500,'#18b3c9'],[550,'#3fcf4a'],[600,'#f2c21b'],[650,'#ff7a1a'],[700,'#e8302a']];
@@ -1078,7 +1079,7 @@ const A=AnimKit.app({
   code:'OP1', partie:'TurquoiseLagon', chapitre:'OP1 Propagation de la lumière',
   titre:'Lois de Snell-Descartes', sousTitre:'Réflexion, réfraction et réflexion totale sur un dioptre plan',
   onglets:['Vue de face','Perspective'],
-  temps:a=>a.p.rep!=='rayons'||a.p.balayer, pas:1/12,
+  temps:a=>(a.tab===0&&a.p.rep!=='rayons'&&!a.p.blanc)||a.p.balayer, pas:1/12,
   panneaux:[{id:'scene',poids:3,ratioTel:1.05},{id:'graphe',poids:2,onglets:[0],ratioTel:.85}],
   reglages:[
     {titre:'Situations',presets:[
@@ -1092,22 +1093,22 @@ const A=AnimKit.app({
       {id:'n1',label:`Indice ${AnimKit.M.v('n','1')}`,min:1,max:2.5,step:0.01,value:1},
       {id:'m2',type:'select',label:`Milieu transmis`,options:MATERIAUX,value:1.5},
       {id:'n2',label:`Indice ${AnimKit.M.v('n','2')}`,min:1,max:2.5,step:0.01,value:1.5},
-      {type:'boutons',items:[{label:'⇅ Intervertir les milieux',action:a=>{const{n1,n2,m1,m2}=a.p;a.set('n1',n2,{silent:true});a.set('n2',n1,{silent:true});a.set('m1',m2,{silent:true});a.set('m2',m1,{silent:true})}}]},
+      {type:'boutons',items:[{label:'⇅ Intervertir les milieux',action:a=>{const{n1,n2,m1,m2}=a.p;a.set('n1',n2,{silent:true});a.set('n2',n1,{silent:true});a.set('m1',m2,{silent:true});a.set('m2',m1,{silent:true});a.enable('lim',a.p.n1>a.p.n2)}}]},
       {type:'note',html:'Teinte plus marquée : indice plus élevé (ce n\'est ni une couleur réelle ni une absorption).'}]},
     {titre:'L\'incidence',items:[
       {id:'i1',label:`Angle ${AnimKit.M.v('i','1')}`,min:-90,max:90,step:0.5,value:40,unit:'°',dec:1},
       {type:'boutons',items:[{id:'lim',label:'Angle limite',titre:'Place i₁ exactement à l\'angle limite',action:a=>{const o=optique(a.p.n1,a.p.n2,0);if(o.ilim)a.set('i1',Math.sign(a.p.i1||1)*+(o.ilim/DEG).toFixed(1))}}]},
       {id:'balayer',type:'check',label:'Balayer l\'incidence pendant la lecture',value:false}]},
     {titre:'Affichage',items:[
-      {id:'rep',type:'seg',label:'Représentation de la lumière',options:[['rayons','Rayons'],['deux','Les deux'],['fronts','Fronts d\'onde']],value:'rayons'},
+      {id:'rep',type:'seg',label:'Représentation de la lumière',options:[['rayons','Rayons'],['deux','Les deux'],['fronts','Fronts d\'onde']],value:'rayons',onglets:[0]},
       {id:'normale',type:'check',label:'Normale',value:true},
-      {id:'angles',type:'check',label:'Angles orientés',value:true},
-      {id:'rapporteur',type:'check',label:'Rapporteur',value:false},
+      {id:'angles',type:'check',label:'Angles orientés',value:true,onglets:[0]},
+      {id:'rapporteur',type:'check',label:'Rapporteur',value:false,onglets:[0]},
       {id:'plan',type:'check',label:'Plan d\'incidence',value:true,onglets:[1]},
-      {id:'lambda',type:'check',label:'Longueurs d\'onde',value:false,si:a=>a.p.rep!=='rayons'&&!a.p.blanc},
+      {id:'lambda',type:'check',label:'Longueurs d\'onde',value:false,onglets:[0],si:a=>a.p.rep!=='rayons'&&!a.p.blanc},
       {id:'descartes',type:'check',label:'Construction de Descartes (deux cercles)',value:false,onglets:[0]},
-      {id:'fresnel',type:'check',label:'Épaisseurs proportionnelles à la puissance (Fresnel)',value:false},
-      {id:'limite',type:'check',label:'Angle limite (prévision)',value:false,si:a=>a.p.n1>a.p.n2}]},
+      {id:'fresnel',type:'check',label:'Épaisseurs proportionnelles à la puissance (Fresnel)',value:false,onglets:[0]},
+      {id:'limite',type:'check',label:'Angle limite (prévision)',value:false,onglets:[0],si:a=>a.p.n1>a.p.n2}]},
     {titre:'Lumière blanche',onglets:[0],items:[
       {id:'blanc',type:'check',label:'Lumière blanche : dispersion (loi de Cauchy)',value:false},
       {id:'exag',label:'Écarts angulaires agrandis ×',min:1,max:30,step:1,value:10,si:a=>a.p.blanc},
@@ -1120,7 +1121,7 @@ const A=AnimKit.app({
   aide:{
     voit:'Un pinceau lumineux issu d\'un laser arrive en I sur un dioptre plan séparant deux milieux transparents d\'indices <i class="m">n</i><sub>1</sub> et <i class="m">n</i><sub>2</sub>. Rayon incident en rouge, réfléchi en vert, réfracté en bleu.',
     faire:'<ul><li>Glisser le laser (vue de face) ou utiliser le curseur pour régler <i class="m">i</i><sub>1</sub>.</li><li>Choisir les matériaux ou régler les indices, puis intervertir les milieux.</li><li>Pour la réflexion totale : « Verre → air », bouton « Angle limite », puis augmenter légèrement <i class="m">i</i><sub>1</sub>.</li><li>Afficher les fronts d\'onde puis lancer la lecture pour les voir avancer.</li><li>En perspective, glisser sur la scène pour tourner le point de vue.</li></ul>',
-    modele:'Dioptre plan entre deux milieux transparents, homogènes, isotropes et non absorbants. Lois de Snell-Descartes : <i class="m">r</i> = −<i class="m">i</i><sub>1</sub> et <i class="m">n</i><sub>1</sub> sin <i class="m">i</i><sub>1</sub> = <i class="m">n</i><sub>2</sub> sin <i class="m">i</i><sub>2</sub>. Réflexion totale si <i class="m">n</i><sub>1</sub> &gt; <i class="m">n</i><sub>2</sub> et |<i class="m">i</i><sub>1</sub>| &gt; arcsin(<i class="m">n</i><sub>2</sub>/<i class="m">n</i><sub>1</sub>). Les épaisseurs des rayons sont conventionnelles (les coefficients de Fresnel ne sont pas calculés). Fronts d\'onde : régime monochromatique établi, λ<sub>0</sub> = 600 nm, λ = λ<sub>0</sub>/<i class="m">n</i> ; l\'échelle des longueurs est agrandie et le temps très fortement ralenti.',
+    modele:'Dioptre plan entre deux milieux transparents, homogènes, isotropes et non absorbants. Lois de Snell-Descartes : <i class="m">r</i> = −<i class="m">i</i><sub>1</sub> et <i class="m">n</i><sub>1</sub> sin <i class="m">i</i><sub>1</sub> = <i class="m">n</i><sub>2</sub> sin <i class="m">i</i><sub>2</sub>. Réflexion totale si <i class="m">n</i><sub>1</sub> &gt; <i class="m">n</i><sub>2</sub> et |<i class="m">i</i><sub>1</sub>| &gt; arcsin(<i class="m">n</i><sub>2</sub>/<i class="m">n</i><sub>1</sub>). Par défaut, les épaisseurs des rayons sont conventionnelles ; l\'option Fresnel les rend proportionnelles aux puissances réfléchie et transmise. Fronts d\'onde : régime monochromatique établi, λ<sub>0</sub> = 600 nm, λ = λ<sub>0</sub>/<i class="m">n</i> ; l\'échelle des longueurs est agrandie et le temps très fortement ralenti.',
     plus:'<ul><li><b>Construction de Descartes</b> : deux demi-cercles de centre I, de rayons proportionnels à <i class="m">n</i><sub>1</sub> et <i class="m">n</i><sub>2</sub>. Le prolongement du rayon incident coupe le premier en P ; la parallèle à la normale passant par P coupe le second en Q : (IQ) est le rayon réfracté, car <i class="m">n</i><sub>1</sub> sin <i class="m">i</i><sub>1</sub> = <i class="m">n</i><sub>2</sub> sin <i class="m">i</i><sub>2</sub>. Si la parallèle ne coupe pas le second cercle : réflexion totale.</li><li><b>Puissances</b> (hors programme) : coefficients de Fresnel en lumière non polarisée ; la puissance réfléchie augmente quand on approche de l\'angle limite, puis devient totale. En incidence normale air → verre, <i class="m">R</i> ≈ 4 %. L\'angle de Brewster, où la polarisation <i class="m">p</i> n\'est pas réfléchie, est marqué en prévision.</li><li><b>Erreur fréquente</b> : les angles ne sont pas proportionnels ; <i class="m">i</i><sub>2</sub> ≈ (<i class="m">n</i><sub>1</sub>/<i class="m">n</i><sub>2</sub>) <i class="m">i</i><sub>1</sub> n\'est valable qu\'aux petits angles (comparer sur le graphe).</li></ul>',
     cours:'OP1 Propagation de la lumière, partie « Les lois de Snell-Descartes ». Milieux dispersifs et loi de Cauchy <i class="m">n</i>(λ<sub>0</sub>) = <i class="m">A</i> + <i class="m">B</i>/λ<sub>0</sub><sup>2</sup>. Angles algébriques orientés dans le sens trigonométrique vu de face : <i class="m">i</i><sub>1</sub> et <i class="m">r</i> sont repérés depuis la normale côté milieu 1, <i class="m">i</i><sub>2</sub> depuis la normale côté milieu 2.',
     touches:'<kbd>←</kbd> <kbd>→</kbd> modifient aussi <i class="m">i</i><sub>1</sub> quand la lecture est arrêtée et que le curseur a le focus'
@@ -1164,7 +1165,7 @@ function infos(a){
   const bl=a.p.blanc&&a.tab===0,L=[{c:bl?a.C.ink:a.C.F,label:bl?'Incident (lumière blanche)':'Incident'},{c:bl?a.C.ink2:a.C.v,label:'Réfléchi'},o.total||a.p.blanc?null:{c:a.C.B,label:'Réfracté'},a.p.blanc&&a.tab===0&&{c:'#3fcf4a',label:'Réfractés (400 à 700 nm)'},a.p.limite&&n1>n2&&{c:a.C.pred,label:'angle limite',dash:true},a.p.descartes&&a.tab===0&&{c:a.C.ink2,label:'construction de Descartes',dash:true}];
   if(a.tab===0)L.push(...(a._lgG||[]));
   a.legend(L);
-  a.clock(a.p.rep!=='rayons'?'temps très ralenti':'');
+  a.clock(a.tab===0&&a.p.rep!=='rayons'&&!a.p.blanc?'temps très ralenti':'');
 }
 
 /* ---------- utilitaires de dessin ---------- */
@@ -1203,6 +1204,7 @@ function drawFace(a){
   if(showFronts)s+=fronts(a,{cx,cy,R,src,ref,tra,n1,n2,o,Ls,Lr,Lt});
   // rayons
   const rayW=showRays?1:0.55;
+  let ntBlanc=0;
   if(showRays||true){
     const sI=rayStyle(a,'inc'), sR=rayStyle(a,'ref',o.total), sT=rayStyle(a,'tra');
     if(a.p.fresnel){sI.w=7;sR.w=7*fr.R;sT.w=7*fr.T}
@@ -1212,10 +1214,9 @@ function drawFace(a){
     s+=midArrow(S,[lx,ly],[cx,cy],sI.c,sI.w*rayW,k);
     if((n1!==n2||o.total)&&sR.w>.05){const [rx,ry]=Pt(ref,Lr);s+=S.line(cx,cy,rx,ry,{c:sR.c,w:sR.w*rayW,op:showRays?1:.6});s+=midArrow(S,[cx,cy],[rx,ry],sR.c,Math.max(1.2,sR.w)*rayW,k)}
     if(a.p.blanc){const i2r=o.total?null:o.i2;
-      for(const[l,col]of SPECTRE){const q=optique(cauchy(n1,l),cauchy(n2,l),i1);if(q.total)continue;const ref0=i2r??q.i2,ang=ref0+a.p.exag*(q.i2-ref0),d=[Math.sin(ang),-Math.cos(ang)],L2=bord(d),[tx,ty]=Pt(d,L2);
+      for(const[l,col]of SPECTRE){const q=optique(cauchy(n1,l),cauchy(n2,l),i1);if(q.total){ntBlanc++;continue}const ref0=i2r??q.i2,ang=Math.max(-Math.PI/2+.01,Math.min(Math.PI/2-.01,ref0+a.p.exag*(q.i2-ref0))),d=[Math.sin(ang),-Math.cos(ang)],L2=bord(d),[tx,ty]=Pt(d,L2);
         const wl=a.p.fresnel?7*fresnel(cauchy(n1,l),cauchy(n2,l),i1).T:1.8;s+=S.line(cx,cy,tx,ty,{c:col,w:wl})}
-      const nt=SPECTRE.filter(([l])=>optique(cauchy(n1,l),cauchy(n2,l),i1).total).length;
-      if(nt>0&&nt<SPECTRE.length)s+=S.text(cx+12*k,cy+30*k,`${nt} couleur${nt>1?'s':''} sur ${SPECTRE.length} totalement réfléchie${nt>1?'s':''} (le bleu d'abord)`,{base:'top',size:14,c:C.ink})}
+      if(ntBlanc>0&&ntBlanc<SPECTRE.length)s+=S.text(cx+12*k,cy+30*k,`${ntBlanc} couleur${ntBlanc>1?'s':''} sur ${SPECTRE.length} totalement réfléchie${ntBlanc>1?'s':''} (le bleu d'abord)`,{base:'top',size:14,c:C.ink})}
     else if(tra){const [tx,ty]=Pt(tra,Lt);if(sT.w>.05){s+=S.line(cx,cy,tx,ty,{c:sT.c,w:sT.w*rayW,op:showRays?1:.6});s+=midArrow(S,[cx,cy],[tx,ty],sT.c,Math.max(1.2,sT.w)*rayW,k)}}
     // laser
     s+=laser(a,lx,ly,src);
@@ -1228,7 +1229,7 @@ function drawFace(a){
     const Px=cx+r1*Math.sin(i1),Py=cy+r1*Math.cos(i1);s+=S.line(cx,cy,Px,Py,{c:C.F,w:1.2,dash:`${3*k} ${3*k}`})+S.circle(Px,Py,3.5*k,{fill:C.F})+S.text(Px+8*k,Py,'P',{size:14,c:C.F});
     const dx=Px-cx;if(Math.abs(dx)<=r2){const Qy=cy+Math.sqrt(r2*r2-dx*dx);s+=S.line(Px,Math.min(Py,Qy)-6*k,Px,Math.max(Py,Qy)+6*k,{c:C.ink2,w:1.2,dash:`${2*k} ${3*k}`})+S.circle(Px,Qy,3.5*k,{fill:C.B})+S.text(Px+8*k,Qy+6*k,'Q',{size:14,c:C.B})}
     else s+=S.line(Px,cy+2*k,Px,h-4*k,{c:C.ink2,w:1.2,dash:`${2*k} ${3*k}`})+S.text(Px+(dx>0?-8:8)*k,h-24*k,'ne coupe pas le cercle : réflexion totale',{anchor:dx>0?'end':'start',size:14,c:C.ink})}
-  if(o.total)s+=S.text(cx,cy+34*k,'réflexion totale : aucun rayon réfracté',{anchor:'middle',size:16,c:C.v,weight:600});
+  if(a.p.blanc?ntBlanc===SPECTRE.length:o.total)s+=S.text(cx,cy+34*k,'réflexion totale : aucun rayon réfracté',{anchor:'middle',size:16,c:C.v,weight:600});
   else if(n1===n2)s+=S.text(cx+10*k,cy-14*k,'indices égaux : ni déviation ni réflexion',{size:15,c:C.ink});
   s+=S.circle(cx,cy,3*k,{fill:C.ink});
   s+=S.text(cx-8*k,cy+9*k,'I',{anchor:'end',base:'top',size:13,c:C.ink,italic:false});
@@ -1354,7 +1355,7 @@ function graphe(a){
     s+=S.clip('gs',G)+G.svg;
     if(a.p.futur){const pr=[],pt=[];for(let j=0;j<=360;j++){const x=j/4,q=fresnel(n1,n2,x*DEG);pr.push([x,q.R*100]);pt.push([x,q.T*100])}
       s+=S.curve(pr,G,{c:C.v,w:2.2})+S.curve(pt,G,{c:C.B,w:2.2});
-      const ib=Math.atan(n2/n1)/DEG;if(!o.ilim||ib<o.ilim/DEG){const X=G.X(ib);s+=S.line(X,G.y0,X,G.y0+G.h,{c:C.pred,w:1.2,dash:`${2*k} ${3*k}`})+S.text(X+4*k,G.y0+G.h*.45,`Brewster ${f.fix(ib,1)}°`,{size:13,c:C.pred})}
+      const ib=Math.atan(n2/n1)/DEG;if(Math.abs(n1-n2)>1e-12&&(!o.ilim||ib<o.ilim/DEG)){const X=G.X(ib);s+=S.line(X,G.y0,X,G.y0+G.h,{c:C.pred,w:1.2,dash:`${2*k} ${3*k}`})+S.text(X+4*k,G.y0+G.h*.45,`Brewster ${f.fix(ib,1)}°`,{size:13,c:C.pred})}
       if(o.ilim){const X=G.X(o.ilim/DEG);s+=S.line(X,G.y0,X,G.y0+G.h,{c:C.pred,w:1.2,dash:`${2*k} ${3*k}`})+S.text(X-4*k,G.y0+G.h*.6,`${S.v('i','lim')}`,{anchor:'end',size:13,c:C.pred})}}
     for(const x of vus.keys()){const q=fresnel(n1,n2,Math.abs(x)*DEG);s+=S.circle(G.X(Math.abs(x)),G.Y(q.R*100),2.2*k,{fill:C.v,op:.55})+S.circle(G.X(Math.abs(x)),G.Y(q.T*100),2.2*k,{fill:C.B,op:.55})}
     const q=fresnel(n1,n2,Math.abs(i1)*DEG);s+=S.circle(G.X(Math.abs(i1)),G.Y(q.R*100),5*k,{fill:C.card,c:C.v,w:2.2})+S.circle(G.X(Math.abs(i1)),G.Y(q.T*100),5*k,{fill:C.card,c:C.B,w:2.2});

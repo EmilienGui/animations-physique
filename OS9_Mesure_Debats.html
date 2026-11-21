@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1323,7 +1324,7 @@ function scene1(a,P){
 }
 function graphs1(a,P){
   const S=a.S,C=a.C,p=a.p,k=step(a),m=Q.box(10**p.massLog,p.weighTime),L=fitBox(P,520,430),X=L.X,Y=L.Y;let s='';
-  const dm=Q.photon?0:p.photon*Q.e/Q.c**2;
+  const dm=p.photon*Q.e/Q.c**2;
   if(k<4){
     const head=['Pesée initiale','Départ programmé','Un seul photon sort','Nouvelle pesée'][k];
     s+=S.rect(X(20),Y(60),L.L(480),L.L(300),{fill:C.cSoft,c:C.rule,rx:12})+S.text(X(44),Y(105),head,{size:22,c:C.cInk});
@@ -1481,7 +1482,8 @@ const A=AnimKit.app({
       {id:'test',type:'select',label:'Quelle mesure ?',options:[['direct','Dans la base des branches'],['recombine','Après recombinaison du système jouet']],value:'direct',si:a=>a.p.step2>=2},
       RG('phase2','Phase relative φ',-3.14,3.14,.01,0,'rad',2,{si:a=>a.p.step2>=2}),
       RG('env','Couplage à l’environnement κ',0,5,.1,0,'',1,{si:a=>a.p.step2===3}),RG('elapsed','Temps écoulé (unités arbitraires)',0,5,.05,0,'',2,{si:a=>a.p.step2===3}),
-      {type:'boutons',items:[{label:'Ouvrir la boîte : une issue',action:a=>{a.play(false);st.lid=true;st.open=Math.random()<a.p.prob?'vivant':'mort';st.last=st.open;st.chain=1;a.set('step2',1,{silent:true});a.toast('Issue tirée : '+st.open)}},{label:'Repréparer et refermer',action:a=>{st.lid=false;st.open=null;st.last=null;st.chain=0}},{label:'Une mesure',action:a=>{if(a.p.step2>=2)measureCat(a)}},{label:'+ 500 mesures',action:a=>{if(a.p.step2>=2)for(let j=0;j<500;j++)measureCat(a)}}]},
+      {type:'boutons',si:a=>a.p.step2<2,items:[{label:'Ouvrir la boîte : une issue',action:a=>{a.play(false);st.lid=true;st.open=Math.random()<a.p.prob?'vivant':'mort';st.last=st.open;st.chain=1;a.set('step2',1,{silent:true});a.toast('Issue tirée : '+st.open)}},{label:'Repréparer et refermer',action:a=>{st.lid=false;st.open=null;st.last=null;st.chain=0}}]},
+      {type:'boutons',si:a=>a.p.step2>=2,items:[{label:'Une mesure',action:a=>{measureCat(a)}},{label:'+ 500 mesures',action:a=>{for(let j=0;j<500;j++)measureCat(a)}}]},
       {type:'note',html:'γ = exp(−κt) ; P(+) = [1 + 2√(p(1−p)) γ cos φ]/2. Le tirage d’une issue est un postulat du simulateur ; le chat réel n’est pas recombinable.'}]},
     {titre:'Hypothèse à essayer',onglets:[3],presets:[{label:'Meilleure stratégie équilibrée',valeurs:{model:'local',strategy:'mixture',step3:2}},{label:'Comparer au quantique',valeurs:{model:'quantum',vis:1,step3:2}},{label:'Angles usuels',valeurs:{a:0,ap:45,b:22.5,bp:-22.5}}],items:[
       {id:'model',type:'select',label:'Source',options:[['local','Instructions locales partagées'],['quantum','État quantique |Φ⁺⟩ + bruit']],value:'local'},
@@ -1516,7 +1518,7 @@ const A=AnimKit.app({
     else if(i===2&&!['cutaway','prev'].includes(id)){st.out=[0,0];st.n=0;st.last=null;st.lid=false;st.open=null}
     if(i===3&&!['prev','rate3'].includes(id)&&!id.startsWith('step')){st.stats.forEach(r=>Object.assign(r,{N:0,corr:0,wins:0}));st.n=0;st.pair=null;st.events=[]}
   },
-  onglet(a,i){a.play(false);resetState()},
+  onglet(a,i){a.play(false);a.set('prev',false,{silent:true});resetState()},
   step(a,dt){
     const i=a.tab,k=step(a);st.rot+=dt*3;
     if(i===0||i===3){st.acc+=dt*(i===0?a.p.rate0:a.p.rate3);if(st.acc>=1&&st.events.length<8){st.acc=0;emit(a)}

@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1121,7 +1122,7 @@ const A=AnimKit.app({
   reglages:[
     {titre:'Situations',presets:[
       {label:'Axial',valeurs:{x:0,minima:false},action:()=>{st.phase=3},onglets:[0,1,2]},
-      {label:'Au minimum',action:a=>{a.set('x',+RM.minimum(a.tab===2?nRd(a):a.p.n).x.toFixed(4));st.phase=3},onglets:[0,1,2],titre:'Rayon de déviation minimale'},
+      {label:'Au minimum',action:a=>{a.set('x',+RM.minimum(a.tab===2?nR(a):a.p.n).x.toFixed(4));st.phase=3},onglets:[0,1,2],titre:'Rayon de déviation minimale'},
       {label:'Presque rasant',valeurs:{x:XMAX,minima:false},action:()=>{st.phase=3},onglets:[0,1,2]},
       {label:'Soleil à l\'horizon',valeurs:{h:0},onglets:[3]},
       {label:'Soleil à 20°',valeurs:{h:20},onglets:[3]},
@@ -1145,7 +1146,7 @@ const A=AnimKit.app({
       {id:'rayons',type:'check',label:'Rayons vers l\'œil',value:true,si:a=>a.p.vue==='cone'},
       {id:'spectre',type:'check',label:'Toutes les couleurs (400–700 nm)',value:false},
       {type:'note',si:a=>a.p.spectre,html:'Spectre continu, dispersion illustrative ajustée aux indices du DM. La loupe montre une coupe radiale au sommet de l\'arc, à échelle angulaire dilatée (graduations en vrais degrés).'},
-      {type:'boutons',items:[{label:'Vue initiale',titre:'Rétablit l\'orientation de la caméra',action:a=>{st.yaw=CAM0.yaw;st.pitch=CAM0.pitch;a.panels.obs.zoom=1}}]}]},
+      {type:'boutons',items:[{label:'Vue initiale',titre:'Rétablit l\'orientation de la caméra',action:a=>{st.yaw=CAM0.yaw;st.pitch=CAM0.pitch;a.cadrer('obs')}}]}]},
     {titre:'Affichage',items:[
       {id:'normales',type:'check',label:'Normales',value:true,onglets:[0]},
       {id:'angles',type:'check',label:'Angles',value:true,onglets:[0,3]},
@@ -1315,7 +1316,8 @@ function decomposition(a){
     s+=S.line(c[0]-R*1.15,c[1],c[0]+R*1.15,c[1],{c:C.ink2,w:1,dash:`${4*k} ${4*k}`});
     let p0,p1;
     if(j===1){p0=[c[0]-R*Math.cos(m.r),c[1]-R*Math.sin(m.r)];p1=[c[0]-R*Math.cos(m.r),c[1]+R*Math.sin(m.r)]}
-    else{const ia=j===0?m.i:m.r,ra=j===0?m.r:m.i;p0=[c[0]-R*Math.cos(ia),c[1]+R*Math.sin(ia)];p1=[c[0]+R*Math.cos(ra),c[1]-R*Math.sin(ra)]}
+    else if(j===0){p0=[c[0]-R*Math.cos(m.i),c[1]+R*Math.sin(m.i)];p1=[c[0]+R*Math.cos(m.r),c[1]-R*Math.sin(m.r)]}
+    else{p0=[c[0]-R*Math.cos(m.r),c[1]-R*Math.sin(m.r)];p1=[c[0]+R*Math.cos(m.i),c[1]+R*Math.sin(m.i)]}
     s+=ray(S,k,p0,c,C.E,2.4)+ray(S,k,c,p1,C.E,2.4);
     // prolongement du rayon incident et angle de déviation
     const u=[c[0]-p0[0],c[1]-p0[1]],L=Math.hypot(...u),pe=[c[0]+u[0]/L*R*.95,c[1]+u[1]/L*R*.95];
@@ -1331,12 +1333,12 @@ function decomposition(a){
 /* ===================== courbe D(x) ===================== */
 function grapheD(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,W=P.w,H=P.h,f=a.fmt;
-  const models=a.tab===1?[RM.solve(a.p.n,a.p.x)]:couleurs(a), ns=models.map(q=>q.n), mins=ns.map(n=>RM.minimum(n)), det=a.tab===2&&a.p.detail;
+  const models=a.tab===1?[RM.solve(a.p.n,a.p.x)]:couleurs(a,false), ns=models.map(q=>q.n), mins=ns.map(n=>RM.minimum(n)), det=a.tab===2&&a.p.detail;
   const Dm=mins.map(q=>q.D*R2D);
   const ymin=det?Math.min(...Dm)-.35:Math.floor(Math.min(...Dm)-2), ymax=det?Math.max(...Dm)+1.4:181, xmin=det?.8:0, xmax=det?.92:1;
   const G=S.graph({x:0,y:0,w:W,h:H,xmin,xmax,ymin,ymax,padB:52*k,padL:46*k,padT:26*k,ylab:`${S.v('D')} (°)`,yfmt:(v,st)=>f.fix(v,st<1?1:0)+'°'});
   geo.graphe=G; let s=S.clip('clipD',G)+G.svg;
-  s+=S.text(G.x0+G.w-30*k,G.y0+G.h+32*k,`${S.v('x')} =`,{anchor:'end',size:14})+fracS(S,k,G.x0+G.w-26*k,G.y0+G.h+32*k,S.v('b'),S.v('R'),{size:14});
+  s+=`<g data-ak-hors-graphe>${S.text(G.x0+G.w-30*k,G.y0+G.h+32*k,`${S.v('x')} =`,{anchor:'end',size:14})+fracS(S,k,G.x0+G.w-26*k,G.y0+G.h+32*k,S.v('b'),S.v('R'),{size:14})}</g>`;
   models.forEach((q,j)=>{
     const col=models.length===1?C.E:j===0?C.F:C.B, n=q.n, pts=[];
     for(let i=0;i<=500;i++){const x=Math.min(XMAX,xmin+(xmax-xmin)*i/500);pts.push([x,RM.solve(n,x).D*R2D])}
@@ -1355,7 +1357,7 @@ function histogramme(a){
   geo.graphe=null; let s=G.svg;
   for(const b of histCache.bins)if(b.density>0)s+=S.rect(G.X(b.lo),G.Y(b.density),Math.max(.5,G.X(b.hi)-G.X(b.lo)-.6),G.y0+G.h-G.Y(b.density),{fill:C.E,fop:.75});
   const th=RM.solve(a.p.n,a.p.x).theta*R2D;s+=S.line(G.X(th),G.y0,G.X(th),G.y0+G.h,{c:C.cInk,w:2,dash:`${5*k} ${4*k}`})+S.text(G.X(th)+5*k,G.y0+10*k,'rayon sélectionné',{size:13,c:C.cInk,base:'top',anchor:G.X(th)>G.x0+G.w*.7?'end':'start'});
-  s+=S.text(G.x0+G.w,G.y0+G.h+30*k,`θ = 180° − ${S.v('D')}`,{anchor:'end',size:14});
+  s+=`<g data-ak-hors-graphe>${S.text(G.x0+G.w,G.y0+G.h+30*k,`θ = 180° − ${S.v('D')}`,{anchor:'end',size:14})}</g>`;
   a.svg('graphe',s);
 }
 

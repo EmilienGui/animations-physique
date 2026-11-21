@@ -714,6 +714,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -1018,7 +1019,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1230,20 +1231,21 @@ P.parseTableau=function(text){
 };
 
 /* ---------- statistiques d'une série ---------- */
-P.mean=v=>{let s=0;for(let i=0;i<v.length;i++)s+=v[i];return v.length?s/v.length:NaN};
-P.sd=(v,m)=>{const n=v.length;if(n<2)return NaN;if(m===undefined)m=P.mean(v);let s=0;for(let i=0;i<n;i++)s+=(v[i]-m)*(v[i]-m);return Math.sqrt(s/(n-1))};
+P.mean=v=>{const n=v.length;if(!n)return NaN;const v0=v[0];let s=0;for(let i=1;i<n;i++)s+=v[i]-v0;return v0+s/n};
+P.sd=(v,m)=>{const n=v.length;if(n<2)return NaN;if(m===undefined)m=P.mean(v);let s=0,c=0;for(let i=0;i<n;i++){const d=v[i]-m;s+=d*d;c+=d}return Math.sqrt(Math.max(0,(s-c*c/n)/(n-1)))};
 P.typeA=v=>{const n=v.length,m=P.mean(v),s=P.sd(v,m);return{n,mean:m,s,u:n>1?s/Math.sqrt(n):NaN}};
 P.uniforme=D=>D/SQ3;
 P.notice=(lecture,pct,digits,res)=>pct/100*Math.abs(lecture)+digits*res;
-P.compose=(...u)=>Math.sqrt(u.reduce((s,x)=>s+x*x,0));
-P.ecartNorm=(x1,u1,x2,u2)=>{const d=Math.sqrt(u1*u1+u2*u2);return d>0?Math.abs(x1-x2)/d:(x1===x2?0:Infinity)};
+P.compose=(...u)=>Math.hypot(...u);
+P.ecartNorm=(x1,u1,x2,u2)=>{const d=Math.hypot(u1,u2);return d>0?Math.abs(x1-x2)/d:(x1===x2?0:Infinity)};
 
 /* arrondi : u par excès à 2 chiffres significatifs, valeur arrondie au même rang */
 P.arrondi=function(x,u){
   if(!(u>0)||!isFinite(u)||!isFinite(x))return null;
   let e=Math.floor(Math.log10(u)),q=Math.pow(10,e-1),m=Math.ceil(u/q-1e-9);
   if(m>=100){m=10;e+=1;q=Math.pow(10,e-1)}
-  let rx=Math.round(x/q)*q;
+  let rx=q>0&&isFinite(x/q)?Math.round(x/q)*q:x;
+  if(!isFinite(rx))rx=x;
   if(Object.is(rx,-0)||rx===0)rx=0;
   return{x:rx,u:m*q,d:Math.max(0,1-e),e};
 };
@@ -1256,10 +1258,12 @@ P.formater=function(x,u){
   if(sci){
     const fu=Math.pow(10,eu);
     if(r.x===0)return{sci:true,xStr:'0.0',ex:eu,uStr:(r.u/fu).toFixed(1),eu,r};
-    const f=Math.pow(10,ex),dx=Math.max(0,ex-(eu-1));
-    let xm=r.x/f,eUse=ex;
-    if(Math.abs(Number(xm.toFixed(dx)))>=10){eUse++;xm=r.x/Math.pow(10,eUse)}
-    const dxUse=Math.max(0,eUse-(eu-1));
+    let eUse=ex,xm=r.x/Math.pow(10,eUse);
+    let dx=Math.min(16,Math.max(0,eUse-(eu-1)));
+    const absM=Math.abs(Number(xm.toFixed(dx)));
+    if(absM>=10){eUse++;xm=r.x/Math.pow(10,eUse)}
+    else if(absM<1&&absM>0){eUse--;xm=r.x/Math.pow(10,eUse)}
+    const dxUse=Math.min(16,Math.max(0,eUse-(eu-1)));
     return{sci:true,xStr:xm.toFixed(dxUse),ex:eUse,uStr:(r.u/fu).toFixed(1),eu,r};
   }
   return{sci:false,xStr:r.x.toFixed(r.d),ex:0,uStr:r.u.toFixed(r.d),eu:0,r};
@@ -1326,7 +1330,7 @@ P.compiler=function(expr,noms){
     const c=raw[k],p=tok[tok.length-1];
     if(p){
       const pFin=p.t==='num'||p.t==='val'||p.t===')';
-      const cDeb=c.t==='val'||c.t==='fn'||c.t==='('||c.t==='num';
+      const cDeb=c.t==='val'||c.t==='fn'||c.t==='(';
       if(pFin&&cDeb)tok.push({t:'*',v:'*'});
     }
     tok.push(c);
@@ -1412,7 +1416,8 @@ P.budget=function(fn,vars,seed){
   vars.forEach((v,i)=>{
     const u=P.uEff(v);
     if(!(u>0)){c.push(0);cLin.push(0);return}
-    const h=Math.max(1e-4*u,1e-6*Math.abs(vals[i]),1e-12);
+    const ax=Math.abs(vals[i]);
+    const h=ax>0?Math.max(1e-7*ax,Math.min(1e-4*u,1e-4*ax)):1e-4*u;
     const a=vals.slice(),b=vals.slice();a[i]+=h;b[i]-=h;
     const fa=fn(...a),fb=fn(...b);
     let d=NaN;
@@ -1460,7 +1465,8 @@ P.transfo=function(code,expr,varNom){
   return{fn:z=>z,id:true};
 };
 function deriv1(fn,x,u){
-  const h=Math.max(1e-4*(u||0),1e-6*Math.abs(x),1e-10);
+  const ax=Math.abs(x);
+  const h=ax>0?Math.max(1e-7*ax,u>0?Math.min(1e-4*u,1e-4*ax):1e-6*ax):(u>0?1e-4*u:1e-10);
   const a=fn(x+h),b=fn(x-h);
   if(isFinite(a)&&isFinite(b))return(a-b)/(2*h);
   const y0=fn(x);
@@ -1490,7 +1496,7 @@ P.fit=function(x,y){
   for(let i=0;i<n;i++){sxx+=(x[i]-mx)*(x[i]-mx);sxy+=(x[i]-mx)*(y[i]-my)}
   const a=sxx>0?sxy/sxx:NaN;return{a,b:my-a*mx};
 };
-P.zReg=function(pts,a,b){return pts.map(p=>{const d=Math.sqrt(p.uy*p.uy+a*a*p.ux*p.ux);return d>0?(p.y-a*p.x-b)/d:0})};
+P.zReg=function(pts,a,b){return pts.map(p=>{const d=Math.hypot(p.uy,a*p.ux);return d>0?(p.y-a*p.x-b)/d:0})};
 P.mcReg=function(pts,loi,M,seed,tx,ty){
   const r=P.rng(seed),n=pts.length,A=new Float64Array(M),B=new Float64Array(M),x=new Array(n),y=new Array(n);
   const fx=tx&&tx.fn&&!tx.id?tx.fn:null,fy=ty&&ty.fn&&!ty.id?ty.fn:null;
@@ -1587,13 +1593,14 @@ P.comparer=function(items){
   const ponderables=items.filter(m=>m.u>0);
   let xMoy=NaN,uMoy=NaN,chi2=NaN,chi2Red=NaN;
   if(ponderables.length>=2){
+    let uRef=Infinity;for(const m of ponderables)if(m.u<uRef)uRef=m.u;
     let W=0,Wx=0;
-    for(const m of ponderables){const w=1/(m.u*m.u);W+=w;Wx+=w*m.x}
-    xMoy=Wx/W;uMoy=1/Math.sqrt(W);
+    for(const m of ponderables){const s=uRef/m.u,w=s*s;W+=w;Wx+=w*m.x}
+    xMoy=Wx/W;uMoy=uRef/Math.sqrt(W);
     chi2=ponderables.reduce((s,m)=>s+Math.pow((m.x-xMoy)/m.u,2),0);
     chi2Red=chi2/(ponderables.length-1);
   }
-  return{Z,paires,zMax,compatible:zMax<=2,xMoy,uMoy,chi2,chi2Red};
+  return{Z,paires,zMax,compatible:zMax<=2,xMoy,uMoy,chi2,chi2Red,nPond:ponderables.length};
 };
 
 return P;
@@ -1632,13 +1639,14 @@ const finis=(...v)=>v.every(isFinite);
 function ecrire(x,u,unite,nom){
   const nm=nom||'x', un=suffixeUnite(unite), neg=s=>s.replace('-','−');
   const fm=PH2.formater(x,u);
-  if(!fm)return `${nm} = ${F.sig(x,4)}${un}`;
+  if(!fm)return u===0?`${nm} = ${F.sig(x,4)}${un} , u(${nm}) = 0${un}`:`${nm} = ${F.sig(x,4)}${un}`;
   const ex=k=>String(k).replace('-','−');
   if(fm.sci){
     return `${nm} = ${neg(fm.xStr)} × 10<sup>${ex(fm.ex)}</sup>${un} , u(${nm}) = ${fm.uStr} × 10<sup>${ex(fm.eu)}</sup>${un}`;
   }
   return `${nm} = ${neg(fm.xStr)}${un} , u(${nm}) = ${fm.uStr}${un}`;
 }
+const fmtZ=(z,n=3)=>isFinite(z)?F.sig(z,n):'∞';
 const lienz=z=>z<=2?`<span class="ok">compatible</span>`:`<span class="ko">incompatible</span>`;
 function echelle(lo,hi){const m=Math.max(Math.abs(lo),Math.abs(hi));if(!(m>0))return 1;const e=Math.floor(Math.log10(m));return(e<-3||e>5)?Math.pow(10,e):1}
 const suffixe=f=>f===1?'':` ×10<tspan font-size="72%" dy="-0.55em">${String(Math.round(Math.log10(f))).replace('-','−')}</tspan><tspan dy="0.4em">\u200B</tspan>`;
@@ -1674,10 +1682,10 @@ function histo(a,R,o){
   const pic=m=>mY(1/(m.s*Math.sqrt(2*Math.PI)));
   if(o.modele)ymax=Math.max(ymax,pic(o.modele));
   if(o.lin)ymax=Math.max(ymax,pic(o.lin));
-  if(o.ref&&o.ref.u>0)ymax=Math.max(ymax,pic({s:o.ref.u}));
   if(o.hauteur)ymax=Math.max(ymax,o.hauteur);
   const hU=o.unif?(lay&&ymax>0?0.5*ymax:mY(1/(2*o.unif.D))):0;
   if(o.unif)ymax=Math.max(ymax,hU);
+  if(o.ref&&o.ref.u>0){const pr=pic({s:o.ref.u});ymax=Math.max(ymax,ymax>0?Math.min(pr,2.5*ymax):pr)}
   if(!(ymax>0))ymax=1;
   ymax*=o.bandes?1.75:1.14;
   const pad=0.03*(o.xhi-o.xlo),xmin=(o.xlo-pad)/f,xmax=(o.xhi+pad)/f;
@@ -1750,7 +1758,7 @@ const CACHE={};
 function memo(nom,cle,fn){const c=CACHE[nom];if(c&&c.cle===cle)return c.val;const val=fn();CACHE[nom]={cle,val};return val}
 const OHM=[[0.010,1.01],[0.020,1.98],[0.030,3.03],[0.040,3.99],[0.050,5.02],[0.060,5.97]].map(([x,y])=>[x,5e-4,y,0.02].map(nbTexte));
 const exProduit=()=>({type:'produit',nom:'c',unite:'m·s⁻¹',k:'1',vars:[V('lambda',0.0085,'u',0.0001,1),V('f',40000,'u',200,1)],mute:[false,false],ref:false,xref:'340',uref:'0'});
-const defaut=()=>({
+const exemple=()=>({
   t0:{nom:'T',unite:'s',rows:['1.52','1.49','1.51','1.50','1.53','1.48','1.51','1.50','1.52','1.49'].map(x=>[x]),B:false,modeB:'D',delta:'0.01',bmin:'1.49',bmax:'1.51',pct:'0.5',dgt:'2',res:'0.01',lec:'',ref:false,xref:'1.50',uref:'0'},
   t1:{type:'somme',nom:'d',unite:'mm',k:'1',vars:[V('x1',10,'u',.5,-1),V('x2',30,'u',.5,1)],mute:[false,false],ref:false,xref:'21.5',uref:'0'},
   t2:{formule:'4*pi^2*L/T^2',nom:'g',unite:'m·s⁻²',vars:[V('L',1.000,'u',.002,1),V('T',2.012,'u',.005,1)],mute:[false,false],N:100000,graine:1,lin:false,ref:false,xref:'9.81',uref:'0'},
@@ -1762,12 +1770,24 @@ const defaut=()=>({
   t4:{nom:"f'",unite:'mm',items:[{nom:'Autocollimation',val:100.4,kind:'u',p:1.1,on:true},{nom:'Bessel',val:99.6,kind:'u',p:0.9,on:true},{nom:'Silbermann',val:101.5,kind:'u',p:1.8,on:true}],moyPond:true,ref:true,xref:'100.0',uref:'0.5'},
   carnet:[]
 });
+const defaut=()=>({
+  t0:{nom:'',unite:'',rows:[],B:false,modeB:'D',delta:'',bmin:'',bmax:'',pct:'',dgt:'',res:'',lec:'',ref:false,xref:'',uref:'0'},
+  t1:{type:'somme',nom:'',unite:'',k:'1',vars:[V('x1',NaN,'u',NaN,1)],mute:[false],ref:false,xref:'',uref:'0'},
+  t2:{formule:'',nom:'',unite:'',vars:[V('x',NaN,'u',NaN,1)],mute:[false],N:100000,graine:1,lin:false,ref:false,xref:'',uref:'0'},
+  t3:{xnom:'',xun:'',xmode:'pt',xkind:'u',xcst:'',xpct:'',xdgt:'',xres:'',xtr:'id',xtrExpr:'',
+      ynom:'',yun:'',ymode:'pt',ykind:'u',ycst:'',ypct:'',ydgt:'',yres:'',ytr:'id',ytrExpr:'',
+      rows:[],off:[],loi:'unif',M:10000,graine:1,histos:false,zones:true,enveloppe:false,deplacer:false,zoomU:0,
+      predMode:'off',predVal:'',predU:'0',predExpr:'',predNom:'',predUn:'',
+      ref:false,xref:'',uref:'0',refB:false,bref:'',ubref:'0'},
+  t4:{nom:'',unite:'',items:[{nom:'Méthode 1',val:NaN,kind:'u',p:NaN,on:true},{nom:'Méthode 2',val:NaN,kind:'u',p:NaN,on:true}],moyPond:true,ref:false,xref:'',uref:'0'},
+  carnet:[]
+});
 const VIDE={
-  t0:t=>{t.rows=[];t.lec='';t.bmin='';t.bmax='';t.B=false;t.ref=false},
-  t1:t=>{t.k='1';t.vars=[V('x1',NaN,'u',NaN,1)];t.mute=[false];t.ref=false},
-  t2:t=>{t.formule='';t.vars=[V('x',NaN,'u',NaN,1)];t.mute=[false];t.ref=false},
-  t3:t=>{t.rows=[];t.off=[];t.ref=false;t.refB=false;t.predMode='off';t.xtr='id';t.ytr='id';t.xtrExpr='';t.ytrExpr=''},
-  t4:t=>{t.items=[{nom:'Méthode 1',val:NaN,kind:'u',p:NaN,on:true},{nom:'Méthode 2',val:NaN,kind:'u',p:NaN,on:true}];t.ref=false}
+  t0:t=>{Object.assign(t,defaut().t0)},
+  t1:t=>{const ty=t.type;Object.assign(t,defaut().t1,{type:ty})},
+  t2:t=>{const N=t.N;Object.assign(t,defaut().t2,{N})},
+  t3:t=>{const {loi,M}=t;Object.assign(t,defaut().t3,{loi,M})},
+  t4:t=>{Object.assign(t,defaut().t4)}
 };
 let ST=defaut();
 const CLE='PH2_Incertitudes_v1';
@@ -1834,7 +1854,7 @@ function lignesReg(t){
   });
   return lignes;
 }
-const regSans=()=>{const P=lignesReg(ST.t3).filter(q=>q&&!q.off);return P.length>0&&P.every(q=>q.ux===0&&q.uy===0)};
+const regSans=()=>{const P=lignesReg(ST.t3).filter(q=>q&&!q.off);return P.length<2||P.every(q=>q.ux===0&&q.uy===0)};
 const colonne=(rows,j)=>Float64Array.from(rows.map(r=>String(r[j]??'').trim()).filter(Boolean).map(lire).filter(isFinite));
 
 /* ---------- petits constructeurs de champs ---------- */
@@ -1884,6 +1904,7 @@ function grille(rows,cols,opts={}){
       tr.addEventListener('mouseenter',()=>opts.onHoverRow(i));
       tr.addEventListener('mouseleave',()=>opts.onHoverRow(-1));
       tr.addEventListener('focusin',()=>opts.onHoverRow(i));
+      tr.addEventListener('focusout',()=>opts.onHoverRow(-1));
     }
     if(opts.off){
       const tdc=h('td',{class:'cb'}),cb=h('input',{type:'checkbox','aria-label':`Inclure ${titreLigne} ${i+1}`,title:'Inclure dans l\'ajustement'});
@@ -2013,8 +2034,8 @@ function zInfo(t,x,u,keys={}){
   if(!finis(xr,x)||!(u>=0))return null;
   const z=PH2.ecartNorm(x,u,xr,ur);return{z,ref:{x:xr,u:ur},ok:z<=2};
 }
-const zLigne=(zi,prefix)=>zi?note(`${prefix?prefix+' — ':''}Écart normalisé ${M.v('Z')} = <b>${F.sig(zi.z,3)}</b> : ${lienz(zi.z)} (${M.v('Z')} ${zi.ok?'≤':'&gt;'} 2)`):'';
-const zCalc=(zi,nom,ref='x',titre)=>zi?`<br><b>${titre||'Écart normalisé'}</b><br>${M.v('Z')} = ${M.frac(`|${nom} − ${sub(ref,'réf')}|`,M.sqrt(`${M.v('u')}² + ${sub('u','réf')}²`))} = <span class="res">${F.sig(zi.z,3)}</span><span class="lien">donc</span>${lienz(zi.z)}<div class="gr">On compare ${M.v('Z')} à 2 ; le chevauchement visuel de deux distributions n'est pas un critère.</div>`:'';
+const zLigne=(zi,prefix)=>zi?note(`${prefix?prefix+' — ':''}Écart normalisé ${M.v('Z')} = <b>${fmtZ(zi.z,3)}</b> : ${lienz(zi.z)} (${M.v('Z')} ${zi.ok?'≤':'&gt;'} 2)`):'';
+const zCalc=(zi,nom,ref='x',titre)=>zi?`<br><b>${titre||'Écart normalisé'}</b><br>${M.v('Z')} = ${M.frac(`|${nom} − ${sub(ref,'réf')}|`,M.sqrt(`${M.v('u')}² + ${sub('u','réf')}²`))} = <span class="res">${fmtZ(zi.z,3)}</span><span class="lien">donc</span>${lienz(zi.z)}<div class="gr">On compare ${M.v('Z')} à 2 ; le chevauchement visuel de deux distributions n'est pas un critère.</div>`:'';
 const manque=(a,id,txt)=>{a.svg(id,a.S.text(a.panels[id].w/2,a.panels[id].h/2,txt,{anchor:'middle',size:15,c:a.C.ink2,halo:false}))};
 
 /* ---------- helpers Carnet & chaînage ---------- */
@@ -2118,7 +2139,7 @@ const A=AnimKit.app({
           const bR=h('button',{class:'mini',type:'button',title:'Utiliser comme référence de l\'onglet actif'},'→ Réf.');
           bR.onclick=()=>envoyerVersRef(it);
           const bX=h('button',{class:'ph-x',type:'button',title:'Retirer du carnet','aria-label':'Retirer du carnet'},'×');
-          bX.onclick=()=>{ST.carnet.splice(idx,1);sauver();majCarnet()};
+          bX.onclick=()=>{pushUndo('retirer du carnet');ST.carnet.splice(idx,1);sauver();majCarnet();a.majUndo()};
           acts.append(bP,bC,bR,bX);row.append(acts);list.append(row);
         });
         const foot=h('div',{class:'ph-bar'});
@@ -2143,8 +2164,8 @@ const A=AnimKit.app({
       const vd=h('button',{class:'mini',type:'button',title:'Effacer les saisies de cet onglet'},'Vider');
       ex.onclick=()=>{
         pushUndo('charger exemple');
-        if(k==='t1'){const ty=ST.t1.type;ST.t1=ty==='produit'?exProduit():defaut().t1;ST.t1.type=ty}
-        else ST[k]=defaut()[k];
+        if(k==='t1'){const ty=ST.t1.type;ST.t1=ty==='produit'?exProduit():exemple().t1;ST.t1.type=ty}
+        else ST[k]=exemple()[k];
         construire(k);a.majUndo();change();
       };
       vd.onclick=()=>{pushUndo('vider l\'onglet');VIDE[k](ST[k]);construire(k);a.majUndo();change()};
@@ -2402,7 +2423,7 @@ const A=AnimKit.app({
           s.onchange=()=>{it.kind=s.value;change()};cell(s);
           cell(inp(nbTexte(it.p),x=>{it.p=Math.abs(lire(x))}));
           const td=h('td');
-          if(t.items.length>2){const x=h('button',{class:'ph-x',type:'button',tabindex:'-1',title:'Supprimer','aria-label':'Supprimer cette mesure'},'×');x.onclick=()=>{t.items.splice(i,1);buildCmp();change()};td.append(x)}
+          if(t.items.length>2){const x=h('button',{class:'ph-x',type:'button',tabindex:'-1',title:'Supprimer','aria-label':'Supprimer cette mesure'},'×');x.onclick=()=>{pushUndo('supprimer une mesure');t.items.splice(i,1);buildCmp();a.majUndo();change()};td.append(x)}
           tr.append(td);tb.append(tr);
         });
         tab.append(tb);root.append(tab);
@@ -2427,7 +2448,7 @@ const A=AnimKit.app({
     for(const id of['bud1','bud2'])a.drag(id,{hit:(x,y)=>HIT_BUD.some(r=>y>=r.y0&&y<r.y1),
       start:(x,y)=>{const r=HIT_BUD.find(r=>y>=r.y0&&y<r.y1);if(!r)return;const m=ST[id==='bud1'?'t1':'t2'].mute;m[r.i]=!m[r.i];sauver()},move:()=>{}});
     /* déplacement des points de la régression (verrouillé par défaut en TP ; actif si case cochée et sans transformation) */
-    a.drag('reg3',{hit:(x,y)=>ST.t3.deplacer&&ST.t3.xtr==='id'&&ST.t3.ytr==='id'&&pointProche(x,y)>=0,
+    a.drag('reg3',{hit:(x,y)=>ST.t3.deplacer&&(ST.t3.xtr||'id')==='id'&&(ST.t3.ytr||'id')==='id'&&pointProche(x,y)>=0,
       start:(x,y)=>{pushUndo('déplacer un point');ST.drag3=pointProche(x,y);ST.gel3=RG3;a.majUndo()},
       move:(x,y)=>{const g=GEL3&&GEL3.G,i=ST.drag3;if(!g||i<0||(!IDX3[i]&&IDX3[i]!==0))return;const r=ST.t3.rows[IDX3[i]];r[0]=nbTexte(+(g.xv(x)*GEL3.f).toPrecision(4));r[2]=nbTexte(+(g.yv(y)*GEL3.fy).toPrecision(4))},
       end:()=>{ST.drag3=-1;ST.gel3=null;sauver();const g=a.panes.t3.querySelector('.ph-grid');if(g&&g.build)g.build()}});
@@ -2475,7 +2496,7 @@ function d0(a){
   const xlab=axeGrandeur(nom,unite),moyenne=`<tspan text-decoration="overline">${nom}</tspan>`;
   const incertitudeMoyenne=`u(${barreMoyenne(nom)})`;
   const data=colonne(t.rows,0),N=data.length,Aa=N>=2?PH2.typeA(data):null;
-  const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&bmax>bmin;
+  const bmin=lire(t.bmin),bmax=lire(t.bmax),bornes=t.B&&t.modeB==='B'&&finis(bmin,bmax)&&bmax>bmin;
   const lecture=Aa?Aa.mean:(N===1?data[0]:bornes?(bmin+bmax)/2:lire(t.lec));
   let Delta=NaN,uB=0,pctVal=0,dgtVal=0,resVal=0;
   if(t.B){
@@ -2513,6 +2534,7 @@ function d0(a){
     r+=ligneRes('Résultat',ecrire(x,u,unite,nom),{nom:nomBrut,x,u,unite,versPropag:true});
     if(okB&&Delta>0)r+=note(`type B : ${M.v('Δ')} = ${F.sig(Delta,3)}${unite?'&nbsp;'+esc(unite):''}, ${sub('u','B')} = ${M.frac('Δ',M.sqrt('3'))} = ${F.sig(uB,3)}${unite?'&nbsp;'+esc(unite):''}`,'gr');
     r+=note(Aa&&okB?`type A (${M.v('N')} = ${N}) et type B composés`:Aa?`type A, ${M.v('N')} = ${N} mesures`:'type B seul');
+    if(Aa&&Aa.s===0&&!okB)r+=note('Dispersion nulle (valeurs identiques) : ajoutez une évaluation de type B (l\'absence de dispersion ne signifie pas u = 0).','warn');
   }else r+=note('Entrez au moins deux mesures, ou une valeur lue avec une évaluation de type B.','gr');
   r+=zLigne(zi);
   setZone(a.zones.resultat,r);
@@ -2536,9 +2558,11 @@ function d1(a){
   const incertitude=`u(${nom})`,sym=M.v(nom),uSym=`${M.v('u')}(${sym})`;
   const P1=a.panels.bud1,P2=a.panels.res1;
   const ok=vars.length&&vars.every(v=>finis(v.val,v.p,v.coef))&&(somme||finis(k)&&vars.every(v=>v.val!==0));
-  if(!ok){manque(a,'bud1','Complétez les valeurs, incertitudes et coefficients.');a.svg('res1','');a.legend([]);
+  if(!ok){HIT_BUD=[];manque(a,'bud1','Complétez les valeurs, incertitudes et coefficients.');a.svg('res1','');a.legend([]);
     setZone(a.zones.resultat,note('Complétez le tableau des grandeurs mesurées.','gr'));setZone(calcZone(),'');return}
   const B=somme?PH2.budgetSomme(ve):PH2.budgetProduit(ve,k);
+  if(!finis(B.y0,B.uLin)){HIT_BUD=[];manque(a,'bud1','Calcul hors domaine (puissance non réelle ou débordement).');a.svg('res1','');a.legend([]);
+    setZone(a.zones.resultat,note('Expression non définie ou hors limites numériques pour ces valeurs et exposants.','ko'));setZone(calcZone(),'');return}
   const y=B.y0,u=B.uLin,zi=zInfo(t,y,u);
   a.svg('bud1',budget(a,{x:0,y:0,w:P1.w,h:P1.h},vars,B.c,mute,u,`Part de chaque grandeur dans ${incertitude}²`));
   const lo=[y-3.6*u],hi=[y+3.6*u];if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
@@ -2577,14 +2601,15 @@ function d2(a){
   const dup=noms.find((n,i)=>noms.indexOf(n)!==i),mauvais=noms.find(n=>!PH2.nomValide(n));
   if(mauvais!==undefined)err=`Nom de grandeur non valide : « ${mauvais} » (lettres, chiffres et _ ; ni nom de fonction, ni pi).`;
   else if(dup!==undefined)err=`Deux grandeurs portent le nom « ${dup} ».`;
-  let cp=err?{err}:PH2.compiler(t.formule,noms);
-  if(!err&&!cp.err&&!vars.every(v=>finis(v.val,v.p)))cp={err:'Complétez les valeurs et les incertitudes.'};
-  if(!cp.err){const y0=cp.fn(...vars.map(v=>v.val));if(!isFinite(y0))cp={err:'La formule ne donne pas un nombre pour ces valeurs.'}}
+  const vide2=!String(t.formule||'').trim()&&!err;
+  let cp=err?{err}:vide2?{vide:true}:PH2.compiler(t.formule,noms);
+  if(!err&&!cp.err&&!cp.vide&&!vars.every(v=>finis(v.val,v.p)))cp={err:'Complétez les valeurs et les incertitudes.'};
+  if(!cp.err&&!cp.vide){const y0=cp.fn(...vars.map(v=>v.val));if(!isFinite(y0))cp={err:'La formule ne donne pas un nombre pour ces valeurs.'}}
   const e2=document.getElementById('ph-e2');if(e2)e2.textContent=cp.err||'';
-  if(cp.err){manque(a,'res2',cp.err);a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('Corrigez la formule ou les grandeurs.','gr'));setZone(calcZone(),'');return}
+  if(cp.vide||cp.err){HIT_BUD=[];const msg=cp.vide?'Saisissez une formule et les grandeurs mesurées.':cp.err;manque(a,'res2',msg);a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note(cp.vide?msg:'Corrigez la formule ou les grandeurs.','gr'));setZone(calcZone(),'');return}
   const ve=vEff(vars,mute),N=RAPIDE?Math.min(+t.N,5000):+t.N;
   const ys=memo('mc2',JSON.stringify([t.formule,ve,N,t.graine]),()=>{const y=PH2.mc(cp.fn,ve,N,t.graine),n=y.length,m=PH2.mean(y);return{y,n,m,s:n>1?PH2.sd(y,m):NaN,lay:n>0?PH2.hist(y):null}});
-  if(ys.n<2||!ys.lay){manque(a,'res2','Aucune valeur simulée exploitable.');a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('La formule ne donne pas de valeur exploitable pour ces tirages.','gr'));setZone(calcZone(),'');return}
+  if(ys.n<2||!ys.lay){HIT_BUD=[];manque(a,'res2','Aucune valeur simulée exploitable.');a.svg('bud2','');a.legend([]);setZone(a.zones.resultat,note('La formule ne donne pas de valeur exploitable pour ces tirages.','gr'));setZone(calcZone(),'');return}
   const B=PH2.budget(cp.fn,ve,t.graine),y0=B.y0,sd=ys.s,zi=zInfo(t,y0,sd);
   const incertitude=`u(${nom})`,symbole=M.v(nom),uSymbole=`${M.v('u')}(${symbole})`;
   a.svg('bud2',budget(a,{x:0,y:0,w:P2.w,h:P2.h},vars,B.c,mute,B.uLin,`Part dans ${incertitude}² (${B.mcFallback?'linéarisée + MC 1D':'linéarisée'})`));
@@ -2592,13 +2617,15 @@ function d2(a){
   if(zi){lo.push(zi.ref.x-3*zi.ref.u,zi.ref.x);hi.push(zi.ref.x+3*zi.ref.u,zi.ref.x)}
   const xlo=Math.min(...lo),xhi=Math.max(...hi);
   const o={lay:ys.lay,counts:PH2.compte(ys.y,ys.n,ys.lay),n:ys.n,mode:'dens',xlo,xhi,xlab:axeGrandeur(nom,unite),ylab:'Effectif normalisé',cid:'r2',
-    hauteur:sd>0?(1/(sd*Math.sqrt(2*Math.PI)))*echelle(xlo,xhi)*0.9:0,moyenne:y0,moyNom:nom,interv:{m:y0,u:sd,label:incertitude,haut:true}};
+    hauteur:sd>0?(1/(sd*Math.sqrt(2*Math.PI)))*echelle(xlo,xhi)*0.9:0,moyenne:y0,moyNom:nom};
+  if(sd>0)o.interv={m:y0,u:sd,label:incertitude,haut:true};
   if(t.lin&&B.uLin>0)o.lin={m:B.y0,s:B.uLin};
   if(zi){o.ref=zi.ref;o.refNom=nom}
   a.svg('res2',histo(a,{x:0,y:0,w:P1.w,h:P1.h},o).svg);
-  a.legend([{c:BLEU,label:`Valeurs simulées de ${nom}`},{c:a.C.ink,label:`Valeur calculée de ${nom}`,dash:true},{c:a.C.E,label:`${incertitude} (Monte-Carlo)`},t.lin&&{c:a.C.E,label:'Linéarisation',dash:true},zi&&{c:a.C.v,label:'Référence'}]);
+  a.legend([{c:BLEU,label:`Valeurs simulées de ${nom}`},{c:a.C.ink,label:`Valeur calculée de ${nom}`,dash:true},sd>0&&{c:a.C.E,label:`${incertitude} (Monte-Carlo)`},t.lin&&{c:a.C.E,label:'Linéarisation',dash:true},zi&&{c:a.C.v,label:'Référence'}]);
   const sp=v=>v.toLocaleString('fr-FR').replace(/[\u202F\u00A0]/g,' ');
   let r=ligneRes('Résultat',ecrire(y0,sd,unite,nom),{nom:nomBrut,x:y0,u:sd,unite})+note(`Monte-Carlo, ${sp(ys.n)} tirages : ${incertitude} = écart-type des valeurs simulées`);
+  if(mute.some(Boolean))r+=note('Certaines incertitudes sont mises à zéro (clic sur une barre du budget).','gr');
   if(ys.n<N)r+=note(`${sp(N-ys.n)} tirage(s) hors domaine de définition écarté(s) (${F.fix(100*(N-ys.n)/N,1)} %).`,'warn');
   if(sd>0&&Math.abs(ys.m-y0)/sd>0.2)r+=note(`Non-linéarité marquée : la moyenne Monte-Carlo (${F.sig(ys.m,4)}) s'écarte de la valeur nominale (${F.sig(y0,4)}).`,'warn');
   if(sd>0&&B.uLin>0&&Math.abs(B.uLin-sd)/sd>0.1)r+=note(`Écart de ${F.fix(100*(B.uLin-sd)/sd,1)} % entre linéarisation (${F.sig(B.uLin,2)}) et Monte-Carlo (${F.sig(sd,2)}) : la linéarisation atteint ses limites.`,'warn');
@@ -2631,7 +2658,7 @@ function d3(a){
   const tx=PH2.transfo(t.xtr||'id',t.xtrExpr,'x'),ty=PH2.transfo(t.ytr||'id',t.ytrExpr,'y');
   if(tx.err||ty.err){
     const msg=tx.err?`Transformation X : ${tx.err}`:`Transformation Y : ${ty.err}`;
-    manque(a,'reg3',msg);a.svg('z3','');if(a.panels.ab3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    manque(a,'reg3',msg);a.svg('z3','');if(a.panels.ab3)manque(a,'ab3',msg);a.legend([]);if(ST.drag3<0)GEL3=null;GELZ3=null;
     setZone(a.zones.resultat,note(msg,'ko'));setZone(calcZone(),'');return;
   }
   const infoX=transfoInfo(t.xtr||'id',t.xtrExpr,nxBrut,t.xun,'x');
@@ -2653,14 +2680,16 @@ function d3(a){
   IDX3=pts.map(p=>p.i);
   const n=pts.length;
   if(n<2){
-    manque(a,'reg3',trAct.rejet?'Points hors domaine de la transformation.':'Entrez au moins deux points actifs.');
-    a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    const msg=trAct.rejet?'Points hors domaine de la transformation.':'Entrez au moins deux points actifs.';
+    manque(a,'reg3',msg);
+    a.svg('z3','');if(P3)manque(a,'ab3',msg);a.legend([]);if(ST.drag3<0)GEL3=null;GELZ3=null;
     setZone(a.zones.resultat,note(trAct.rejet?`${trAct.rejet} point(s) hors domaine de la transformation (ex. ln ou 1/x sur ≤ 0).`:partiel?`${partiel} ligne(s) incomplète(s) ignorée(s).`:`Saisissez ${M.v(nxBrut)} et ${M.v(nyBrut)} pour chaque point, avec ${incX} et ${incY} si ces incertitudes sont connues.`,'gr'));
     setZone(calcZone(),'');return;
   }
   const X=pts.map(q=>q.x),Y=pts.map(q=>q.y),fit=PH2.fit(X,Y);
   if(!isFinite(fit.a)||!isFinite(fit.b)){
-    manque(a,'reg3','Abscisses toutes identiques : régression impossible.');a.svg('z3','');if(P3)a.svg('ab3','');a.legend([]);GEL3=null;GELZ3=null;
+    const msg='Abscisses toutes identiques : régression impossible.';
+    manque(a,'reg3',msg);a.svg('z3','');if(P3)manque(a,'ab3',msg);a.legend([]);if(ST.drag3<0)GEL3=null;GELZ3=null;
     setZone(a.zones.resultat,note('Toutes les abscisses actives sont égales : impossible de déterminer une pente.','ko'));setZone(calcZone(),'');return;
   }
   const z0=PH2.zReg(pts,fit.a,fit.b);
@@ -2750,12 +2779,13 @@ function d3(a){
     s+=S.circle(cx,cy,(ST.drag3===i||hl?8:6)*K,{fill:col,c:C.card,w:1.2,style:dragOk?'cursor:grab':''});
   });
   s+='</g>';
+  if(kzm>1&&!sans)s+=`<g data-ak-hors-graphe>${S.text(G.x0+8*K,G.y0+13*K,`Barres d'erreur ×${kzm} (affichage)`,{anchor:'start',size:12,c:C.ink2})}</g>`;
   /* infobulle SVG propre pour le point survolé */
   if(HOVER3>=0&&HOVER3<n){
     const q=pts[HOVER3],cx=G.X(q.x/f),cy=G.Y(q.y/fy);
     const tip=`#${q.i+1} : ${F.sig(q.x,4)} , ${F.sig(q.y,4)}${sans?'':` · z = ${F.sig(z[HOVER3],2)}`}`;
     const anchor=cx>G.x0+G.w*.62?'end':'start',txp=cx+(anchor==='end'?-12*K:12*K),typ=Math.max(G.y0+16*K,cy-12*K);
-    s+=S.text(txp,typ,tip,{anchor,size:12.5,c:C.ink,weight:600});
+    s+=`<g data-ak-hors-graphe>${S.text(txp,typ,tip,{anchor,size:12.5,c:C.ink,weight:600})}</g>`;
   }
   a.svg('reg3',s);
 
@@ -2778,20 +2808,22 @@ function d3(a){
   sz+='</g>'+S.text(Gz.x0+Gz.w-4*K,Gz.Y(2)-9*K,'+2',{anchor:'end',size:13,c:C.ink2,halo:false})+S.text(Gz.x0+Gz.w-4*K,Gz.Y(-2)+9*K,'−2',{anchor:'end',size:13,c:C.ink2,halo:false});
   a.svg('z3',sz);
 
-  if(t.histos&&!sans&&P3&&mc.A.length>=2){
-    const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B);
-    if(hA&&hB){
-      const w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w],rb=[hB.lo,hB.lo+hB.nb*hB.w];
-      if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
-      if(ziB){rb[0]=Math.min(rb[0],ziB.ref.x-3*ziB.ref.u,ziB.ref.x);rb[1]=Math.max(rb[1],ziB.ref.x+3*ziB.ref.u,ziB.ref.x)}
-      const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:axeGrandeur(S.v('a'),un),ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
-      if(zi){oa.ref=zi.ref;oa.refNom='a'}
-      const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:rb[0],xhi:rb[1],xlab:axeGrandeur(S.v('b'),uy),ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
-      if(ziB){ob.ref=ziB.ref;ob.refNom='b'}
-      a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
-    }
+  if(t.histos&&!sans&&P3){
+    if(mc.A.length>=2){
+      const hA=PH2.hist(mc.A),hB=PH2.hist(mc.B);
+      if(hA&&hB){
+        const w2=P3.w/2,ra=[hA.lo,hA.lo+hA.nb*hA.w],rb=[hB.lo,hB.lo+hB.nb*hB.w];
+        if(zi){ra[0]=Math.min(ra[0],zi.ref.x-3*zi.ref.u,zi.ref.x);ra[1]=Math.max(ra[1],zi.ref.x+3*zi.ref.u,zi.ref.x)}
+        if(ziB){rb[0]=Math.min(rb[0],ziB.ref.x-3*ziB.ref.u,ziB.ref.x);rb[1]=Math.max(rb[1],ziB.ref.x+3*ziB.ref.u,ziB.ref.x)}
+        const oa={lay:hA,counts:PH2.compte(mc.A,mc.A.length,hA),n:mc.A.length,mode:'dens',xlo:ra[0],xhi:ra[1],xlab:axeGrandeur(S.v('a'),un),ylab:'Effectif normalisé',moyenne:fit.a,moyNom:'a',cid:'a3'};
+        if(zi){oa.ref=zi.ref;oa.refNom='a'}
+        const ob={lay:hB,counts:PH2.compte(mc.B,mc.B.length,hB),n:mc.B.length,mode:'dens',xlo:rb[0],xhi:rb[1],xlab:axeGrandeur(S.v('b'),uy),ylab:'',moyenne:fit.b,moyNom:'b',cid:'b3'};
+        if(ziB){ob.ref=ziB.ref;ob.refNom='b'}
+        a.svg('ab3',histo(a,{x:0,y:0,w:w2,h:P3.h},oa).svg+histo(a,{x:w2,y:0,w:w2,h:P3.h},ob).svg);
+      }
+    }else manque(a,'ab3','Tirages Monte-Carlo insuffisants (hors domaine de transformation).');
   }
-  a.legend(t.histos&&!sans?[{c:BLEU,label:'Tirages Monte-Carlo'},{c:C.ink,label:'Valeur ajustée',dash:true},(zi||ziB)&&{c:C.v,label:'Référence'}]:[{c:BLEU,label:sans?'Point de mesure':'Point (|zᵢ| ≤ 2)',dot:true},ptsOff.length&&{c:C.ink2,label:'Point exclu',dot:true},t.zones&&!sans&&{c:C.cInk,label:(t.loi==='unif'?'Zone de tirage':'Zone de tirage 1σ, 2σ')+(kzm>1?` (u ×${kzm})`:'')},t.enveloppe&&isFinite(mc.ua)&&{c:C.E,label:'Enveloppe ±1σ, ±2σ',dash:true},!sans&&{c:C.F,label:'Point (|zᵢ| > 2)',dot:true},{c:C.ink,label:'Régression'},pred&&!pred.err&&(t.predMode==='y'||t.predMode==='x')&&{c:C.v,label:t.predMode==='y'?'Prévision Y(X₀)':'Étalonnage X(Y₀)',dot:true}]);
+  a.legend(t.histos&&!sans?[{c:BLEU,label:'Tirages Monte-Carlo'},{c:C.ink,label:'Valeur ajustée',dash:true},(zi||ziB)&&{c:C.v,label:'Référence'}]:[{c:BLEU,label:sans?'Point de mesure':`Point (|zᵢ| ≤ 2)${!t.zones&&kzm>1?` (barres u ×${kzm})`:''}`,dot:true},ptsOff.length&&{c:C.ink2,label:'Point exclu',dot:true},t.zones&&!sans&&{c:C.cInk,label:(t.loi==='unif'?'Zone de tirage':'Zone de tirage 1σ, 2σ')+(kzm>1?` (u ×${kzm})`:'')},t.enveloppe&&isFinite(mc.ua)&&{c:C.E,label:'Enveloppe ±1σ, ±2σ',dash:true},!sans&&{c:C.F,label:'Point (|zᵢ| > 2)',dot:true},{c:C.ink,label:'Régression'},pred&&!pred.err&&(t.predMode==='y'||t.predMode==='x')&&{c:C.v,label:t.predMode==='y'?'Prévision Y(X₀)':'Étalonnage X(Y₀)',dot:true}]);
 
   /* résultats */
   let r=ligneRes(`Pente ${M.v('a')}`,ecrire(fit.a,mc.ua,un,M.v('a')),{nom:'a',x:fit.a,u:mc.ua,unite:un,versPropag:true})
@@ -2800,9 +2832,10 @@ function d3(a){
     if(pred.err)r+=note(esc(pred.err),'ko');
     else{
       const pLab=t.predMode==='y'?`Prévision ${ny}`:t.predMode==='x'?`Étalonnage ${nx}`:esc(String(t.predNom||'').trim()||'f(a,b)');
+      const pSym=t.predMode==='y'?(ty.id?`${ny}₀`:'Y₀'):t.predMode==='x'?(tx.id?`${nx}₀`:'X₀'):esc(String(t.predNom||'').trim()||'f');
       const pNomBrut=t.predMode==='y'?nyBrut+'_0':t.predMode==='x'?nxBrut+'_0':(String(t.predNom||'').trim()||'f');
       const pUn=t.predMode==='y'?uy:t.predMode==='x'?ux:uniteCalculee(t.predUn);
-      r+=ligneRes(pLab,ecrire(pred.val,pred.u,pUn,pLab),{nom:pNomBrut,x:pred.val,u:pred.u,unite:pUn,versPropag:true});
+      r+=ligneRes(pLab,ecrire(pred.val,pred.u,pUn,pSym),{nom:pNomBrut,x:pred.val,u:pred.u,unite:pUn,versPropag:true});
       r+=note(`Corrélation (a, b) prise en compte (${pred.ok} tirages${pred.rejected?`, ${pred.rejected} hors domaine`:''}).`,'gr');
     }
   }
@@ -2916,18 +2949,22 @@ function d4(a){
     s+=S.line(X(cmp.xMoy-cmp.uMoy),y,X(cmp.xMoy+cmp.uMoy),y,{c:col,w:5});
     s+=S.circle(X(cmp.xMoy),y,6.5*K,{fill:col,c:C.card,w:1.5});
   }
-  s+='</g>';
-  /* libellés à gauche et scores Z à droite (hors clip) */
+  s+='</g><g data-ak-hors-graphe>';
+  /* libellés à gauche et scores Z à droite (hors clip pour rester visibles au zoom) */
   actifs.forEach((m,i)=>{
     const y=G.Y(nRows-i);
+    if(y<G.y0-2||y>G.y0+G.h+2)return;
     s+=S.text(G.x0-10*K,y,esc(m.nom),{anchor:'end',size:13.5,c:C.ink,halo:false});
-    if(hasRef)s+=S.text(G.x0+G.w+8*K,y,`Z = ${F.sig(zRefs[i],2)}`,{anchor:'start',size:12.5,c:zRefs[i]<=2?C.v:C.F,weight:600,halo:false});
+    if(hasRef)s+=S.text(G.x0+G.w+8*K,y,`Z = ${fmtZ(zRefs[i],2)}`,{anchor:'start',size:12.5,c:zRefs[i]<=2?C.v:C.F,weight:600,halo:false});
   });
   if(t.moyPond&&isFinite(cmp.xMoy)){
     const y=G.Y(1);
-    s+=S.text(G.x0-10*K,y,'Moy. pondérée',{anchor:'end',size:13.5,c:C.E,weight:600,halo:false});
-    if(hasRef&&isFinite(zMoyRef))s+=S.text(G.x0+G.w+8*K,y,`Z = ${F.sig(zMoyRef,2)}`,{anchor:'start',size:12.5,c:zMoyRef<=2?C.v:C.F,weight:600,halo:false});
+    if(y>=G.y0-2&&y<=G.y0+G.h+2){
+      s+=S.text(G.x0-10*K,y,'Moy. pondérée',{anchor:'end',size:13.5,c:C.E,weight:600,halo:false});
+      if(hasRef&&!isNaN(zMoyRef))s+=S.text(G.x0+G.w+8*K,y,`Z = ${fmtZ(zMoyRef,2)}`,{anchor:'start',size:12.5,c:zMoyRef<=2?C.v:C.F,weight:600,halo:false});
+    }
   }
+  s+='</g>';
   if(hasRef)s+=S.text(X(xr)+5*K,G.y0+13*K,S.v(nom,'réf'),{anchor:'start',size:13,c:C.v,weight:600});
   a.svg('cmp4',s);
   a.legend([{c:BLEU,label:'Mesure (±u épais, ±2u fin)',dot:true},t.moyPond&&isFinite(cmp.xMoy)&&{c:C.E,label:'Moyenne pondérée',dash:true},hasRef&&{c:C.v,label:'Référence'}]);
@@ -2937,15 +2974,15 @@ function d4(a){
   if(t.moyPond&&isFinite(cmp.xMoy)){
     r+=ligneRes('Moy. pondérée',ecrire(cmp.xMoy,cmp.uMoy,unite,nom),{nom:nomBrut+'_pond',x:cmp.xMoy,u:cmp.uMoy,unite,versPropag:true});
   }
-  if(cmp.compatible)r+=note(`Écart normalisé maximal entre mesures : ${M.v('Z')}<sub>max</sub> = <b>${F.sig(cmp.zMax,3)}</b> ≤ 2 — les ${actifs.length} résultats sont mutuellement compatibles.`,'ok');
+  if(cmp.compatible)r+=note(`Écart normalisé maximal entre mesures : ${M.v('Z')}<sub>max</sub> = <b>${fmtZ(cmp.zMax,3)}</b> ≤ 2 — les ${actifs.length} résultats sont mutuellement compatibles.`,'ok');
   else{
-    const koP=cmp.paires.filter(p=>!p.ok).map(p=>`${esc(actifs[p.i].nom)} / ${esc(actifs[p.j].nom)} (${M.v('Z')} = ${F.sig(p.z,3)})`).join(', ');
+    const koP=cmp.paires.filter(p=>!p.ok).map(p=>`${esc(actifs[p.i].nom)} / ${esc(actifs[p.j].nom)} (${M.v('Z')} = ${fmtZ(p.z,3)})`).join(', ');
     r+=note(`Incompatibilité entre mesures : ${koP}.`,'ko');
     if(t.moyPond&&isFinite(cmp.xMoy))r+=note('Attention : la moyenne pondérée suppose des mesures compatibles et indépendantes.','gr');
   }
   if(hasRef){
     const badR=actifs.filter((_,i)=>zRefs[i]>2).map((m,_,arr)=>esc(m.nom));
-    r+=note(badR.length?`Référence : écart > 2 pour ${actifs.map((m,i)=>zRefs[i]>2?`${esc(m.nom)} (Z = ${F.sig(zRefs[i],3)})`:'').filter(Boolean).join(', ')}.`:`Tous les résultats sont compatibles avec la référence (Z ≤ 2).`,badR.length?'ko':'ok');
+    r+=note(badR.length?`Référence : écart > 2 pour ${actifs.map((m,i)=>zRefs[i]>2?`${esc(m.nom)} (Z = ${fmtZ(zRefs[i],3)})`:'').filter(Boolean).join(', ')}.`:`Tous les résultats sont compatibles avec la référence (Z ≤ 2).`,badR.length?'ko':'ok');
   }
   setZone(a.zones.resultat,r);
 
@@ -2956,20 +2993,20 @@ function d4(a){
   actifs.forEach((mi,i)=>{
     c+=`<tr><td>${esc(mi.nom)}</td>${actifs.map((_,j)=>{
       if(i===j)return '<td class="gr">—</td>';
-      const zv=cmp.Z[i][j];return `<td class="${zv<=2?'ok':'ko'}">${F.sig(zv,3)}</td>`;
+      const zv=cmp.Z[i][j];return `<td class="${zv<=2?'ok':'ko'}">${fmtZ(zv,3)}</td>`;
     }).join('')}</tr>`;
   });
   c+='</tbody></table>';
   if(hasRef){
     c+=`<br><b>Comparaison à la référence</b> (${sg(xr)}${ur>0?` ± ${sg(ur)}`:''}${U})<table>`;
-    actifs.forEach((m,i)=>{c+=`<tr><td>${esc(m.nom)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">Z = ${F.sig(zRefs[i],3)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">${zRefs[i]<=2?'compatible':'incompatible'}</td></tr>`});
+    actifs.forEach((m,i)=>{c+=`<tr><td>${esc(m.nom)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">Z = ${fmtZ(zRefs[i],3)}</td><td class="${zRefs[i]<=2?'ok':'ko'}">${zRefs[i]<=2?'compatible':'incompatible'}</td></tr>`});
     c+='</table>';
   }
   if(isFinite(cmp.xMoy)){
     c+=`<br><b>Moyenne pondérée par l'inverse des variances</b> (w<sub>i</sub> = 1/u<sub>i</sub>²)<br>`;
     c+=`${M.v(barreMoyenne(nom))}<sub>pond</sub> = ${M.frac(`Σ ${sub(nom,'i')}/${sub('u','i')}²`,`Σ 1/${sub('u','i')}²`)} = ${sg(cmp.xMoy)}${U}<br>`;
     c+=`${M.v('u')}(${M.v(barreMoyenne(nom))}<sub>pond</sub>) = ${M.frac('1',M.sqrt(`Σ 1/${sub('u','i')}²`))} = <span class="res">${sg(cmp.uMoy)}${U}</span><br>`;
-    c+=`<span class="gr">χ² réduit = ${F.fix(cmp.chi2Red,2)} (pour ${actifs.length-1} degré(s) de liberté).</span>`;
+    c+=`<span class="gr">χ² réduit = ${F.fix(cmp.chi2Red,2)} (pour ${cmp.nPond-1} degré(s) de liberté).</span>`;
   }
   setZone(calcZone(),c);
 }

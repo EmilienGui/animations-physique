@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1236,7 +1237,7 @@ const A=AnimKit.app({
     {titre:'Situations',presets:[
       {label:'Lentille simple',onglets:[0],valeurs:{achrom:false,ap:12},action:a=>a.set('plane',a.p.f)},
       {label:'Doublet achromatique',onglets:[0],valeurs:{achrom:true,ap:12},action:a=>a.set('plane',a.p.f)},
-      ...Object.entries(FAM).map(([k,v])=>({label:v.nom,onglets:[1],valeurs:{family:k}})),
+      ...Object.entries(FAM).map(([k,v])=>({label:v.nom,onglets:[1],valeurs:{family:k,shape:'biconvex',flip:false,asphere:false}})),
       {label:'Diaphragmer',onglets:[1],valeurs:{ap2:3}},
       {label:'Plan-convexe bien orienté',onglets:[1],valeurs:{family:'sphere',shape:'plano',flip:false}},
       {label:'Plan-convexe retourné',onglets:[1],valeurs:{family:'sphere',shape:'plano',flip:true}}]},
@@ -1281,7 +1282,7 @@ const A=AnimKit.app({
   },
   change(a,id,v){
     if(id==='family'){const F=FAM[v];a.set('angle',F.angle,{silent:true});a.set('ap2',F.ap,{silent:true});a.set('autofocus',F.af,{silent:true});
-      if(F.plane)a.set('plane2',F.plane,{silent:true});if(v==='distortion')a.set('visual','mire',{silent:true})}
+      if(F.plane)a.set('plane2',F.plane,{silent:true});a.set('visual',v==='distortion'?'mire':'spot',{silent:true})}
   },
   onglet(a){a.play(false)},
   reset(a){a.t=0},
@@ -1370,7 +1371,9 @@ function calcGeo(a){
   const p=a.p, o=options(a), key=JSON.stringify([o,p.family]);
   if(geo.key!==key){
     const rs=faisceau(o), best=O.bestPlane(rs), fp=O.focusPlanes(rs);
-    const par=faisceau({...o,ap:.3},2,8), xp=O.bestPlane(par), yp=O.spot(par,xp).cy;
+    // foyer paraxial exact de Gauss (matrice ABCD de la lentille épaisse)
+    const M1=[1,0,-(o.n-1)/o.R1,1], Md=[1,8/o.n,0,1], M2=[1,0,(o.n-1)/o.R2,1], Mg=O.mat(M2,O.mat(Md,M1));
+    const xp=4-Mg[0]/Mg[2], yp=-Math.tan(o.angle)/Mg[2];
     let champ=null;
     if(p.family==='field'){champ=[];for(let d=-12;d<=12;d+=1.5){const r=faisceau({...o,angle:d*DEG},3,12),b=O.bestPlane(r);champ.push([b,O.spot(r,b).cy])}}
     let dist=null;
@@ -1425,7 +1428,7 @@ function geometrique(a){
     sphere:{label:'Foyer paraxial − meilleur plan',value:p.parax?sig(E.xp-E.best,3):'?',unit:p.parax?'mm':''},
     coma:{label:'Diamètre de la tache',value:sig(E.sp.diam*1000,3),unit:'µm'},
     astig:{label:'Écart des focales S − T',value:p.parax?sig(E.fp[1]-E.fp[0],3):'?',unit:p.parax?'mm':''},
-    field:{label:'Meilleur plan (champ) − foyer paraxial (axe)',value:p.parax?sig(E.best-O.bestPlane(faisceau({...E.o,angle:0,ap:.3},2,8)),3):'?',unit:p.parax?'mm':''},
+    field:{label:'Meilleur plan (champ) − foyer paraxial (axe)',value:p.parax?sig(E.best-E.xp,3):'?',unit:p.parax?'mm':''},
     distortion:{label:'Distorsion au bord de la grille',value:p.parax&&E.dist?sig(E.dist.bord*100,2):'?',unit:p.parax?'%':''}}[p.family];
   a.metrics([
     {label:'Rayon RMS de la tache',value:sig(E.sp.rms*1000,3),unit:'µm'},

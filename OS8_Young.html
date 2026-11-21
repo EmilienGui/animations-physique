@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1167,7 +1168,7 @@ const A=AnimKit.app({
             {id:'profil',titre:'L\'écran et le profil d\'intensité',zoom:false,poids:1,ratioTel:.7}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Montage du cours',titre:'λ₀ = 633 nm, a = 50 µm, r = 5 µm, D = d = 1 m',valeurs:{lambda:633,a:50,D:1,dS:1,width:5,slit1:true,slit2:true,exact:false,x:0,span:50}},
+      {label:'Montage du cours',titre:'λ₀ = 633 nm, a = 50 µm, r = 5 µm, D = d = 1 m',valeurs:{lambda:633,lamInc:false,a:50,D:1,dS:1,ys:0,width:5,slit1:true,slit2:true,exact:false,x:0,span:50,calc:false,env:false,lobes:false}},
       {label:'M sur une frange sombre',valeurs:{slit1:true,slit2:true},action:a=>{a.set('x',+darkX(a).toFixed(3))}},
       {label:'Fermer T₂ sur une frange sombre',titre:'La lumière réapparaît',valeurs:{slit1:true,slit2:false},action:a=>{a.set('x',+darkX(a).toFixed(3),{silent:true});a.set('slit2',false)}}],items:[]},
     {titre:'La lumière',items:[
@@ -1228,7 +1229,7 @@ const A=AnimKit.app({
     const mg=()=>st.mg,gg=()=>st.gg;
     a.drag('montage',{hit:(x,y)=>a.tab===4&&mg()&&Math.abs(x-mg().sx)<28*a.k&&Math.abs(y-mg().sy)<80*a.k,
       move:(x,y)=>{const g=mg();a.set('ys',U.clamp(+((g.cy-y)/g.srcScale).toFixed(1),-20,20))}});
-    a.drag('montage',{start:(x,y)=>{const g=mg();if(g)a.set('x',+(g.wx(y)*1000).toFixed(3))},move:(x,y)=>{const g=mg();if(g)a.set('x',+U.clamp(g.wx(y)*1000,-a.p.span,a.p.span).toFixed(3))}});
+    a.drag('montage',{start:(x,y)=>{const g=mg();if(g)a.set('x',+U.clamp(g.wx(y)*1000,-a.p.span,a.p.span).toFixed(3))},move:(x,y)=>{const g=mg();if(g)a.set('x',+U.clamp(g.wx(y)*1000,-a.p.span,a.p.span).toFixed(3))}});
     for(const w of['m1','m2'])a.drag('profil',{hit:(x)=>a.p.ruler&&gg()&&Math.abs(x-gg().X(st[w]*1000))<16*a.k,move:(x)=>{st[w]=U.clamp(gg().xv(x),-a.p.span,a.p.span)/1000}});
     a.drag('profil',{hit:(x,y)=>gg()&&x>gg().x0&&x<gg().x0+gg().w,start:(x)=>{a.set('x',+U.clamp(gg().xv(x),-a.p.span,a.p.span).toFixed(3))},move:(x)=>{a.set('x',+U.clamp(gg().xv(x),-a.p.span,a.p.span).toFixed(3))}});
     if(a.panels.profil.node.addEventListener)a.panels.profil.node.addEventListener('wheel',e=>{if(a.narrow)return;e.preventDefault();a.set('span',U.clamp(a.p.span*Math.exp(e.deltaY*.0015),.5,maxSpan(a)))},{passive:false});
@@ -1239,9 +1240,10 @@ const A=AnimKit.app({
     if(id==='D'||id==='span'||id==='x'){a.p.span=U.clamp(a.p.span,.5,maxSpan(a));if(a.tab===2&&a.p.span/1000/a.p.D>.1)a.p.exact=true}
     if(id==='D'||id==='span')a.p.x=U.clamp(a.p.x,-maxSpan(a),maxSpan(a));
     if(id==='lamInc'&&a.p.lamInc){a.p.ruler=true}
+    if(id==='span'||id==='ruler'||id==='lamInc'){const sp=a.p.span/1000;if(Math.abs(st.m1)>sp||Math.abs(st.m2)>sp){st.m1=U.clamp(st.m1,-sp*.8,sp*.8);st.m2=U.clamp(st.m2,-sp*.8,sp*.8);if(Math.abs(st.m2-st.m1)<sp*.05){st.m1=-sp*.4;st.m2=sp*.4}}}
   },
   onglet(a,i){
-    a.p.exact=false;a.p.ys=0;a.p.slit1=a.p.slit2=true;
+    a.p.exact=false;a.p.ys=0;a.p.slit1=a.p.slit2=true;a.p.calc=false;a.p.env=false;
     if(i===1)a.p.ratio=.35;if(i===3)a.p.bw=60;if(i===4)a.p.B=8;
     a.p.span=U.clamp(a.p.span,.5,maxSpan(a));a.p.x=U.clamp(a.p.x,-maxSpan(a),maxSpan(a));
   },

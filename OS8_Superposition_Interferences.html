@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1125,7 +1126,7 @@ const lenStr=(a,v)=>{const m=med(a);return m==='light'?a.fmt.sig(v*.5,3)+' µm':
 const W=a=>({sources:st.src,only:a.p.only,count:2,ratio:a.p.ratio,phase:a.p.phase,lambdaWorld:lamW(a),time:0});
 const sgn=a=>a.p.kind==='collision'?a.p.sign:a.p.bout;
 const sepNow=()=>Math.hypot(st.src[0].x-st.src[1].x,st.src[0].y-st.src[1].y);
-const posDefault=a=>{st.src=[{x:2,y:1.2},{x:2,y:-1.2}];st.probe={x:11,y:.45};a.p.sep=2.4};
+const posDefault=a=>{st.src=[{x:2,y:1.2},{x:2,y:-1.2}];st.probe={x:11,y:.45};a.set('sep',2.4,{silent:true})};
 const TMAX=3;                         // fenêtre du signal en M, en périodes
 const cnt={name:['Impulsions sur une corde','Cuve à ondes','Son dans l\'air','Lumière']};
 
@@ -1152,20 +1153,20 @@ const A=AnimKit.app({
             {id:'graphe',titre:'Signaux reçus en M',poids:1,ratioTel:.58}],
   reglages:[
     {titre:'Situations',onglets:[0],presets:[
-      {label:'Rencontre, même signe',valeurs:{kind:'collision',sign:1},action:a=>{a.t=0}},
-      {label:'Rencontre, signes opposés',valeurs:{kind:'collision',sign:-1},action:a=>{a.t=0}},
-      {label:'Réflexion libre',titre:'Pente nulle : pas d\'inversion',valeurs:{kind:'reflection',bout:1},action:a=>{a.t=0}},
-      {label:'Réflexion fixe',titre:'Déplacement nul : inversion',valeurs:{kind:'reflection',bout:-1},action:a=>{a.t=0}}],items:[]},
+      {label:'Rencontre, même signe',valeurs:{kind:'collision',sign:1,comps:false,calc:false},action:a=>{a.t=0}},
+      {label:'Rencontre, signes opposés',valeurs:{kind:'collision',sign:-1,comps:false,calc:false},action:a=>{a.t=0}},
+      {label:'Réflexion libre',titre:'Pente nulle : pas d\'inversion',valeurs:{kind:'reflection',bout:1,comps:false,calc:false},action:a=>{a.t=0}},
+      {label:'Réflexion fixe',titre:'Déplacement nul : inversion',valeurs:{kind:'reflection',bout:-1,comps:false,calc:false},action:a=>{a.t=0}}],items:[]},
     {titre:'Situations',onglets:[1,2,3],presets:[
-      {label:'Deux sources en phase',valeurs:{phase:0,ratio:1,only:'both'},action:a=>{posDefault(a)}},
-      {label:'Sources en opposition',valeurs:{phase:180,ratio:1,only:'both'},action:a=>{posDefault(a)}},
-      {label:'M sur un maximum',valeurs:{phase:0,ratio:1,only:'both'},action:a=>{posDefault(a);st.probe.y=0}},
-      {label:'M sur un minimum',valeurs:{phase:0,ratio:1,only:'both'},action:a=>{
+      {label:'Deux sources en phase',valeurs:{phase:0,ratio:1,only:'both',calc:false},action:a=>{posDefault(a)}},
+      {label:'Sources en opposition',valeurs:{phase:180,ratio:1,only:'both',calc:false},action:a=>{posDefault(a)}},
+      {label:'M sur un maximum',valeurs:{phase:0,ratio:1,only:'both',calc:false},action:a=>{posDefault(a);st.probe.y=0}},
+      {label:'M sur un minimum',valeurs:{phase:0,ratio:1,only:'both',calc:false},action:a=>{
         posDefault(a);const lw=lamW(a);
-        if(lw<4.4)st.probe={x:2,y:lw/4};else{const q=PM.wave(W(a),st.probe.x,st.probe.y,0);a.p.phase=((q.delta/lw*TAU+Math.PI)*180/Math.PI+180)%360-180}}},
-      {label:'Amplitudes différentes',valeurs:{phase:0,ratio:.45,only:'both'},action:a=>{posDefault(a)}},
-      {label:'Une source seule',valeurs:{phase:0,ratio:1,only:'one'},action:a=>{posDefault(a)}},
-      {label:'Deux haut-parleurs face à face',titre:'Application du cours (1600 Hz) : maxima de pression séparés de λ/2',onglets:[2],valeurs:{phase:0,ratio:1,only:'both',view:'amp',graph:'cut',fS:1600},action:a=>{st.src=[{x:1,y:0},{x:15,y:0}];st.probe={x:8,y:0};a.p.sep=14}}],items:[]},
+        if(lw<4.4)st.probe={x:2,y:lw/4};else{const q=PM.wave(W(a),st.probe.x,st.probe.y,0);const ph=(((q.delta/lw*360+180+180)%360)+360)%360-180;a.set('phase',Math.round(ph),{silent:true})}}},
+      {label:'Amplitudes différentes',valeurs:{phase:0,ratio:.45,only:'both',calc:false},action:a=>{posDefault(a)}},
+      {label:'Une source seule',valeurs:{phase:0,ratio:1,only:'one',calc:false},action:a=>{posDefault(a)}},
+      {label:'Deux haut-parleurs face à face',titre:'Application du cours (1600 Hz) : maxima de pression séparés de λ/2',onglets:[2],valeurs:{phase:0,ratio:1,only:'both',view:'amp',graph:'cut',fS:1600,calc:false},action:a=>{st.src=[{x:1,y:0},{x:15,y:0}];st.probe={x:8,y:0};a.set('sep',14,{silent:true})}}],items:[]},
     {titre:'Les impulsions',onglets:[0],items:[
       {id:'kind',type:'select',label:'Expérience',value:'collision',options:[['collision','Rencontre de deux impulsions'],['reflection','Réflexion d\'une impulsion']]},
       {id:'sign',type:'select',label:'Seconde impulsion',value:1,si:a=>a.p.kind==='collision',options:[[1,'Même signe'],[-1,'Signe opposé']]},
@@ -1208,17 +1209,18 @@ const A=AnimKit.app({
     for(const j of[0,1])a.drag('champ',{hit:(x,y)=>{const g=st.geo;return g&&Math.hypot(x-g.px(st.src[j].x),y-g.py(st.src[j].y))<24*a.k},
       move:(x,y)=>{const g=st.geo;st.src[j].x=U.clamp(g.wx(x),.4,15.6);st.src[j].y=U.clamp(g.wy(y),-2,2);a.set('sep',+sepNow().toFixed(2),{silent:true})}});
     a.drag('champ',{start:(x,y)=>{const g=st.geo;if(g)clampP(g.wx(x),g.wy(y))},move:(x,y)=>{const g=st.geo;if(g)clampP(g.wx(x),g.wy(y))}});
-    a.drag('corde',{move:(x)=>{if(st.cg)st.probe.x=U.clamp(st.cg.xv(x),0,a.p.kind==='reflection'?11:12)}});
+    a.drag('corde',{start:(x)=>{if(st.cg)st.probe.x=U.clamp(st.cg.xv(x),0,a.p.kind==='reflection'?11:12)},move:(x)=>{if(st.cg)st.probe.x=U.clamp(st.cg.xv(x),0,a.p.kind==='reflection'?11:12)}});
     a.drag('graphe',{hit:()=>a.tab>0&&a.p.graph==='cut'&&!!st.gg,move:(x)=>{st.probe.x=U.clamp(st.gg.xv(x),0,16)}});
   },
   change(a,id){
     if(id==='sep'){const s0=st.src[0],s1=st.src[1],cx=(s0.x+s1.x)/2,cy=(s0.y+s1.y)/2,v=a.p.sep,ang=Math.atan2(s0.y-s1.y,s0.x-s1.x);
-      s0.x=U.clamp(cx+v/2*Math.cos(ang),.5,15.5);s1.x=U.clamp(cx-v/2*Math.cos(ang),.5,15.5);s0.y=U.clamp(cy+v/2*Math.sin(ang),-2,2);s1.y=U.clamp(cy-v/2*Math.sin(ang),-2,2)}
+      s0.x=U.clamp(cx+v/2*Math.cos(ang),.5,15.5);s1.x=U.clamp(cx-v/2*Math.cos(ang),.5,15.5);s0.y=U.clamp(cy+v/2*Math.sin(ang),-2,2);s1.y=U.clamp(cy-v/2*Math.sin(ang),-2,2);
+      a.p.sep=+sepNow().toFixed(2)}
     if(id==='kind'||id==='sign'||id==='bout')a.t=0;
   },
   onglet(a,i){
-    a.p.phase=0;a.p.ratio=1;a.p.only='both';a.p.view=i===3?'int':'inst';a.p.graph='time';a.p.nodes=false;
-    posDefault(a);a.t=0;a.play(i>0);
+    a.p.phase=0;a.p.ratio=1;a.p.only='both';a.p.view=i===3?'int':'inst';a.p.graph='time';a.p.nodes=false;a.p.calc=false;a.p.comps=false;
+    posDefault(a);a.t=0;
   },
   reset(a){a.t=0},
   step(a,dt){

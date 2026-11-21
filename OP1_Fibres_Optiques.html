@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1176,7 +1177,7 @@ const A=AnimKit.app({
       {id:'vue2',type:'seg',label:'Vue',options:[['local','Coupe fidèle'],['overview','Vue d\'ensemble']],value:'overview',onglets:[1]},
       {id:'cone',type:'check',label:'Cône d\'acceptance (masqué au départ)',value:false,onglets:[0]},
       {id:'angles',type:'check',label:'Angles θ, θ′ et i',value:true,onglets:[0],si:a=>a.p.vue==='local'},
-      {id:'comp',label:'Compression de z',min:1,max:50,step:1,value:5,unit:'×',si:a=>(a.tab===0?a.p.vue:a.p.vue2)!=='local'},
+      {id:'comp',label:'Compression de z',min:1,max:50,step:1,value:5,unit:'×',onglets:[0,1],si:a=>(a.tab===0?a.p.vue:a.p.vue2)!=='local'},
       {id:'eventail',type:'check',label:'Éventail de rayons de −θ à θ',value:false,onglets:[0],si:a=>a.p.vue!=='structure'},
       {id:'plans',type:'check',label:'Rayons à θ dans six plans méridiens',value:false,onglets:[0],si:a=>a.p.vue==='structure'},
       {id:'plan',type:'check',label:'Plan méridien du rayon',value:true,onglets:[0],si:a=>a.p.vue==='structure'},
@@ -1195,9 +1196,9 @@ const A=AnimKit.app({
     if(id==='ng'&&v>a.p.nc)a.set('nc',v,{silent:true});
     if(['nc','ng','n0','rc','y0','L','theta','width','gap','deux','fibre','vue','vue2'].includes(id)&&!a.running)st.clock=0;
   },
-  onglet(a){a.play(false);st.clock=0;a.panels.fibre.zoom=1},
+  onglet(a){a.play(false);st.clock=0;st.u=0},
   peutLire(a){if(a.tab===2&&st.clock>=calc(a).end-1e-9)st.clock=0;return true},
-  reset(a){st.clock=0},
+  reset(a){st.clock=0;st.u=0},
   step(a,dt){
     if(a.tab===2){const c=calc(a),r=st.clock<c.arrival?Math.max(c.arrival,1)/6:(c.end-c.arrival)/7;st.clock=Math.min(c.end,st.clock+dt*r);if(st.clock>=c.end)a.play(false)}
     else st.clock=(st.clock+dt/5*st.period)%st.period;
@@ -1305,8 +1306,9 @@ function fibre(a,c,kd,top,height,single,times){
       if(Number.isFinite(rr.hit)&&rr.hit<maxU&&!rr.guided&&!rr.limiting){pts.push([X(rr.hit),Y(rr.side)]);pts.sort((u,v)=>u[0]-v[0])}}
     g+=S.poly(pts,{c:col,w:single?2.6:2.2,op:single&&rays.length>1&&rr.theta!==p.theta?.55:1});
     const T=FM.time(rr,maxU); times.push(T);
-    if(st.clock<=T){const u=FM.distanceAtTime(rr,st.clock,maxU);if(single&&rr===r)st.u=u;dots+=S.circle(X(u),Y(FM.position(rr,u)),(single?5:4.2)*k,{fill:col,c:C.card,w:1.2})}
+    if(st.clock<=T){const u=FM.distanceAtTime(rr,st.clock,maxU);dots+=S.circle(X(u),Y(FM.position(rr,u)),(single?5:4.2)*k,{fill:col,c:C.card,w:1.2})}
   });
+  if(single)st.u=r.entered?FM.distanceAtTime(r,Math.min(st.clock,FM.time(r,maxU)),maxU):0;
   s+=`<g clip-path="url(#${clip})">${g}${dots}</g>`;
   // angles (coupe fidèle seulement)
   if(single&&local&&a.p.angles&&r.entered){
@@ -1361,7 +1363,7 @@ function structure(a,c,times){
   s+=S.poly(ring(1,0).map(Pp),{c:C.c,w:1.4});
   s+=S.line(...Pp([0,0,zin]),...Pp([0,0,Lm+.4]),{c:C.ink2,w:1,dash:`${6*k} ${5*k}`,op:.8});
   // cône d'acceptance (même compression de z)
-  if(p.cone){const t=Math.tan(ck.acc.angle*RAD)*comp,zc=-Math.min(-zin*.9,1.9/Math.max(t,1e-6)),rho=-zc*t,base=ring(rho,zc,48),ap=Pp([0,p.y0,0]);
+  if(p.cone){const t=Math.tan(ck.acc.angle*RAD)*comp,zc=-Math.min(-zin*.9,1.9/Math.max(t,1e-6)),rho=-zc*t,base=ring(rho,zc,48).map(([x,y,z])=>[x,y+p.y0,z]),ap=Pp([0,p.y0,0]);
     s+=S.poly(base.map(Pp),{close:true,fill:C.c,fop:.12,c:C.c,w:1.2,dash:`${5*k} ${4*k}`});
     for(let j=0;j<48;j+=4)s+=S.line(...ap,...Pp(base[j]),{c:C.c,w:1,op:.55})}
   // plan méridien du rayon principal
@@ -1407,12 +1409,15 @@ function signal(a,c){
   const ct=topH+20*k, ch=(H-ct-30*k)/2, lo=c.lo, hi=c.hi, X=t=>left+(t-lo)/(hi-lo)*span, cx=X(clock-c.ref), visible=cx>=left&&cx<=right;
   ['step','graded'].forEach((kd,row)=>{
     const tp=ct+row*ch, bot=tp+ch-20*k, amp=ch-34*k;
+    const taus=c[kd].received.map(r=>r.tau-c.ref), N=Math.max(300,Math.min(1200,Math.ceil(span))), lim=p.tout?hi:clock-c.ref;
+    const refV=[], outV=[]; let ymax=1;
+    for(let i=0;i<=N;i++){const t=lo+(hi-lo)*i/N, vr=FM.signal(t,[0,0,0,0,0],p.width,p.gap,p.deux); refV.push([t,vr]); if(vr>ymax)ymax=vr;
+      if(t<=lim)outV.push([t,FM.signal(t,taus,p.width,p.gap,p.deux)])}
+    const ref=refV.map(([t,v])=>[X(t),bot-v/ymax*amp]), out=outV.map(([t,v])=>[X(t),bot-v/ymax*amp]);
     s+=S.text(10*k,tp+amp*.5,kd==='step'?'Saut':'Gradient',{size:14,c:C.cInk});
-    s+=S.line(left,bot,right,bot,{c:C.ink2,w:1})+S.line(left,bot-amp,right,bot-amp,{c:C.rule,w:1,dash:`${3*k} ${5*k}`});
-    s+=S.text(left-6*k,bot,'0',{anchor:'end',size:13})+S.text(left-6*k,bot-amp,'1',{anchor:'end',size:13});
+    s+=S.line(left,bot,right,bot,{c:C.ink2,w:1})+S.line(left,bot-amp/ymax,right,bot-amp/ymax,{c:C.rule,w:1,dash:`${3*k} ${5*k}`});
+    s+=S.text(left-6*k,bot,'0',{anchor:'end',size:13})+S.text(left-6*k,bot-amp/ymax,'1',{anchor:'end',size:13});
     for(const t of AnimKit.ticks(lo,hi,Math.max(3,Math.round(span/(70*k))))){const x=X(t);s+=S.line(x,bot,x,bot+4*k,{c:C.ink2,w:1})+S.text(x,bot+5*k,f.fix(t,0),{anchor:'middle',base:'top',size:13})}
-    const taus=c[kd].received.map(r=>r.tau-c.ref), out=[], ref=[], N=Math.max(300,Math.min(1200,Math.ceil(span))), lim=p.tout?hi:clock-c.ref;
-    for(let i=0;i<=N;i++){const t=lo+(hi-lo)*i/N;ref.push([X(t),bot-FM.signal(t,[0,0,0,0,0],p.width,p.gap,p.deux)*amp]);if(t<=lim)out.push([X(t),bot-FM.signal(t,taus,p.width,p.gap,p.deux)*amp])}
     s+=S.poly(ref,{c:C.ink2,w:1.4,dash:`${5*k} ${5*k}`,op:.75})+S.poly(out,{c:row===0?C.B:C.F,w:2.6});
     for(const tau of taus)if(p.tout||tau<=clock-c.ref)s+=S.line(X(tau),bot,X(tau),bot-8*k,{c:C.cInk,w:2});
     if(visible)s+=S.line(cx,tp+2*k,cx,bot,{c:C.E,w:1.8,dash:`${4*k} ${3*k}`});

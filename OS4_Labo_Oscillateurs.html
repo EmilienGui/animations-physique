@@ -606,6 +606,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -910,7 +911,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1396,7 +1397,7 @@ function drawPendulum(a,b,zs,pp){
   const r=Math.min(46*k,len*.35),angle=pp.exact?Math.atan2(Math.sin(zs.x),Math.cos(zs.x)):zs.x;
   if(Math.abs(angle)>.02)s+=S.path(`M${cx},${top+r}A${r},${r} 0 ${Math.abs(angle)>Math.PI?1:0} ${angle>0?0:1} ${cx+r*Math.sin(angle)},${top+r*Math.cos(angle)}`,{c:C.cInk,w:2});
   s+=S.text(cx+r+8*k,top+r*.9,S.v('θ'),{size:fs,c:C.cInk});
-  if(a.p.forces){const f=60*k/(pp.m*MD.g*1.6),Pw=pp.m*MD.g*f,T=pp.m*(MD.g*Math.cos(zs.x)+pp.length*zs.v*zs.v);
+  if(a.p.forces){const vmax=bottomSpeed(pp,pp.v0),fref=Math.max(1.6*pp.m*MD.g,pp.m*(MD.g+pp.length*vmax*vmax)),f=Math.min(60*k/(pp.m*MD.g*1.6),len*.85/fref),Pw=pp.m*MD.g*f,T=pp.m*(MD.g*Math.cos(zs.x)+pp.length*zs.v*zs.v);
     s+=S.arrow(X,Y,X,Y+Pw,{c:C.F,w:2.4})+S.text(X+10*k,Y+Pw*.7,'P',{size:fs,c:C.F});
     const ux=(cx-X)/len,uy=(top-Y)/len;s+=S.arrow(X,Y,X+ux*T*f,Y+uy*T*f,{c:C.B,w:2.4})+S.text(X+ux*T*f+10*k,Y+uy*T*f,'T',{size:fs,c:C.B})}
   s+=S.text(b.x+16*k,b.y+b.h-16*k,S.v('θ')+' = '+a.fmt.fix(zs.x*180/Math.PI,0)+'°',{size:fs,c:C.ink2})+S.text(b.x+b.w-16*k,b.y+b.h-16*k,S.v('ℓ')+' = '+sg(a,pp.length)+' m',{anchor:'end',size:fs,c:C.ink2});
@@ -1661,7 +1662,7 @@ function energyExplore(a,box){
   for(const[key,,col,dash]of items){
     const pts=[];for(const z of st.samp){if(z.t>=now)break;pts.push([z.t,MD.energies(pp,z)[key]*f])}pts.push([now,MD.energies(pp,z0)[key]*f]);
     series.push({pts,c:col,dash,w:key==='stored'?3:2.4});dots.push({x:now,y:MD.energies(pp,z0)[key]*f,c:col,r:4});}
-  const r=gr(a,{box,xmin:0,xmax:st.H,ymin:st.emin*f,ymax:st.emax*f,xlab:'t (s)',ylab:'Énergies ('+q.u+')',series,dots,cursor:now});
+  const r=gr(a,{box,xmin:0,xmax:st.H,ymin:st.emin*f,ymax:st.emax*f,xlab:'t (s)',ylab:'Énergies ('+q.u+')',series,dots,cursor:now,xfmt:timeFormat(a)});
   st.legE=items.map(([,l,c,d])=>({label:l,c,dash:!!d}));
   return r.svg;
 }
@@ -1725,7 +1726,8 @@ function info(a){
     const kind=MD.kind(pp),c=MD.coefficients(pp),e=MD.energies(pp,st.exp.at(st.t)),vw=view(a,pp);
     const M=[w0,{label:'Facteur de qualité '+Mh.v('Q'),value:hide?'?':pp.Q===Infinity?'∞':sg(a,pp.Q),hint:hide?'À prévoir : régime ?':(pp.exact?'petits angles · ':'')+REG[kind]}];
     if(kind==='under'&&!hide)M.push({label:'Pseudo-pulsation Ω',value:sg(a,c.b),unit:'rad·s<sup>−1</sup>',hint:'T / T<sub>0</sub> = '+a.fmt.fix(pp.w/c.b,3)+' · environ Q = '+sg(a,pp.Q,2)+' oscillations visibles'});
-    M.push({label:'Énergie dissipée',value:K.qty(a,e.loss,'J'),hint:e.initial?a.fmt.fix(100*e.loss/(e.initial+Math.abs(e.work)),0)+' % de l’énergie fournie':''});
+    const tot=e.initial+e.work;
+    M.push({label:'Énergie dissipée',value:K.qty(a,e.loss,'J'),hint:tot>1e-15?a.fmt.fix(100*e.loss/tot,0)+' % de l’énergie fournie':''});
     a.metrics(M);
     const L=[],cp=pp.system==='circuit'?C.F:C.cInk,cv=pp.system==='circuit'?C.E:C.v,m=a.p.vtemps;
     if(m!=='vel')L.push({c:cp,label:vw.ph+(m==='both'?' (axe gauche)':'')});
@@ -1772,7 +1774,7 @@ const A=AnimKit.app({
   reglages:[
     {titre:'Situations',onglets:[0,1,2],presets:[
       {label:'Sans pertes',titre:'Amortissement nul',action:a=>applyPreset(a,'harmonic')},
-      {label:'Faible amortissement',titre:'Q = 4',action:a=>applyPreset(a,'weak')},
+      {label:'Faible amortissement',titre:'Q = 8',action:a=>applyPreset(a,'weak')},
       {label:'Critique',titre:'Q = 1/2 (pendule : aux petits angles)',action:a=>applyPreset(a,'critical')},
       {label:'Fort amortissement',titre:'Q = 0.2',action:a=>applyPreset(a,'strong')},
       {label:'Départ en vitesse',titre:'Position initiale nulle, vitesse (ou courant) non nul',action:a=>applyPreset(a,'velocity')},
@@ -1817,13 +1819,13 @@ const A=AnimKit.app({
         return 'À cet angle, sans amortissement, rotation si |'+Mh.v('θ̇','0')+'| > '+a.fmt.fix(threshold,2)+' rad·s⁻¹.';
       }},
       {type:'note',html:'Glisser la masse ou le pendule, ou cliquer dans le plan de phase cadré, pour poser les conditions initiales.'}]},
-    {titre:'Affichage',onglets:[0,1,2],items:[
+    {titre:'Affichage',onglets:[0,1,2,3,4],items:[
       {id:'vue2',type:'seg',options:[['phase','Phase'],['energie','Énergies'],['racines','Racines']],value:'phase'},
-      {id:'vtemps',type:'seg',options:[['both','Les deux'],['pos','Position'],['vel','Vitesse']],value:'both'},
+      {id:'vtemps',type:'seg',options:[['both','Les deux'],['pos','Position'],['vel','Vitesse']],value:'both',onglets:[0,1,2]},
       {id:'dur',type:'seg',options:[[3,'3 T<sub>0</sub>'],[6,'6 T<sub>0</sub>'],[12,'12 T<sub>0</sub>'],[24,'24 T<sub>0</sub>']],value:6},
-      {id:'forces',type:'check',label:'Forces (ressort, pendule) ou tensions (circuit)',value:false},
+      {id:'forces',type:'check',label:'Forces (ressort, pendule) ou tensions (circuit)',value:false,onglets:[0,1,2]},
       {id:'refl',type:'check',label:'Comparer au pendule linéarisé',value:false,si:a=>a.tab===2&&a.p.exact},
-      {type:'boutons',items:[{label:'Garder la trajectoire',titre:'Conserve la trajectoire de phase (6 au plus)',action:a=>{
+      {type:'boutons',onglets:[0,1,2],items:[{label:'Garder la trajectoire',titre:'Conserve la trajectoire de phase (6 au plus)',action:a=>{
         st.saved.push({p:st.p,samples:samples(st.exp,Math.max(st.t,st.p.T0*.01))});
         if(st.saved.length>6)st.saved.shift();
       }},{label:'Effacer',action:a=>{st.saved=[]}}]}]},
@@ -1881,6 +1883,7 @@ const A=AnimKit.app({
   onglet(a,i){
     st.saved=[];
     if(i>=3&&a.p.U0===0&&a.p.I0===0)a.p.U0=5;
+    a.set('env',false,{silent:true});a.set('depass',false,{silent:true});a.set('marks',false,{silent:true});
     st.t=st.offset=0;rebuild(a,true);a.play(false);
     if(i<3&&a.p.portrait)a.set('vue2','phase',{silent:true});
   },

@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1216,13 +1217,13 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:1.3,ratioTel:1.1},{id:'courbes',poids:1,ratioTel:.95,onglets:[0,1,2],si:a=>!geo(a)}],
   reglages:[
     {titre:'Situations',onglets:[0,1,2],presets:[
-      {label:'Grande résistance',onglets:[0],valeurs:{R:1000,mode:'dynamic'}},
+      {label:'Grande résistance',onglets:[0],valeurs:{E:6,R:1000,mode:'dynamic'}},
       {label:'E = 0',titre:'Source éteinte : courant et puissance nuls',onglets:[0],valeurs:{E:0,mode:'dynamic'}},
-      {label:'Condensateur chargé',titre:'Chargé à u = E, puis relié à la résistance',onglets:[1],valeurs:{mode:'dynamic'},action:a=>preset(a,()=>{st.x=a.p.E;st.phase='discharge'})},
-      {label:'Charger puis isoler',titre:'Chargé à u = E puis débranché : i = 0, u et l\'énergie subsistent',onglets:[1],valeurs:{mode:'dynamic'},action:a=>preset(a,()=>{st.x=a.p.E;st.phase='isolated'})},
-      {label:'Courant établi',titre:'Régime permanent : la bobine se comporte comme un fil',onglets:[2],action:a=>preset(a,()=>{st.x=a.p.E/(a.p.RsL+(a.p.real?a.p.r:0));st.phase='source'})},
-      {label:'Restituer l\'énergie',titre:'Source retirée : boucle fermée sur R_s',onglets:[2],action:a=>preset(a,()=>{st.x=a.p.E/(a.p.RsL+(a.p.real?a.p.r:0));st.phase='discharge'})},
-      {label:'Bobine réelle',titre:'L en série avec r',onglets:[2],valeurs:{real:true},action:a=>preset(a,()=>{st.x=a.p.E/(a.p.RsL+a.p.r);st.phase='source'})}],items:[]},
+      {label:'Condensateur chargé',titre:'Chargé à u = E, puis relié à la résistance',onglets:[1],valeurs:{E:6,mode:'dynamic',tangente:false},action:a=>preset(a,()=>{st.x=a.p.E;st.phase='discharge'})},
+      {label:'Charger puis isoler',titre:'Chargé à u = E puis débranché : i = 0, u et l\'énergie subsistent',onglets:[1],valeurs:{E:6,mode:'dynamic',tangente:false},action:a=>preset(a,()=>{st.x=a.p.E;st.phase='isolated'})},
+      {label:'Courant établi',titre:'Régime permanent : la bobine se comporte comme un fil',onglets:[2],valeurs:{E:6,real:false,tangente:false},action:a=>preset(a,()=>{st.x=a.p.E/a.p.RsL;st.phase='source'})},
+      {label:'Restituer l\'énergie',titre:'Source retirée : boucle fermée sur R_s',onglets:[2],valeurs:{E:6,real:false,tangente:false},action:a=>preset(a,()=>{st.x=a.p.E/a.p.RsL;st.phase='discharge'})},
+      {label:'Bobine réelle',titre:'L en série avec r',onglets:[2],valeurs:{E:6,real:true,tangente:false},action:a=>preset(a,()=>{st.x=a.p.E/(a.p.RsL+a.p.r);st.phase='source'})}],items:[]},
     {titre:'Expérience',onglets:[0,1],items:[
       {id:'mode',type:'seg',options:[['dynamic','Fonctionnement électrique'],['geometry','Explorer la géométrie']],value:'dynamic'},
       {type:'note',html:a=>geo(a)?'Comparer des équilibres : modifier les dimensions (glisser les poignées dans le dessin, ou les curseurs).':a.tab===0?'Un courant, une tension, une puissance dissipée.':'Alimenter, puis observer la restitution d\'énergie.'}]},
@@ -1281,7 +1282,7 @@ const A=AnimKit.app({
     if(id==='mode'){st.geoConn=true;st.phase='source';resetSim(a);syncPhase(a);return}
     resetSim(a);
   },
-  onglet(a){a.play(false);a.set('mode','dynamic',{silent:true});st.phase='source';st.geoConn=true;resetSim(a);syncPhase(a)},
+  onglet(a){a.play(false);a.set('mode','dynamic',{silent:true});a.set('tangente',false,{silent:true});st.phase='source';st.geoConn=true;resetSim(a);syncPhase(a)},
   reset(a){st.phase='source';st.geoConn=true;resetSim(a);if(a.set)syncPhase(a)},
   step(a,dt){
     if(geo(a)||a.tab>2||!(dt>0))return;
@@ -1398,10 +1399,10 @@ function component(a,b,m){
     s+=E.W(a,x1-60*k,cy,x1,cy)+E.W(a,x2,cy,x2+60*k,cy)+S.rect(x1,cy-th/2,len,th,{fill:C.card,c:C.ink,w:2.4,rx:6*k});
     s+=S.text(x1-60*k,cy-12*k,'A',{size:13,c:C.ink2,anchor:'middle'})+S.text(x2+60*k,cy-12*k,'B',{size:13,c:C.ink2,anchor:'middle'});
     s+=S.text(cx,cy,`${v(a,'R')} = ${g?a.fmt.sig(m.R,3):a.fmt.sig(a.p.R,3)} Ω`,{anchor:'middle',size:16,c:C.ink});
-    /* u et i, proportionnelles */
+    /* u et i, proportionnelles (centrées pour rester lisibles quelle que soit la polarité) */
     const Lu=110*k*m.u/6,Li=90*k*m.i/(g?Math.max(6/m.R,1e-9):iref(a));
-    if(Math.abs(Lu)>1)s+=S.arrow(x2,cy-th/2-26*k,x2-Lu,cy-th/2-26*k,{c:C.F,w:2.6,head:10*k})+S.text(x2+10*k,cy-th/2-26*k,v(a,'u'),{size:16,c:C.F});
-    if(Math.abs(Li)>1)s+=S.arrow(x1+len*.2,cy+th/2+26*k,x1+len*.2+Li,cy+th/2+26*k,{c:C.E,w:2.6,head:10*k})+S.text(x1+len*.2-12*k,cy+th/2+26*k,v(a,'i'),{anchor:'end',size:16,c:C.E});
+    if(Math.abs(Lu)>1)s+=S.arrow(cx+Lu/2,cy-th/2-26*k,cx-Lu/2,cy-th/2-26*k,{c:C.F,w:2.6,head:10*k})+S.text(cx+Math.abs(Lu)/2+10*k,cy-th/2-26*k,v(a,'u'),{size:16,c:C.F});
+    if(Math.abs(Li)>1)s+=S.arrow(cx-Li/2,cy+th/2+26*k,cx+Li/2,cy+th/2+26*k,{c:C.E,w:2.6,head:10*k})+S.text(cx-Math.abs(Li)/2-12*k,cy+th/2+26*k,v(a,'i'),{anchor:'end',size:16,c:C.E});
     if(g){
       s+=S.text(cx,cy+th/2+58*k,`${v(a,'ℓ')} = ${a.fmt.sig(a.p.length,3)} cm · ${v(a,'S')} = ${a.fmt.sig(a.p.section,2)} mm²`,{anchor:'middle',size:14,c:C.ink2});
       s+=S.circle(x2,cy,8*k,{fill:C.card,c:C.ink,w:2.2})+S.circle(cx,cy-th/2,8*k,{fill:C.card,c:C.ink,w:2.2});
@@ -1418,8 +1419,13 @@ function component(a,b,m){
     const slots=12,n=Math.min(slots,Math.round(slots*Math.abs(m.q)/qmax));
     for(let j=0;j<n;j++){const yy=top+H*(.5+(j-(n-1)/2)/slots*(slots/ (slots+1))*1)-0,sg=m.q>0?1:-1;
       s+=S.text(xa-9*k,top+H*(j+.5)/slots*1,sg>0?'+':MINUS,{anchor:'middle',size:14,c:sg>0?C.F:C.B,halo:false,weight:700})+S.text(xb+9*k,top+H*(j+.5)/slots,sg>0?MINUS:'+',{anchor:'middle',size:14,c:sg>0?C.B:C.F,halo:false,weight:700});}
-    /* champ électrique : longueur proportionnelle à u */
-    if(a.p.fE){const Lf=(Gp-10*k)*m.u/6;if(Math.abs(Lf)>2)for(let j=0;j<5;j++){const yy=top+H*(j+.5)/5;s+=S.arrow(cx-Lf/2,yy,cx+Lf/2,yy,{c:C.B,w:2.4,head:8*k})}}
+    /* champ électrique : borné entre les armatures ; en géométrie, reflète E = u/d (réf. 6 V / 3 mm = 2000 V/m) */
+    if(a.p.fE&&Math.abs(m.u)>1e-9){
+      const Erel=g?(m.u/(a.p.gap*1e-3))/2000:(m.u/6),sg=Math.sign(Erel),mag=Math.abs(Erel);
+      const Lf=g?(Gp-10*k)*sg*Math.min(1,Math.max(.35,mag*.65)):(Gp-10*k)*sg*Math.min(1,mag);
+      const nL=g?Math.max(2,Math.min(9,Math.round(5*Math.min(2,mag)))):5,op=g?Math.min(1,.3+.55*Math.min(1.5,mag)):1;
+      if(Math.abs(Lf)>2)for(let j=0;j<nL;j++){const yy=top+H*(j+.5)/nL;s+=S.arrow(cx-Lf/2,yy,cx+Lf/2,yy,{c:C.B,w:2.4,head:Math.min(8*k,Math.abs(Lf)*.45),op})}
+    }
     s+=S.text(cx,top-14*k,`${v(a,'C')} = ${g?sc(a,m.C,'F'):a.fmt.sig(a.p.C,3)+' µF'}`,{anchor:'middle',size:16,c:C.ink});
     if(a.p.fE&&Math.abs(m.u)>1e-9)s+=S.text(cx,top+H+16*k,`${v(a,'E')} (champ)`,{anchor:'middle',size:13,c:C.B});
     if(en)s+=gauge(a,b.x+b.w-46*k,top+H,H,m.stored/Eref,C.cInk,v(a,'E','C'),sc(a,m.stored,'J'));
@@ -1441,7 +1447,7 @@ function component(a,b,m){
       for(const sg of[1,-1]){const yc=cy-sg*(r+34*k);s+=S.path(`M${x2+4*k},${cy-sg*r*.5}C${x2+40*k},${yc} ${x1-40*k},${yc} ${x1-4*k},${cy-sg*r*.5}`,{c:C.B,w:1.4,op});}
     }
     s+=S.text(cx,cy-r-48*k,`${v(a,'L')} = ${a.fmt.sig(a.p.L,3)} mH${a.p.real?` · ${v(a,'r')} = ${a.fmt.sig(a.p.r,3)} Ω`:''}`,{anchor:'middle',size:16,c:C.ink});
-    if(Math.abs(m.i)>1e-12){const Li=90*k*m.i/im;s+=S.arrow(x1-50*k,cy+r+22*k,x1-50*k+Li,cy+r+22*k,{c:C.E,w:2.6,head:10*k})+S.text(x1-58*k,cy+r+22*k,v(a,'i'),{anchor:'end',size:16,c:C.E});}
+    if(Math.abs(m.i)>1e-12){const Li=90*k*m.i/im;s+=S.arrow(cx-Li/2,cy+r+22*k,cx+Li/2,cy+r+22*k,{c:C.E,w:2.6,head:10*k})+S.text(cx-Math.abs(Li)/2-12*k,cy+r+22*k,v(a,'i'),{anchor:'end',size:16,c:C.E});}
     if(en)s+=gauge(a,b.x+b.w-46*k,cy+r+8*k,2*r+16*k,m.stored/Eref,C.cInk,v(a,'E','L'),sc(a,m.stored,'J'));
   }
   return s;
@@ -1456,7 +1462,7 @@ function drawCourbes(a,m){
     const R=a.p.R,im=6/R,ui=K.unit(im,'A'),h2=(P.h-g)/2,b0={x:0,y:0,w:P.w,h:h2},b1={x:0,y:h2+g,w:P.w,h:h2};
     const g1=K.plot(a,{box:b0,id:'r1',xmin:-6,xmax:6,ymin:-im*ui.f*1.1,ymax:im*ui.f*1.1,xlab:`${v(a,'u')} (V)`,ylab:`${v(a,'i')} (${ui.u})`,series:[{pts:[[-6,-im*ui.f],[6,im*ui.f]],c:C.E}],dots:[{x:m.u,y:m.i*ui.f,c:C.F}],hlines:[]});
     const up=K.unit(36/R,'W'),g2=K.plot(a,{box:b1,id:'r2',xmin:-6,xmax:6,ymin:0,ymax:36/R*up.f*1.1,xlab:`${v(a,'u')} (V)`,ylab:`${v(a,'p')} (${up.u})`,series:[{pts:Array.from({length:121},(_,j)=>{const u=-6+j/10;return[u,u*u/R*up.f]}),c:C.v}],dots:[{x:m.u,y:m.p*up.f,c:C.F}]});
-    a.svg('courbes',g1.svg+g2.svg+S.text(b0.x+b0.w*.62,b0.y+b0.h*.2,`pente ${Mh.frac?'1/':'1/'}${v(a,'R')}`,{size:13,c:C.E,anchor:'start'}));return;
+    a.svg('courbes',g1.svg+S.text(b0.x+b0.w*.62,b0.y+b0.h*.2,`pente 1/${v(a,'R')}`,{size:13,c:C.E,anchor:'start'})+g2.svg);return;
   }
   const tau=tauRef(a),win=8*tau,live=st.t,end=Math.max(win,live),start=end-win,tcur=st.view??live,U=K.unit(win,'s'),f=U.f;
   const vis=st.hist.filter(p=>p.t>=start-1e-12&&p.t<=tcur+1e-12);
@@ -1464,24 +1470,11 @@ function drawCourbes(a,m){
   let umax=6,imax=iref(a),pmax=9/Math.max(1,tab===1?a.p.RsC:a.p.RsL);
   for(const p of vis){umax=Math.max(umax,Math.abs(p.u));imax=Math.max(imax,Math.abs(p.i));pmax=Math.max(pmax,Math.abs(p.p))}
   const ui=K.unit(imax,'A'),up=K.unit(pmax,'W');
-  const nb=a.p.bilan?3:2,zh=(P.h-g*nb)/(nb+.1),zs=Array.from({length:3},(_,j)=>({x:0,y:j*(zh+g),w:P.w,h:zh}));
   const xl=`${v(a,'t')} (${U.u})`;
   const ptsOf=key=>vis.map(p=>[p.t*f,p[key]]);
   const tang=tab===1?{x:tcur*f,y:m.u,slope:m.du/f,half:.7*tau*f}:null,tang2=tab===2?{x:tcur*f,y:m.i*ui.f,slope:m.di*ui.f/f,half:.7*tau*f}:null;
-  const g1=K.plot(a,{box:zs[0],id:'c1',xmin:start*f,xmax:end*f,ymin:-umax*1.12,ymax:umax*1.12,xlabels:false,xlab:'',ylab:`${v(a,'u')} (V)`,
-    series:[...(real?[{pts:ptsOf('idealU'),c:C.F,dash:true,w:2}]:[]),{pts:ptsOf('u'),c:C.F}],cursor:tcur*f,dots:[{x:tcur*f,y:m.u,c:C.F}],
-    tangent:a.p.tangente?tang:null});
-  const g2=K.plot(a,{box:zs[1],id:'c2',xmin:start*f,xmax:end*f,ymin:-imax*ui.f*1.12,ymax:imax*ui.f*1.12,xlabels:a.p.bilan?false:undefined,xlab:a.p.bilan?'':xl,ylab:`${v(a,'i')} (${ui.u})`,
-    series:[{pts:vis.map(p=>[p.t*f,p.i*ui.f]),c:C.E}],cursor:tcur*f,dots:[{x:tcur*f,y:m.i*ui.f,c:C.E}],tangent:a.p.tangente?tang2:null});
-  let s=g1.svg+g2.svg;
-  /* puissance reçue, signée */
-  if(nb===3){
-    const g3=K.plot(a,{box:zs[2],id:'c3',xmin:start*f,xmax:end*f,ymin:-pmax*up.f*1.12,ymax:pmax*up.f*1.12,xlab:xl,ylab:`${v(a,'p')} (${up.u})`,
-      signed:{pts:vis.map(p=>[p.t*f,p.p*up.f]),pos:C.v,neg:C.B},series:[{pts:vis.map(p=>[p.t*f,p.p*up.f]),c:C.ink2,w:1.8}],cursor:tcur*f,dots:[{x:tcur*f,y:m.p*up.f,c:C.v}]});
-    s+=g3.svg;
-  }
-  /* troisième rangée : p(t) ; le bilan occupe une rangée de plus s'il est demandé */
-  if(nb===2){
+  let s='';
+  if(!a.p.bilan){
     /* trois rangées u, i, p : on réserve la dernière pour p */
     const hh=(P.h-g*2)/3,z=[0,1,2].map(j=>({x:0,y:j*(hh+g),w:P.w,h:hh}));
     const q1=K.plot(a,{box:z[0],id:'d1',xmin:start*f,xmax:end*f,ymin:-umax*1.12,ymax:umax*1.12,xlabels:false,xlab:'',ylab:`${v(a,'u')} (V)`,
@@ -1493,14 +1486,13 @@ function drawCourbes(a,m){
     s=q1.svg+q2.svg+q3.svg+S.text(q3.G.x0+q3.G.w-4*k,q3.G.y0+6*k,'reçoit',{anchor:'end',base:'top',size:13,c:C.v})+S.text(q3.G.x0+q3.G.w-4*k,q3.G.y0+q3.G.h-6*k,'restitue',{anchor:'end',size:13,c:C.B});
   }else{
     /* bilan : trois rangées u, i, bilan en barres signées */
-    s='';
     const hu=(P.h-g*2)*.3,hi=(P.h-g*2)*.3,hb=(P.h-g*2)*.4;
     const z=[{x:0,y:0,w:P.w,h:hu},{x:0,y:hu+g,w:P.w,h:hi},{x:0,y:hu+hi+2*g,w:P.w,h:hb}];
     const q1=K.plot(a,{box:z[0],id:'e1',xmin:start*f,xmax:end*f,ymin:-umax*1.12,ymax:umax*1.12,xlabels:false,xlab:'',ylab:`${v(a,'u')} (V)`,
       series:[...(real?[{pts:ptsOf('idealU'),c:C.F,dash:true,w:2}]:[]),{pts:ptsOf('u'),c:C.F}],cursor:tcur*f,dots:[{x:tcur*f,y:m.u,c:C.F}],tangent:a.p.tangente?tang:null});
     const q2=K.plot(a,{box:z[1],id:'e2',xmin:start*f,xmax:end*f,ymin:-imax*ui.f*1.12,ymax:imax*ui.f*1.12,xlab:xl,ylab:`${v(a,'i')} (${ui.u})`,
       series:[{pts:vis.map(p=>[p.t*f,p.i*ui.f]),c:C.E}],cursor:tcur*f,dots:[{x:tcur*f,y:m.i*ui.f,c:C.E}],tangent:a.p.tangente?tang2:null});
-    s=q1.svg+q2.svg+bilanBars(a,z[2],m);
+    s=q1.svg+q2.svg+'<g data-ak-hors-graphe="">'+bilanBars(a,z[2],m)+'</g>';
   }
   a.svg('courbes',s);
 }
@@ -1544,7 +1536,7 @@ function drawCompare(a){
 function info(a,m){
   const f=a.fmt,C=a.C,g=geo(a),tab=a.tab,q=(x,u)=>sv2(K.qty(a,x,u));
   a.clock(g?'équilibres quasi statiques':`${Mh.v('t')} = ${sv2(K.qty(a,st.view??st.t,'s'))}`);
-  const u=q(m.u,'V'),metric=(label,val,hint)=>({label,value:val.split(' ')[0],unit:val.split(' ').slice(1).join(' '),hint});
+  const u=q(m.u,'V'),metric=(label,val,hint)=>{const idx=val.lastIndexOf(' ');return{label,value:idx<0?val:val.slice(0,idx),unit:idx<0?'':val.slice(idx+1),hint}};
   if(g){
     a.metrics(tab===0?[metric(`Tension ${Mh.v('u')}`,u),metric(`Résistance ${Mh.v('R')}`,f.sig(m.R,3)+' Ω'),metric(`Puissance ${Mh.v('p')}`,q(m.p,'W')),{label:`${Mh.v('ℓ')} / ${Mh.v('S')}`,value:`${f.sig(a.p.length,3)} / ${f.sig(a.p.section,2)}`,unit:'cm / mm²'}]
       :[metric(`Tension ${Mh.v('u')}`,u),metric(`Charge ${Mh.v('q')}`,q(m.q,'C')),metric(`Capacité ${Mh.v('C')}`,q(m.C,'F')),metric(`Énergie ${Mh.v('E','C')}`,q(m.stored,'J'))]);

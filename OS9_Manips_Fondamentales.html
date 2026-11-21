@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1197,7 +1198,7 @@ resetState();
 const wk=a=>WORK[a.p.metal];
 const photo=a=>Q.photo(a.p.frequency*1e12,a.p.intensity*1e-7,wk(a),a.p.voltage);
 const yp=p=>Object.assign({},p,{distance:p.ydist,width:p.ywidth,energy:p.yenergy});
-const youngSpan=a=>Q.young(yp(a.p)).fringe*6;
+const youngSpan=a=>clampv(Q.young(yp(a.p)).fringe*6,1e-7,1e-1);
 /* ---------------------------------------------------------------- tirages */
 function singlePhoto(a){
   const p=a.p,m=photo(a);st.ctr++;
@@ -1294,11 +1295,11 @@ function sceneYoung(a,P){
 function sceneLoc(a,P){
   const S=a.S,C=a.C,L=fitBox(P,520,440),X=L.X,Y=L.Y,p=a.p;
   if(p.profile==='gaussian')return'';
-  const g=p.awidth*8;
-  let s=S.line(X(240),Y(150),X(240),Y(300-g),{c:C.c,w:5})+S.line(X(240),Y(300+g),X(240),Y(450),{c:C.c,w:5})+S.arrow(X(40),Y(300),X(225),Y(300),{c:C.c,w:2.6});
-  s+=S.text(X(240),Y(485),'a = '+F.sig(p.awidth,3)+' µm',{size:17,c:C.cInk,anchor:'middle'});
-  s+=S.line(X(240),Y(300-g),X(260),Y(300-g),{c:C.ink2,w:1})+S.line(X(240),Y(300+g),X(260),Y(300+g),{c:C.ink2,w:1})+S.text(X(268),Y(300),'← a →',{size:13,rot:90});
-  for(let j=-3;j<=3;j++)s+=S.line(X(250),Y(300),X(460),Y(300+j*42/p.awidth),{c:C.B,w:1.2,dash:'4 5',op:.7});
+  const g=p.awidth*8,cy=220;
+  let s=S.line(X(240),Y(70),X(240),Y(cy-g),{c:C.c,w:5})+S.line(X(240),Y(cy+g),X(240),Y(370),{c:C.c,w:5})+S.arrow(X(40),Y(cy),X(225),Y(cy),{c:C.c,w:2.6});
+  s+=S.text(X(240),Y(410),'a = '+F.sig(p.awidth,3)+' µm',{size:17,c:C.cInk,anchor:'middle'});
+  s+=S.line(X(240),Y(cy-g),X(260),Y(cy-g),{c:C.ink2,w:1})+S.line(X(240),Y(cy+g),X(260),Y(cy+g),{c:C.ink2,w:1})+S.text(X(268),Y(cy),'← a →',{size:13,rot:90});
+  for(let j=-3;j<=3;j++)s+=S.line(X(250),Y(cy),X(460),Y(cy+j*42/p.awidth),{c:C.B,w:1.2,dash:'4 5',op:.7});
   return s;
 }
 function scenePhoton(a,P){
@@ -1462,11 +1463,11 @@ const A=AnimKit.app({
   titre:'Manips fondamentales',sousTitre:'Photoélectricité, diffraction d’électrons, interférences de particules, relations de Heisenberg, photon unique',
   fichier:'Manips_Fondamentales',
   onglets:TABS,temps:a=>a.tab!==0||true,pas:.2,
-  panneaux:[{id:'scene',poids:.95,ratioTel:.95},{id:'graphes',poids:1.05,ratioTel:1.15}],
+  panneaux:[{id:'scene',poids:.95,ratioTel:.95,si:a=>!(a.tab===3&&a.p.profile==='gaussian')},{id:'graphes',poids:1.05,ratioTel:1.15}],
   reglages:[
     {titre:'Situations',onglets:[0],presets:[
       {label:'Sous le seuil',valeurs:{frequency:450,intensity:4}},{label:'Plus intense',valeurs:{intensity:5}},{label:'Plus énergétique',valeurs:{frequency:1400}},
-      {label:'Au potentiel d’arrêt',action:a=>{a.set('frequency',1000);a.set('voltage',-Q.photo(1e15,1e-7,wk(a),0).stop)}}],items:[]},
+      {label:'Au potentiel d’arrêt',action:a=>{const f=Math.min(1800,Math.max(1000,Math.ceil(wk(a)*Q.e/Q.h/1e12/100)*100+300));a.set('frequency',f);a.set('voltage',-Q.photo(f*1e12,1e-7,wk(a),0).stop)}}],items:[]},
     {titre:'Éclairage et collecte',onglets:[0],items:[
       {id:'metal',type:'select',label:'Métal (travail d’extraction)',options:[['Na','Sodium · 2.28 eV'],['Cs','Césium · 2.14 eV'],['Zn','Zinc · 4.30 eV'],['Fe','Fer · 4.50 eV']],value:'Na'},
       RG('frequency','Fréquence '+Mh.v('ν'),300,1800,10,800,'THz',0),RG('intensity','Éclairement relatif',.1,5,.1,1,'',1),RG('voltage','Tension de collecte '+Mh.v('U'),-6,3,.05,0,'V',2),
@@ -1521,7 +1522,7 @@ const A=AnimKit.app({
   reset(a){resetState()},
   change(a,id,v){
     const i=a.tab;
-    if(i===0){if(id!=='classic'&&id!=='prev'&&id!=='imax'&&id!=='umax'&&id!=='metal'||id==='metal'){st.ctr=0;st.emitted=0;st.collected=0}}
+    if(i===0){if(id==='metal')st.rel=[];if(id!=='classic'&&id!=='prev'&&id!=='imax'&&id!=='umax'){st.ctr=0;st.emitted=0;st.collected=0}}
     if(i===1&&['dvolt','ddist'].includes(id)){st.pts=[];st.ctr=0}
     if(i===2&&!['rate','compare','prev','dmax'].includes(id)){
       if(id==='species'){a.p.gravity=v==='atom';a.p.span=youngSpan(a)}
@@ -1529,7 +1530,7 @@ const A=AnimKit.app({
     if(i===3&&['profile','awidth','sigma','lenergy'].includes(id)){st.xs=[];st.ps=[];st.ctr=0;if(id==='profile'){a.p.pmax=v==='gaussian'?25:150}}
     if(i===4&&['source','transmission','mean'].includes(id)){st.det=[0,0,0,0];st.lastAB=null}
   },
-  onglet(a,i){a.play(false);st.pts=[];st.ctr=0;st.xs=[];st.ps=[];st.cdf=[];st.bin.fill(0);st.det=[0,0,0,0];st.emitted=0;st.collected=0},
+  onglet(a,i){a.play(false);a.set('prev',false,{silent:true});st.pts=[];st.ctr=0;st.xs=[];st.ps=[];st.cdf=[];st.bin.fill(0);st.det=[0,0,0,0];st.emitted=0;st.collected=0},
   step(a,dt){
     const i=a.tab;st.rot+=dt*3;st.acc+=dt*rate(a);
     const n=Math.floor(st.acc);st.acc-=n;

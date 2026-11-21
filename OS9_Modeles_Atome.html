@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1329,12 +1330,12 @@ function sceneClassic(a,P){
 /* ---- 5 · Bohr */
 function sceneBohr(a,P){
   const S=a.S,C=a.C,k=a.k,L=fitBox(P,520,520),X=L.X,Y=L.Y,ev=st.ev;
-  const n0=+a.p.n,half=ev&&ev.s>=ev.T*.5,nShown=ev&&ev.kind!=='test'&&!half?ev.ni:n0,maxn=Math.max(4,n0,ev?ev.ni||0:0,+a.p.destination),scale=205/(maxn*maxn);
+  const n0=+a.p.n,half=ev&&ev.s>=ev.T*.5,waitEv=ev&&!half,nShown=waitEv?ev.ni:n0,ionShown=st.ionized&&!(ev&&ev.kind==='test'&&!half),maxn=Math.max(4,n0,ev?ev.ni||0:0,+a.p.destination),scale=205/(maxn*maxn);
   let s='';
-  for(let j=1;j<=maxn;j++)if(a.p.orbits||j===nShown)s+=S.circle(X(260),Y(250),L.L(j*j*scale),{c:j===nShown&&!st.ionized?C.c:C.rule,w:j===nShown?2.2:1.2});
+  for(let j=1;j<=maxn;j++)if(a.p.orbits||j===nShown)s+=S.circle(X(260),Y(250),L.L(j*j*scale),{c:j===nShown&&!ionShown?C.c:C.rule,w:j===nShown?2.2:1.2});
   s+=S.circle(X(260),Y(250),L.L(8),{fill:C.F});
   const ang=st.rot*.5;
-  if(!st.ionized){const r=nShown*nShown*scale;s+=S.circle(X(260+r*Math.cos(ang)),Y(250-r*Math.sin(ang)),L.L(7),{fill:C.B})}
+  if(!ionShown){const r=nShown*nShown*scale;s+=S.circle(X(260+r*Math.cos(ang)),Y(250-r*Math.sin(ang)),L.L(7),{fill:C.B})}
   else{s+=S.arrow(X(290),Y(215),X(450),Y(110),{c:C.B,w:2.2})+S.circle(X(450),Y(110),L.L(7),{fill:C.B})+S.text(X(380),Y(90),S.v('ℰ','c')+' = '+F.sig(st.kin,3)+' eV',{size:14,c:C.B})}
   if(ev&&ev.kind!=='test'){
     const col=specRGB(ev.lambda*1e9),em=ev.kind==='emission',u=ev.s/ev.T;
@@ -1408,7 +1409,7 @@ function graphsFoil(a,P){
   const G=S.graph({x:0,y:0,w:P.w,h:P.h,xmin:0,xmax:180,ymin:0,ymax:7,xticks:[0,30,60,90,120,150,180],yticks:[0,1,2,3,4,5,6,7],yfmt:v=>'10'+S.sup(v),xlab:'θ (°)',ylab:'α détectées par intervalle de 5°',padB:42});
   let s=G.svg+S.clip('foilclip',G);
   const lg=v=>Math.log10(Math.max(v,1));
-  f.bins.forEach((v,i)=>{if(v>0){const x0=G.X(i*5)+1,x1=G.X(i*5+5)-1,y=G.Y(lg(v));s+=S.rect(x0,y,Math.max(1,x1-x0),G.Y(0)-y,{fill:C.c,op:.9})}});
+  f.bins.forEach((v,i)=>{if(v>0){const x0=G.X(i*5)+1,x1=G.X(i*5+5)-1,y=G.Y(lg(v)),bh=Math.max(3,G.Y(0)-y);s+=S.rect(x0,G.Y(0)-bh,Math.max(1,x1-x0),bh,{fill:C.c,op:.9})}});
   if(a.p.prev){
     const pts=[];for(let i=0;i<36;i++){const th1=i*5*Math.PI/180,th2=(i+1)*5*Math.PI/180;
       const p=(i===0?1-QA.tail(th2,t):QA.tail(th1,t)-QA.tail(th2,t));pts.push([i*5+2.5,lg(f.N*p)])}
@@ -1615,7 +1616,7 @@ const A=AnimKit.app({
     if(id==='n'){st.ionized=false;st.ev=null;st.msg=''}
     if(id==='destination'){st.msg=''}
   },
-  onglet(a,i){a.play(false);if(i===3&&st.f>=.97)st.f=0},
+  onglet(a,i){a.play(false);a.set('prev',false,{silent:true});if(i===3&&st.f>=.97)st.f=0},
   step(a,dt){
     const i=a.tab;st.rot+=dt*3;
     if(i<2){st.acc+=dt*30;while(st.acc>=1){singleAlpha(a,i);st.acc--}}

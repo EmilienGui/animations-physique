@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1372,7 +1373,7 @@ function overlay(a,G,Gp){
     sg+=stemG(x-2.5*k,MD.abs(c.c),C.E,sel?3:1.7,undefined,op);sp+=stemP(x-2.5*k,c.c,C.E,sel?3:1.7,undefined,op);
     if(!mute){sg+=stemG(x+2.5*k,MD.abs(t.c),C.B,sel?3:1.7,`${5*k} ${2*k}`,op);sp+=stemP(x+2.5*k,t.c,C.B,sel?3:1.7,`${5*k} ${2*k}`,op)}});
   const cl=(id,Gx,b)=>S.clip(id,Gx)+`<g clip-path="url(#${id})">${b}</g>`;
-  return cl('ovg',G,sg)+cl('ovp',Gp,sp)+S.text(G.x0+G.w-6*k,G.y0+16*k,'spectres en dBV (échelle du gain)',{anchor:'end',size:13,c:C.ink2})}
+  return '<g data-ak-hors-graphe="">'+cl('ovg',G,sg)+cl('ovp',Gp,sp)+S.text(G.x0+G.w-6*k,G.y0+16*k,'spectres en dBV (échelle du gain)',{anchor:'end',size:13,c:C.ink2})+'</g>'}
 function chips(a,y,hc){
   const S=a.S,C=a.C,k=a.k,L=[['bode','Diagramme de Bode',200],['tp','Signaux temporels',190]];let x=a.panels.graphes.w*.04,s='';st.g.chips=[];
   for(const[key,lab,wd]of L){const w=wd*k,on=st.low===key;st.g.chips.push({x,y,w,h:hc,key});
@@ -1440,7 +1441,7 @@ const A=AnimKit.app({
   titre:'Atelier de filtrage',sousTitre:'Filtres du premier et du second ordre : Bode, signaux, spectres, cascade',
   fichier:'Atelier_Filtrage',
   onglets:['Explorer un filtre','Filtrer un signal','Cascade'],
-  temps:true,pas:.04,
+  temps:a=>a.tab>0&&st.low==='tp',pas:.04,
   curseur:{max:()=>1,get:()=>st.cur,set:(a,v)=>{st.cur=Math.max(0,Math.min(1,v))}},
   panneaux:[{id:'scene',titre:'Schéma du filtre',poids:.9,ratioTel:.8},{id:'graphes',poids:1.6,ratioTel:2}],
   reglages:[
@@ -1494,11 +1495,11 @@ const A=AnimKit.app({
   init(a){
     a.drag('graphes',{
       hit:(x,y)=>!!onChip(x,y)||inBox(st.g.gain,x,y)||inBox(st.g.ph,x,y),
-      start:(x,y)=>{const c=onChip(x,y);if(c){st.low=c.key;st.dm='c';a.render();return}st.dm='b';const G=st.g.gain;st.dragF0=Math.abs(x-G.X(lg(a.p.f0)))<14*a.k;pickF(a,x)},
+      start:(x,y)=>{const c=onChip(x,y);if(c){st.low=c.key;st.dm='c';a.refresh();a.render();return}st.dm='b';const G=st.g.gain;st.dragF0=Math.abs(x-G.X(lg(a.p.f0)))<14*a.k;pickF(a,x)},
       move:(x,y)=>{if(st.dm==='b')pickF(a,x)},end:()=>{st.dragF0=false}});
     commit(a);
   },
-  reset(a){st.cur=0},
+  reset(a){stopAudio();st.cur=0},
   change(a,id,v){
     if(['marks','asymptotes','phaseCompare','magnify','periods','gdb','umax','spectres','isolate','approx','buffer','k','Q','dc','amplitude','parasite'].includes(id)){if(id==='buffer'||id==='k')return;return}
     if(id==='type'){a.set('approx',false,{silent:true});commit(a);return}
@@ -1509,7 +1510,7 @@ const A=AnimKit.app({
     if(id==='f0'){const fr=frange(a);if(lg(a.p.f0)<st.range[0]||lg(a.p.f0)>st.range[1])st.range=fr}
   },
   onglet(a,i){
-    a.set('approx',false,{silent:true});a.set('isolate',false,{silent:true});a.set('exo',false,{silent:true});st.reveal=false;
+    a.set('approx',false,{silent:true});a.set('isolate',false,{silent:true});a.set('exo',false,{silent:true});a.set('marks',false,{silent:true});a.set('asymptotes',false,{silent:true});st.reveal=false;
     if(i===1&&a.p.signal==='sin')a.set('signal','square',{silent:true});
     st.selected=1;st.probe=a.p.f;stopAudio();commit(a)},
   step(a,dt){st.cur=(st.cur+dt*.4/a.p.periods)%1},

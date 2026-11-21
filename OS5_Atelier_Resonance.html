@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1300,7 +1301,7 @@ function sceneCircuit(a){
   s+=E.ind(a,xa,yt,xr,yt)+S.text((xa+xr)/2,yt-22*k,S.v('L'),{anchor:'middle',size:fs});
   s+=E.cap(a,xr,yt,xr,yb)+S.text(xr-20*k,ym,S.v('C'),{anchor:'end',size:fs});
   s+=E.volt(a,xr+34*k,ym+30*k,xr+34*k,ym-30*k,S.v('u','C'),{c:C.F});
-  s+=E.cur(a,(xl+xr)/2,yb,'r',S.v('i'),{c:C.E,ly:-16*k});
+  s+=E.cur(a,(xl+xr)/2,yb,'l',S.v('i'),{c:C.E,ly:-16*k});
   if(a.p.tensions){
     s+=E.volt(a,xa-8*k,yt+36*k,xl+8*k,yt+36*k,S.v('u','R'),{c:C.F,dy:20*k,dx:0,anchor:'middle'});
     s+=E.volt(a,xr-8*k,yt+36*k,xa+8*k,yt+36*k,S.v('u','L'),{c:C.F,dy:20*k,dx:0,anchor:'middle'})}
@@ -1394,8 +1395,9 @@ function reponse(a,B){
   const dots=[];if(f>=R[0]&&f<=R[1]&&kd!=='radio')dots.push({x:f,y:gf({o}),c:C.F});
   const pl1=K.plot(a,{box:b1,id:'amp',xmin:R[0],xmax:R[1],ymin:0,ymax,xticks:xt,xlab:'f (Hz)',ylab:norm?o.d.norm(S.v):o.d.lab+' ('+pUnit(o)+')',series:ser,marks,hlines:hl,cursor:kd==='radio'?undefined:f,dots,padB:16*k});
   let s=pl1.svg,G=pl1.G;st.g.amp=G;
-  if(show)for(const x of xt.slice(1,4))s+=S.text(G.X(x),G.y0-8*k,a.fmt.sig(x/m.f0,2),{anchor:'middle',size:12,c:C.ink2,halo:false});
-  if(show)s+=S.text(G.x0+G.w,G.y0-8*k,'f / '+S.v('f','0'),{anchor:'end',size:12,c:C.ink2,halo:false});
+  if(show){let topLab='';for(const x of xt.slice(1,4))topLab+=S.text(G.X(x),G.y0-8*k,a.fmt.sig(x/m.f0,2),{anchor:'middle',size:12,c:C.ink2,halo:false});
+    topLab+=S.text(G.x0+G.w,G.y0-8*k,'f / '+S.v('f','0'),{anchor:'end',size:12,c:C.ink2,halo:false});
+    s+='<g data-ak-hors-graphe="">'+topLab+'</g>';}
   if(kd==='radio')SRC.forEach((sr,i)=>{const v=gf({o:outInfo(q,'ur',TAU*sr.f)})*sr.a,x=G.X(sr.f);
     s+=S.line(x,G.Y(0),x,G.Y(v),{c:i===1?C.E:C.B,w:4*k})+S.circle(x,G.Y(v),4.5*k,{fill:C.ink})+S.text(x,G.Y(v)-12*k,sr.name,{anchor:'middle',size:15})});
   if(a.p.rulers&&(kd==='rlc'||kd==='spring'))st.ruler.forEach((x,i)=>{if(x<R[0]||x>R[1])return;
@@ -1440,7 +1442,7 @@ function preset(a,name){
   else if(k==='road'){if(name==='soft')a.set('dc',250,{silent:true});if(name==='damped')a.set('dc',4000,{silent:true});
     if(name==='resonance')a.set('dv',m.roadPeak/TAU*3.6*a.p.dl,{silent:true});if(name==='isolation')a.set('dv',m.f0*3*3.6*a.p.dl,{silent:true})}
   else{const tg=name==='A'?4200:name==='C'?5800:5000;a.set('aC',1/((TAU*tg)**2*(a.p.aL/1000))*1e9,{silent:true});if(name==='broad')a.set('aR',160,{silent:true});if(name==='sharp')a.set('aR',8,{silent:true})}
-  st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];commit(a)}
+  st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];a.set('ru1',clampv(st.ruler[0],.1,2000),{silent:true});a.set('ru2',clampv(st.ruler[1],.1,2000),{silent:true});a.set('markers',false,{silent:true});commit(a)}
 const RG=(id,label,min,max,step,value,unit,tab,more)=>Object.assign({id,label,min,max,step,dec:step<.1?2:step<1?1:0,value,unit,si:a=>a.tab===tab},more||{});
 function insight(a){
   const k=kind(a),m=chr(a),key=outKey(a),r=MD.response(pm(a),TAU*freq(a));
@@ -1515,7 +1517,7 @@ const A=AnimKit.app({
       {type:'boutons',items:[{label:'Zoom +',action:a=>zoomF(a,.65)},{label:'Zoom −',action:a=>zoomF(a,1.5)},{label:'Cadrer',action:a=>{frame(a)}}]}]},
     {titre:'Mesurer',onglets:[0,1],items:[
       {id:'rulers',type:'check',label:'Deux repères de fréquence (largeur de bande, Q)',value:false},
-      RG('ru1','Repère 1',.1,2000,.1,110,'Hz',0,{log:true,si:a=>a.p.rulers&&a.tab<2}),RG('ru2','Repère 2',.1,2000,.1,200,'Hz',0,{log:true,si:a=>a.p.rulers&&a.tab<2})]},
+      RG('ru1','Repère 1',.1,2000,.01,110,'Hz',0,{log:true,si:a=>a.p.rulers&&a.tab<2}),RG('ru2','Repère 2',.1,2000,.01,200,'Hz',0,{log:true,si:a=>a.p.rulers&&a.tab<2})]},
     {titre:'Exercice',onglets:[0,1,2,3],items:[
       {id:'exo',type:'check',label:'<span>Mode exercice : masquer f<sub>0</sub>, Q et les formules</span>',value:false},
       {type:'boutons',items:[{label:'Révéler',action:a=>{st.reveal=true}}],si:a=>a.p.exo&&!st.reveal}]},
@@ -1545,7 +1547,7 @@ const A=AnimKit.app({
         if(a.p.rulers&&a.tab<2&&inBox(G,x,y)){let dm=18*a.k;st.ruler.forEach((r,i)=>{const d=Math.abs(x-G.X(r));if(d<dm){dm=d;st.drag=i}})}
         pick(a,x,y)},
       move:(x,y)=>pick(a,x,y),end:()=>{st.drag=null}});
-    st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];commit(a);
+    st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];a.set('ru1',clampv(st.ruler[0],.1,2000),{silent:true});a.set('ru2',clampv(st.ruler[1],.1,2000),{silent:true});commit(a);
   },
   reset(a){st.s=0},
   change(a,id,v){
@@ -1559,8 +1561,8 @@ const A=AnimKit.app({
     if(PAR.includes(id)||FREQ.includes(id)){if(id!=='dv')st.s=0;const f0=chr(a).f0;
       if((a.tab===2&&id==='dl')||f0<st.range[0]||f0>st.range[1]*.9||freq(a)>st.range[1]||freq(a)<st.range[0])frame(a)}
   },
-  onglet(a,i){st.ghost=null;st.reveal=false;a.set('sweep',false,{silent:true});a.set('startup',false,{silent:true});a.set('phasors',false,{silent:true});a.set('exo',false,{silent:true});
-    st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];a.set('ru1',st.ruler[0],{silent:true});a.set('ru2',st.ruler[1],{silent:true});commit(a);a.play(true)},
+  onglet(a,i){st.ghost=null;st.reveal=false;a.set('sweep',false,{silent:true});a.set('startup',false,{silent:true});a.set('phasors',false,{silent:true});a.set('exo',false,{silent:true});a.set('markers',false,{silent:true});
+    st.ruler=[chr(a).f0*.8,chr(a).f0*1.2];a.set('ru1',clampv(st.ruler[0],.1,2000),{silent:true});a.set('ru2',clampv(st.ruler[1],.1,2000),{silent:true});commit(a)},
   step(a,dt){
     const k=kind(a);
     if(a.p.sweep&&k!=='radio'){const R=st.range,nx=freq(a)+(R[1]-R[0])*dt/20;setFreq(a,nx>R[1]?R[0]:nx)}

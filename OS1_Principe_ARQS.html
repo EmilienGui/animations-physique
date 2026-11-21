@@ -593,6 +593,7 @@ function app(cfg){
   document.addEventListener('fullscreenchange',syncMenu);
 
   const sommaireHref=(()=>{
+    if(location.pathname.includes('/TIPE/'))return './index.html';
     const ref=document.referrer||'';
     const isMP=/\bMP\b/.test(cfg.titreFenetre||'')||ref.endsWith('mp.html');
     const page=isMP?'mp.html':'index.html';
@@ -897,7 +898,7 @@ function app(cfg){
   $('.ak-speed',tr).onchange=e=>{A.speed=+e.target.value};A.speed=cfg.vitesse||1;
 
   /* ---------- onglets ---------- */
-  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
+  A.setTab=i=>{if(!tabs||i<0||i>=cfg.onglets.length)return;A.play(false);A.tab=i;A.cadrerTout();clearActivePresets();$$('.ak-tab',tabs).forEach((b,j)=>b.setAttribute('aria-selected',String(j===i)));if(cfg.onglet)cfg.onglet(A,i);refreshSettings();A.render()};
 
   /* ---------- thème, projection, plein écran ---------- */
   A.setTheme=t=>{root.dataset.theme=t;writeStore(THEME_KEY,t);readColors();syncMenu();A.renderNow()};
@@ -1107,13 +1108,13 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:1,ratioTel:1.7}],
   reglages:[
     {titre:'Situations',onglets:[0,1,2],presets:[
-      {label:'Retard sensible',titre:'1 m, 30 MHz, v = 2 × 10⁸ m·s⁻¹',valeurs:{L:1,f:3e7,v:2},action:a=>a.setTab(1)},
-      {label:'Montage de TP',titre:'1 m, 1 MHz, v ≈ c',valeurs:{L:1,f:1e6,v:3},action:a=>a.setTab(1)},
-      {label:'Puce électronique',titre:'1 cm, 10 MHz, v ≈ c',valeurs:{L:.01,f:1e7,v:3},action:a=>a.setTab(1)},
-      {label:'Ligne de 300 km',titre:'50 Hz, v ≈ c : τ/T = 0.05, soit 18°',valeurs:{L:3e5,f:50,v:3},action:a=>a.setTab(1)},
-      {label:'Fréquence élevée',titre:'1 m, 100 MHz, v ≈ c',valeurs:{L:1,f:1e8,v:3},action:a=>a.setTab(1)},
-      {label:'Le piège : L = λ',titre:'Les extrémités coïncident, pas l\'intérieur',valeurs:{L:1,f:2e8,v:2,middle:true},action:a=>a.setTab(1)},
-      {label:'Période longue, fronts rapides',titre:'τ/T = 0.01 mais τ/tₘ = 5',valeurs:{L:1,f:2e6,v:2,rise:.002,focus:true},action:a=>a.setTab(2)}],items:[]},
+      {label:'Retard sensible',titre:'1 m, 30 MHz, v = 2 × 10⁸ m·s⁻¹',valeurs:{L:1,f:3e7,v:2,pA:0,pB:1,middle:false,approx:false},action:a=>a.setTab(1)},
+      {label:'Montage de TP',titre:'1 m, 1 MHz, v ≈ c',valeurs:{L:1,f:1e6,v:3,pA:0,pB:1,middle:false,approx:false},action:a=>a.setTab(1)},
+      {label:'Puce électronique',titre:'1 cm, 10 MHz, v ≈ c',valeurs:{L:.01,f:1e7,v:3,pA:0,pB:1,middle:false,approx:false},action:a=>a.setTab(1)},
+      {label:'Ligne de 300 km',titre:'50 Hz, v ≈ c : τ/T = 0.05, soit 18°',valeurs:{L:3e5,f:50,v:3,pA:0,pB:1,middle:false,approx:false},action:a=>a.setTab(1)},
+      {label:'Fréquence élevée',titre:'1 m, 100 MHz, v ≈ c',valeurs:{L:1,f:1e8,v:3,pA:0,pB:1,middle:false,approx:false},action:a=>a.setTab(1)},
+      {label:'Le piège : L = λ',titre:'Les extrémités coïncident, pas l\'intérieur',valeurs:{L:1,f:2e8,v:2,pA:0,pB:1,middle:true,approx:false},action:a=>a.setTab(1)},
+      {label:'Période longue, fronts rapides',titre:'τ/T = 0.01 mais τ/tₘ = 5',valeurs:{L:1,f:2e6,v:2,pA:0,pB:1,rise:.002,focus:true,approx:false},action:a=>a.setTab(2)}],items:[]},
     {titre:'La ligne et le signal',onglets:[0,1,2,3,4],items:[
       {id:'L',label:`Longueur ${M.v('L')}`,type:'range',log:true,min:1e-3,max:1e6,dec:3,step:'any',value:1,unit:'m'},
       {id:'f',label:`Fréquence ${M.v('f')}`,type:'range',log:true,min:1,max:1e9,dec:0,step:'any',value:3e7,unit:'Hz',onglets:[1,2,3,4]},
@@ -1129,7 +1130,7 @@ const A=AnimKit.app({
       {type:'note',html:'Glisser les poignées A et B sur la ligne.'}]},
     {titre:'Précision recherchée',onglets:[3],items:[
       {id:'tol',label:'Écart toléré',type:'range',min:1,max:50,step:1,value:5,unit:'% de l\'amplitude'},
-      {type:'note',html:'Écart maximal entre la tension en bout de ligne et la tension à la source, sinusoïde : 2 sin(π τ/T).'}]},
+      {type:'note',html:'Écart maximal sur la ligne entre u(x,t) et le modèle ARQS u(0,t), sinusoïde : 2 sin(π τ/T) pour τ/T ≤ 0.5, puis 200 %.'}]},
     {titre:'Électrons',onglets:[4],items:[
       {id:'vd',label:`Vitesse de dérive ${M.v('v','d')}`,type:'range',log:true,min:1e-6,max:1e-2,dec:6,step:'any',value:1e-4,unit:'m·s⁻¹'},
       {type:'note',html:'Ordre de grandeur du cours : 10⁻⁴ m·s⁻¹ pour un fil métallique, selon le courant et la section.'}]}
@@ -1141,7 +1142,7 @@ const A=AnimKit.app({
     cours:'OS1 : <i class="m">τ</i> = <i class="m">L</i>/<i class="m">v</i> ≪ <i class="m">T</i> ⇔ <i class="m">L</i> ≪ λ, avec <i class="m">v</i> ≃ <i>c</i> pour les ordres de grandeur. Application du cours : ligne de 300 km à 50 Hz, <i class="m">τ</i>/<i>T</i> ≃ 0.05 ; puce à 10 MHz ; TP de 1 m : <i class="m">f</i> ≪ 300 MHz. Les porteurs de charge ne se déplacent pas à la vitesse du signal.'
   },
   change(a,id){if(['pA','pB','middle','approx','tol','vd'].includes(id))return;a.t=0;},
-  onglet(a){a.play(false);a.t=0;},
+  onglet(a){a.play(false);a.t=0;a.set('approx',false,{silent:true});},
   reset(a){a.t=0;},
   step(a,dt){
     const sp=span(a),r=.25*((a.tab===2&&a.p.focus)?sp:1);
@@ -1161,9 +1162,9 @@ const A=AnimKit.app({
 function drawStack(a){
   const P=a.panels.scene,g=6*a.k,h1=Math.round((P.h-g)*.56),h2=P.h-g-h1,real=a.svg,parts=[];
   a.svg=(id,s)=>{parts.push(s)};
-  try{a.panels.scene={...P,h:h1};drawScene(a);a.panels.scene=P;drawTime(a,{w:P.w,h:h2})}
+  try{a.panels.scene={...P,h:h1};drawScene(a);a.panels.scene=P;drawTime(a,{w:P.w,y:h1+g,h:h2})}
   finally{a.svg=real;a.panels.scene=P}
-  a.svg('scene',parts[0]+`<g transform="translate(0,${h1+g})">${parts[1]}</g>`);
+  a.svg('scene',parts[0]+parts[1]);
 }
 function drawScene(a){
   const P=a.panels.scene,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h,m=mdl(a),md=mode(a),q=a.t;
@@ -1206,7 +1207,7 @@ function drawScene(a){
     s+=S.line(gx,G.y0,gx,G.y0+G.h,guide);
     if(drawn)s+=S.circle(gx,G.Y(smp(a,m,q,x)),4.5*k,{fill:c});
     s+='<g data-ak-hors-graphe="">'+S.line(hx,yL,hx,G.y0,guide);
-    s+=S.circle(hx,hy,11*k,{fill:c,c:C.card,w:1.5,s:nm==='M'?'':'cursor:grab'})+S.text(hx,hy,nm,{anchor:'middle',size:13,c:'#fff',halo:false,weight:700})+'</g>';
+    s+=S.circle(hx,hy,11*k,{fill:c,c:C.card,w:1.5,style:nm==='M'?'':'cursor:grab'})+S.text(hx,hy,nm,{anchor:'middle',size:13,c:'#fff',halo:false,weight:700})+'</g>';
     if(nm!=='M')st.pr.push({id:nm,x:hx,y:hy});
   }
   st.X0=X0;st.X1=X1;
@@ -1220,7 +1221,7 @@ function drawScene(a){
 /* ---------- signaux temporels aux sondes ---------- */
 function drawTime(a,P){
   const S=a.S,C=a.C,k=a.k,m=mdl(a),md=mode(a),q=a.t,sp=span(a),T0=Tref(a,m),U=tu(sp*T0),sine=md==='sine';
-  const G=S.graph({x:0,y:0,w:P.w,h:P.h,xmin:0,xmax:sp*T0*U.f,ymin:sine?-1.25:-.2,ymax:1.25,xlab:`${S.v('t')} (${U.u})`,ylab:`${S.v('u')} (V)`,yticks:sine?[-1,0,1]:[0,.5,1],yfmt:v=>String(v).replace('-',MINUS)});
+  const G=S.graph({x:0,y:P.y||0,w:P.w,h:P.h,xmin:0,xmax:sp*T0*U.f,ymin:sine?-1.25:-.2,ymax:1.25,xlab:`${S.v('t')} (${U.u})`,ylab:`${S.v('u')} (V)`,yticks:sine?[-1,0,1]:[0,.5,1],yfmt:v=>String(v).replace('-',MINUS)});
   let s=G.svg+S.clip('ctm',G);
   const tr=(x,approx)=>{const n=700,pts=[];for(let i=0;i<=n;i++){const qq=sp*i/n;if(qq>q)break;pts.push([qq*T0*U.f,smp(a,m,qq,x,approx)])}pts.push([q*T0*U.f,smp(a,m,q,x,approx)]);return pts};
   if(a.p.approx)s+=S.curve(tr(0,true),G,{c:C.cInk,w:2.2,dash:`${7*k} ${5*k}`});
@@ -1252,8 +1253,9 @@ function drawPrecision(a){
   s+=S.line(G.X(lm),G.y0,G.X(lm),G.y0+G.h,{c:C.v,w:1.6,dash:`${6*k} ${4*k}`})+S.text(G.X(lm)+6*k,G.y0+6*k,`${S.v('τ')}/${S.v('T')} ≤ ${a.fmt.sig(epsMax,2)}`,{base:'top',size:13,c:C.v});
   for(const[nm,e,sd]of EPS_PRESETS){const x=G.X(Math.log10(e)),y=G.Y(100*PH.maxSineError(e));
     s+=S.circle(x,y,4*k,{fill:C.ink2})+S.text(x,y+sd*(sd>0?-14:15)*k,nm,{anchor:'middle',size:13,c:C.ink2});}
-  const xc=G.X(Math.log10(eps)),yc=G.Y(100*PH.maxSineError(eps));
-  s+=S.circle(xc,yc,7*k,{fill:C.cInk,c:C.card,w:1.5})+S.text(xc+(Math.log10(eps)>0?-12:12)*k,yc+22*k,'ma ligne',{anchor:Math.log10(eps)>0?'end':'start',size:14,c:C.cInk,weight:700});
+  const le=Math.log10(eps),leCl=Math.max(-4,Math.min(1,le)),xc=G.X(leCl),yc=G.Y(100*PH.maxSineError(eps));
+  const out=le<-4?' (hors plage < 10⁻⁴)':le>1?' (hors plage > 10)':'';
+  s+=S.circle(xc,yc,7*k,{fill:C.cInk,c:C.card,w:1.5})+S.text(xc+(leCl>0?-12:12)*k,yc+(yc>G.y0+G.h-30*k?-16:22)*k,'ma ligne'+out,{anchor:leCl>0?'end':'start',size:14,c:C.cInk,weight:700});
   a.svg('scene',s);
 }
 
@@ -1280,10 +1282,10 @@ function info(a){
   const tauM={label:`Propagation ${M.v('τ')} = ${M.frac(M.v('L'),M.v('v'))}`,value:tauV,unit:tauU,hint:`${M.v('L')} = ${qlen(a,a.p.L)}`};
   if(a.tab===0)a.metrics([tauM,{label:`Retard entre les sondes`,value:f.sig(tu(dAB).f*dAB,3),unit:tu(dAB).u,hint:'|x<sub>B</sub> − x<sub>A</sub>| / v'},{label:`Montée ${M.v('t','m')}`,value:f.sig(tu(.1*m.tau).f*.1*m.tau,3),unit:tu(.1*m.tau).u,hint:'0.1 τ, de 0 à 100 %'}]);
   else if(a.tab===1){
-    const dph=360*m.epsilon*Math.abs(a.p.pB-a.p.pA),red=((dph+180)%360+360)%360-180;
+    const dph=360*m.epsilon*(a.p.pB-a.p.pA),red=((dph+180)%360+360)%360-180;
     a.metrics([tauM,{label:`${M.frac(M.v('τ'),M.v('T'))} = ${M.frac(M.v('L'),'λ')}`,value:f.sig(m.epsilon,3),unit:'',hint:`λ = ${qlen(a,m.lambda)}`},
       {label:'Déphasage sur la ligne entière',value:f.sig(m.phase,3),unit:'°',hint:'non réduit modulo 360°'},
-      Math.abs(a.p.pB-a.p.pA)>0&&{label:'Déphasage entre A et B',value:f.sig(red,3),unit:'°',hint:'ramené entre −180° et 180°'}]);
+      Math.abs(a.p.pB-a.p.pA)>0&&{label:`Retard de phase ${M.v('φ','A')} − ${M.v('φ','B')}`,value:f.sig(red,3),unit:'°',hint:'ramené entre −180° et 180°'}]);
   }else if(a.tab===2)a.metrics([tauM,{label:`${M.frac(M.v('τ'),M.v('T'))}`,value:f.sig(m.epsilon,3),unit:'',hint:'à comparer à T'},{label:`${M.frac(M.v('τ'),M.v('t','m'))}`,value:f.sig(m.tau/m.tm,3),unit:'',hint:`${M.v('t','m')} = ${qtime(a,m.tm)} : à comparer à la montée`,warn:m.tau/m.tm>1}]);
   else if(a.tab===3){
     const em=Math.asin(Math.min(1,a.p.tol/200))/Math.PI,Lm=em*m.lambda,fm=em*a.p.v*1e8/a.p.L;
