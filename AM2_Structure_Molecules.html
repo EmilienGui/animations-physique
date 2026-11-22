@@ -1195,14 +1195,14 @@ globalThis.AM2P=(()=>{
   function vdwEnergy(mech,deg,d,alpha=1,T=300,average=false){
     if(mech==='keesom')return average?-300/T/d**6:dipoleEnergy(deg,d);
     if(mech==='debye')return -2*alpha/d**6;
-    return -alpha/d**6;
+    return -alpha*alpha/d**6;
   }
   /** exposant n de la loi |E| ∝ 1/rⁿ */
   const vdwExponent=(mech,average)=>mech==='keesom'&&!average?3:6;
   function vdwForce(mech,deg,d,alpha=1,T=300,average=false){
     /* force sur la molécule 2 ; la force sur 1 est opposée */
     if(mech==='keesom')return average?[-6*(300/T)/d**7,0]:[-6*Math.cos(deg*rad)/d**4,3*Math.sin(deg*rad)/d**4];
-    return[-(mech==='debye'?12:6)*alpha/d**7,0];
+    return[-(mech==='debye'?12*alpha:6*alpha*alpha)/d**7,0];
   }
   /** énergie coulombienne molaire d'une paire Na⁺/Cl⁻ à r = 0.50 nm dans un milieu de permittivité εr (kJ/mol) */
   const screened=(eps,d=.5)=>-138.935456/(eps*d);
@@ -1603,9 +1603,9 @@ const A=AnimKit.app({
   reglages:[
     {titre:'Situations',presets:[
       {label:'Équilibre',onglets:[0],action:a=>a.set('r',P.bondData[a.p.bond].r0,{silent:true})},
-      {label:'Atomes très proches',onglets:[0],valeurs:{r:45}},
+      {label:'Atomes très proches',onglets:[0],action:a=>a.set('r',45,{silent:true})},
       {label:'Force maximale',onglets:[0],action:a=>a.set('r',Math.round(P.rForceMax(P.bondData[a.p.bond])),{silent:true})},
-      {label:'Atomes éloignés',onglets:[0],valeurs:{r:380}},
+      {label:'Atomes éloignés',onglets:[0],action:a=>a.set('r',380,{silent:true})},
       {label:'À construire',onglets:[1],action:a=>blank(a)},
       {label:'Solution',onglets:[1],action:a=>canon(a)},
       {label:'Vue de face',onglets:[2],action:()=>{view.set(0,0);view2.set(0,0)}},
@@ -1651,10 +1651,17 @@ const A=AnimKit.app({
   change(a,id,v){
     if(id==='bond')a.p.r=P.bondData[v].r0;
     else if(id==='lew')canon(a);
-    else if(id==='pol'){a.p.guess='';a.p.reveal=false}
+    else if(id==='pol'){a.p.guess='';a.p.reveal=false;if(v!=='AB2'&&view.yaw===0&&view.pitch===0){view.reset();view2.reset()}}
   },
-  onglet(a){a.play(false)},
-  reset(a){a.t=0},
+  onglet(a){
+    a.play(false);a.t=0;a.p.guess='';a.p.reveal=false;
+    if((a.tab===2||(a.tab===3&&!ab2on(a)))&&view.yaw===0&&view.pitch===0){view.reset();view2.reset()}
+  },
+  reset(a){
+    a.t=0;
+    if(a.tab===0)a.set('r',P.bondData[a.p.bond].r0,{silent:true});
+    else if(a.tab>=2&&!ab2on(a)){view.reset();view2.reset()}
+  },
   peutLire(a){return a.tab!==1&&!ab2on(a)},
   step(a,dt){
     a.t+=dt;
@@ -1699,7 +1706,7 @@ V.bind(A,'scene',[view,view2],{
     A.set('angle',clamp(Math.abs(Math.atan2(x-q[0],y-q[1]))*2/rad,20,180),{silent:true});
   }
 });
-V.bind(A,'somme',[view,view2],{canRotate:()=>true,start:()=>A.play(false)});
+V.bind(A,'somme',[view,view2],{hit:()=>!ab2on(A),canRotate:()=>!ab2on(A),start:()=>A.play(false)});
 
 </script>
 </body>

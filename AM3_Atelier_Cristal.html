@@ -1336,7 +1336,7 @@ function info(a,m){
     const lim=m.limit,R=p.fe?FE_R:null;
     const arr=[{label:'Sites en propre',value:hid(a,p.site==='octa'?'4':'8')},{label:'Voisins du site',value:hid(a,p.site==='octa'?'6':'4')},
       {label:'Rayon maximal r / R',value:hid(a,f.fix(lim,3)),hint:R?hid(a,`r<sub>max</sub> = ${f.fix(lim*R,1)} pm`):undefined}];
-    if(R)arr.push({label:'Carbone dans le fer γ',value:`${f.fix(p.ratio*R,0)}`,unit:'pm',hint:`r / R = ${f.fix(p.ratio,3)}`,warn:p.reveal&&m.over});
+    if(R)arr.push({label:Math.abs(p.ratio-FE_RC/FE_R)<.002?'Carbone dans le fer γ':'Rayon inséré (fer γ)',value:`${f.fix(p.ratio*R,0)}`,unit:'pm',hint:`r / R = ${f.fix(p.ratio,3)}`,warn:p.reveal&&m.over});
     a.metrics(arr);
     a.legend([{c:C.v,label:'atomes de l’hôte'},{c:m.over?C.F:C.E,label:m.over?'sphère insérée : trop grande':'sphère insérée'}]);
     return;
@@ -1366,7 +1366,8 @@ function formule(a){
   if(a.tab===2){
     const lim=Cr.siteRadius(p.site),ok=p.ratio<=lim+1e-7;
     const st1=p.ratio>lim+1e-7?'Interpénétration : la sphère dépasse la place disponible.':Math.abs(p.ratio-lim)<1e-7?'Contact limite : la sphère touche tous les voisins.':'La sphère tient sans déplacer les voisins.';
-    const fe=p.fe?`<br>Fer γ : ${iv('R')} = ${FE_R} pm ; carbone : ${iv('r')} = ${FE_RC} pm, soit ${iv('r')} / ${iv('R')} = ${a.fmt.fix(FE_RC/FE_R,3)}.${p.reveal?` Le site octaédrique accepte au plus ${a.fmt.fix(Cr.siteRadius('octa')*FE_R,0)} pm : le carbone ${FE_RC/FE_R>Cr.siteRadius('octa')?'ne tient pas sans déformer le réseau (solution solide d’insertion)':'tient'}.`:''}`:'';
+    const sNom=p.site==='octa'?'octaédrique':'tétraédrique';
+    const fe=p.fe?`<br>Fer γ : ${iv('R')} = ${FE_R} pm ; carbone : ${iv('r')} = ${FE_RC} pm, soit ${iv('r')} / ${iv('R')} = ${a.fmt.fix(FE_RC/FE_R,3)}.${p.reveal?` Le site ${sNom} accepte au plus ${a.fmt.fix(lim*FE_R,0)} pm : le carbone ${FE_RC/FE_R>lim?'ne tient pas sans déformer le réseau (solution solide d’insertion)':'tient'}.`:''}`:'';
     return `<b>${st1}</b><br>${p.reveal?(p.site==='octa'?`${iv('r','max')} = ${iv('a')}/2 − ${iv('R')}`:`${iv('r','max')} = ${iv('a')}√3/4 − ${iv('R')}`):`${iv('r','max')} = distance au voisin − ${iv('R')}`}${fe}`;
   }
   if(a.tab===3){
@@ -1381,7 +1382,7 @@ const A=AnimKit.app({
   code:'AM3',partie:'VertEmeraude',chapitre:'AM3 Solides cristallins',
   titre:'Atelier du cristal',sousTitre:'Empilements, mailles, sites interstitiels, NaCl et diamant',fichier:'Atelier_Cristal',
   onglets:['Empiler','Lire la maille','Sites','NaCl et diamant'],
-  temps:true,pas:1.4,
+  temps:a=>!((a.tab===1||a.tab===3)&&task(a)==='contact'),pas:1.4,
   panneaux:[{id:'scene',poids:2.2,ratioTel:.95},{id:'dessus',titre:'Vue de dessus (sphères réduites)',poids:1,onglets:[0],ratioTel:.7}],
   reglages:[
     {titre:'Situations',presets:[
@@ -1425,7 +1426,7 @@ const A=AnimKit.app({
         {label:'Au contact',action:a=>{a.set('ratio',Cr.siteRadius(a.p.site));a.set('local',true)}},
         {label:'Trop grande',action:a=>{a.set('ratio',Cr.siteRadius(a.p.site)+.08);a.set('local',true)}}]},
       {id:'fe',type:'check',label:`Hôte : fer γ (${FE_R} pm), carbone ${FE_RC} pm`,value:false},
-      {type:'boutons',items:[{label:'Carbone (77 pm)',action:a=>{a.set('fe',true);a.set('ratio',FE_RC/FE_R);a.set('local',true)}}]}]},
+      {type:'boutons',items:[{label:'Carbone (77 pm)',action:a=>{a.set('site','octa');a.set('fe',true);a.set('ratio',FE_RC/FE_R);a.set('local',true)}}]}]},
     {titre:'Deux constructions',onglets:[3],items:[
       {id:'material',type:'seg',label:'Structure',options:[['nacl','NaCl · sites O'],['diamond','Diamant · sites T']],value:'nacl'},
       {id:'task3',type:'seg',label:'Observer',options:[['count','Population'],['neighbors','Environnement'],['contact','Contact']],value:'count'},
@@ -1435,7 +1436,7 @@ const A=AnimKit.app({
       {type:'note',html:a=>explication(a)},
       {type:'note',html:a=>formule(a)}]},
     {titre:'Vue',items:[
-      {type:'boutons',items:[
+      {type:'boutons',si:a=>!locked(a),items:[
         {label:'Vue 3D',action:a=>{if(!locked(a))view.reset()}},
         {label:'Vue de dessus',action:a=>{if(!locked(a))view.set(0,PI/2)}},
         {label:'Vue de face',action:a=>{if(!locked(a))view.set(0,0)}}]},
@@ -1449,7 +1450,7 @@ const A=AnimKit.app({
   },
   init(a){setView(a)},
   change(a,id,v){
-    if(['structure','task1','task3','material','site'].includes(id)){a.p.reveal=false;st.sel=[0,0,0];if(id==='site'){st.site=0;a.p.local=false;a.p.cut=false}}
+    if(['structure','task1','task3','material','site','seq'].includes(id)){a.p.reveal=false;st.sel=[0,0,0];if(id==='site'){st.site=0;a.p.local=false;a.p.cut=false}}
     if(id==='cut'&&v)a.p.local=true;
     if(id==='local'&&!v)a.p.cut=false;
     if(id==='cube'&&v){a.p.seq='abc';a.p.layers=4}
@@ -1458,10 +1459,10 @@ const A=AnimKit.app({
   },
   onglet(a){a.play(false);a.t=0;a.p.reveal=false;st.sel=[0,0,0];st.site=0;setView(a)},
   reset(a){a.t=0;setView(a)},
-  peutLire(a){if(a.tab===0&&a.p.cube)a.p.cube=false;return true},
+  peutLire(a){if((a.tab===1||a.tab===3)&&task(a)==='contact')return false;if(a.tab===0&&a.p.cube)a.set('cube',false,{silent:true});return true},
   step(a,dt){
     if(a.tab===0){a.t+=dt;if(a.t>=1.4-1e-9){a.t=0;a.p.layers=a.p.layers%4+1;a.refresh()}}
-    else if(a.tab===2){a.p.ratio=(a.p.ratio+dt*.08)%.6;a.refresh()}
+    else if(a.tab===2){a.p.ratio=(a.p.ratio+dt*.08)%.65;a.refresh()}
     else if(task(a)!=='contact')view.yaw+=dt*.22;
   },
   draw

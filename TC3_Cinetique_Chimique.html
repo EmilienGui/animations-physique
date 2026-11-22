@@ -1065,16 +1065,17 @@ const Kinetics=(()=>{
  const R=8.314462618,packet=.001;
  const random=seed=>{let a=seed>>>0;return ()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296}};
  const arrhenius=(T,Ea,kref)=>kref*Math.exp(Ea*1000/R*(1/298.15-1/T));
- function spec(mode,q,dimer1){if(dimer1&&mode!=='mixture'&&q===1)return{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:1};return mode==='mixture'?{name:'A + B → AB',names:['A','B','AB'],nu:[-1,-1,1],order:2}:q===2?{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:2}:{name:'A → P',names:['A','P'],nu:[-1,1],order:q}}
+ function spec(mode,q,dimer1,mono2){if(mono2&&mode!=='mixture')return{name:'A → P',names:['A','P'],nu:[-1,1],order:q};if(dimer1&&mode!=='mixture'&&q===1)return{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:1};return mode==='mixture'?{name:'A + B → AB',names:['A','B','AB'],nu:[-1,-1,1],order:2}:q===2?{name:'2 A → A₂',names:['A','A₂'],nu:[-2,1],order:2}:{name:'A → P',names:['A','P'],nu:[-1,1],order:q}}
  function prepare(p,seed=1631){
   p={...p,q:p.mode==='temperature'?1:p.q};
-  const reaction=spec(p.mode,p.q,p.dimer1),mixture=p.mode==='mixture';
+  const reaction=spec(p.mode,p.q,p.dimer1,p.mono2),mixture=p.mode==='mixture';
   const limit=mixture?Math.floor(420/(1+p.ratio)):240;
   const N=Math.max(10,2*Math.floor(Math.min(Math.round(p.nA/packet),limit)/2));
   const quantum=p.nA/N,B=mixture?Math.round(N*p.ratio):0,initial=mixture?[N,B,0]:[N,0];
   const c0=N*quantum/p.V,b0=B*quantum/p.V,q=mixture?2:p.q;
   const k=p.mode==='temperature'?arrhenius(p.T,p.Ea,p.kref):p.k;
-  const half=mixture?null:q===0?c0/(2*k):q===1?Math.log(2)/(k*(reaction.nu[0]===-2?2:1)):1/(2*k*c0);
+  const nu=reaction.nu[0]===-2?2:1;
+  const half=mixture?null:q===0?c0/(2*k):q===1?Math.log(2)/(k*nu):1/(nu*k*c0);
   const duration=mixture?10/(k*(c0+b0)):q===0?c0/k*1.15:half*(q===2?5:4);
   const run={p:{...p},reaction,q,k,N,B,quantum,c0,b0,initial,seed,duration,half,events:[],initialActors:[]};
   let id=0;for(let s=0;s<initial.length;s++)for(let i=0;i<initial[s];i++)run.initialActors.push({id:id++,s});
@@ -1104,8 +1105,9 @@ const Kinetics=(()=>{
    const d=b0-c0;let a;if(d===0)a=c0/(1+k*c0*t);else if(d>0){const z=d*k*t;a=d*c0*Math.exp(-z)/(d-c0*Math.expm1(-z))}else{const z=-d*k*t;a=-d*c0/(-d-b0*Math.expm1(-z))}
    const x=Math.max(0,Math.min(c0,b0,c0-a));return[c0-x,b0-x,x];
   }
-  const c=run.q===0?Math.max(0,c0-k*t):run.q===1?c0*Math.exp(-k*t*(run.reaction.nu[0]===-2?2:1)):c0/(1+2*k*c0*t);
-  return[c,(c0-c)/(run.q===2||run.reaction.nu[0]===-2?2:1)];
+  const nu=run.reaction.nu[0]===-2?2:1;
+  const c=run.q===0?Math.max(0,c0-k*t):run.q===1?c0*Math.exp(-k*nu*t):c0/(1+nu*k*c0*t);
+  return[c,(c0-c)/nu];
  }
  function trace(run,t){const result=[[0,...run.initial.map(n=>n*run.quantum/run.p.V)]];for(const e of run.events){if(e.t>t)break;result.push([e.t,...e.counts.map(n=>n*run.quantum/run.p.V)])}if(result.at(-1)[0]<t)result.push([t,...values(run,t)]);return result}
  function observedHalf(run){const e=run.events.find(e=>e.counts[0]<=run.N/2);return e?e.t:null}
@@ -1145,7 +1147,7 @@ const sv=(a,s)=>uS(String(s).replace(/<sup>(.*?)<\/sup>/g,(_,e)=>a.S.sup(e)));
 const UQ=['mol·L<sup>−1</sup>·s<sup>−1</sup>','s<sup>−1</sup>','L·mol<sup>−1</sup>·s<sup>−1</sup>'];
 const LOI={a1:{q:1},a0:{q:0},a2:{q:2},d1:{q:1,d:true}};
 const GRID=[.04,.07,.12,.18,.24];
-const st={runs:[],stages:[],time:0,end:1,fullEnd:1,seed:1631,tab:-1,drag:null,data:{2:[],3:[],4:[]},fp:'',myst:1,G:{}};
+const st={runs:[],stages:[],time:0,end:1,fullEnd:1,seed:1631,tab:-1,drag:null,data:{2:[],3:[],4:[]},fp:{2:'',3:'',4:''},myst:1,G:{}};
 
 /* ---------- paramètres ---------- */
 const lawQ=(a,t)=>{const v=a.p['loi'+t];return v==='m'?st.myst:+v};
@@ -1154,7 +1156,7 @@ function params(a){
   if(t===0){const l=LOI[p.loi0];return{...base,mode:'orders',q:l.q,dimer1:!!l.d,nA:p.nA0,V:p.V0,k:p.k0}}
   if(t===1)return{...base,mode:'mixture',q:2,nA:p.nA1,V:p.V1,ratio:p.ratio1,k:p.k1};
   if(t===2)return{...base,mode:'temperature',q:1,nA:p.nA2,V:p.V2,k:.035,T:p.Ta2,T2:p.Tb2,Ea:p.Ea2};
-  return{...base,mode:'orders',q:lawQ(a,t),nA:g('nA'),V:g('V'),k:g('k')};
+  return{...base,mode:'orders',q:lawQ(a,t),mono2:true,nA:g('nA'),V:g('V'),k:g('k')};
 }
 const nuA=r=>r.reaction.nu[0]===-2?2:1;
 function lawText(a,r){
@@ -1207,8 +1209,8 @@ function prepare(a,newSeed){
   const t=a.tab,P=params(a);if(newSeed)st.seed+=101;
   st.runs=[KN.prepare(P,st.seed)];
   if(t===2)st.runs.push(KN.prepare({...P,T:P.T2},st.seed+9127));
-  const fp=t===2?'T'+P.Ea:t>=3?`${t}|${P.q}|${P.k}|${P.V}`:'';
-  if(fp!==st.fp){st.fp=fp;st.data={2:[],3:[],4:[]}}
+  const fp=t===2?'T'+P.Ea:t>=3?`${P.q}|${P.k}`:'';
+  if(t>=2&&fp!==st.fp[t]){st.fp[t]=fp;st.data[t]=[]}
   st.end=Math.max(...st.runs.map(r=>r.duration));st.fullEnd=st.end;st.time=0;
   st.stages=st.runs.map(createStage);st.drag=null;st.tab=t;
   a.refresh();a.render();
@@ -1258,7 +1260,7 @@ const bAct=(label,fn)=>({label,action:fn});
 function cfgTab(t,o){
   const isN=t>=3,id=k=>k+t;
   const grp=[];
-  const pre=(label,valeurs,seed)=>({label,valeurs,action:seed?a=>{st.seed+=101;prepare(a)}:undefined});
+  const pre=(label,valeurs,seed)=>({label,valeurs:{theo:false,tang:false,...(isN?{['rev'+t]:false}:{}),...valeurs},action:seed?a=>{st.seed+=101;prepare(a)}:undefined});
   const std=(over={})=>({['nA'+t]:.12,['V'+t]:.12,['k'+t]:.035,...over});
   if(t===0){
     grp.push({titre:'Une loi de vitesse',onglets:[0],
@@ -1340,11 +1342,11 @@ const A=AnimKit.app({
   },
   change(a,id,v){
     const m=/^(loi|nA|V|k|ratio|Ta|Tb|Ea)(\d)$/.exec(id);
-    if(id==='loi3'||id==='loi4'){if(v==='m')st.myst=Math.floor(Math.random()*3)}
+    if(id==='loi3'||id==='loi4'){if(v==='m'){st.myst=Math.floor(Math.random()*3);a.set('rev'+m[2],false,{silent:true})}}
     if(m&&+m[2]===a.tab)prepare(a);
   },
   init(a){if(!st.runs.length)prepare(a)},
-  onglet(a){a.play(false);prepare(a)},
+  onglet(a){a.play(false);a.set('theo',false,{silent:true});a.set('tang',false,{silent:true});prepare(a)},
   reset(a){a.play(false);if(!st.runs.length){prepare(a);return}st.stages=st.runs.map(createStage);st.time=0;st.drag=null},
   peutLire(a){if(!st.runs.length)return false;if(st.time>=st.end-1e-9)seek(a,0);return true},
   step(a,dt){
@@ -1455,7 +1457,7 @@ function drawSuivi(a){
   }
   vl.push({x:st.time,c:C.ink2,op:.8});
   let dots=[];
-  if(noise>0&&!temp){const nrm=mix?1/r.c0:f;dots=KN.measurements(r,st.time,noise).map(q=>({p:[q.t,q.c*nrm],c:cols[0],r:2.8}))}
+  if(noise>0&&!temp){const nrm=mix?1/r.c0:f;dots=KN.measurements(r,st.end,noise).filter(q=>q.t<=st.time+1e-9).map(q=>({p:[q.t,q.c*nrm],c:cols[0],r:2.8}))}
   const ylab=mix?'concentrations normalisées':abs?'absorbance (sans unité)':'concentration (mol·L<sup>−1</sup>)';
   plot(a,'suivi',{xmin:0,xmax:st.end,ymin:noise>0&&!temp?-3*noise/100*(mix?1:r.c0*f):0,ymax,xlab:'t (s)',ylab:sv(a,ylab),series,vlines:vl,dots,msg:st.time===0?'Lecture ou curseur pour construire le suivi':''});
   st.leg=leg;
@@ -1508,21 +1510,24 @@ function drawAnalyse(a){
 }
 /* onglets 4 et 5 : t½ et v0 en fonction de [A]0 (propositions B et C) */
 function drawSerie(a){
-  const t=a.tab,C=a.C,k=a.k,r=st.runs[0],P=r.p,data=st.data[t],q=r.q,kk=P.k,V=P.V,cmin=GRID[0]/V,cmax=GRID[4]/V,log=a.p['log'+t]==='log';
-  const th=t===3?c=>q===0?c/(2*kk):q===1?Math.LN2/kk:1/(2*kk*c):c=>q===0?kk:q===1?kk*c:2*kk*c*c;
-  const lin=[1.25*Math.max(th(cmin),th(cmax)),0];
+  const t=a.tab,C=a.C,k=a.k,r=st.runs[0],P=r.p,data=st.data[t],q=r.q,kk=P.k,V=P.V,log=a.p['log'+t]==='log';
+  const cmin=Math.min(GRID[0]/V,r.c0,...data.map(d=>d.c0)),cmax=Math.max(GRID[4]/V,r.c0,...data.map(d=>d.c0));
+  const th=t===3?c=>q===0?c/(2*kk):q===1?Math.LN2/kk:1/(kk*c):c=>q===0?kk:q===1?kk*c:kk*c*c;
+  const ymaxLin=Math.max(1.25*Math.max(th(cmin),th(cmax)),...data.map(d=>d.y*1.15));
   const pts=data.map(d=>[d.c0,d.y]);
   const lp=data.map(d=>[lnc(d.c0),lnc(d.y)]),fit=data.length>=2&&new Set(data.map(d=>d.c0.toFixed(6))).size>=2?KN.fit(lp):null;
-  const lthA=lnc(th(cmin)),lthB=lnc(th(cmax)),ylo=Math.min(lthA,lthB)-.7,yhi=Math.max(lthA,lthB)+.7;
+  const lthA=lnc(th(cmin)),lthB=lnc(th(cmax)),lys=[lthA,lthB,...lp.map(p=>p[1])];
+  const ylo=Math.min(...lys)-.7,yhi=Math.max(...lys)+.7;
   const yl=t===3?'t½ (s)':'v₀ (mol·L<sup>−1</sup>·s<sup>−1</sup>)',leg=[{c:C.B,label:t===3?'t<sub>½</sub> observé':'v<sub>0</sub> observé'}];
   const ser=[],vl=[{x:log?lnc(r.c0):r.c0,c:C.ink2,op:.8}];
+  const thLbl=t===4?'Modèle continu (v<sub>0</sub> instantanée)':'Modèle continu';
   let G;
   if(!log){
-    if(a.p.theo){ser.push({pts:Array.from({length:101},(_,j)=>{const c=cmin*.8+(cmax*1.1-cmin*.8)*j/100;return[c,th(c)]}),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:'Modèle continu',dash:true})}
-    G=plot(a,'analyse',{xmin:0,xmax:cmax*1.12,ymin:0,ymax:lin[0],xlab:'[A]₀ (mol·L⁻¹)',ylab:sv(a,yl),series:ser,vlines:vl,dots:pts.map(p=>({p,c:C.B,r:4.4})),msg:data.length?'':'Relever des suivis pour construire le graphe'});
+    if(a.p.theo){ser.push({pts:Array.from({length:101},(_,j)=>{const c=cmin*.8+(cmax*1.1-cmin*.8)*j/100;return[c,th(c)]}),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:thLbl,dash:true})}
+    G=plot(a,'analyse',{xmin:0,xmax:cmax*1.12,ymin:0,ymax:ymaxLin,xlab:'[A]₀ (mol·L⁻¹)',ylab:sv(a,yl),series:ser,vlines:vl,dots:pts.map(p=>({p,c:C.B,r:4.4})),msg:data.length?'':'Relever des suivis pour construire le graphe'});
   }else{
     if(fit){ser.push({pts:[[lnc(cmin)-.4,fit.intercept+fit.slope*(lnc(cmin)-.4)],[lnc(cmax)+.4,fit.intercept+fit.slope*(lnc(cmax)+.4)]],c:C.F,dash:`${8*k} ${5*k}`});leg.push({c:C.F,label:'Droite ajustée',dash:true})}
-    if(a.p.theo){const n=t===3?1-q:q;ser.push({pts:[[lnc(cmin)-.4,lthA+n*(-.4)],[lnc(cmax)+.4,lthB+n*.4]].map(([x,y])=>[x,y]),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:'Modèle continu',dash:true})}
+    if(a.p.theo){const n=t===3?1-q:q;ser.push({pts:[[lnc(cmin)-.4,lthA+n*(-.4)],[lnc(cmax)+.4,lthB+n*.4]].map(([x,y])=>[x,y]),c:C.v,w:1.8,dash:`${3*k} ${5*k}`});leg.push({c:C.v,label:thLbl,dash:true})}
     G=plot(a,'analyse',{xmin:lnc(cmin)-.4,xmax:lnc(cmax)+.4,ymin:ylo,ymax:yhi,xlab:'ln([A]₀ / c°)',ylab:t===3?'ln(t½ / t°)':'ln(v₀ / v°)',series:ser,vlines:vl,dots:lp.map(p=>({p,c:C.B,r:4.4})),msg:data.length<2?'Relever au moins deux suivis':''});
   }
   a.panels.analyse.head&&(a.panels.analyse.head.textContent=t===3?'Temps de demi-réaction en fonction de [A]₀':'Vitesse initiale en fonction de [A]₀');

@@ -1096,7 +1096,7 @@ const LOGK=MD.lnK/Math.LN10,PENTE=MD.a*Math.LN10,E0=MD.a*MD.lnK;   /* log K, V p
 /* palette locale : espèces chimiques (couleurs conservées de la version d'origine) */
 const pal=C=>C.dark?{zn:'#b6cbd7',cu:'#f2a071',el:'#9abcff',cur:'#ffa5a8',ion:'#8ce6c7',glass:'#9aa8a2',tube:'#6f857b'}:{zn:'#637988',cu:'#ac5127',el:'#285ac1',cur:'#8f2227',ion:'#007b63',glass:'#53595e',tube:'#8a9690'};
 
-const BASE={cCu:.1,cZn:.1,vCu:100,vZn:100,mZn:1,closed:true,bridge:true,device:'resistor',swapped:false};
+const BASE={cCu:.1,cZn:.1,vCu:100,vZn:100,mZn:1,closed:true,bridge:true,device:'resistor',swapped:false,showNernst:false,showFinal:false,showLaw:false};
 const PS=o=>({...BASE,...o});
 
 /* bilan de matière : tableau mis à jour à chaque image (hors réglages, donc sans rafraîchir le panneau) */
@@ -1119,7 +1119,7 @@ const A=AnimKit.app({
   onglets:['Fonctionnement','Décharge'],
   temps:true,pas:.6,
   curseur:{max:()=>1,get:()=>st.f,set:(a,v)=>{if(peutDecharger(a))st.f=clamp(v,0,1);else a.toast('Décharge impossible : interrupteur ouvert, pont retiré ou voltmètre idéal.')}},
-  panneaux:[{id:'scene',poids:2.3,ratioTel:.85},{id:'graphe',titre:'ℰ en fonction de log Q',poids:1,ratioTel:.8,onglets:[1]}],
+  panneaux:[{id:'scene',poids:2.3,ratioTel:.85},{id:'graphe',titre:'ℰ en fonction de log Qᵣ',poids:1,ratioTel:.8,onglets:[1]}],
   reglages:[
     {titre:'Situations',presets:[
       {label:'Daniell classique',titre:'Zn / Cu, 0.1 mol·L⁻¹, 100 mL, 1 g de zinc',valeurs:BASE,action:a=>a.setTab(0)},
@@ -1144,12 +1144,12 @@ const A=AnimKit.app({
       {id:'eq',type:'check',label:'Équation de la réaction',value:true},
       {id:'showNernst',type:'check',label:'Potentiels d\'électrode (loi de Nernst)',value:false},
       {id:'showFinal',type:'check',label:'Capacité et état final',value:false},
-      {id:'showLaw',type:'check',label:'Droite ℰ = ℰ° − 0.0296 log Q',value:false,onglets:[1]}]},
+      {id:'showLaw',type:'check',label:'Droite ℰ = ℰ° − 0.0296 log Q<sub>r</sub>',value:false,onglets:[1]}]},
     {titre:'Bilan de matière',items:[BIL]}
   ],
   aide:{
     voit:'Une <b>pile Daniell</b> : une lame de zinc plongée dans une solution de Zn<sup>2+</sup>, une lame de cuivre dans une solution de Cu<sup>2+</sup>, reliées par un <b>pont salin</b> (NH<sub>4</sub>NO<sub>3</sub>) et, à l\'extérieur, par une résistance ou un voltmètre. Sous le schéma, la pile est écrite avec la convention du cours : les signes ⊕ et ⊖ sont les polarités physiques, ils suivent la permutation des demi-piles.',
-    faire:'<ul><li><b>Fonctionnement</b> : lecture pour faire circuler les électrons (fil), les ions du pont et les ions de chaque demi-pile, à composition figée. Cliquer sur l\'<b>interrupteur</b> ou sur le <b>pont</b> pour les ouvrir ou les refermer.</li><li><b>Décharge</b> : le curseur (ou la lecture) fait avancer <i class="m">ξ</i> ; le bilan de matière, la charge débitée <i class="m">Q</i> et la tension à vide <i class="m">ℰ</i> évoluent. Le graphe donne <i class="m">ℰ</i> en fonction de log <i class="m">Q</i>.</li><li><b>Permuter</b> les demi-piles : <i class="m">ℰ</i> = <i class="m">V</i><sub>D</sub> − <i class="m">V</i><sub>G</sub> change de signe, pas la tension entre les pôles.</li><li>Les <b>prévisions</b> (potentiels de Nernst, capacité <i class="m">Q</i><sub>f</sub>, droite <i class="m">ℰ</i>(log <i class="m">Q</i>)) sont masquées au départ : les faire prévoir, puis les cocher.</li></ul>',
+    faire:'<ul><li><b>Fonctionnement</b> : lecture pour faire circuler les électrons (fil), les ions du pont et les ions de chaque demi-pile, à composition figée. Cliquer sur l\'<b>interrupteur</b> ou sur le <b>pont</b> pour les ouvrir ou les refermer.</li><li><b>Décharge</b> : le curseur (ou la lecture) fait avancer <i class="m">ξ</i> ; le bilan de matière, la charge débitée <i class="m">Q</i> et la tension à vide <i class="m">ℰ</i> évoluent. Le graphe donne <i class="m">ℰ</i> en fonction de log <i class="m">Q</i><sub>r</sub>.</li><li><b>Permuter</b> les demi-piles : <i class="m">ℰ</i> = <i class="m">V</i><sub>D</sub> − <i class="m">V</i><sub>G</sub> change de signe, pas la tension entre les pôles.</li><li>Les <b>prévisions</b> (potentiels de Nernst, capacité <i class="m">Q</i><sub>f</sub>, droite <i class="m">ℰ</i>(log <i class="m">Q</i><sub>r</sub>)) sont masquées au départ : les faire prévoir, puis les cocher.</li></ul>',
     modele:'Solutions idéales (activités égales aux concentrations), 25 °C, volumes constants, pont salin parfait, voltmètre idéal. Équation : Zn + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu, avec <i class="m">E</i>°(Cu<sup>2+</sup>/Cu) = 0.34 V, <i class="m">E</i>°(Zn<sup>2+</sup>/Zn) = −0.76 V, <i class="m">K</i> = exp(<i class="m">ℰ</i>°/<i class="m">a</i>) avec <i class="m">a</i> = <i class="m">RT</i>/2ℱ. La charge débitée vaut <i class="m">Q</i> = 2ℱ<i class="m">ξ</i>. L\'avancement final est limité par le zinc ou par l\'équilibre (résidu de Cu<sup>2+</sup> calculé directement). La tension affichée est la tension à vide à la composition courante ; le régime transitoire et la résistance interne ne sont pas modélisés. Épaisseurs des lames et charges schématiques.',
     cours:'TC6 : pile électrochimique, anode (oxydation) et cathode (réduction), écriture conventionnelle, convention <i class="m">ℰ</i> = <i class="m">V</i><sub>D</sub> − <i class="m">V</i><sub>G</sub>, formule de Nernst, constante d\'équilibre, capacité d\'une pile <i class="m">Q</i><sub>f</sub> = <i class="m">z</i>ℱ<i class="m">ξ</i><sub>f</sub>.'
   },
@@ -1158,10 +1158,10 @@ const A=AnimKit.app({
     else if(id==='closed'||id==='bridge'||id==='device')a.play(false);
   },
   init(){scrub(false)},
-  onglet(a,i){a.play(false);scrub(i===1)},
-  reset(a){st.phase=0;if(a.tab===1)st.f=0},
+  onglet(a,i){a.play(false);scrub(i===1);if(i===0&&st.f>=1)st.f=0},
+  reset(a){st.phase=0;st.f=0},
   peutLire(a){
-    if(a.tab===1&&st.f>=1)st.f=0;
+    if(st.f>=1)st.f=0;
     const m=mdl(a);
     if(!peut(a,m)){a.toast(!a.p.closed?'Fermer l\'interrupteur pour faire circuler les charges.':!a.p.bridge?'Remettre le pont salin.':a.p.device!=='resistor'?'Voltmètre idéal : aucun courant. Choisir la résistance.':'Décharge terminée.');return false}
     return true;
@@ -1252,6 +1252,7 @@ function drawScene(a,m){
     o+=T(420,310,d===1?no3:nh4,{size:14,c:pl.ion})+T(580,310,d===1?nh4:no3,{size:14,c:pl.ion});
   }
   /* électrodes, légendes */
+  const pole=m.hasZinc&&m.emf>5e-4;
   for(const {x,left,isLeft,isZn,level,c} of bks){
     const xe=isLeft?150:850,frac=m.metal/m.metal0,znW=(22+14*Math.log10(p.mZn/.01))*Math.max(0,frac),depW=clamp(32*Math.sqrt(m.deposit/.63546),0,120),w=isZn?znW:34;
     if(!isZn||m.hasZinc){
@@ -1259,7 +1260,7 @@ function drawScene(a,m){
       if(!isZn&&depW>0){const yy=Math.max(level,310);o+=rc(xe-w/2-depW/2,yy,w+depW,402-yy,{fill:pl.cu,op:.7})}
     }else o+=ln([[xe,248],[xe,420]],C.rule,1.6,{dash:'4 6'});
     const col=isZn?pl.zn:pl.cu;
-    if(m.hasZinc){const cx=X(x-110),cy=Y(28),r=Math.max(10*k,16*s);o+=S.circle(cx,cy,r,{fill:C.card,c:col,w:2})+S.text(cx,cy,isZn?'−':'+',{anchor:'middle',size:17,c:col,weight:700,halo:false})}
+    if(pole){const cx=X(x-110),cy=Y(28),r=Math.max(10*k,16*s);o+=S.circle(cx,cy,r,{fill:C.card,c:col,w:2})+S.text(cx,cy,isZn?'−':'+',{anchor:'middle',size:17,c:col,weight:700,halo:false})}
     o+=T(x,36,isZn&&!m.hasZinc?(tiny?'Zn épuisé':'Zinc épuisé'):(tiny?(isZn?'Zn':'Cu'):(isZn?'Zinc · Zn':'Cuivre · Cu')),{size:16,c:col,weight:700});
     if(ann>=1)o+=T(x,78,isZn&&!m.hasZinc?'Phase disparue':(tiny?(isZn?'Oxydation':'Réduction'):(isZn?'Anode · oxydation':'Cathode · réduction')),{size:14,c:C.ink});
     if(ann>=2){
@@ -1279,7 +1280,6 @@ function drawScene(a,m){
     else o+=T(500,520,cu2+' + Zn → Cu + '+zn2,{size:15,c:C.cInk});
   }
   /* écriture conventionnelle (suit la permutation ; les signes sont les polarités physiques) */
-  const pole=m.hasZinc&&m.emf>5e-4;
   const left=sw?['Cu',cu2,zn2,'Zn']:['Zn',zn2,cu2,'Cu'],pg=sw?['⊕','⊖']:['⊖','⊕'];
   o+=T(500,tiny?630:562,`${pole?pg[0]+' ':''}${left[0]} | ${left[1]} ‖ ${left[2]} | ${left[3]}${pole?' '+pg[1]:''}`,{size:16,c:C.ink,math:true});
   /* charges en mouvement */
@@ -1301,7 +1301,7 @@ function drawScene(a,m){
 function drawGraphe(a,m){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,p=a.p,sg=p.swapped?-1:1;
   const x0=-4,x1=Math.ceil(LOGK)+3,y0=p.swapped?-1.4:-.1,y1=p.swapped?.1:1.4;
-  const G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:x0,xmax:x1,ymin:y0,ymax:y1,xlab:`log ${S.v('Q')}`,ylab:`${S.v('ℰ')} (V)`,yticks:AnimKit.ticks(y0,y1,7)});
+  const G=S.graph({x:2*k,y:2*k,w:P.w-4*k,h:P.h-4*k,xmin:x0,xmax:x1,ymin:y0,ymax:y1,xlab:`log ${S.v('Q','r')}`,ylab:`${S.v('ℰ')} (V)`,yticks:AnimKit.ticks(y0,y1,7)});
   let o=G.svg+S.clip('tc6g',G);
   const E=lq=>sg*(E0-PENTE*lq);
   if(p.showLaw){

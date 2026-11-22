@@ -1263,7 +1263,7 @@ const A=AnimKit.app({
   },
   init(a){build(a);const ro=new ResizeObserver(()=>a.render());for(const P of Object.values(a.panels))ro.observe(P.node)},
   reset(a){build(a)},
-  onglet(a){a.panels.scene.zoom=1;a.reset()},
+  onglet(a){a.panels.scene.zoom=1;a.p.courbe=false;a.reset()},
   change(a,id,v){if(a.tab===1)build(a)},
   step(a,dt){a.t=Math.min(B.duration,a.t+dt);if(a.t>=B.duration)a.play(false)},
   draw(a){const q=Q(a);[drawInertia,drawForces,drawConservation][a.tab](a,q);infos(a,q)}
@@ -1354,24 +1354,18 @@ function infos(a,q){const f=a.fmt,p=a.p,C=a.C;
     a.metrics([{label:`Moment d'inertie ${JD}`,value:f.sig(q.J,3),unit:'kg·m²',hint:`référence : ${f.sig(q.Jref,3)} kg·m²`},
       {label:`Accélération angulaire ${Mh.frac('Γ',JD)}`,value:f.sig(q.alpha,3),unit:'rad·s<sup>−2</sup>',hint:`référence : ${f.sig(q.alref,3)} rad·s<sup>−2</sup>`},
       {label:'Vitesse angulaire ω',value:f.sig(q.w,3),unit:'rad·s<sup>−1</sup>',hint:`référence : ${f.sig(q.wref,3)} rad·s<sup>−1</sup>`}]);
-    const d=q.J/q.Jref;
-    a.insight((Math.abs(d-1)<1e-9?'Même moment d\'inertie : les deux solides tournent ensemble. ':d<1?'Inertie plus faible : sous le même couple, le solide grenat accélère plus vite. ':'Inertie plus grande : sous le même couple, le solide grenat accélère moins vite. ')+`${JD} dω/d${mv('t')} = Γ et ${JD} = Σ${mv('m')}<sub>i</sub>${mv('r')}<sub>i</sub><sup>2</sup> : la masse loin de l'axe compte davantage.`);
     a.legend([{c:C.cInk,label:'solide réglable'},{c:C.B,label:'référence'},{c:C.F,label:'couple Γ (même valeur)'}]);
     a.clock(`${mv('t')} = ${f.fix(a.t,2)} s`);
   }else if(a.tab===1){
     a.metrics([{label:`Moment ${MD}`,value:f.sig(q.M,3),unit:'N·m',hint:Math.abs(q.M)<1e-9?'aucune rotation':q.M>0?'tend à tourner dans le sens direct':'tend à tourner dans le sens indirect'},
       {label:p.kind==='couple'?`Distance entre les droites d'action 2${mv('d')}`:`Bras de levier ${mv('d')}`,value:f.sig(q.d*(p.kind==='couple'?2:1),3),unit:'m',hint:`${mv('r')} = ${f.fix(p.r2,2)} m`},
       {label:'Résultante des forces',value:f.sig(q.result,3),unit:'N',hint:p.kind==='couple'?'couple pur':''}]);
-    a.insight(p.kind==='couple'?`Résultante nulle, mais ${MD} = 2${mv('r')}${mv('F')} sin φ = ${f.sig(q.M,3)} N·m : c'est un couple, qui ne déplace pas le centre mais fait tourner.`
-      :Math.abs(Math.sin(q.phi))<1e-6||p.F===0?`La droite d'action passe par O : bras de levier nul, ${MD} = 0, quelle que soit la distance OA.`
-      :`|${MD}| = ${mv('F')} ${mv('d')} avec ${mv('d')} = ${mv('r')}|sin φ| : c'est le bras de levier qui compte, pas la distance OA seule.`);
     a.legend([{c:C.F,label:'force'},p.kind==='couple'?{c:C.B,label:'force opposée'}:null,{c:C.E,label:'bras de levier',dash:true},{c:C.ink2,label:'droite d\'action',dash:true},{c:C.cInk,label:`sens et valeur de ${MD}`}]);
     a.clock('');
   }else{
     a.metrics([{label:`Moment d'inertie ${JD}`,value:f.sig(q.J,3),unit:'kg·m²'},
       {label:'Vitesse angulaire ω',value:f.sig(q.w,3),unit:'rad·s<sup>−1</sup>'},
       {label:`Moment cinétique ${LD}`,value:f.sig(q.L,3),unit:'kg·m²·s<sup>−1</sup>',hint:'constant'}]);
-    a.insight(`Pas de moment extérieur suivant Δ : ${LD} = ${JD}ω reste constant. `+(p.r0===p.rf?'Rayon constant : rien ne change.':p.w0===0?'Sans rotation initiale, ℒ<sub>Δ</sub> = 0 : déplacer les masses ne crée aucune rotation.':`En revanche l'énergie cinétique n'est pas conservée : travail des forces intérieures ${f.sig(q.W,3)} J.`));
     a.legend([{c:C.v,label:'vitesse tangentielle'},{c:C.E,label:'vitesse radiale (même échelle)'},{c:C.cInk,label:'énergie de rotation ½'+JD+'ω²'},{c:C.Ec,label:'énergie cinétique totale',dash:true}]);
     a.clock(`${mv('t')} = ${f.fix(a.t,2)} s`);
   }

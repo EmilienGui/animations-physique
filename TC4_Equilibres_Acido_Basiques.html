@@ -1243,15 +1243,17 @@ function barres(a,rx,aq){
   const P=a.panels.barres,S=a.S,C=a.C,k=a.k,p=a.p,W=P.w,H=P.h,nn=names(a),P2=pal(C),col=[C.F,C.B,C.E,P2.purple];
   const ini=nvec(a),mx=Math.max(.1,...ini,...rx.final,...aq.final)*1.12;
   const G=S.graph({x:2*k,y:2*k,w:W-4*k,h:H-4*k,xmin:0,xmax:4,ymin:0,ymax:mx,xlabels:false,xlab:'',ylab:'Quantité (mmol)',padB:30*k});
-  let o=G.svg;
-  const gw=G.w/4,bw=Math.min(26*k,gw/4.2);
+  let o=G.svg+S.clip('tc4ab-bar',G),bars='',labs='';
+  const gw=Math.abs(G.X(1)-G.X(0)),bw=Math.min(26*k,gw/4.2),yBase=G.Y(0);
   for(let i=0;i<4;i++){
-    const cx=G.x0+gw*(i+.5),vals=[ini[i],p.showAq?rx.final[i]:null,p.showAq?aq.final[i]:null];
-    vals.forEach((v,j)=>{if(v===null)return;const x=cx+(j-1)*(bw+3*k)-bw/2,h=v/mx*G.h;
-      o+=j===0?S.rect(x,G.y0+G.h-h,bw,h,{fill:'none',c:col[i],w:1.8}):S.rect(x,G.y0+G.h-h,bw,h,{fill:col[i],fop:j===1?.45:1});});
-    o+=S.text(cx,G.y0+G.h+18*k,cS(a,nn[i]),{anchor:'middle',size:15,c:col[i],halo:false,weight:600});
+    const cx=G.X(i+.5),vals=[ini[i],p.showAq?rx.final[i]:null,p.showAq?aq.final[i]:null];
+    vals.forEach((v,j)=>{if(v===null)return;const x=cx+(j-1)*(bw+3*k)-bw/2,yt=G.Y(v),h=Math.max(0,yBase-yt);
+      bars+=j===0?S.rect(x,yt,bw,h,{fill:'none',c:col[i],w:1.8}):S.rect(x,yt,bw,h,{fill:col[i],fop:j===1?.45:1});});
+    if(cx>=G.x0-10&&cx<=G.x0+G.w+10)labs+=S.text(cx,G.y0+G.h+18*k,cS(a,nn[i]),{anchor:'middle',size:15,c:col[i],halo:false,weight:600});
   }
+  o+=`<g clip-path="url(#tc4ab-bar)">${bars}</g><g data-ak-hors-graphe>${labs}`;
   if(p.showAq)o+=S.text(G.x0+G.w,G.y0+8*k,'contour : introduit · clair : réaction unique · plein : avec l\'eau',{anchor:'end',size:13,c:C.ink2,base:'top'});
+  o+='</g>';
   a.svg('barres',o);
 }
 
@@ -1278,7 +1280,7 @@ function phc(a,w){
 }
 
 /* ---------- application ---------- */
-const BASE={system:'acetate',ph:4.8,pk1:4.8,pk2:9.2,n0:1,n1:0,n2:0,n3:3,vol:100};
+const BASE={system:'acetate',ph:4.8,pk1:4.8,pk2:9.2,n0:1,n1:0,n2:0,n3:3,vol:100,showK:false,showEq:false,showAq:false};
 const MIX=o=>({...BASE,system:'pair',...o});
 function scrub(on){const d=typeof document!=='undefined'&&document.querySelector?document.querySelector('.ak-scrub'):null;if(d)d.hidden=!on}
 
@@ -1303,9 +1305,9 @@ const A=AnimKit.app({
       {label:'K < 1',titre:'pKa,1 = 9, pKa,2 = 5',valeurs:MIX({pk1:9,pk2:5,n0:1,n1:0,n2:0,n3:1}),action:a=>{st.prog=0;a.setTab(2)}},
       {label:'Sens indirect',titre:'Beaucoup de produits au départ : Q₀ > K',valeurs:MIX({pk1:6,pk2:8,n0:.1,n1:2,n2:2,n3:.1}),action:a=>{st.prog=0;a.setTab(1)}}],items:[],onglets:[0,1,2,3]},
     {titre:'Acide ou base faible',presets:[
-      {label:'Acide éthanoïque 0.1 mol·L⁻¹',valeurs:{wkind:'acide',wpk:4.8,wc:.1},action:a=>a.setTab(4)},
-      {label:'Ammoniac 0.1 mol·L⁻¹',titre:'base faible, couple NH₄⁺/NH₃',valeurs:{wkind:'base',wpk:9.2,wc:.1},action:a=>a.setTab(4)},
-      {label:'Acide très dilué',titre:'l\'autoprotolyse de l\'eau compte',valeurs:{wkind:'acide',wpk:4.8,wc:1e-5},action:a=>a.setTab(4)}],items:[],onglets:[4]},
+      {label:'Acide éthanoïque 0.1 mol·L⁻¹',valeurs:{wkind:'acide',wpk:4.8,wc:.1,showApprox:false},action:a=>a.setTab(4)},
+      {label:'Ammoniac 0.1 mol·L⁻¹',titre:'base faible, couple NH₄⁺/NH₃',valeurs:{wkind:'base',wpk:9.2,wc:.1,showApprox:false},action:a=>a.setTab(4)},
+      {label:'Acide très dilué',titre:'l\'autoprotolyse de l\'eau compte',valeurs:{wkind:'acide',wpk:4.8,wc:1e-5,showApprox:false},action:a=>a.setTab(4)}],items:[],onglets:[4]},
     {titre:'Le système',onglets:[0],items:[
       {id:'system',type:'select',label:'Système acido-basique',options:[['acetate','Acide éthanoïque / éthanoate'],['ammonium','Ammonium / ammoniac'],['carbon','Système carbonaté'],['pair','Les deux couples du mélange']],value:'acetate'},
       {id:'ph',label:'pH imposé',min:0,max:14,step:.05,dec:2,value:4.8},
@@ -1327,7 +1329,7 @@ const A=AnimKit.app({
       {id:'wpk',label:'p<i>K</i><sub>a</sub> du couple',min:-2,max:16,step:.05,dec:2,value:4.8},
       {id:'wc',label:'Concentration apportée <i>c</i>',min:1e-6,max:1,log:true,step:.001,dec:6,value:.1,unit:'mol·L⁻¹'},
       {type:'note',html:'Eau pure + soluté ; 25 °C, activités égales aux concentrations. La lecture dilue la solution à partir de la concentration choisie.'}]},
-    {titre:'Affichages (prévisions masquées)',items:[
+    {titre:'Affichages (prévisions masquées)',onglets:[1,2,3,4],items:[
       {id:'showK',type:'check',label:'ΔpKa, K, Q₀ et verdict',value:false,onglets:[1]},
       {id:'showEq',type:'check',label:'Équilibre : ξₑ, conversion et ligne « Équilibre »',value:false,onglets:[2]},
       {id:'showAq',type:'check',label:'Résultats : réaction unique et calcul avec l\'eau',value:false,onglets:[3]},
@@ -1335,8 +1337,8 @@ const A=AnimKit.app({
   ],
   aide:{
     voit:'Quatre formes acido-basiques et leurs <b>proportions</b> en fonction du pH (courbes), avec en dessous les <b>domaines de prédominance</b> de chaque couple. Le mélange de référence est CH<sub>3</sub>COOH + NH<sub>3</sub> ⇌ CH<sub>3</sub>COO<sup>−</sup> + NH<sub>4</sub><sup>+</sup>.',
-    faire:'<ul><li><b>Explorer</b> : le pH est <b>imposé</b>. Glisser la ligne de pH, ou utiliser pKa − 1, pKa, pKa + 1 ; choisir le couple. Les poignées rondes des domaines déplacent les pKa.</li><li><b>Prévoir</b> : comparer les domaines des réactifs, calculer <i class="m">K</i> et comparer <i class="m">Q</i><sub>i</sub> à <i class="m">K</i> ; cocher ensuite pour vérifier.</li><li><b>Calculer</b> : le tableau d\'avancement de la réaction unique ; le curseur (ou la lecture) fait avancer <i class="m">ξ</i>. L\'équilibre est masqué : le prévoir d\'abord.</li><li><b>Interpréter</b> : le pH final est <b>calculé</b> avec l\'eau ; comparer aux quantités de la réaction unique.</li><li><b>Dans l\'eau</b> : acide ou base faible seul(e) dans l\'eau ; la lecture dilue la solution et montre quand les approximations cessent d\'être valables.</li></ul>',
-    modele:'25 °C, solutions idéales (activités = [i]/C°), volumes additifs. Couple monoprotique : α<sub>acide</sub> = 1/(1 + 10<sup>pH−pKa</sup>). Carbonaté : CO<sub>2</sub>* = CO<sub>2</sub>(aq) + H<sub>2</sub>CO<sub>3</sub>, pKa 6.3 et 10.3. <i class="m">K</i> = 10<sup>pKa₂ − pKa₁</sup> ; <i class="m">Q</i><sub>i</sub> = n(A<sup>−</sup>)n(BH<sup>+</sup>)/[n(AH)n(B)] ; sens direct si <i class="m">Q</i><sub>i</sub> &lt; <i class="m">K</i>. La progression de <i class="m">ξ</i> est une interpolation, sans cinétique. Le calcul avec l\'eau résout l\'électroneutralité avec <i class="m">K</i><sub>e</sub> = 10<sup>−14</sup> et la conservation de chaque famille ; les contre-ions des sels sont pris en compte. Acide faible seul : [H<sub>3</sub>O<sup>+</sup>] = [HO<sup>−</sup>] + [A<sup>−</sup>] ; approximation pH ≈ ½(pKa − log <i class="m">c</i>) valable si l\'acide est peu dissocié et pH &lt; 6.5 ; base faible : pH ≈ 7 + ½(pKa + log <i class="m">c</i>). L\'écart exprimé est une différence de proportions au sein d\'une famille.',
+    faire:'<ul><li><b>Explorer</b> : le pH est <b>imposé</b>. Glisser la ligne de pH, ou utiliser pKa − 1, pKa, pKa + 1 ; choisir le couple. Les poignées rondes des domaines déplacent les pKa.</li><li><b>Prévoir</b> : comparer les domaines des réactifs, calculer <i class="m">K</i> et comparer <i class="m">Q</i><sub>0</sub> à <i class="m">K</i> ; cocher ensuite pour vérifier.</li><li><b>Calculer</b> : le tableau d\'avancement de la réaction unique ; le curseur (ou la lecture) fait avancer <i class="m">ξ</i>. L\'équilibre est masqué : le prévoir d\'abord.</li><li><b>Interpréter</b> : le pH final est <b>calculé</b> avec l\'eau ; comparer aux quantités de la réaction unique.</li><li><b>Dans l\'eau</b> : acide ou base faible seul(e) dans l\'eau ; la lecture dilue la solution et montre quand les approximations cessent d\'être valables.</li></ul>',
+    modele:'25 °C, solutions idéales (activités = [i]/C°), volumes additifs. Couple monoprotique : α<sub>acide</sub> = 1/(1 + 10<sup>pH−pKa</sup>). Carbonaté : CO<sub>2</sub>* = CO<sub>2</sub>(aq) + H<sub>2</sub>CO<sub>3</sub>, pKa 6.3 et 10.3. <i class="m">K</i> = 10<sup>pKa₂ − pKa₁</sup> ; <i class="m">Q</i><sub>0</sub> = n(A<sup>−</sup>)n(BH<sup>+</sup>)/[n(AH)n(B)] ; sens direct si <i class="m">Q</i><sub>0</sub> &lt; <i class="m">K</i>. La progression de <i class="m">ξ</i> est une interpolation, sans cinétique. Le calcul avec l\'eau résout l\'électroneutralité avec <i class="m">K</i><sub>e</sub> = 10<sup>−14</sup> et la conservation de chaque famille ; les contre-ions des sels sont pris en compte. Acide faible seul : [H<sub>3</sub>O<sup>+</sup>] = [HO<sup>−</sup>] + [A<sup>−</sup>] ; approximation pH ≈ ½(pKa − log <i class="m">c</i>) valable si l\'acide est peu dissocié et pH &lt; 6.5 ; base faible : pH ≈ 7 + ½(pKa + log <i class="m">c</i>). L\'écart exprimé est une différence de proportions au sein d\'une famille.',
     cours:'TC4 : couples acide/base, constante d\'acidité, diagrammes de distribution et de prédominance, constante de réaction et quotient initial, tableau d\'avancement, pH d\'une solution d\'acide ou de base faible.'
   },
   change(a,id,v){
@@ -1349,7 +1351,7 @@ const A=AnimKit.app({
     a.refresh();
   },
   init(){scrub(false)},
-  onglet(a,i){a.play(false);scrub(i===2);if(i===2)st.prog=0},
+  onglet(a,i){a.play(false);scrub(i===2);if(i===2)st.prog=0;if(i===0&&a.p.system==='carbon'&&a.p.pk1>=CARB2)a.p.pk1=CARB2-.05},
   reset(a){st.dir=1;if(a.tab===2)st.prog=0},
   peutLire(a){
     if(a.tab===2&&st.prog>=1)st.prog=0;
@@ -1432,8 +1434,8 @@ function drag(id,tabOK){
   function apply(x){
     const pl=st.plot[id];if(!pl)return;const v=phOf(pl,x);
     if(sel){
-      const lim=(sel.key==='pk1'&&A.p.system==='carbon'&&A.tab===0)?10.25:13;
-      A.set(sel.key,rd(clamp(v,1,lim),2));
+      const lo=sel.key==='wpk'?0:1,hi=sel.key==='wpk'?14:(sel.key==='pk1'&&A.p.system==='carbon'&&A.tab===0)?10.25:13;
+      A.set(sel.key,rd(clamp(v,lo,hi),2));
     }else A.set('ph',rd(v,2));
   }
 }

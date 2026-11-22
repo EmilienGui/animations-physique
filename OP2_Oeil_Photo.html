@@ -1252,7 +1252,7 @@ const A=AnimKit.app({
       {label:'Objet à 25 cm',onglets:[0],valeurs:{infinity:false,distance:.25}},
       {label:'Myope sans lunettes',onglets:[0],valeurs:{condition:'myopia',infinity:true,L:50/3}},
       {label:'Hypermétrope qui lit',onglets:[0],valeurs:{condition:'hyper',infinity:false,distance:.25,L:50/3}},
-      {label:'Astigmate corrigé',onglets:[0],valeurs:{condition:'astig',L:50/3},action:a=>corriger(a)},
+      {label:'Astigmate corrigé',onglets:[0],valeurs:{condition:'astig',infinity:true,L:50/3},action:a=>corriger(a)},
       {label:'Grand-angle 18 mm',onglets:[1],valeurs:{f:18,projection:'rectilinear'}},
       {label:'Standard 35 mm',onglets:[1],valeurs:{f:35,projection:'rectilinear'}},
       {label:'Fisheye 12 mm',onglets:[1],valeurs:{f:12,projection:'fisheye'}},
@@ -1320,8 +1320,9 @@ const A=AnimKit.app({
     if(id==='acc'&&v>accMax(a))a.set('acc',accMax(a),{silent:true});
     if(id==='photoView'){st.photoYaw=v==='atelier'?-58:35;st.photoPitch=-15;st.focusPick=null}
     if(id==='focus')st.focusPick=null;
-    if(id==='probe'&&v*1000<2*a.p.f)a.set('probe',+(2*a.p.f/1000).toFixed(3),{silent:true});
+    if((id==='probe'||id==='f')&&a.p.probe*1000<2*a.p.f)a.set('probe',+(2*a.p.f/1000).toFixed(3),{silent:true});
   },
+  onglet(a){a.p.res=false},
   draw(a){a.tab===0?oeil(a):a.tab===1?photo(a):pdc(a)}
 });
 const sig=(x,n=3)=>A.fmt.sig(x,n), fix=(x,d)=>A.fmt.fix(x,d);
@@ -1382,13 +1383,7 @@ function oeil(a){
     {label:'Vergence de l\'œil et du verre',value:sig(E.V,3),unit:'δ'},
     {label:E.ast?`Images du point ${bar('OA′')}`:`Image du point ${bar('OA′')}`,value:cache(E.ast?E.foc.map(f=>sig(f,3)).join(' / '):sig(E.foc[0],3),p.res),unit:p.res?'mm':''},
     {label:'Accommodation nécessaire',value:cache(sig(reqVal,2),p.res),unit:p.res?'δ':'',warn:p.res&&(E.req<-.02||E.req>accMax(a)+.02)},
-    {label:'PR · PP au repos (distances)',value:cache(E.ast?'2 méridiens':`${prTxt} · ${E.pp>0?sig(1/E.pp,2)+' m':'—'}`,p.res)}]);
-  let msg;
-  if(E.rms<.008)msg='Les rayons issus du point convergent sur la rétine : l\'image est nette.';
-  else if(E.ast)msg='Les deux méridiens n\'ont pas la même vergence : deux focalisations F<sub>1</sub> et F<sub>2</sub>. Le verre cylindrique doit avoir le bon axe pour corriger.';
-  else if(E.foc[0]>0&&E.foc[0]<p.L)msg='L\'image se forme <b>avant</b> la rétine : l\'œil est trop convergent pour cet objet. Il faut diminuer la vergence (verre divergent) ou rapprocher l\'objet.';
-  else msg='L\'image se forme <b>derrière</b> la rétine : l\'œil n\'est pas assez convergent. Il faut accommoder ou ajouter un verre convergent.';
-  a.insight(msg);
+    {label:'PR · PP (distances)',value:cache(E.ast?'2 méridiens':`${prTxt} · ${E.pp>0?sig(1/E.pp,2)+' m':'—'}`,p.res)}]);
   a.legend([{c:cc.r[0],label:'Rayons issus du point objet'},{c:C.F,dot:true,label:'Impacts sur la rétine'},{c:C.E,label:'Rétine'},Math.abs(p.sph)>1e-9&&!vue3d(a)?{c:C.v,label:'Verre correcteur'}:null]);
 }
 /* mire reçue, calculée par convolution du faisceau (échelle fixe : 0.6 mm de rétine) */
@@ -1398,7 +1393,8 @@ let mireC={key:'',cv:null};
 function mireRecue(a,E){
   const key=JSON.stringify([E.K,E.u,E.L,a.C.card,a.C.ink]);
   if(mireC.key!==key){const off=R.disk(5,128).map(([y,z])=>{const r=O.eyeRay(y/1000,z/1000,E.u,E.L,E.K);return[r.Z*1000/.6*192,-r.Y*1000/.6*192]});
-    mireC={key,cv:R.colorize(R.convolve(mire,off),a.C.card,a.C.ink)}}
+    const maxO=off.reduce((m,[x,y])=>Math.max(m,Math.hypot(x,y)),0);
+    mireC={key,cv:R.colorize(maxO<.5?mire.canvas:R.convolve(mire,off),a.C.card,a.C.ink)}}
   return urlCanvas(mireC.cv,'recue');
 }
 let refC={key:'',cv:null};
@@ -1429,7 +1425,7 @@ function retine(a,E){
   a.svg('retine',s);
 }
 A.drag('oeil',{hit:()=>A.tab===0&&vue3d(A),start(x,y){this.x=x;this.y=y;this.yaw=st.yaw;this.pitch=st.pitch},
-  move(x,y){st.yaw=this.yaw+(x-this.x)*.008;st.pitch=this.pitch+(y-this.y)*.008}});
+  move(x,y){st.yaw=this.yaw+(x-this.x)*.008;st.pitch=K.clamp(this.pitch+(y-this.y)*.008,-1.4,1.4)}});
 
 /* ===================== 2 · PHOTOGRAPHIE ===================== */
 const photoImg=new Image(); photoImg.onload=()=>A.render(); photoImg.src=window.PHOTO_REAL;
@@ -1497,9 +1493,6 @@ function photo(a){
     {label:`Ouverture et temps de pose`,value:`f/${fix(p.N,1)} · ${tps} s`},
     {label:'Zone nette (profondeur de champ)',value:cache(`${sig(d.near/1000,2)} à ${Number.isFinite(d.far)?sig(d.far/1000,2):'∞'}`,p.res),unit:p.res?'m':''},
     {label:'Exposition relative (réf. f/2.8, 1/125 s)',value:sig(t*125*(2.8/p.N)**2,2),unit:'×'}]);
-  a.insight(p.projection==='fisheye'?'Projection fisheye : <i class="m">r</i> = <i class="m">f</i>′θ, les droites qui ne passent pas par le centre se courbent ; le flou de profondeur n\'est ici qu\'indicatif.'
-    :p.motion?'L\'appareil tourne pendant la pose : plus le temps de pose est long, plus le filé est marqué.'
-    :'Fermer le diaphragme (augmenter <i class="m">NO</i>) agrandit la zone nette mais assombrit l\'image : il faut allonger le temps de pose τ.');
   a.legend([]);
 }
 A.drag('photo',{hit:(x,y)=>A.tab===1&&rectPhoto&&pyramide&&x>=rectPhoto.x&&x<=rectPhoto.x+rectPhoto.w&&y>=rectPhoto.y&&y<=rectPhoto.y+rectPhoto.h,
@@ -1539,8 +1532,6 @@ function pdc(a){
     {label:`Limite proche ${M.v('A','1')}`,value:cache(sig(d.near/1000,3),p.res),unit:p.res?'m':''},
     {label:`Limite lointaine ${M.v('A','2')}`,value:cache(Number.isFinite(d.far)?sig(d.far/1000,3):'∞',p.res),unit:p.res&&Number.isFinite(d.far)?'m':''},
     {label:'Diamètre de la tache du point test',value:sig(vp.c*1000,3),unit:'µm',warn:!net}]);
-  a.insight(nr<3?'Le capteur est placé à l\'image A′<sub>0</sub> du plan de mise au point ; les points plus proches ou plus lointains donnent une tache sur le capteur.'
-    :net?'Le point test est dans la profondeur de champ : sa tache a un diamètre <i class="m">c</i> ≤ Φ.':'Le point test est hors de la profondeur de champ : sa tache a un diamètre <i class="m">c</i> > Φ.');
   a.legend([{c:C.E,label:'Plan de mise au point'},nr>=2?{c:cc.r[1],label:'Limite proche'}:null,nr>=3?{c:cc.plan,label:'Limite lointaine'}:null,nr>=3?{c:C.F,label:'Point test'}:null]);
 }
 function zoomCapteur(a,items,d,D,c0){

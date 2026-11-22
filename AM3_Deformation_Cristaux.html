@@ -1217,7 +1217,7 @@ function gridModel(a,ionic,t){
     const top=[x+t,0,0];bonds.push({a:top,b:[x,-1,0],c:'blue',width:1.5,dash:[4,5],alpha:.8});
     if(t>.25&&x<3)bonds.push({a:top,b:[x+1,-1,0],c:'red',width:2.6});
   }
-  if(a.p.inter&&!ionic)for(let x=-3;x<=2;x++)bonds.push({a:[x+t,0,0],b:[x+(t>.5?1:0),-1,0],c:'accent',width:2,dash:[5,5]});
+  if(a.p.inter&&!ionic)for(let x=-3;x<=3;x++){const xb=x+(t>.5?1:0);if(xb<=3)bonds.push({a:[x+t,0,0],b:[xb,-1,0],c:'accent',width:2,dash:[5,5]})}
   wires.push({a:[-3.6,-.5,0],b:[3.9,-.5,0],c:'muted',width:1,dash:[4,5]});
   return{atoms,bonds,wires,dots,faces,bounds:[[-3.8,-2.6,0],[4.1,2.6,0]],pad:.1,lock:true};
 }
@@ -1323,10 +1323,10 @@ function draw(a){
   const k=a.k,PL=a.panels.gauche,PR=a.panels.droite,t=prog(a);
   const box=P=>({x:0,y:36*k,w:P.w,h:Math.max(60,P.h-36*k-32*k)});
   let mL,mR;
-  if(a.tab===0){mL=gridModel(a,false,t);mR=gridModel(a,true,t)}
+  if(a.tab===0){mL=gridModel(a,false,t);mR=gridModel(a,true,t);vL.set(0,0);vR.set(0,0)}
   else if(a.tab===1){mL=graphiteModel(a,t);mR=diamondModel(a,t);vL.set(cam.yaw,cam.pitch);vR.set(cam.yaw,cam.pitch)}
-  else if(a.p.defect==='dislocation'){mL=blockModel(a,t);mR=dislocModel(a,t)}
-  else{mL=defectModel(a,false);mR=defectModel(a,true)}
+  else if(a.p.defect==='dislocation'){mL=blockModel(a,t);mR=dislocModel(a,t);vL.set(0,0);vR.set(0,0)}
+  else{mL=defectModel(a,false);mR=defectModel(a,true);vL.set(0,0);vR.set(0,0)}
   const T=titles(a),Cm=comments(a);
   let sL=vL.render(a,mL,'gauche',{box:box(PL)}),sR=vR.render(a,mR,'droite',{box:box(PR)});
   const bandeau=(P,s,title,com)=>{
@@ -1351,7 +1351,7 @@ function info(a,t,mL,mR){
     a.metrics([{label:'Graphite',value:'glissement',hint:'entre feuillets'},{label:'Diamant',value:'liaisons',hint:'sollicitées'},{label:'À distinguer',value:'dureté',hint:'≠ compacité'}]);
     a.legend([{c:C.B,label:'liaison covalente'},{c:C.E,label:'interaction entre feuillets',dash:true},{c:C.F,label:'liaison étirée de plus de 4 %'},{c:V.palette(C).purple,label:'liaison comprimée'}]);
   }else if(d==='dislocation'){
-    a.metrics([{label:'Glissement du bloc',value:String(mL.nCross),hint:'liaisons étirées à la fois'},{label:'Dislocation',value:String(mR.nCross),hint:'liaisons étirées à la fois'},{label:'Cœur ⊥ à la colonne',value:f.fix(XD(t)+5.5,1),hint:'sur 11 colonnes'}]);
+    a.metrics([{label:'Glissement du bloc',value:String(mL.nCross),hint:'liaisons étirées à la fois'},{label:'Dislocation',value:String(mR.nCross),hint:'liaisons étirées à la fois'},{label:'Cœur ⊥ à la colonne',value:f.fix(XD(t)+6,1),hint:'sur 11 colonnes'}]);
     a.legend([{c:C.F,label:'liaison étirée de plus de 6 %'},{c:C.B,label:'liaison comprimée'},{c:C.E,label:'cœur de la dislocation'}]);
   }else{
     const names={vacancy:'Lacune',substitution:'Substitution',insertion:'Insertion'},count=d==='vacancy'?34:d==='insertion'?36:35;
@@ -1376,14 +1376,14 @@ const A=AnimKit.app({
   titre:'Déformer les cristaux',sousTitre:'Structure, interactions et propriétés mécaniques (modèles qualitatifs)',fichier:'Deformation_Cristaux',
   onglets:['Métal / ionique','Graphite / diamant','Défauts'],
   temps:true,pas:.74,
-  curseur:{max:()=>1,get:a=>prog(a),set:(a,v)=>{a.p[pk(a)]=v}},
+  curseur:{max:()=>1,get:a=>prog(a),set:(a,v)=>{a.p[pk(a)]=v;a.refresh()}},
   panneaux:[{id:'gauche',poids:1,ratioTel:.95},{id:'droite',poids:1,ratioTel:.95}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Initial',onglets:[0],valeurs:{prog0:0}},{label:'Milieu',onglets:[0],valeurs:{prog0:.5}},{label:'Un pas du réseau',onglets:[0],valeurs:{prog0:1}},
-      {label:'Initial',onglets:[1],valeurs:{prog1:0}},{label:'Milieu',onglets:[1],valeurs:{prog1:.5}},{label:'Final',onglets:[1],valeurs:{prog1:1}},
-      {label:'Lacune',onglets:[2],valeurs:{defect:'vacancy',prog2:1}},{label:'Substitution',onglets:[2],valeurs:{defect:'substitution',prog2:1}},
-      {label:'Insertion',onglets:[2],valeurs:{defect:'insertion',prog2:1}},{label:'Dislocation',onglets:[2],valeurs:{defect:'dislocation',prog3:.3}}]},
+      {label:'Initial',onglets:[0],action:a=>a.set('prog0',0)},{label:'Milieu',onglets:[0],action:a=>a.set('prog0',.5)},{label:'Un pas du réseau',onglets:[0],action:a=>a.set('prog0',1)},
+      {label:'Initial',onglets:[1],action:a=>a.set('prog1',0)},{label:'Milieu',onglets:[1],action:a=>a.set('prog1',.5)},{label:'Final',onglets:[1],action:a=>a.set('prog1',1)},
+      {label:'Lacune',onglets:[2],valeurs:{defect:'vacancy'},action:a=>a.set('prog2',1)},{label:'Substitution',onglets:[2],valeurs:{defect:'substitution'},action:a=>a.set('prog2',1)},
+      {label:'Insertion',onglets:[2],valeurs:{defect:'insertion'},action:a=>a.set('prog2',1)},{label:'Dislocation',onglets:[2],valeurs:{defect:'dislocation'},action:a=>a.set('prog3',.3)}]},
     {titre:'Déplacement imposé',items:[
       {id:'prog0',label:'Glissement du bloc supérieur',min:0,max:1,step:.01,value:0,unit:'pas',onglets:[0]},
       {id:'prog1',label:'Déplacement relatif',min:0,max:1,step:.01,value:0,onglets:[1]},
@@ -1405,9 +1405,9 @@ const A=AnimKit.app({
     cours:'AM3 : liaison métallique, cristal ionique, cristal covalent, cristal moléculaire ; lien entre structure, interactions et propriétés (ductilité, fragilité, dureté) ; défauts de cristaux réels.'
   },
   init(a){a.p.dir=1},
-  onglet(a){a.play(false);a.p.prog0=a.p.prog1=a.p.prog2=a.p.prog3=0;a.p.dir=1},
-  reset(a){a.t=0},
-  peutLire(a){if(prog(a)>=1-1e-9)a.p[pk(a)]=0;return true},
+  onglet(a){a.play(false);a.t=0;a.p.prog0=a.p.prog1=a.p.prog2=a.p.prog3=0;a.p.dir=1;vL.set(0,0);vR.set(0,0)},
+  reset(a){a.t=0;a.p[pk(a)]=0;a.p.dir=1;if(a.tab===1){cam.yaw=-.5;cam.pitch=.55}a.refresh()},
+  peutLire(a){if(prog(a)>=1-1e-9){a.p[pk(a)]=0;a.p.dir=1;a.refresh()}return true},
   step(a,dt){const key=pk(a);let v=a.p[key]+dt*.15*a.p.dir;if(v>=1||v<=0){a.p.dir*=-1;v=clamp(v,0,1)}a.p[key]=v;a.refresh()},
   draw
 });

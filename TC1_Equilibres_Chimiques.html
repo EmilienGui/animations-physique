@@ -1114,13 +1114,19 @@ function makeParticle(s,x,y){const m=st.model,solid=m.c.solids&&m.c.solids.inclu
 function arrangeSolids(){if(!st.model||st.model.id!=='chaux')return;for(const s of[0,1]){const list=st.particles.filter(p=>p.s===s);list.forEach((p,j)=>{p.x=.06+s*.49+(j%9)*.047;p.y=.73+Math.floor(j/9)*.027})}}
 function prepare(a){
   const{ci,c,n0,V,K}=gp(a),id=KEYS[ci];
-  if(n0.some(n=>!Number.isFinite(n)||n<0)||!(V>=.001&&V<=100)||n0.every(n=>n===0)){a.toast(n0.every(n=>n===0)?'Introduire au moins une espèce dans le réacteur.':'Volume entre 0.001 et 100 L.');if(!st.model)return;return}
+  if(n0.some(n=>!Number.isFinite(n)||n<0)||!(V>=.001&&V<=100)){a.toast('Volume entre 0.001 et 100 L.');return}
+  const empty=n0.every(n=>n===0);
+  if(empty)a.toast('Introduire au moins une espèce dans le réacteur.');
   st.ci=ci;st.model=CH.create(id,n0,V,K);
-  const scaled=n0.map(n=>Math.round(n*1e6)),common=scaled.reduce((x,y)=>gcd(x,y),0)/1e6,sum=n0.reduce((x,y)=>x+y,0),mult=Math.max(1,Math.floor(TARGET[id]*common/sum));
-  st.quantum=common/mult;
-  if(!(st.quantum>0)||sum/st.quantum>420){st.quantum=sum/180;a.toast('Pour ce mélange, les particules sont un échantillon approché.')}
+  const scaled=n0.map(n=>Math.round(n*1e6)),common=scaled.reduce((x,y)=>gcd(x,y),0)/1e6,sum=n0.reduce((x,y)=>x+y,0);
+  if(empty){st.quantum=1;}
+  else{
+    const mult=Math.max(1,Math.floor(TARGET[id]*common/sum));
+    st.quantum=common/mult;
+    if(!(st.quantum>0)||sum/st.quantum>420){st.quantum=sum/180;a.toast('Pour ce mélange, les particules sont un échantillon approché.')}
+  }
   st.particles=[];st.effects=[];st.drag=null;st.visualX=0;st.cycle=0;st.serial=0;st.sample=0;st.t0=0;st.marks=[];st.probe=null;
-  n0.forEach((n,i)=>{for(let j=0;j<Math.round(n/st.quantum);j++)st.particles.push(makeParticle(i))});
+  if(!empty)n0.forEach((n,i)=>{for(let j=0;j<Math.round(n/st.quantum);j++)st.particles.push(makeParticle(i))});
   arrangeSolids();
   st.history=[{t:0,n:n0.slice()}];st.n0run=n0.slice();
   st.logQ0=CH.logQ(c,n0,V);
@@ -1199,12 +1205,21 @@ function perturb(a,kind,amt){
   if(n2.some(v=>v>c.max*3)){a.toast('Quantité trop grande pour le réacteur.');return}
   /* nouveau segment : la courbe continue, le temps local repart de 0 */
   const tAbs=st.t0+m.t,nm=CH.create(m.id,n2,V2,m.K);
-  /* particules : on ajuste les effectifs de chaque espèce, sans tout redessiner */
-  const nq=st.quantum;
-  for(let s=0;s<n2.length;s++){
-    const want=Math.round(n2[s]/nq),have=st.particles.filter(p=>p.s===s);
-    if(have.length>want){for(const p of have.slice(0,have.length-want)){const i=st.particles.indexOf(p);if(i>=0)st.particles.splice(i,1)}}
-    st.model=nm;for(let j=have.length;j<want;j++)st.particles.push(makeParticle(s));
+  /* particules : on ajuste les effectifs (rééchelonnage si l'ajout dépasse le plafond de 360 particules) */
+  const sum2=n2.reduce((x,y)=>x+y,0);
+  if(sum2===0){
+    st.particles=[];st.quantum=1;st.model=nm;
+  }else if(sum2/st.quantum>360){
+    st.quantum=sum2/180;st.particles=[];st.model=nm;
+    n2.forEach((v,s)=>{for(let j=0;j<Math.round(v/st.quantum);j++)st.particles.push(makeParticle(s))});
+    a.toast('Échelle des particules ajustée après cet ajout.');
+  }else{
+    const nq=st.quantum;
+    for(let s=0;s<n2.length;s++){
+      const want=Math.round(n2[s]/nq),have=st.particles.filter(p=>p.s===s);
+      if(have.length>want){for(const p of have.slice(0,have.length-want)){const i=st.particles.indexOf(p);if(i>=0)st.particles.splice(i,1)}}
+      st.model=nm;for(let j=have.length;j<want;j++)st.particles.push(makeParticle(s));
+    }
   }
   st.model=nm;arrangeSolids();
   st.t0=tAbs;st.visualX=0;st.cycle=0;st.sample=0;
@@ -1221,9 +1236,9 @@ function statut(a){
   const bnd=m.id==='chaux'&&m.eq.boundary,lq=CH.logQ(m.c,n,m.V);
   const near=bnd?gap<1e-8:Number.isFinite(lq)&&Math.abs(lq-Math.log(m.K))<.01;
   if(m.t===0)return'Prévoir, puis observer';
-  if(CH.rates(m).every(r=>r===0)&&!bnd)return'Aucune évolution pour ce mélange';
+  if(CH.rates(m).every(r=>r===0))return'Aucune évolution pour ce mélange';
   if(near){
-    if(bnd)return m.eq.n[0]<1e-8?'Calcaire épuisé':'Une phase ou un réactif est épuisé';
+    if(bnd)return m.eq.x===0&&m.n0[0]<1e-8?'Aucune évolution pour ce mélange':m.eq.n[0]<1e-8?'Calcaire épuisé':'Une phase ou un réactif est épuisé';
     if(m.id==='pcl5'&&m.n0[0]>0&&m.eq.x>=0)return'Équilibre : conversion finale '+fm.fix(100*m.eq.x/m.n0[0],2)+' %';
     return'Équilibre dynamique : les réactions continuent';
   }
@@ -1248,7 +1263,7 @@ const QNOTE={type:'note',html:a=>'<b>Question :</b> '+uH(st.question)};
 function groupsFor(ci){
   const key=KEYS[ci],c=CH.cases[key],items=[],eqf=c.formula.replace(/<span class="phase">(.*?)<\/span>/g,'$1');
   const V=(k,v)=>({[pid(ci,k)]:v});
-  const presets=c.presets.map(p=>({label:p[1],valeurs:{...c.species.reduce((o,_,i)=>({...o,[pid(ci,'n'+i)]:p[2][i]}),{}),...V('V',p[4]),...(c.fixedK?{}:V('K',p[3]))},action:a=>{prepare(a);st.question=p[5];a.refresh()}}));
+  const presets=c.presets.map(p=>({label:p[1],valeurs:{...c.species.reduce((o,_,i)=>({...o,[pid(ci,'n'+i)]:p[2][i]}),{}),...V('V',p[4]),...(c.fixedK?{}:V('K',p[3]))},action:a=>{a.set('showEq',false,{silent:true});a.set('showDir',false,{silent:true});prepare(a);st.question=p[5];a.refresh()}}));
   const sp=c.species.map((s,i)=>({id:pid(ci,'n'+i),label:`Quantité de ${uH(s)}`,min:0,max:c.max,step:c.step,dec:c.step<1?(c.step<.1?2:1):0,value:c.presets[0][2][i],unit:'mmol'}));
   const K0=key==='association'?50:c.presets[0][3];
   return[
@@ -1302,7 +1317,7 @@ const A=AnimKit.app({
     if(id.startsWith('c'+a.tab)&&/^c\d(n\d|V|K)$/.test(id))prepare(a);
   },
   init(a){if(!st.model)prepare(a)},
-  onglet(a,i){a.play(false);prepare(a)},
+  onglet(a,i){a.play(false);a.set('showEq',false,{silent:true});a.set('showDir',false,{silent:true});prepare(a)},
   reset(a){a.play(false);prepare(a)},
   step(a,dt){if(!st.model)return;simulate(a,dt);move(a,dt)},
   draw(a){
@@ -1358,13 +1373,14 @@ function drawCourbes(a){
   st.G=G;
   let o=G.svg+S.clip('tc1g',G);
   /* perturbations */
-  for(const mk of st.marks)if(mk.t>=tmin&&mk.t<=tmax){
+  const xMin=G.xv(G.x0),xMax=G.xv(G.x0+G.w);
+  for(const mk of st.marks)if(mk.t>=xMin&&mk.t<=xMax){
     o+=S.line(G.X(mk.t),G.y0,G.X(mk.t),G.y0+G.h,{c:C.ink2,w:1.2,dash:`${4*k} ${4*k}`});
     o+=S.text(G.X(mk.t)+5*k,G.y0+10*k,uS(mk.label),{size:13,c:C.ink2,base:'top'});
   }
   if(p.showEq)m.eq.n.forEach((n,i)=>{o+=S.line(G.x0,G.Y(n),G.x0+G.w,G.Y(n),{c:cols[i],w:1.5,dash:`${5*k} ${6*k}`,op:.55})});
   const now={t:tNow,n:CH.amounts(m.c,m.n0,m.x)},all=st.history.at(-1).t===now.t?st.history:[...st.history,now];
-  const vis=all.filter(q=>q.t>=tmin-1&&q.t<=tmax+1);
+  const vis=all.filter(q=>q.t>=xMin-1&&q.t<=xMax+1);
   m.c.species.forEach((s,i)=>{
     o+=S.curve(vis.map(q=>[q.t,q.n[i]]),G,{c:cols[i],w:2.8,dash:i===1?`${9*k} ${3*k}`:i===2?`${2*k} ${3*k}`:undefined});
     o+=S.circle(G.X(now.t),G.Y(now.n[i]),4*k,{fill:cols[i]});
@@ -1411,7 +1427,8 @@ function info(a){
   arr.push({label:`Avancement ${Mv('ξ')}`,value:fm.sig(m.x,3),unit:'mmol'});
   {const xmax=Math.min(...c.nu.map((v,i)=>v<0?st.n0run[i]/(-v):Infinity));arr.push({label:`Taux d'avancement ${Mv('τ')} = ${Mv('ξ')} / ${Mv('ξ','max')}`,value:Number.isFinite(xmax)&&xmax>0&&m.x>=0?fm.fix(m.x/xmax,3):'—',unit:'sans unité',hint:Number.isFinite(xmax)&&xmax>0?`${Mv('ξ','max')} = ${fm.sig(xmax,3)} mmol`:undefined})}
   if(c.phase!=='solution'){const gas=c.solids?n[2]:n.reduce((x,y)=>x+y,0),P=gas*.001*CH.R*c.T/m.V;arr.push({label:c.solids?`Pression ${Mv('P','CO₂')}`:'Pression',value:fm.sig(P,3),unit:'bar',hint:c.solids?'coexistence : 0.358 bar':(m.id==='hi'?'constante dans ce modèle':'varie avec la quantité de gaz')})}
-  const[f,b]=CH.rates(m),r=Math.max(f,b,1e-20);
+  const atBnd=m.eq.boundary&&Math.abs(m.eq.x-m.x)<=m.ref*1e-10;
+  const[f,b]=atBnd?[0,0]:CH.rates(m),r=Math.max(f,b,1e-20);
   arr.push({label:'Vitesses relatives (directe | indirecte)',value:`${fm.fix(f/r*100,0)} | ${fm.fix(b/r*100,0)}`,unit:'%'});
   a.metrics(arr);
   const col=spCol(a.C);

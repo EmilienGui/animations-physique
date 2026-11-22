@@ -1195,7 +1195,8 @@ function wrap(a,x,y,txt,maxW,size,c,lh=20){
 }
 
 /* ---------- état : cases, cible ---------- */
-function syncRef(a){const p=a.p;p.acc=0;if(p.mode==='ref')p.boxes=P.boxesFor(P.targetCounts(p.z,p.q))}
+const spec=a=>a.tab===1?ionOf(a.p.ion||'11:1'):{z:clamp(Math.round(a.p.z),1,36),q:0};
+function syncRef(a){const p=a.p,{z,q}=spec(a);p.acc=0;if(p.mode==='ref')p.boxes=P.boxesFor(P.targetCounts(z,q))}
 function toFill(a){if(a.p.mode!=='fill')a.set('mode','fill',{silent:true})}
 const spinTxt=s=>s>0?'↑':'↓';
 
@@ -1210,17 +1211,18 @@ const FAUX={
 };
 function defi(a,id){
   const d=FAUX[id],p=a.p;
-  p.z=d.z;p.q=d.q;a.set('z',d.z,{silent:true});
   if(d.q)a.set('ion',d.z+':'+d.q,{silent:true});
-  a.set('mode','fill',{silent:true});p.boxes=d.b();p.acc=0;a.play(false);a.render();
+  else a.set('z',d.z,{silent:true});
+  a.set('mode','fill',{silent:true});a.set('verif',false,{silent:true});
+  p.boxes=d.b();p.acc=0;a.play(false);a.render();
 }
 
 /* =====================================================================
    Panneau des cases quantiques
    ===================================================================== */
 function drawCases(a){
-  const Pn=a.panels.cases,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p;
-  const dg=P.diagnose(p.boxes,p.z,p.q),cnt=P.countsOf(p.boxes);
+  const Pn=a.panels.cases,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p,{z,q}=spec(a);
+  const dg=P.diagnose(p.boxes,z,q),cnt=P.countsOf(p.boxes);
   const top=14*k,bot=12*k,rh=(H-top-bot)/8,labW=78*k;
   const bw=Math.min(46*k,(W-labW-34*k)/5),bh=Math.min(rh*(p.qn?.6:.8),bw*1.15);
   const x0=labW+12*k;
@@ -1259,7 +1261,7 @@ function flow(a,x,y,maxW,tokens,size){
 }
 function drawDroite(a){
   const Pn=a.panels.droite,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p,f=a.fmt;
-  const z=p.z,q=p.q,el=P.ELEMENTS[z-1],cnt=P.countsOf(p.boxes),dg=P.diagnose(p.boxes,z,q);
+  const {z,q}=spec(a),el=P.ELEMENTS[z-1],cnt=P.countsOf(p.boxes),dg=P.diagnose(p.boxes,z,q);
   const ref=P.targetCounts(z,q),showRef=p.mode==='ref'||p.verif,n=dg.total,ne=z-q;
   const mx=W-36*k;
   let s=S.text(18*k,10*k,`${el.name} · ${P.label(z,q)} · Z = ${z}`,{base:'top',size:16,c:C.cInk,weight:600});
@@ -1344,12 +1346,12 @@ function drawCloud(a){
   for(let i=0;i<N;i++){
     const pt=cl.points[i],q=proj(pt[0]*sc,pt[1]*sc,pt[2]*sc),sg=p.phase?pt[3]:1;
     if(sg!==lastSign){c.fillStyle=sg>0?C.B:C.F;lastSign=sg}
-    c.globalAlpha=clamp(.32+.4*(q[2]/R),.12,.8);
+    c.globalAlpha=clamp(.32-.4*(q[2]/R),.12,.8);
     c.fillRect(q[0]-half,q[1]-half,s,s);
   }
   c.globalAlpha=1;
   /* échelle */
-  const nice=[1,2,5,10,20].find(L=>L*pxa/Z>=50*k)||20,len=nice*pxa/Z;
+  const nice=[1,2,5,10,20].find(L=>L*pxa>=50*k)||20,len=nice*pxa;
   c.strokeStyle=C.ink;c.lineWidth=2*k;c.beginPath();c.moveTo(18*k,H-26*k);c.lineTo(18*k+len,H-26*k);c.stroke();
   c.textAlign='left';c.fillStyle=C.ink;c.fillText(`${nice} a₀`,18*k,H-44*k);
   c.fillStyle=C.cInk;c.font=`600 ${16*k}px system-ui,sans-serif`;c.fillText(`${o.lab} · ${Z===1?'H':'He⁺'}`,18*k,22*k);
@@ -1401,8 +1403,8 @@ const A=AnimKit.app({
   ],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Carbone à remplir',onglets:[0],action:a=>{a.set('z',6,{silent:true});a.set('mode','fill',{silent:true});a.p.boxes=P.emptyBoxes();a.p.q=0;a.play(false);a.render()}},
-      {label:'Fluor à remplir',onglets:[0],action:a=>{a.set('z',9,{silent:true});a.set('mode','fill',{silent:true});a.p.boxes=P.emptyBoxes();a.p.q=0;a.play(false);a.render()}},
+      {label:'Carbone à remplir',onglets:[0],action:a=>{a.set('z',6,{silent:true});a.set('mode','fill',{silent:true});a.set('verif',false,{silent:true});a.p.boxes=P.emptyBoxes();a.play(false);a.render()}},
+      {label:'Fluor à remplir',onglets:[0],action:a=>{a.set('z',9,{silent:true});a.set('mode','fill',{silent:true});a.set('verif',false,{silent:true});a.p.boxes=P.emptyBoxes();a.play(false);a.render()}},
       {label:'Chrome réel',onglets:[0],valeurs:{z:24,mode:'ref'}},
       {label:'Cuivre réel',onglets:[0],valeurs:{z:29,mode:'ref'}},
       {label:'Défi : Hund (C)',onglets:[0],action:a=>defi(a,'hundC')},
@@ -1424,9 +1426,9 @@ const A=AnimKit.app({
     {titre:'Placer les électrons',onglets:[0,1],items:[
       {id:'mode',type:'seg',label:'Cases',options:[['fill','Je place les électrons'],['ref','Configuration réelle']],value:'fill'},
       {id:'tool',type:'seg',label:'Un clic sur une case',options:[['up','Ajouter ↑'],['down','Ajouter ↓'],['flip','Inverser un spin'],['erase','Gomme']],value:'up'},
-      {type:'boutons',items:[{label:'Vider',action:a=>{toFill(a);a.p.boxes=P.emptyBoxes();a.play(false);a.render()}},{label:'Corriger (voir la référence)',action:a=>{toFill(a);a.p.boxes=P.boxesFor(P.targetCounts(a.p.z,a.p.q));a.render()}}]},
+      {type:'boutons',items:[{label:'Vider',action:a=>{toFill(a);a.p.boxes=P.emptyBoxes();a.play(false);a.render()}},{label:'Corriger (voir la référence)',action:a=>{const {z,q}=spec(a);toFill(a);a.p.boxes=P.boxesFor(P.targetCounts(z,q));a.render()}}]},
       {id:'verif',type:'check',label:'Comparer à la configuration réelle',value:false},
-      {id:'qn',type:'check',label:'Afficher les nombres quantiques ℓ, m_ℓ',value:false},
+      {id:'qn',type:'check',label:'Afficher les nombres quantiques ℓ, m<sub>ℓ</sub>',value:false},
       {id:'core',type:'check',label:'Écrire avec le cœur de gaz noble',value:false},
       {id:'nl',type:'check',label:'Afficher n + ℓ dans le triangle',value:false,si:a=>a.tab===0},
       {id:'hundx',type:'check',label:'Commentaire sur Cr et Cu (hors programme)',value:false,si:a=>a.tab===0},
@@ -1446,25 +1448,24 @@ const A=AnimKit.app({
     modele:'Les configurations de H à Kr suivent la règle de Klechkowski, avec les exceptions du cours (Cr : 3d⁵4s¹, Cu : 3d¹⁰4s¹). Les orbitales sont celles de l’atome hydrogénoïde (R_nℓ exacte, harmoniques réelles) ; elles illustrent seulement les atomes polyélectroniques. Les ions listés sont ceux du cours, y compris Fe²⁺ : [Ar]3d⁶.',
     cours:'AM1 : nombres quantiques, orbitales, principes de Pauli, Hund et Klechkowski, configurations électroniques des atomes et des ions.'
   },
-  init(a){const p=a.p;p.z=6;p.q=0;p.mode='fill';p.boxes=P.emptyBoxes();p.acc=0;p.yaw=.6;p.pitch=.35},
+  init(a){const p=a.p;p.z=6;p.mode='fill';p.boxes=P.emptyBoxes();p.acc=0;p.yaw=.6;p.pitch=.35},
   change(a,id,v){
     const p=a.p;
-    if(id==='z'){p.z=clamp(Math.round(v),1,36);p.q=0;syncRef(a)}
+    if(id==='z'){p.z=clamp(Math.round(v),1,36);syncRef(a)}
     else if(id==='mode')syncRef(a);
-    else if(id==='ion'){const o=ionOf(v);p.z=o.z;p.q=o.q;if(p.mode==='ref')syncRef(a);else{p.boxes=P.emptyBoxes();p.acc=0}}
+    else if(id==='ion'){if(p.mode==='ref')syncRef(a);else{p.boxes=P.emptyBoxes();p.acc=0}}
   },
   onglet(a,i){
-    const p=a.p;a.play(false);
-    if(i===0){p.q=0;syncRef(a);if(p.mode==='fill')p.boxes=P.emptyBoxes()}
-    else if(i===1){const o=ionOf(p.ion||'11:1');p.z=o.z;p.q=o.q;syncRef(a);if(p.mode==='fill')p.boxes=P.emptyBoxes()}
+    const p=a.p;a.play(false);a.t=0;p.verif=false;
+    if(i<2){syncRef(a);if(p.mode==='fill')p.boxes=P.emptyBoxes()}
   },
-  reset(a){a.t=0;a.p.acc=0},
+  reset(a){a.t=0;a.p.acc=0;if(a.tab===2){a.p.yaw=.6;a.p.pitch=.35}},
   peutLire(a){return a.tab!==1},
   step(a,dt){
     const p=a.p;a.t+=dt;
     if(a.tab===2){p.yaw+=.7*dt;return}
     if(a.tab!==0)return;
-    if(p.mode==='fill'){const n=P.total(p.boxes);p.z=clamp(n,1,36);p.q=0;a.set('z',p.z,{silent:true});a.set('mode','ref',{silent:true});syncRef(a);return}
+    if(p.mode==='fill'){const n=P.total(p.boxes);p.z=clamp(n,1,36);a.set('z',p.z,{silent:true});a.set('mode','ref',{silent:true});syncRef(a);return}
     if(p.z>=36){a.set('z',1,{silent:true});syncRef(a);return}
     p.acc+=dt;
     if(p.acc>=.7-1e-9){p.acc=0;a.set('z',p.z+1,{silent:true});syncRef(a);if(p.z>=36)a.play(false)}

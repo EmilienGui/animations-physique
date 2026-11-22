@@ -1076,7 +1076,7 @@ const mV=x=>fm.fix(x,1);
 
 function record(a,ph){
   a.set('ph',ph,{silent:true});
-  st.points=st.points.filter(q=>q.pH!==ph);st.points.push({pH:ph,u:U(a,ph)});
+  st.points=st.points.filter(q=>q.pH!==ph);st.points.push({pH:ph,u:U(a,ph),T:a.p.T});
   if(st.points.length>2)st.points.shift();
   st.cal=M.calibrate(st.points);st.calT=a.p.T;
   a.refresh();
@@ -1087,10 +1087,12 @@ function statutCal(a){
   if(n===0)return 'Aucun point enregistré.';
   if(n===1)return 'Un point enregistré (pH '+fm.fix(st.points[0].pH,0)+') : ajouter le second.';
   const q=st.points.map(p=>fm.fix(p.pH,0)).join(' et ');
-  return 'Tampons '+q+' enregistrés à '+fm.fix(st.calT,0)+' °C · pente mémorisée '+fm.fix(Math.abs(st.cal.m),2)+' mV par unité de pH.';
+  const t0=st.points[0].T??st.calT,t1=st.points[1].T??st.calT;
+  const tTxt=Math.abs(t0-t1)>.5?`à ${fm.fix(t0,0)} °C puis ${fm.fix(t1,0)} °C (températures différentes !)`:`à ${fm.fix(st.calT,0)} °C`;
+  return 'Tampons '+q+' enregistrés '+tTxt+' · pente mémorisée '+fm.fix(Math.abs(st.cal.m),2)+' mV par unité de pH.';
 }
 
-const BASE={ph:7,T:25,eff:100,off:0,stage:4,sep:false};
+const BASE={ph:7,T:25,eff:100,off:0,stage:4,sep:false,theo:false};
 const A=AnimKit.app({
   code:'TC4',partie:'VertEmeraude',chapitre:'TC4 Réactions acido-basiques',
   titre:'Électrode combinée du pH-mètre',sousTitre:'Coupe, membrane et étalonnage',
@@ -1127,7 +1129,7 @@ const A=AnimKit.app({
       {id:'eff',label:'Sensibilité η',min:85,max:100,step:1,value:100,unit:'%'},
       {id:'off',label:'Décalage U<sub>7</sub>',min:-30,max:30,step:1,value:0,unit:'mV'},
       {type:'note',html:'Après étalonnage, modifier η, U<sub>7</sub> ou la température fait apparaître une erreur de pH (dérive) ; réenregistrer deux tampons la corrige.'}]},
-    {titre:'Affichages',items:[
+    {titre:'Affichages',onglets:[1,2],items:[
       {id:'theo',type:'check',label:'Réponse théorique de la sonde et pente (prévision)',value:false,onglets:[1,2]}]}
   ],
   aide:{
@@ -1139,7 +1141,7 @@ const A=AnimKit.app({
   change(a,id,v){
     if(id==='stage')st.timer=0;
   },
-  onglet(a,i){a.play(false);st.timer=0},
+  onglet(a,i){a.play(false);st.timer=0;a.set('theo',false,{silent:true})},
   reset(a){st.phase=0;st.timer=0;st.dir=1},
   step(a,dt){
     st.phase+=dt;
@@ -1310,7 +1312,7 @@ function info(a){
     if(r!==null&&isFinite(r))arr.push({label:'pH lu après étalonnage',value:fm.fix(r,2),hint:`pH réel de la solution : ${fm.fix(p.ph,1)}`});
     else arr.push({label:'pH lu',value:'—',hint:'étalonnage incomplet'});
   }
-  if(p.theo&&a.tab>=1)arr.push({label:`Pente ${Mh.v('S')}(${Mh.v('T')})`,value:'−'+fm.fix(M.slope(p.T),2),unit:'mV par unité de pH',hint:`${Mh.v('U')} = ${Mh.v('U','7')} + η ${Mh.v('S')}(7 − pH)`});
+  if(p.theo&&a.tab>=1)arr.push({label:`Pente réelle −η ${Mh.v('S')}(${Mh.v('T')})`,value:'−'+fm.fix(M.slope(p.T)*p.eff/100,2),unit:'mV par unité de pH',hint:`${Mh.v('S')}(${Mh.v('T')}) = ${fm.fix(M.slope(p.T),2)} mV · ${Mh.v('U')} = ${Mh.v('U','7')} + η ${Mh.v('S')}(7 − pH)`});
   a.metrics(arr);
   a.legend(a.tab===2?[p.theo&&{c:a.C.pred,label:'réponse réelle de la sonde',dash:true},{c:a.C.c,label:'droite mémorisée'},{c:a.C.F,label:'solution testée'}]:[]);
   a.clock('');
@@ -1322,7 +1324,7 @@ A.drag('coupe',{
   start:(x,y)=>{const h=st.hits.find(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h);if(!h)return;if(h.id===4)A.setTab(1);else A.set('stage',h.st)},
   move:()=>{},end:()=>{}
 });
-const phDe=x=>{const G=st.G;return Math.round(clamp(2+(x-G.x0)/G.w*10,2,12)*100)/100};
+const phDe=x=>{const G=st.G;return Math.round(clamp(G.xv(x),2,12)*100)/100};
 A.drag('etal',{
   hit:(x,y)=>{const G=st.G;return !!G&&x>=G.x0&&x<=G.x0+G.w&&y>=G.y0&&y<=G.y0+G.h},
   start:x=>{A.play(false);A.set('ph',phDe(x))},

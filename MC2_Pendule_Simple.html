@@ -1099,7 +1099,7 @@ const PRESETS=[
   {label:'Fil qui se détend',valeurs:{theta:0,w:6},tab:0},
   {label:'Battre la seconde',valeurs:{l:+(9.81/Math.PI**2).toFixed(3),theta:5},tab:1},
   {label:'Situation du cours',valeurs:{},tab:0}
-].map(ps=>({label:ps.label,valeurs:{support:'string',l:1,m:1,g:9.81,theta:30,w:0,vecs:'forces',...ps.valeurs},action:a=>{a.setTab(ps.tab);a.panels.scene.zoom=1}}));
+].map(ps=>({label:ps.label,valeurs:{support:'string',l:1,m:1,g:9.81,theta:30,w:0,vecs:'forces',harm:false,...ps.valeurs},action:a=>{a.setTab(ps.tab);a.panels.scene.zoom=1}}));
 
 const A=AnimKit.app({
   code:'MC2', partie:'RougeGrenat', chapitre:'MC2 Dynamique du point',
@@ -1176,14 +1176,6 @@ function infos(a,q){
       {label:`Petits angles ${mv('T')}<sub>0</sub>`,value:f.sig(B.T0,3),unit:'s'},
       {label:`Période exacte ${mv('T')}`,value:B.comparable&&B.T!==null?f.sig(B.T,4):'—',unit:B.comparable&&B.T!==null?'s':'',hint:B.comparable?`${mv('T')}/${mv('T')}<sub>0</sub> = ${f.fix(B.T/B.T0,4)}`:'pas d\'oscillation périodique'}]);
   }
-  let msg;
-  if(q.released)msg=B.slack===0?'Fil détendu dès <i class="m">t</i> = 0 : la liaison circulaire est impossible avec ces conditions initiales.':`Arrêt au relâchement du fil : ${mv('T')} = 0. La suite est une chute libre, non animée.`;
-  else if(a.tab===1)msg=`${pt(2)} + ${Mh.frac(mv('g'),mv('l'))} sin ${mv('θ')} = 0`+(harm?` et ${pt(2)}<sub>h</sub> + ${Mh.frac(mv('g'),mv('l'))} ${mv('θ')}<sub>h</sub> = 0 : `+(B.amplitude>.35?'à grande amplitude, la solution harmonique se décale.':'même départ, courbes presque confondues.'):a.p.harm?' : pas de comparaison pour une rotation ou un fil détendu.':'. Prévoir l\'allure de la solution des petits angles, puis l\'afficher.')+' Les périodes ne dépendent pas de la masse.';
-  else if(Math.abs(q.w)<1e-5&&Math.abs(Math.sin(q.a))>.001)msg=`À une extrémité : ${mv('v')} = 0, mais ${mv('a')}<sub>θ</sub> ≠ 0 : le mouvement repart.`;
-  else if(Math.abs(Math.sin(q.a))<1e-4&&Math.cos(q.a)>0&&Math.abs(q.w)>1e-3)msg=`En bas : ${mv('a')}<sub>θ</sub> = 0, mais ${mv('a')}<sub>r</sub> = −${Mh.frac(`${mv('v')}<sup>2</sup>`,mv('l'))} ≠ 0 : la liaison tire plus que ${mv('m')}${mv('g')}.`;
-  else if(Math.abs(Math.cos(q.a)+1)<1e-7&&Math.abs(q.w)<1e-7)msg='Équilibre supérieur instable : la tige pousse et compense le poids.';
-  else msg=p.support==='rod'?`Tige sans masse : ${mv('R')} est signé ; ${mv('R')} &lt; 0 quand la tige pousse. ${pt(2)} + ${Mh.frac(mv('g'),mv('l'))} sin ${mv('θ')} = 0.`:`Fil souple : ${mv('T')} = ${mv('m')}(${mv('g')} cos ${mv('θ')} + ${mv('l')}${pt(1)}<sup>2</sup>) ≥ 0. ${pt(2)} + ${Mh.frac(mv('g'),mv('l'))} sin ${mv('θ')} = 0.`;
-  a.insight(msg);
   const L=a.tab===0?(a.p.vecs==='forces'?[{c:a.C.F,label:`forces : 1 N ↔ ${f.sig(sc.F,2)} px`},a.p.comp?{c:a.C.F,label:'projections du poids',dash:true}:null]:a.p.vecs==='accel'?[{c:a.C.cInk,label:`accélération : 1 m·s<sup>−2</sup> ↔ ${f.sig(sc.a,2)} px`},{c:a.C.cInk,label:`composantes ${mv('a')}<sub>r</sub>, ${mv('a')}<sub>θ</sub>`,dash:true}]:[{c:a.C.v,label:`vitesse : 1 m·s<sup>−1</sup> ↔ ${f.sig(sc.v,2)} px`}])
     :[{c:a.C.cInk,label:'mouvement exact'},harm?{c:a.C.pred,label:'solution harmonique',dash:true}:null];
   if(cap)L.push({c:a.C.ink2,label:'flèche plafonnée au bord'});

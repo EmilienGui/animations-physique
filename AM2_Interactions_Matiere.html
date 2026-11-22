@@ -1195,14 +1195,14 @@ globalThis.AM2P=(()=>{
   function vdwEnergy(mech,deg,d,alpha=1,T=300,average=false){
     if(mech==='keesom')return average?-300/T/d**6:dipoleEnergy(deg,d);
     if(mech==='debye')return -2*alpha/d**6;
-    return -alpha/d**6;
+    return -alpha*alpha/d**6;
   }
   /** exposant n de la loi |E| ∝ 1/rⁿ */
   const vdwExponent=(mech,average)=>mech==='keesom'&&!average?3:6;
   function vdwForce(mech,deg,d,alpha=1,T=300,average=false){
     /* force sur la molécule 2 ; la force sur 1 est opposée */
     if(mech==='keesom')return average?[-6*(300/T)/d**7,0]:[-6*Math.cos(deg*rad)/d**4,3*Math.sin(deg*rad)/d**4];
-    return[-(mech==='debye'?12:6)*alpha/d**7,0];
+    return[-(mech==='debye'?12*alpha:6*alpha*alpha)/d**7,0];
   }
   /** énergie coulombienne molaire d'une paire Na⁺/Cl⁻ à r = 0.50 nm dans un milieu de permittivité εr (kJ/mol) */
   const screened=(eps,d=.5)=>-138.935456/(eps*d);
@@ -1466,7 +1466,8 @@ function drawInter(a){
   if(hyd){
     const ss=Math.min(W/12,hs*.2),left=p.pair.startsWith('acetone')?'acetone':'water',right=p.pair.endsWith('acetone')?'acetone':'water',ang=p.oriH*rad;
     s+=sprite(a,left,pp[0],pp[1],ss,ang,true)+sprite(a,right,qq[0],qq[1],ss,0,true);
-    const hp=[pp[0]+ss*Math.cos(ang),pp[1]+ss*Math.sin(ang)],near=p.d<2.1,aligned=Math.abs(p.oriH)<28,valid=left==='water'&&near&&aligned;
+    const wrapD=x=>((x+180)%360+360)%360-180,d1=wrapD(p.oriH),d2=wrapD(p.oriH+104.5),best=Math.abs(d2)<Math.abs(d1)?d2:d1,angH=best*rad;
+    const hp=[pp[0]+ss*Math.cos(angH),pp[1]+ss*Math.sin(angH)],near=p.d<2.1,aligned=Math.abs(best)<28,valid=left==='water'&&near&&aligned;
     if(valid&&p.hbond){const dd=Math.hypot(qq[0]-hp[0],qq[1]-hp[1]),u=[(qq[0]-hp[0])/dd,(qq[1]-hp[1])/dd];
       s+=S.line(hp[0]+u[0]*.34*ss,hp[1]+u[1]*.34*ss,qq[0]-u[0]*.45*ss,qq[1]-u[1]*.45*ss,{c:C.v,w:3,dash:`${7*k} ${6*k}`});
       s+=S.text((hp[0]+qq[0])/2,Math.min(hp[1],qq[1])-24*k,'H ··· O',{anchor:'middle',size:15,c:C.cInk,weight:600})}
@@ -1476,9 +1477,9 @@ function drawInter(a){
       {label:'Donneur',value:left==='water'?'O–H':'absent'},{label:'Accepteur',value:'O (doublet libre)'}]);
   }else{
     const aa=p.ori*rad;let l1=1,l2=1,ind1=false,ind2=false,a1=0,a2=0,msg='';
-    if(p.mech==='keesom'){a2=aa}
+    if(p.mech==='keesom'){a2=p.avg?.65*Math.sin(a.t*4.5):aa}
     else if(p.mech==='debye'){l2=p.alpha/p.d**3;ind2=true}
-    else{const fl=Math.sin(a.t*3+.8);a1=a2=fl<0?Math.PI:0;l1=Math.abs(fl);l2=l1*p.alpha;ind1=true;ind2=true}
+    else{const fl=Math.sin(a.t*3+.8);a1=a2=fl<0?Math.PI:0;l1=Math.abs(fl)*Math.sqrt(p.alpha);l2=Math.abs(fl)*p.alpha;ind1=true;ind2=true}
     s+=dipoleBubble(a,pp,a1,l1,ind1,1,sz)+dipoleBubble(a,qq,a2,l2,ind2,2,sz);
     const F=P.vdwForce(p.mech,p.ori,p.d,p.alpha,p.TK,p.avg),nF=Math.hypot(F[0],F[1]),Lmax=Math.min(hs*.14,64*k),yf=hs*.84;
     const Lf=nF>1e-12?Lmax*Math.pow(nF/13,.3):0;
@@ -1658,7 +1659,7 @@ function drawIons(a){
   let s=S.text(18*k,12*k,'Paire d’ions Na⁺ · Cl⁻',{base:'top',size:16,c:C.cInk,weight:600});
   s+=S.line(A[0],y,B[0],y,{c:C.rule,w:2,dash:`${4*k} ${6*k}`});
   s+=S.circle(A[0],y,R,{fill:pal.purple})+S.circle(B[0],y,R,{fill:pal.accent})+S.text(A[0],y,P.fs('Na^+'),{anchor:'middle',size:19,c:'#fff',weight:700,halo:false})+S.text(B[0],y,P.fs('Cl^−'),{anchor:'middle',size:19,c:'#fff',weight:700,halo:false});
-  const l=140*k/p.eps;
+  const lMax=Math.max(20*k,(d-2*R-14*k)*.48),l=lMax/p.eps;
   s+=S.arrow(A[0]+R+4*k,y,A[0]+R+4*k+l,y,{c:C.B,w:4})+S.arrow(B[0]-R-4*k,y,B[0]-R-4*k-l,y,{c:C.B,w:4});
   const yd=y+R+26*k;
   s+=S.arrow(W/2,yd,A[0],yd,{c:C.ink2,w:1.3,head:6*k})+S.arrow(W/2,yd,B[0],yd,{c:C.ink2,w:1.3,head:6*k})+S.text(W/2,yd+18*k,`${S.v('r')} = 0.50 nm`,{anchor:'middle',size:14,c:C.ink});
@@ -1669,7 +1670,7 @@ function drawIons(a){
   a.svg('scene',s);
   const E=P.screened(p.eps);
   a.metrics([{label:'Permittivité relative',value:f.fix(p.eps,1)},{label:'Énergie coulombienne',value:f.fix(E,1),unit:'kJ·mol⁻¹'},{label:'Comparée à RT',value:f.fix(Math.abs(E)/RT,1),unit:'RT',hint:'RT = 2.5 kJ·mol⁻¹ à 300 K'}]);
-  a.legend([{c:C.B,label:'force attractive (longueur divisée par ε_r)'}]);
+  a.legend([{c:C.B,label:'force attractive (longueur divisée par ε<sub>r</sub>)'}]);
 }
 function auxIons(a){
   const Pn=a.panels.aux,W=Pn.w,H=Pn.h,k=a.k,S=a.S,C=a.C,p=a.p;
@@ -1777,7 +1778,7 @@ const resetT1=a=>{a.p.guess='';a.p.guessD='';a.p.reveal=false;a.p.prog=0;a.p.sha
 const keyNote=a=>{
   const p=a.p;
   if(p.mech==='hydrogen')return'Une liaison hydrogène relie un H lié à un atome très électronégatif (O) à un doublet non liant d’un autre atome électronégatif : elle est directionnelle, plus forte qu’une interaction de van der Waals, mais bien plus faible qu’une liaison covalente.';
-  const formule=p.mech==='keesom'?(p.avg?`⟨${iv('E')}⟩ ∝ −${M.frac('1',`${iv('T')} ${iv('r')}<sup>6</sup>`)}`:`${iv('E')} ∝ −${M.frac('2 cos θ',`${iv('r')}<sup>3</sup>`)}`):`⟨${iv('E')}⟩ ∝ −${M.frac('α',`${iv('r')}<sup>6</sup>`)}`;
+  const formule=p.mech==='keesom'?(p.avg?`⟨${iv('E')}⟩ ∝ −${M.frac('1',`${iv('T')} ${iv('r')}<sup>6</sup>`)}`:`${iv('E')} ∝ −${M.frac('2 cos θ',`${iv('r')}<sup>3</sup>`)}`):p.mech==='debye'?`⟨${iv('E')}⟩ ∝ −${M.frac('α',`${iv('r')}<sup>6</sup>`)}`:`⟨${iv('E')}⟩ ∝ −${M.frac('α<sup>2</sup>',`${iv('r')}<sup>6</sup>`)}`;
   return`${formule} (unités relatives)<br>${lay.msg||''}<br>London existe aussi entre molécules polaires : les contributions s’ajoutent.`;
 };
 const solvCard=a=>{
@@ -1805,11 +1806,11 @@ const A=AnimKit.app({
       {label:'Eau + éthanol',onglets:[1],valeurs:{scenario:'mix',mix:'ethanol'}},
       {label:'Eau + cyclohexane',onglets:[1],valeurs:{scenario:'mix',mix:'cyclo'}},
       {label:'Eau + éther',onglets:[1],valeurs:{scenario:'mix',mix:'ether'}},
-      {label:'NaCl dans l’eau',onglets:[1],valeurs:{scenario:'dissolve',solute:'salt',solvent:'water'}},
-      {label:'I₂ dans l’eau',onglets:[1],valeurs:{scenario:'dissolve',solute:'iodine',solvent:'water'}},
+      {label:'NaCl dans l’eau',onglets:[1],valeurs:{scenario:'dissolve',solute:'salt',solvent:'water',dose:1}},
+      {label:'I₂ dans l’eau',onglets:[1],valeurs:{scenario:'dissolve',solute:'iodine',solvent:'water',dose:1}},
       {label:'Paire d’ions dans l’eau',onglets:[1],valeurs:{scenario:'ions',eps:78}},
-      {label:'Eau et H₂S',onglets:[2],valeurs:{compare:'g16',hydride:'h2s',T:20}},
-      {label:'Ébullition de l’eau',onglets:[2],valeurs:{compare:'g16',hydride:'h2s',T:100}},
+      {label:'Eau et H₂S',onglets:[2],valeurs:{compare:'g16',hydride:'h2s',T:20,tend:false}},
+      {label:'Ébullition de l’eau',onglets:[2],valeurs:{compare:'g16',hydride:'h2s',T:100,tend:false}},
       {label:'Alcanes',onglets:[2],valeurs:{compare:'alk',T:20}},
       {label:'Acides maléique et fumarique',onglets:[2],valeurs:{compare:'acids'}}]},
     {titre:'Interaction étudiée',onglets:[0],items:[
@@ -1835,7 +1836,7 @@ const A=AnimKit.app({
       {id:'solvent',type:'select',label:'Solvant',options:SOLVOPT,value:'water',si:a=>a.p.scenario==='dissolve'},
       {id:'dose',label:'Quantité relative de soluté',min:.5,max:2,step:.1,value:1,si:a=>a.p.scenario==='dissolve'},
       {id:'hydration',type:'check',label:'Montrer l’hydratation des ions',value:true,si:a=>a.p.scenario==='dissolve'&&a.p.solute==='salt'&&a.p.solvent==='water'},
-      {id:'eps',label:'Permittivité relative ε_r',min:1,max:80,step:.5,value:78,si:a=>a.p.scenario==='ions'},
+      {id:'eps',label:'Permittivité relative ε<sub>r</sub>',min:1,max:80,step:.5,value:78,si:a=>a.p.scenario==='ions'},
       {type:'boutons',si:a=>a.p.scenario==='ions',items:[{label:'Vide',action:a=>a.set('eps',1)},{label:'Éther',action:a=>a.set('eps',4.4)},{label:'Eau',action:a=>a.set('eps',78)}]}]},
     {titre:'Prévoir puis vérifier',onglets:[1],si:a=>a.p.scenario!=='ions',items:[
       {id:'guess',type:'seg',label:'Le mélange donnera…',options:[['une','Une phase'],['deux','Deux phases']],value:'',si:a=>a.p.scenario==='mix'},
@@ -1850,7 +1851,7 @@ const A=AnimKit.app({
       {id:'acid',type:'select',label:'Molécule affichée',options:[['maleic','Acide maléique · Z'],['fumaric','Acide fumarique · E']],value:'maleic',si:a=>a.p.compare==='acids'&&a.narrow},
       {id:'T',label:'Température imposée',min:-140,max:140,step:.5,value:20,unit:'°C',si:a=>a.p.compare!=='acids'},
       {type:'boutons',si:a=>a.p.compare!=='acids',items:[{label:'Refroidir',action:a=>a.set('T',-120)},{label:'20 °C',action:a=>a.set('T',20)},{label:'Chauffer',action:a=>a.set('T',120)},{label:'Fusion du premier',action:a=>{a.set('T',P.PURS[pairIds(a.p)[0]].mp);a.play(false)}}]},
-      {id:'hb',type:'check',label:'Repères de liaisons H',value:true},
+      {id:'hb',type:'check',label:'Repères de liaisons H',value:true,si:a=>a.p.compare!=='alk'},
       {id:'tend',type:'check',label:'Tracer la tendance sans liaison H',value:false,si:a=>a.p.compare==='g16'},
       {type:'note',html:a=>a.p.compare==='acids'?'La fusion dépend des interactions <b>et</b> de l’organisation du cristal : une liaison H intramoléculaire seule ne permet pas de prévoir la température de fusion. Schémas de connectivité Z / E, sans structure cristallographique. * Pour l’acide fumarique, sublimation ou décomposition possibles (repère du cours).':
         `<b>Solide :</b> ordre et vibrations. <b>Liquide :</b> molécules proches, organisation mobile. <b>Gaz :</b> molécules éloignées. Une transition de phase ne rompt pas les liaisons covalentes.${a.p.compare==='g16'?'<br>Sur le graphe : la masse molaire croissante fait monter <i class="m">T</i><sub>éb</sub> (London), sauf pour l’eau, à cause des liaisons H.':'<br>Pression ≈ 1 atm. La température est imposée : ce n’est pas une courbe calorimétrique.'}`}]}
@@ -1867,14 +1868,14 @@ const A=AnimKit.app({
     else if(id==='scenario'||id==='mix'||id==='solute'||id==='solvent'){resetT1(a)}
     else if(id==='reveal'){a.p.prog=0;a.p.shaken=false;if(v&&a.p.scenario==='dissolve')a.play(true)}
   },
-  onglet(a){a.play(false)},
-  reset(a){a.t=0;a.p.prog=0;a.p.shaken=false},
+  onglet(a){a.play(false);a.t=0;resetT1(a);a.p.tend=false},
+  reset(a){a.t=0;a.p.prog=0;a.p.shaken=false;dir=1},
   peutLire(a){return a.tab===0||(a.tab===1&&a.p.scenario!=='ions')||(a.tab===2&&a.p.compare!=='acids')},
   step(a,dt){
     a.t+=dt;
     if(a.tab===0){
       const p=a.p;
-      if(p.mech==='keesom'&&!p.avg)p.ori=(p.ori+24*dt)%180;
+      if(p.mech==='keesom'&&!p.avg){p.ori+=dir*24*dt;if(p.ori>=180){p.ori=180;dir=-1}if(p.ori<=0){p.ori=0;dir=1}}
       else if(p.mech==='hydrogen'){p.oriH+=dir*45*dt;if(p.oriH>60){p.oriH=60;dir=-1}if(p.oriH<-60){p.oriH=-60;dir=1}}
       else bounceD(p,dt);
       a.refresh();
