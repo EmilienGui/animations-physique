@@ -1183,7 +1183,7 @@ function graphT(a,id,o){const P=a.panels[id],S=a.S,k=a.k,n=o.n||360;
   for(const sr of o.series)if(!sr.full||sr.point){const y=sr.f(Math.min(o.t,o.tmax));if(isFinite(y)&&y>=lo&&y<=hi)s+=S.circle(X,G.Y(y),3.8*k,{fill:sr.c})}
   a.svg(id,s);return G}
 /** clic ou glissement dans un graphe temporel : choisit l'instant */
-function seekGraph(A,id,getG,max,set){A.drag(id,{hit:(x)=>{const G=getG();return !!G&&x>=G.x0-6&&x<=G.x0+G.w+6},start(x){A.play(false);set(Math.max(0,Math.min(max(),getG().xv(x))))},move(x){set(Math.max(0,Math.min(max(),getG().xv(x))))}})}
+function seekGraph(A,id,getG,max,set){A.drag(id,{hit:(x,y)=>{const G=getG();return !!G&&x>=G.x0-6&&x<=G.x0+G.w+6&&y>=G.y0&&y<=G.y0+G.h},start(x){A.play(false);set(Math.max(0,Math.min(max(),getG().xv(x))))},move(x){set(Math.max(0,Math.min(max(),getG().xv(x))))}})}
 return {DEG,vue,rotor,rot,vlab,axe,bornes,graphT,seekGraph};
 })();
 

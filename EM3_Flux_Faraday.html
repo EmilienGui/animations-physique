@@ -1309,12 +1309,12 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:2.6,ratioTel:.85},{id:'graphe',poids:1.5,ratioTel:.95}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'α = 0°',onglets:[0],valeurs:{angle:0,ori:1}},
-      {label:'α = 90°',onglets:[0],valeurs:{angle:90,ori:1}},
-      {label:'α = 180°',onglets:[0],valeurs:{angle:180,ori:1}},
+      {label:'α = 0°',onglets:[0],valeurs:{angle:0},action:a=>a.set('ori',1)},
+      {label:'α = 90°',onglets:[0],valeurs:{angle:90},action:a=>a.set('ori',1)},
+      {label:'α = 180°',onglets:[0],valeurs:{angle:180},action:a=>a.set('ori',1)},
       {label:'Champ sinusoïdal',onglets:[1],valeurs:{prog1:'sinus',angle:35}},
       {label:'Champ croissant',onglets:[1],valeurs:{prog1:'ramp',angle:35}},
-      {label:'Application du cours',titre:'Spire circulaire fixe, B(t) = B₀ e^(−t/τ), circuit fermé',onglets:[1],valeurs:{prog1:'exp',angle:0,ori:1,closed:true,tau:2},lecture:true},
+      {label:'Application du cours',titre:'Spire circulaire fixe, B(t) = B₀ e^(−t/τ), circuit fermé',onglets:[1],valeurs:{prog1:'exp',B0:40,S:100,N:20,R:50,angle:0,closed:true,tau:2},action:a=>a.set('ori',1),lecture:true},
       {label:'Spire en rotation',onglets:[2],valeurs:{prog2:'rotation'},lecture:true},
       {label:'Boucle déformable',onglets:[2],valeurs:{prog2:'deform'},lecture:true},
       {label:'Translation',onglets:[2],valeurs:{prog2:'translate'},lecture:true}],items:[]},
@@ -1330,7 +1330,7 @@ const A=AnimKit.app({
       {id:'N',label:`Nombre de spires ${mv('N')}`,min:1,max:200,step:1,value:20,unit:''},
       {type:'note',html:a=>prog(a)==='deform'?'Boucle rectangulaire de périmètre constant ; S est l\'aire maximale, atteinte au carré à <i class="m">t</i> = 4 s.':'θ est l\'angle entre la verticale et la normale géométrique de la spire.'}]},
     {titre:'Orientation et circuit',items:[
-      {type:'boutons',items:[{label:'Inverser le sens de référence',action:a=>{a.p.ori=-a.p.ori;cache=null}}]},
+      {type:'boutons',items:[{label:'Inverser le sens de référence',action:a=>a.set('ori',-a.p.ori)}]},
       {type:'note',html:a=>a.p.ori>0?'Sens de référence initial : contour et normale reliés par la main droite.':'Référence inversée : Φ, <i class="m">e</i> et <i class="m">i</i> changent de signe ; le phénomène physique est le même.'},
       {id:'closed',type:'check',label:'Fermer sur une résistance',value:false,onglets:[1,2]},
       {id:'R',label:`Résistance ${mv('R')}`,min:10,max:200,step:5,value:50,unit:'Ω',onglets:[1,2],si:a=>a.p.closed},
@@ -1421,7 +1421,7 @@ function drawGraph(a){
   const P=a.panels.graphe,S=a.S,C=a.C,k=a.k,p=par(a),tr=trace(a);
   if(a.tab===0){
     const m=at(a,0),Phm=p.N*p.B0/1000*p.area/1e4,u=K.unit(Phm||1e-3,'Wb');
-    const r=K.tplot(a,{box:{x:0,y:0,w:P.w,h:P.h},T:360,t:m.alpha===null?0:m.alpha,futur:true,sym:true,xlab:'α (°)',ylab:`Φ (${u.u})`,
+    const r=K.tplot(a,{box:{x:0,y:0,w:P.w,h:P.h},T:180,t:m.alpha===null?0:m.alpha,futur:true,sym:true,xlab:'α (°)',ylab:`Φ (${u.u})`,
       series:[{f:al=>Phm*Math.cos(al*DEG)*u.f,c:C.v}],id:'ga'});
     a.svg('graphe',r.svg+S.text(P.w*.55,26*k,`Φ = ${S.v('N')}${S.v('B')}${S.v('S')} cos α`,{anchor:'middle',size:15,c:C.v}));
     return;
@@ -1441,7 +1441,7 @@ function info(a){
   const alpha=m.alpha===null?'—':f.fix(m.alpha,1);
   if(a.tab===0){
     a.metrics([{label:`Flux Φ = ${mv('N')}${mv('B')}${mv('S')} cos α`,value:f.sig(m.phi*uP.f,3),unit:uP.u,hint:`${p.N} spire${p.N>1?'s':''} · flux total`},
-      {label:'Angle α entre <b>B</b> et <b>S</b>',value:alpha,unit:'°',hint:p.orientation>0?'référence initiale':'référence inversée'},
+      {label:'Angle α entre <b>B</b> et <b>S</b>',value:alpha,unit:m.alpha===null?'':'°',hint:p.orientation>0?'référence initiale':'référence inversée'},
       {label:'Aire S',value:f.sig(m.S*1e4,3),unit:'cm<sup>2</sup>',hint:`rayon ${f.sig(Math.sqrt(m.S/Math.PI)*100,3)} cm`}]);
     a.insight(p.B0===0?'Sans champ, le flux est nul quelle que soit la surface.':Math.abs(Math.cos(m.alpha*DEG))<.01?'<b>S</b> est perpendiculaire à <b>B</b> : aucune ligne de champ ne traverse la spire, Φ = 0.':
       m.phi>0?'Φ > 0 : le champ traverse la surface dans le sens de <b>S</b>. Inverser le sens de référence change le signe de Φ, pas la situation physique.':'Φ < 0 : le champ traverse la surface dans le sens opposé à <b>S</b>.',
@@ -1450,7 +1450,7 @@ function info(a){
     return;
   }
   const dPhi=m.phi-at(a,0).phi;
-  a.metrics([{label:'Flux lié Φ',value:f.sig(m.phi*uP.f,3),unit:uP.u,hint:`α = ${alpha}° · S = ${f.sig(m.S*1e4,3)} cm<sup>2</sup>${p.preset==='deform'?` · ${mv('x')} + ${mv('y')} = ${f.sig((m.sideX+m.sideY)*100,3)} cm`:''}`},
+  a.metrics([{label:'Flux lié Φ',value:f.sig(m.phi*uP.f,3),unit:uP.u,hint:`α = ${alpha}${m.alpha===null?'':'°'} · S = ${f.sig(m.S*1e4,3)} cm<sup>2</sup>${p.preset==='deform'?` · ${mv('x')} + ${mv('y')} = ${f.sig((m.sideX+m.sideY)*100,3)} cm`:''}`},
     {label:`F.é.m. ${mv('e')} = −dΦ/d${mv('t')}`,value:f.sig(m.e*uE.f,3),unit:uE.u,hint:`∫<sub>0</sub><sup>t</sup> ${mv('e')} d${mv('t')} = −ΔΦ = ${f.sig(-dPhi*uP.f,3)} ${uP.u}`},
     {label:`Courant ${mv('i')} = ${M.frac(mv('e'),mv('R'))}`,value:p.closed?f.sig(m.i*uI.f,3):'0',unit:p.closed?uI.u:'A',hint:p.closed?`${M.v('B','ind')} au centre : ${f.sig(bind(m,p)*K.unit(tr.maxB,'T').f,3)} ${K.unit(tr.maxB,'T').u}`:'circuit ouvert'}]);
   const near=Math.abs(m.e)<tr.maxE*1e-3;

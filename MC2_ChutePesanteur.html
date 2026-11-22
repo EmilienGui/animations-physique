@@ -1399,8 +1399,12 @@ function vl(a,x,y,l,c){const S=a.S,k=a.k,fs=17*k;return S.text(x,y,S.v(l),{size:
 let plotButtons=[];
 function wire(a){
   const head=a.panels.graph.head;
-  head.innerHTML='<div class="ak-seg" role="group" aria-label="Grandeur tracée"></div>';
-  const choices=head.firstElementChild;
+  const choices=document.createElement('div');
+  choices.className='ak-seg';
+  choices.setAttribute('role','group');
+  choices.setAttribute('aria-label','Grandeur tracée');
+  head.innerHTML='';
+  head.append(choices);
   for(const [id,label] of [['v','Vitesse'],['z','Altitude'],['a','Accélération']]){
     const button=document.createElement('button');
     button.type='button';
@@ -1450,7 +1454,7 @@ function draw(a,metrics){
   drawGraph(a);
   drawForces(a);
   infos(a,metrics);
-  if(a.p.ana){
+  if(a.p.ana&&analysisNote._box&&analysisNote._box.firstChild){
     const note=analysisNote._box.firstChild;
     const html=analyse(a);
     if(note.innerHTML!==html)note.innerHTML=html;
@@ -1958,7 +1962,7 @@ A.drag('evolution',{
   move(x){selectAbscissa(x)}
 });
 Hail.wire(A);
-if (location.hash === '#grelon') A.setTab(2);
+if (typeof location !== 'undefined' && location.hash === '#grelon') A.setTab(2);
 
 </script>
 </body>

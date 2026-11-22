@@ -1639,11 +1639,11 @@ const st={probe:[.065,.05],drag:null};
 const geo={};
 const kindOf=a=>a.tab===0?a.p.source:a.tab===1?(a.p.pair==='earth'?'coil':'pair'):'loop';
 
-function chooseSource(a,s){Object.assign(a.p,{source:s,I:1,Rcm:5,Lcm:20,N:100,profile:false,ref:REF[s]});st.probe=SONDE[s].slice();a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0;}
+function chooseSource(a,s){Object.assign(a.p,{source:s,I:1,Rcm:5,Lcm:20,N:100,profile:false,ref:REF[s]});st.probe=SONDE[s].slice();a.cadrer('scene');}
 function setPair(a,m){
   if(m==='earth'){Object.assign(a.p,{pair:'earth',Ie:.096,N:130,Lcm:60,Rcm:4,Bh:20,ref:40,profile:false,compass:true});st.probe=[0,0];}
   else{Object.assign(a.p,{pair:'helm',I:1,N:20,Rcm:5,dR:1,ratio:1,ref:400,profile:false,compass:false});st.probe=[0,.018];}
-  a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0;
+  a.cadrer('scene');
 }
 
 const A=AnimKit.app({
@@ -1710,10 +1710,10 @@ const A=AnimKit.app({
   change(a,id,v){
     if(id==='source')chooseSource(a,v);
     if(id==='pair')setPair(a,v);
-    if(id==='far'){a.p.ref=v?1:80;st.probe=v?[.65,.25]:[.12,.055];for(const k of['boucle','aimant']){const P=a.panels[k];P.zoom=1;P.panX=P.panY=0;}}
+    if(id==='far'){a.p.ref=v?1:80;st.probe=v?[.65,.25]:[.12,.055];a.cadrer('boucle');a.cadrer('aimant');}
   },
   onglet(a,i){
-    for(const P of Object.values(a.panels)){P.zoom=1;P.panX=P.panY=0;}
+    a.cadrerTout();
     if(i===0)chooseSource(a,a.p.source);
     if(i===1)setPair(a,a.p.pair);
     if(i===2){Object.assign(a.p,{I:1,Rcm:5,N:20,angle:0,ref:80,far:0});st.probe=[.12,.055];}
@@ -1764,7 +1764,7 @@ function drawMap(a){
     s+=U.drawLines(a,V,L,ok,kind==='wire',C.B);
   }
   if(a.p.vectors)s+=U.vectors(a,V,g,ref,C.ink2);
-  s+=U.axes(a,V,['wire','u'].includes(kind)?'x':'z',kind==='wire'?'y':'r');
+  s+=U.axes(a,V,['wire','u'].includes(kind)?'x':'z',['wire','u'].includes(kind)?'y':'r');
   s+=U.source(a,V,kind,p);
   if(['magnet','u'].includes(kind))s+=U.inside(a,V,kind,p,L)+U.poles(a,V,kind,p);
   const pr=st.probe,b=ok(...pr)?field(...pr):[NaN,NaN],bn=Math.hypot(...b);
@@ -1776,7 +1776,7 @@ function drawMap(a){
   s+=S.text(10*k,30*k,kind==='wire'?'Vue perpendiculaire au fil · ⊙ courant vers vous':kind==='u'?'Coupe plane · pôles aux extrémités des branches':earth?'Vue de dessus · nord vers le haut, est vers la droite':'Coupe méridienne · z : axe de la source',{base:'top',size:13,c:C.ink2});
   a.svg('scene',s);
   // mesures et textes
-  const comp=(['wire','u'].includes(kind)?M.v('B','x'):M.v('B','z'))+' = '+U.unit(b[0],'T',f)+' · '+M.v('B',kind==='wire'?'y':'r')+' = '+U.unit(b[1],'T',f);
+  const comp=(['wire','u'].includes(kind)?M.v('B','x'):M.v('B','z'))+' = '+U.unit(b[0],'T',f)+' · '+M.v('B',['wire','u'].includes(kind)?'y':'r')+' = '+U.unit(b[1],'T',f);
   let third={label:'Position de M',value:`${f.sig(pr[0]*100,3)} ; ${f.sig(pr[1]*100,3)}`,unit:'cm',hint:(['wire','u'].includes(kind)?'(x ; y)':'(z ; r)')};
   let txt='';
   if(kind==='wire')txt='Les lignes sont des cercles centrés sur le fil. La norme décroît en 1/<i class="m">r</i> ; inverser <i class="m">I</i> inverse le sens du champ.';
@@ -1799,24 +1799,27 @@ function drawMap(a){
     txt=Math.abs(a.p.ratio-1)<1e-9?(Math.abs(a.p.dR-1)<.01?'À <i class="m">d</i> = <i class="m">R</i> (Helmholtz), le profil axial est particulièrement plat au centre : champ quasi uniforme.':'Le champ résultant est la somme vectorielle des deux contributions. Comparer le profil axial à <i class="m">d</i> = <i class="m">R</i>.')
       :Math.abs(a.p.ratio+1)<1e-9?'Des courants opposés annulent le champ au centre en laissant un gradient : configuration anti-Helmholtz.':'Le champ résultant est la somme vectorielle des contributions, avec leurs signes.';
   }
-  if(earth){const bb=parts[0](...pr),th=Math.atan2(a.p.Bh*1e-6,bb[0])*180/Math.PI;
-    third={label:'Angle θ de l\'aiguille',value:f.fix(th,1),unit:'°',hint:`depuis l\'axe est–ouest · tan θ = ${M.v('B','h')} / ${M.v('B','bob')}`};
-    txt='L\'aiguille s\'aligne sur le champ horizontal total : la mesure de θ donne <i class="m">B</i><sub>h</sub> = <i class="m">B</i><sub>bob</sub> tan θ.';}
+  if(earth){const bb=ok(...pr)?parts[0](...pr):[NaN,NaN],th=isFinite(bn)?Math.atan2(b[1],b[0])*180/Math.PI:NaN;
+    third={label:'Angle θ de l\'aiguille',value:isFinite(th)?f.fix(th,1):'—',unit:isFinite(th)?'°':'',hint:`depuis l\'axe est–ouest · sur l\'axe : tan θ = ${M.v('B','h')} / ${M.v('B','bob')}`};
+    txt='L\'aiguille s\'aligne sur le champ horizontal total : sur l\'axe, la mesure de θ donne <i class="m">B</i><sub>h</sub> = <i class="m">B</i><sub>bob</sub> tan θ.';}
   if(!ok(...pr))txt='M est sur un conducteur ou dans un aimant : le déplacer dans l\'air.';
   a.metrics([{label:`Norme |${M.vec('B')}(M)|`,value:U.unit(bn,'T',f),hint:'calculée au point M'},
-    earth?{label:`Bobine ${M.v('B','bob')}`,value:U.unit(parts[0](...pr)[0],'T',f),hint:`${M.v('B','h')} = ${U.unit(a.p.Bh*1e-6,'T',f)}`}:{label:'Composantes',value:U.unit(b[0],'T',f),hint:comp},third]);
+    earth?{label:`Bobine ${M.v('B','bob')}`,value:U.unit(ok(...pr)?parts[0](...pr)[0]:NaN,'T',f),hint:`${M.v('B','h')} = ${U.unit(a.p.Bh*1e-6,'T',f)}`}:{label:'Composantes',value:U.unit(b[0],'T',f),hint:comp},third]);
   a.insight(txt);
   a.legend([{c:C.B,label:'lignes de champ et '+M.vec('B')+'(M)'},parts&&a.p.components?{c:C.v,label:M.vec('B')+'<sub>1</sub>'}:null,parts&&a.p.components?{c:C.E,label:M.vec('B')+'<sub>2</sub>'+(earth?' (Terre)':'')}:null,
     ['magnet','u'].includes(kind)?{c:C.F,label:'pôle N'}:null,['magnet','u'].includes(kind)?{c:C.pred,label:'pôle S'}:null]);
 }
 function sum(a,V,pos,b1,b2,ref,earth){
-  const S=a.S,C=a.C,k=a.k,q=V.p(...pos),K=60*k/ref,tot=F.add(b1,b2),P=b=>[q[0]+b[0]*K,q[1]-b[1]*K];
+  const S=a.S,C=a.C,k=a.k,q=V.p(...pos),K0=60*k/ref,tot=F.add(b1,b2);
+  const maxL=Math.max(Math.hypot(...b1),Math.hypot(...b2),Math.hypot(...tot))*K0,cap=maxL>150*k,K=cap?K0*150*k/maxL:K0;
+  const P=b=>[q[0]+b[0]*K,q[1]-b[1]*K];
   const p1=P(b1),p2=P(b2),pt=P(tot);let s='';
   s+=S.line(p1[0],p1[1],pt[0],pt[1],{c:C.E,w:1,dash:`${4*k} ${4*k}`})+S.line(p2[0],p2[1],pt[0],pt[1],{c:C.v,w:1,dash:`${4*k} ${4*k}`});
   s+=S.arrow(q[0],q[1],p1[0],p1[1],{c:C.v,w:2.3})+S.arrow(q[0],q[1],p2[0],p2[1],{c:C.E,w:2.3})+S.arrow(q[0],q[1],pt[0],pt[1],{c:C.B,w:3});
   if(Math.hypot(...b1)*K>14*k)s+=U.vtext(a,p1[0]+8*k,p1[1]-8*k,'B','1',{c:C.v,size:16});
   if(Math.hypot(...b2)*K>14*k)s+=U.vtext(a,p2[0]+8*k,p2[1]+18*k,'B',earth?'h':'2',{c:C.E,size:16});
   if(Math.hypot(...tot)*K>14*k)s+=U.vtext(a,pt[0]+10*k,pt[1]-6*k,'B',undefined,{c:C.B,size:17});
+  if(cap)s+=S.text(pt[0]+10*k,pt[1]+16*k,'hors échelle',{size:13,c:C.B});
   if(a.p.compass)s+=U.probe(a,V,pos,tot,ref,{compass:true,label:''});
   s+=S.circle(q[0],q[1],4.5*k,{fill:C.card,c:C.ink,w:2})+S.text(q[0]-10*k,q[1]+16*k,S.v('M'),{anchor:'end',size:18,c:C.ink});
   return s;
@@ -1875,14 +1878,11 @@ function drawMoment(a){
 
 /* ---------- interactions ---------- */
 for(const id of ['scene','boucle','aimant']){
-  U.navigation(A,id,id==='scene'?.04:.3,6);
   A.drag(id,{
-    start(x,y,e){const V=geo[id];if(!V)return;const P=A.panels[id];
-      if(e.shiftKey){st.drag={pan:true,x,y,px:P.panX,py:P.panY};return;}
+    start(x,y){const V=geo[id];if(!V)return;
       if(A.tab===2&&V.tip&&Math.hypot(x-V.tip[0],y-V.tip[1])<20*A.k){st.drag={mu:true};return;}
       st.drag={probe:true};st.probe=V.q(x,y);},
-    move(x,y){const V=geo[id],P=A.panels[id],d=st.drag;if(!V||!d)return;
-      if(d.pan){P.panX=d.px+x-d.x;P.panY=d.py+y-d.y;return;}
+    move(x,y){const V=geo[id],d=st.drag;if(!V||!d)return;
       if(d.mu){const o=V.p(0,0),sg=A.p.I<0?-1:1;A.set('angle',Math.max(-75,Math.min(75,Math.round(Math.atan2(sg*(o[1]-y),sg*(x-o[0]))*180/Math.PI))));return;}
       st.probe=V.q(x,y);},
     end(){st.drag=null;}

@@ -1183,7 +1183,7 @@ function graphT(a,id,o){const P=a.panels[id],S=a.S,k=a.k,n=o.n||360;
   for(const sr of o.series)if(!sr.full||sr.point){const y=sr.f(Math.min(o.t,o.tmax));if(isFinite(y)&&y>=lo&&y<=hi)s+=S.circle(X,G.Y(y),3.8*k,{fill:sr.c})}
   a.svg(id,s);return G}
 /** clic ou glissement dans un graphe temporel : choisit l'instant */
-function seekGraph(A,id,getG,max,set){A.drag(id,{hit:(x)=>{const G=getG();return !!G&&x>=G.x0-6&&x<=G.x0+G.w+6},start(x){A.play(false);set(Math.max(0,Math.min(max(),getG().xv(x))))},move(x){set(Math.max(0,Math.min(max(),getG().xv(x))))}})}
+function seekGraph(A,id,getG,max,set){A.drag(id,{hit:(x,y)=>{const G=getG();return !!G&&x>=G.x0-6&&x<=G.x0+G.w+6&&y>=G.y0&&y<=G.y0+G.h},start(x){A.play(false);set(Math.max(0,Math.min(max(),getG().xv(x))))},move(x){set(Math.max(0,Math.min(max(),getG().xv(x))))}})}
 return {DEG,vue,rotor,rot,vlab,axe,bornes,graphT,seekGraph};
 })();
 
@@ -1229,9 +1229,9 @@ const A=AnimKit.app({
     {titre:'Situations',presets:[
       ...pr(0,[['Petites oscillations',{length:1.2,d:.45,angle:8,w0:0}],['Grande amplitude',{length:1.2,d:.45,angle:120,w0:0}],['Juste sous le seuil de révolution',{length:1.2,m:1,d:.45,angle:0,w0:7.3}],['Juste au-dessus du seuil',{length:1.2,m:1,d:.45,angle:0,w0:7.5}],['Rotation complète',{length:1.2,d:.45,angle:0,w0:8}],['Pivot proche de G',{length:1.2,d:.06,angle:45,w0:0}]]),
       ...pr(1,[['Un disque initialement arrêté',{J1:1,J2:1.5,w1:4,w2:0,k:.4,cmode:'visq'}],['Moments cinétiques opposés',{J1:1,J2:1,w1:3,w2:-3,k:.4,cmode:'visq'}],['Embrayage brusque',{J1:1,J2:1.5,w1:4,w2:0,cmode:'clutch',tcl:1}],['Même vitesse initiale',{w1:2,w2:2,cmode:'visq'}],['Sans couplage',{k:0,cmode:'visq'}]]),
-      ...pr(2,[['Sans volant',{Jfly:0}],['Volant léger',{Jfly:.6}],['Volant lourd',{Jfly:3}],['Démarrage sans perturbation',{gamma:0}]]),
+      ...pr(2,[['Sans volant',{Jfly:0,gamma:.6}],['Volant léger',{Jfly:.6,gamma:.6}],['Volant lourd',{Jfly:3,gamma:.6}],['Démarrage sans perturbation',{gamma:0}]]),
       ...pr(3,[['Tourner puis s\'immobiliser',{smode:'manoeuvre',C:.2,burn:3}],['Manœuvre plus ample',{smode:'manoeuvre',C:.4,burn:4}],['Saturation de la roue',{smode:'saturation',C:.4,limit:2}],['Asservissement à 60°',{smode:'asservi',C:.4,wn:1,cible:60}],['Couple trop faible : dépassement',{smode:'asservi',C:.1,wn:1,cible:60}]]),
-      ...pr(4,[['Données du cours',{h:.7,a:4,b:.4,tmode:'prescribed',release:45}],['Table plus haute',{h:1.9,tmode:'prescribed',release:45}],['Hauteur limite (270°)',{},a=>{if(sweep.hlim){a.set('h',Math.round(sweep.hlim*100)/100);a.reset()}}],['Glissement précoce',{tmode:'friction',f:.3}],['Départ réglé par le frottement',{tmode:'friction',f:1}]])]},
+      ...pr(4,[['Données du cours',{h:.7,a:4,b:.4,tmode:'prescribed',release:45}],['Table plus haute',{h:1.9,tmode:'prescribed',release:45}],['Hauteur limite (270°)',{},a=>{if(sweep.hlim&&sweep.hlim<=3){a.set('h',Math.round(sweep.hlim*100)/100);a.reset()}else a.toast('Hauteur limite au-delà de 3 m pour ces réglages')}],['Glissement précoce',{tmode:'friction',f:.3}],['Départ réglé par le frottement',{tmode:'friction',f:1}]])]},
     /* pendule */
     {titre:'Barre homogène',onglets:[0],items:[
       {id:'length',label:`Longueur ${mv('L')}`,min:.4,max:2,step:.05,unit:'m',value:1.2,reinit:true},

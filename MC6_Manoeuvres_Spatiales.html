@@ -1128,7 +1128,6 @@ function drag(a,id,grab){
     move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
     end:e=>{if(h&&h.end)h.end(e);h=null}
   });
-  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
   P.node.style.touchAction='none';
 }
 /** Nombre avec espaces fines de milliers (point décimal conservé). */
@@ -1289,7 +1288,8 @@ const A=AnimKit.app({
     modele:'Gravitation newtonienne d\'un centre fixe (Terre : μ = 398 600 km<sup>3</sup>·s<sup>−2</sup>, <span class="m">R</span><sub>T</sub> = 6 371 km), impulsions instantanées qui changent la vitesse sans changer la position. Budget : somme des normes |Δ<span class="vec">v</span>|, en km·s<sup>−1</sup> (ni une énergie ni une masse de carburant). Fronde : μ et <span class="m">R</span> terrestres, planète en translation uniforme dans le repère solaire local. Rendez-vous : « Suivre le duo » centre la vue sur le milieu M des deux engins, axes parallèles aux axes terrestres (repère accéléré). Temps accéléré, symboles de taille fixe.',
     cours:'MC6 § 4.3 : orbites elliptiques, <span class="m">v</span>² = μ(2/<span class="m">r</span> − 1/<span class="m">a</span>), ℰ<sub>m</sub> = −<span class="m">GMm</span>/(2<span class="m">a</span>) ; § 4.4 vitesses cosmiques. TD : transfert de Hohmann, Gravity (rendez-vous), descente d\'un satellite.'
   },
-  init(a){build(a);MC6.drag(a,'scene',grab)},
+  init(a){build(a);MC6.drag(a,'scene',grab);
+    a.panels.scene.el.querySelector('.ak-ptools').addEventListener('click',e=>{if(e.target.closest('[data-z="0"]'))st.focus=null},true)},
   reset(a){st.applied=false;st.sel=0;st.focus=null;build(a);a.t=range(a).s},
   onglet(a){a.play(false);a.t=0;st.applied=false;st.focus=null;const P=a.panels.scene;P.zoom=1;P.panX=P.panY=0;build(a);a.t=range(a).s},
   change(a,id,v){
@@ -1388,7 +1388,7 @@ function duo(a,L){const S=a.S,C=a.C,k=a.k,P=a.panels.scene,c=COL(a),d=duoAt(a.t)
 
 /* ---------- plan orbital en 3D ---------- */
 function planeScene(a,L,X){const S=a.S,C=a.C,k=a.k,m=mission.m,c=COL(a),node=m.events[0],ap=st.applied,q=m.at(a.t,ap),O=X([0,0,0]);let s='';
-  const planes=ap?[[0,c.ini],[m.i,c.tr]]:[[0,c.ini]],r=m.ra*1.2;
+  const planes=ap&&m.i>=1e-10?[[0,c.ini,0],[m.i,c.tr,1]]:[[0,c.ini,0]],r=m.ra*1.2;
   for(const[g,cc]of planes){s+=S.poly(circle(r,100).map(z=>X(K.rotX(z,g))),{c:cc,w:1,fill:cc,fop:.07,close:true,op:.8})}
   /* globe en grille, faces cachées en pointillés */
   const er=K.R*cam.s;s+=S.circle(O[0],O[1],er,{fill:c.earth,op:.35,c:c.earthL,w:1.1});

@@ -1191,7 +1191,6 @@ const A=AnimKit.app({
       a.refresh();a.render()});
     // Invalider avant le traitement du bouton Cadrer par le kit, même à zoom = 1.
     P.el.addEventListener('click',e=>{if(e.target.closest('[data-z="0"]'))clearFrame()},true);
-    P.node.addEventListener('wheel',e=>{e.preventDefault();P.zoom=G.clamp(P.zoom*Math.exp(-e.deltaY*.001),.4,6);a.render()},{passive:false});
     syncCoordFields(a);
   },
   reset(a){if(a.tab===4)st.u=0;else{st.lam=0;st.ph=0}},
@@ -1485,6 +1484,8 @@ A.drag('scene',{
     else if(st.view==='3d'){const cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw),V=Y/Math.sin(cam.pitch);n[0]+=-cy*X-sy*V;n[1]+=-sy*X+cy*V}
     else{const az=s==='sph'?dg.q[2]:s==='cart'?0:dg.q[1];n[0]+=X*Math.cos(az);n[1]+=X*Math.sin(az);n[2]-=Y}
     st.p=n.map(v=>G.clamp(v,-6,6));if(s==='polar')st.p[2]=0;
+    if(s==='polar'||s==='cyl'){const r=Math.hypot(st.p[0],st.p[1]);if(r>8){st.p[0]*=8/r;st.p[1]*=8/r}}
+    else if(s==='sph'){const r=Math.hypot(st.p[0],st.p[1],st.p[2]);if(r>8){st.p[0]*=8/r;st.p[1]*=8/r;st.p[2]*=8/r}}
     const nq=G.to(s,st.p,st.az);if(s!=='cart')st.az=nq[s==='sph'?2:1];
     syncCoordFields(A)},
   end(){dg=null;st.dragging=false}

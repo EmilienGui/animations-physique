@@ -1182,7 +1182,8 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
   const BANDS = [5, 35, 65, 95], LC = 100;    // plans de comptage et hauteur de la cuve (µm)
   const NF = 300, NB = 30, XMAX = 6, ETA = 1e-3, RHOF = 1000;
   const E = [null, null, null];
-  let counter = 0, frame3 = null, dragH = 0;
+  let counter = 0, frame3 = null, dragH = 0, prevGas = null;
+  const garder = () => {if (prevGas) E[0] = prevGas;};
   const plage = {a: .5, b: 2.5};              // plage [x₁, x₂] de l'onglet 3, en ℰ_p / k_B T
   const cum = {z: new Float64Array(NF), x: new Float64Array(NF), S: 0};
   const tmp = {z: new Float64Array(NF), x: new Float64Array(NF), S: 0};
@@ -1263,7 +1264,7 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
         th += S.circle(Gh.X(0), Gh.Y(Hk), 4 * k, {fill: C.ink});
         th += lab(a, Gh.X(0) + 10 * k, Gh.Y(Hk) - 10 * k, S.v('H') + ' = ' + fmt.fix(Hk, 2) + ' km', {c: C.ink, weight: 650});
       }
-      s += S.clip('th3a1-th', Gh) + th;
+      s += clipped(S, Gh, 'th3a1-th', th);
       lg.push({c: C.ink, label: 'loi prévue exp(−z/H)/H et sa tangente en z = 0'});
     }
     if (above / g.N > .01) s += lab(a, Gh.x0 + Gh.w - 6 * k, Gh.y0 + 14 * k, fmt.fix(100 * above / g.N, 0) + ' % des particules au-dessus de la fenêtre', {anchor: 'end', c: C.hot, weight: 650});
@@ -1290,7 +1291,6 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
       xticks: [], grid: false, ylab: S.v('z') + ' (µm)', xlab: 'cuve de Perrin'});
     const Gn = S.graph({x: Wc, y: 0, w: W - Wc, h: Hh, padL: 8 * k, padR: 14 * k, padT, padB, xmin: 0, xmax: XM, ymin: 0, ymax: LC,
       ylabels: false, xticks: [0, 1, 2, 3], xfmt: v => String(Math.round(10 ** v)), xlab: S.v('n') + ' (grains comptés, échelle logarithmique)'});
-    const defsN = S.clip('th3a1-n', Gn);
     const half = p.e / 2, inBand = z => BANDS.some(zc => Math.abs(z - zc) < half);
     let d1 = '', d2 = '';
     for (let i = 0; i < g.N; i++) {
@@ -1327,7 +1327,7 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
       gn += S.curve(line, Gn, {c: C.F, w: 2.4});
       lg.push({c: C.F, label: 'ajustement de ln n en fonction de z'});
     }
-    s += Gn.svg + defsN + gn;
+    s += Gn.svg + clipped(S, Gn, 'th3a1-n', gn);
     a.svg('scene', s);
     a.clock('t = ' + fmtT(g.time) + (p.cumul ? ' · moyenne sur ' + cumP.k + ' relevés' : ''));
     a.legend(lg);
@@ -1373,14 +1373,14 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
       s += S.circle(x, G.y0 - 8 * k, 7 * k, {fill: C.B, c: C.card, w: 1.6});
     }
     let sum = 0;
-    const ia = Math.round(plage.a / XMAX * NF), ib = Math.round(plage.b / XMAX * NF);
+    const ia = Math.max(0, Math.min(NF, Math.round(plage.a / XMAX * NF))), ib = Math.max(ia, Math.min(NF, Math.round(plage.b / XMAX * NF)));
     for (let i = ia; i < ib; i++) sum += f.x[i];
     const meas = f.S > 0 ? sum / f.S : 0, theo = Math.exp(-plage.a) - Math.exp(-plage.b);
     const lg = [{c: C.c, label: f.S > 0 ? 'histogramme (' + (p.mode === 'cum' ? f.S + ' relevés' : g.N + ' particules') + ')' : 'aucun relevé'},
       {c: C.B, dash: true, label: 'plage déplaçable (glisser les deux repères)'}];
     if (p.prevision) {
       const th = Array.from({length: 121}, (_, i) => {const v = hi * i / 120; return [v, zmode ? Math.exp(-v / Hk) / Hk : Math.exp(-v)];});
-      s += S.clip('th3a1-t3', G) + S.curve(th, G, {c: C.ink, w: 2.8});
+      s += clipped(S, G, 'th3a1-t3', S.curve(th, G, {c: C.ink, w: 2.8}));
       lg.push({c: C.ink, label: zmode ? 'loi prévue exp(−z/H)/H' : 'loi prévue exp(−ℰ_p / k_BT)'});
     }
     s += lab(a, (xa + xb) / 2, G.y0 + 16 * k, fmt.fix(100 * meas, 1) + ' %', {anchor: 'middle', c: C.B, weight: 700});
@@ -1415,7 +1415,7 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
       }
     },
     reset(a) {
-      if (a.p.garde) {a.p.garde = 0; return;}      // changement de T, M ou g « en marche » : on garde les positions
+      if (a.tab === 0) prevGas = E[0];
       build(a, a.tab);
     },
     change(a, id) {
@@ -1426,12 +1426,12 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
     reglages: [
       {titre: 'Situations', onglets: [0], presets: [
         {label: 'Air, 288 K (cours)', valeurs: {T: 288, M: 29, g: 9.81, N: 2000, zmax: 30, depart: 'sol'}},
-        {label: 'T doublée, en marche', valeurs: {T: 576, garde: 1}, lecture: true},
-        {label: 'Masse ÷ 2, en marche', valeurs: {M: 14.5, garde: 1}, lecture: true},
-        {label: 'Retour à 288 K, 29 g·mol⁻¹', valeurs: {T: 288, M: 29, zmax: 30, garde: 1}, lecture: true},
+        {label: 'T doublée, en marche', valeurs: {T: 576}, action: garder, lecture: true},
+        {label: 'Masse ÷ 2, en marche', valeurs: {M: 14.5}, action: garder, lecture: true},
+        {label: 'Retour à 288 K, 29 g·mol⁻¹', valeurs: {T: 288, M: 29, zmax: 30}, action: garder, lecture: true},
         {label: 'Vingt particules', valeurs: {N: 20}},
         {label: 'Quelques milliers', valeurs: {N: 3000}},
-        {label: 'Hydrogène', valeurs: {M: 2, zmax: 300, garde: 1}, lecture: true}
+        {label: 'Hydrogène', valeurs: {M: 2, zmax: 300}, action: garder, lecture: true}
       ]},
       {titre: 'Situations', onglets: [1], presets: [
         {label: 'Perrin (cours)', valeurs: {r: .212, rhog: 1194, Tp: 293, Np: 1000, e: 6, departP: 'uniforme'}},
@@ -1498,8 +1498,8 @@ if (typeof module !== 'undefined') module.exports = TH3Atm;
         },
         start: () => {},
         move: x => {
-          const G = frame3.G, u = Math.min(frame3.umax, Math.max(0, frame3.toX(G.xv(x))));
-          if (dragH === 0) plage.a = Math.min(u, plage.b - .05); else plage.b = Math.max(u, plage.a + .05);
+          const G = frame3.G, u = Math.min(frame3.umax, Math.max(0, frame3.toX(G.xv(x)))), gap = Math.min(.05, frame3.umax * .5);
+          if (dragH === 0) plage.a = Math.max(0, Math.min(u, plage.b - gap)); else plage.b = Math.min(frame3.umax, Math.max(u, plage.a + gap));
         }
       });
     },

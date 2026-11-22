@@ -1514,10 +1514,17 @@ const MC1PF = (() => {
       s += S.line(cx - L * ca, cy + L * sa, cx + L * ca, cy - L * sa, {c: C.ink2, w: 1.4, dash: '3 5', op: .8});
       s += S.line(cx - L * Math.cos(ps), cy + L * Math.sin(ps), cx + L * Math.cos(ps), cy - L * Math.sin(ps), {c: C.B, w: 2.2, dash: '8 5'});
       if (Math.abs(m.Om * t) > .01) {
-        const ra = .55 * m.a * sc;
-        s += S.arc(cx, cy, ra, m.ang0, ps, {c: C.B, w: 2, arrow: true});
-        const am = (m.ang0 + ps) / 2;
-        s += lab(a, cx + (ra + 14 * k) * Math.cos(am), cy - (ra + 14 * k) * Math.sin(am), a.fmt.fix(Math.abs(m.Om * t) / DEG, 2) + '°', {anchor: 'middle', c: C.B, weight: 600});
+        const ra = .55 * m.a * sc, da = ps - m.ang0, abs = Math.abs(da);
+        if (abs >= TAU - 1e-3) {
+          const rem = abs % TAU;
+          s += S.circle(cx, cy, ra, {c: C.B, w: 2}) + S.arc(cx, cy, ra, m.ang0, m.ang0 + Math.sign(da) * Math.max(.15, rem), {c: C.B, w: 2, arrow: true});
+          const am = m.ang0 + Math.sign(da) * (rem > .15 ? rem / 2 : Math.PI / 4);
+          s += lab(a, cx + (ra + 14 * k) * Math.cos(am), cy - (ra + 14 * k) * Math.sin(am), a.fmt.fix(abs / DEG, 2) + '°', {anchor: 'middle', c: C.B, weight: 600});
+        } else {
+          s += S.arc(cx, cy, ra, m.ang0, ps, {c: C.B, w: 2, arrow: true});
+          const am = (m.ang0 + ps) / 2;
+          s += lab(a, cx + (ra + 14 * k) * Math.cos(am), cy - (ra + 14 * k) * Math.sin(am), a.fmt.fix(abs / DEG, 2) + '°', {anchor: 'middle', c: C.B, weight: 600});
+        }
       }
     }
     const nP = Math.max(2, Math.min(2400, Math.ceil(40 * t / m.T0)));
@@ -1683,9 +1690,14 @@ const MC1PF = (() => {
     const ca = Math.cos(psi), sa = Math.sin(psi);
     s += S.line(cx - .97 * Rd * ca, cy + .97 * Rd * sa, cx + .97 * Rd * ca, cy - .97 * Rd * sa, {c: C.E, w: 3.4});
     if (swept > .004) {
-      s += S.arc(cx, cy, .5 * Rd, psi0, psi, {c: C.B, w: 2.4, arrow: true});
-      const am = (psi0 + psi) / 2;
-      s += lab(a, cx + .66 * Rd * Math.cos(am) * (Math.sign(Math.cos(am)) || 1) * (Math.cos(am) < 0 ? 1 : 1), cy - .66 * Rd * Math.sin(am), a.fmt.fix(swept / DEG, 1) + '°', {anchor: 'middle', c: C.B, weight: 600});
+      const da = psi - psi0, rem = swept % TAU;
+      if (swept >= TAU - 1e-3) {
+        s += S.circle(cx, cy, .5 * Rd, {c: C.B, w: 2.4}) + S.arc(cx, cy, .5 * Rd, psi0, psi0 + Math.sign(da) * Math.max(.15, rem), {c: C.B, w: 2.4, arrow: true});
+      } else {
+        s += S.arc(cx, cy, .5 * Rd, psi0, psi, {c: C.B, w: 2.4, arrow: true});
+      }
+      const am = swept >= TAU - 1e-3 ? psi0 + Math.sign(da) * (rem > .15 ? rem / 2 : Math.PI / 4) : (psi0 + psi) / 2;
+      s += lab(a, cx + .66 * Rd * Math.cos(am), cy - .66 * Rd * Math.sin(am), a.fmt.fix(swept / DEG, 1) + '°', {anchor: 'middle', c: C.B, weight: 600});
     }
     s += S.circle(cx, cy, 3 * k, {fill: C.ink});
     s += sens(a, cx, cy, Rd * 1.2, -Om, '');
@@ -1744,11 +1756,13 @@ const MC1PF = (() => {
     const pa = GL.proj(V, GL.ll2v(VILLES[0].lon, VILLES[0].lat));
     if (pa[2] > 0) { cdot(a, ctx, cx + R * pa[0], cy - R * pa[1], 4.4 * k, '#ffffff', '#111111'); ctext(a, ctx, 'Paris', cx + R * pa[0] + (pa[0] < 0 ? -8 : 8) * k, cy - R * pa[1] - 10 * k, {size: 13, weight: 600, anchor: pa[0] < 0 ? 'end' : 'start'}); }
     // plots : fixes dans ℛ′, entraînés par la Terre dans ℛ
-    const N = pl.N, rp = Math.max(3 * k, .05 * m.a * s);
-    for (let i = 0; i < N; i++) {
-      const th = pl.off + i * TAU / N + rotT, x = cx + s * pl.ring * Math.cos(th), y = cy - s * pl.ring * Math.sin(th);
-      if (pl.hit[i] <= t) { cdot(a, ctx, x, y, rp + 1.5 * k, null, 'rgba(255,255,255,.85)'); cdot(a, ctx, x, y, rp, null, '#111111'); }
-      else { cdot(a, ctx, x, y, rp + 1.2 * k, '#ffffff', null); cdot(a, ctx, x, y, rp, '#111111', null); }
+    if (a.p.plots) {
+      const N = pl.N, rp = Math.max(3 * k, .05 * m.a * s);
+      for (let i = 0; i < N; i++) {
+        const th = pl.off + i * TAU / N + rotT, x = cx + s * pl.ring * Math.cos(th), y = cy - s * pl.ring * Math.sin(th);
+        if (pl.hit[i] <= t) { cdot(a, ctx, x, y, rp + 1.5 * k, null, 'rgba(255,255,255,.85)'); cdot(a, ctx, x, y, rp, null, '#111111'); }
+        else { cdot(a, ctx, x, y, rp + 1.2 * k, '#ffffff', null); cdot(a, ctx, x, y, rp, '#111111', null); }
+      }
     }
     // plan d'oscillation et trajectoire
     const f = geo ? m.uI : m.u, nP = Math.max(2, Math.min(2400, Math.ceil(40 * t / m.T0)));
@@ -1767,7 +1781,9 @@ const MC1PF = (() => {
     const m = mod(a), t = Math.min(a.t, m.tmax);
     ciel(a, 'ciel_geo', true); ciel(a, 'ciel_terre', false);
     a.clock('t = ' + a.fmt.sig(t, 3) + ' s · ' + a.fmt.fix(t / m.T0, 1) + ' oscillations');
-    a.legend([{label: 'trajectoire de la boule', c: a.C.E}, {label: 'plan d’oscillation (grand axe)', c: a.C.B, dash: true}, {label: 'plots, entraînés par la Terre dans ' + 'ℛ', c: a.C.cInk}]);
+    const L2 = [{label: 'trajectoire de la boule', c: a.C.E}, {label: 'plan d’oscillation (grand axe)', c: a.C.B, dash: true}];
+    if (a.p.plots) L2.push({label: 'plots, entraînés par la Terre dans ' + 'ℛ', c: a.C.cInk});
+    a.legend(L2);
     const fmt = a.fmt;
     a.metrics([
       {label: 'Rotation de la Terre dans ℛ', value: fmt.fix(m.Om * t / DEG, 1), unit: '°', hint: 'Ω t, avec Ω = k ' + M.v('Ω', 'T')},

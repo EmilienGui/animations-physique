@@ -1300,14 +1300,14 @@ const A=AnimKit.app({
   panneaux:[{id:'scene',poids:2.5,ratioTel:.95},{id:'graphe',poids:1.5,ratioTel:.95}],
   reglages:[
     {titre:'Situations',presets:[
-      {label:'Sections égales (k = 1)',onglets:[0],valeurs:{a2:2,a1:2}},
+      {label:'Sections égales (k = 1)',onglets:[0],valeurs:{a1:2,a2:2}},
       {label:'Bobine intérieure fine',onglets:[0],valeurs:{a1:2,a2:1}},
-      {label:'Deux circuits couplés',onglets:[1],valeurs:{L1:50,L2:20,R1:2,r2:.5,Rl:10,U:6,ft:50,kc:.75,open2:false,sgT:1,cap:false}},
+      {label:'Deux circuits couplés',onglets:[1],valeurs:{L1:50,L2:20,R1:2,r2:.5,Rl:10,U:6,ft:50,kc:.75,open2:false,cap:false},action:a=>{a.p.sgT=1}},
       {label:'Secondaire ouvert',onglets:[1],valeurs:{open2:true}},
       {label:'Faible couplage',onglets:[1],valeurs:{kc:.15,open2:false}},
       {label:'Couplage nul',onglets:[1],valeurs:{kc:0,open2:false}},
-      {label:'Recharge du cours',titre:'L₁ = L₂ = 10 µH, k = 0.50, f = 140 kHz, R₂ = 5.0 Ω, amplitude de i₁ = 2.0 A',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,sgT:1,cap:false},action:a=>{const z=phasors({...trP(a),U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
-      {label:'Recharge avec accord',titre:'Même station, condensateur C₂ d\'accord au secondaire',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,sgT:1,cap:true},action:a=>{const z=phasors({...trP(a),cap:false,U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
+      {label:'Recharge du cours',titre:'L₁ = L₂ = 10 µH, k = 0.50, f = 140 kHz, R₂ = 5.0 Ω, amplitude de i₁ = 2.0 A',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,cap:false},action:a=>{a.p.sgT=1;const z=phasors({...trP(a),U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
+      {label:'Recharge avec accord',titre:'Même station, condensateur C₂ d\'accord au secondaire',onglets:[1],valeurs:{L1:.01,L2:.01,R1:.5,r2:.5,Rl:4.5,ft:140000,kc:.5,open2:false,cap:true},action:a=>{a.p.sgT=1;const z=phasors({...trP(a),cap:false,U:1});a.set('U',+(Math.SQRT1_2*2/P.abs(z.I1)).toFixed(3));}},
       {label:'Abaisseur : m = ½',onglets:[2],valeurs:{Np:600,Ns:300,open3:false}},
       {label:'Élévateur : m = 2',onglets:[2],valeurs:{Np:600,Ns:1200,open3:false}},
       {label:'Isolement : m = 1',onglets:[2],valeurs:{Np:600,Ns:600,open3:false}},
@@ -1438,8 +1438,8 @@ function drawTr(a){
   if(p.open){s+=E.W(a,xr,yt,xr,ym-16*k)+E.W(a,xr,ym+16*k,xr,yb)+S.circle(xr,ym-16*k,3*k,{fill:C.card,c:C.ink})+S.circle(xr,ym+16*k,3*k,{fill:C.card,c:C.ink})+S.text(xr+10*k,ym,'à vide',{size:13,c:C.ink2});}
   else s+=E.res(a,xr,yt,xr,yb,{c:C.v})+S.text(xr+12*k,ym+24*k,sub(a,'R','ch'),{size:15,c:C.v});
   s+=E.volt(a,xr-26*k,p.sign>0?ym+20*k:ym-20*k,xr-26*k,p.sign>0?ym-20*k:ym+20*k,sub(a,'u','2'),{c:C.F,dx:-10*k,anchor:'end'});
-  // points et couplage
-  s+=S.circle(x1+10*k,yt+(yb-yt)*.18,3.2*k,{fill:C.ink})+S.circle(x2-10*k,p.sign>0?yt+(yb-yt)*.18:yb-(yb-yt)*.18,3.2*k,{fill:C.ink});
+  // points (fixes : sens d'enroulement physique) et couplage
+  s+=S.circle(x1+10*k,yt+(yb-yt)*.18,3.2*k,{fill:C.ink})+S.circle(x2-10*k,yt+(yb-yt)*.18,3.2*k,{fill:C.ink});
   if(p.k>0)for(const sg of [-1,1])s+=S.path(`M${x1+14*k},${ym+sg*10*k}C${mid-10*k},${ym+sg*40*k} ${mid+10*k},${ym+sg*40*k} ${x2-14*k},${ym+sg*10*k}`,{c:C.B,w:1.4,op:.2+.7*p.k});
   s+=S.text(mid,ym,`${S.v('k')} = ${f.fix(p.k,2)}`,{anchor:'middle',size:15,c:C.ink});
   // références des courants
@@ -1466,7 +1466,7 @@ function graphTr(a,p,z,m){
     const ph=z.w*a.t,rot=c=>({re:c.re*Math.cos(ph)-c.im*Math.sin(ph),im:c.re*Math.sin(ph)+c.im*Math.cos(ph)});
     const A1=rot(P.scale(z.I1,p.R1)),A2=rot(P.mul(P.C(0,z.w*p.L1),z.I1)),A3=rot(P.mul(P.C(0,z.w*z.M),z.I2)),U=rot(z.U),I1=rot(z.I1),I2=rot(z.I2);
     const pts=[[0,0],[A1.re,A1.im],[A1.re+A2.re,A1.im+A2.im],[U.re,U.im]];
-    const R=Math.max(...pts.map(q=>Math.hypot(...q)),Math.abs(A2.re)+Math.abs(A2.im),1e-12)*1.08,cx=Pn.w/2,cy=Pn.h/2,sc=Math.min(Pn.w,Pn.h)*.46/R;
+    const R=Math.max(...pts.map(q=>Math.hypot(...q)),Math.hypot(A2.re,A2.im),1e-12)*1.08,cx=Pn.w/2,cy=Pn.h/2,sc=Math.min(Pn.w,Pn.h)*.46/R;
     const X=q=>[cx+q[0]*sc,cy-q[1]*sc];let s=S.line(cx-Pn.w*.46,cy,cx+Pn.w*.46,cy,{c:C.grid,w:1})+S.line(cx,cy-Pn.h*.46,cx,cy+Pn.h*.46,{c:C.grid,w:1});
     s+=S.text(10*k,10*k,'Maille primaire : '+S.v('U')+' = '+sub(a,'R','1')+sub(a,'I','1')+' + j'+sub(a,'L','1')+'ω'+sub(a,'I','1')+' + j'+S.v('M')+'ω'+sub(a,'I','2'),{base:'top',size:13,c:C.ink});
     const seg=(A,B,c,lab,w=2.6,sd=1)=>{const p1=X(A),p2=X(B),L=Math.hypot(p2[0]-p1[0],p2[1]-p1[1])||1,nx=-(p2[1]-p1[1])/L*sd,ny=(p2[0]-p1[0])/L*sd;return S.arrow(p1[0],p1[1],p2[0],p2[1],{c,w})+(lab&&L>14*k?S.text((p1[0]+p2[0])/2+nx*14*k,(p1[1]+p2[1])/2+ny*14*k,lab,{size:14,c,anchor:'middle'}):'');};

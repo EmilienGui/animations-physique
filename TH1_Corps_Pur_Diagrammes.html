@@ -1169,17 +1169,20 @@ function franklin(q){
 }
 /* ---------- état à partir de (T, P) ---------- */
 function stateFromPT(fluid,m,T,P,qual){
-  const f=FL(fluid),kind=Thermo.phasePT(fluid,T,P);let V;
+  const f=FL(fluid),Ts=Thermo.saturationTemperature(fluid,P);
+  if(Ts!==null&&Math.abs(T-Ts)<.02)T=Ts;
+  const kind=Thermo.phasePT(fluid,T,P);let V;
   if(kind==='solid'){const v=f.sat[0][2]*(fluid==='water'?1.09:.88);return {T,v,V:m*v,m,P,x:null,liquidVolume:0,kind:'solid',phase:fluid==='water'?'Glace':'Solide',sat:null}}
   if(T<f.Tt){const v=kind==='liquid'?f.sat[0][2]:R*T/(f.M*P);return {T,v,V:m*v,m,P,x:kind==='liquid'?0:null,liquidVolume:kind==='liquid'?1:0,kind,phase:kind==='liquid'?'Liquide':'Gaz',sat:null}}
   V=m*Thermo.volumeTP(fluid,T,P,qual);const s=Thermo.stateTV(fluid,T,V/m);s.P=P;s.V=V;s.m=m;return s;
 }
 const guidedOK=a=>{if(a.tab===0){const f=FL(a.p.cp_fluid),T=course?423:clamp(a.p.cp_T,f.Tt+1e-5,f.Tc*1.4999);return course||!!Thermo.saturation(a.p.cp_fluid,T)}
   if(a.tab===1)return Thermo.saturationTemperature(a.p.cp_fluid,a.p.cp_P*1e5)!==null;return true};
-const base={T:300,V:.001,P:1e5};
+const base={T:423,V:.001,P:1.01325e5,x:.022};let hadGuided=false;
+function restoreBase(a){if(!hadGuided)return;hadGuided=false;a.p.cp_T=base.T;a.p.cp_V=clamp(base.V*1000,.05,100);a.p.cp_P=clamp(base.P/1e5,.001,500);a.p.cp_x=clamp(base.x,0,1)}
 function etat(a){
   const p=a.p,tab=a.tab,fluid=p.cp_fluid,f=FL(fluid),m=p.cp_m/1000;let E;
-  let T=p.cp_T,V=p.cp_V/1000,Pt=p.cp_P*1e5,qual=p.cp_x;const g=u>0;if(!g){base.T=T;base.V=V;base.P=Pt}
+  let T=p.cp_T,V=p.cp_V/1000,Pt=p.cp_P*1e5,qual=p.cp_x;const g=u>0;if(!g){base.T=T;base.V=V;base.P=Pt;base.x=qual}else hadGuided=true;
   if(tab===0||tab===2){
     if(course)T=423;
     if(tab===2&&g)T=mix(base.T,Math.max(base.T+10,f.Tc*1.07),u);
@@ -1222,11 +1225,11 @@ function syncParts(init){
 const TXT={course1:'Application du cours : 100 g d\'eau à 423 K dans 1 L. Comparer masses et volumes des phases.',course50:'Même masse et même température, dans 50 L : l\'eau peut-elle rester diphasée ?',condensation:'Comprimer lentement une vapeur à température constante jusqu\'à sa liquéfaction.',heating:'Échantillon fermé sous un piston à pression constante : le titre évolue pendant l\'ébullition.',mountain:'À 0.8 bar, la température d\'ébullition est plus faible.',cocotte:'À 2 bar absolus, la température d\'ébullition augmente.',co2:'À pression atmosphérique, le CO₂ solide se sublime : aucune phase liquide stable sur ce trajet.',critical:'SF₆ proche de la densité critique : chauffer à volume constant jusqu\'à la disparition du ménisque.'};
 function setP(a,o){for(const[k,v]of Object.entries(o))a.set(k,v,{silent:true})}
 function presetAct(key){return a=>{
-  scen=TXT[key]||'';course=false;ovFit=true;u=0;a.t=0;const w=THERMO_DATA.fluids.water;
-  if(key==='course1'||key==='course50'){course=true;setP(a,{cp_fluid:'water',cp_m:100,cp_T:423,cp_V:key==='course1'?1:50})}
-  else if(key==='condensation'){setP(a,{cp_fluid:'water',cp_m:100,cp_T:373.15,cp_V:+(.1*Thermo.saturation('water',373.15).vg*1.35*1000).toFixed(1)})}
-  else if(['heating','mountain','cocotte'].includes(key)){const P=key==='mountain'?.8:key==='cocotte'?2:1.01325;setP(a,{cp_fluid:'water',cp_m:100,cp_P:P,cp_T:+Thermo.saturationTemperature('water',P*1e5).toFixed(2),cp_x:.25})}
-  else if(key==='co2'){setP(a,{cp_fluid:'co2',cp_m:100,cp_T:190,cp_P:1.01325})}
+  scen=TXT[key]||'';course=false;ovFit=true;hadGuided=false;u=0;a.t=0;const w=THERMO_DATA.fluids.water;
+  if(key==='course1'||key==='course50'){course=true;setP(a,{cp_fluid:'water',cp_m:100,cp_T:423,cp_V:key==='course1'?1:50,cp_ov:false})}
+  else if(key==='condensation'){setP(a,{cp_fluid:'water',cp_m:100,cp_T:373.15,cp_V:+(.1*Thermo.saturation('water',373.15).vg*1.35*1000).toFixed(1),cp_ov:false})}
+  else if(['heating','mountain','cocotte'].includes(key)){const P=key==='mountain'?.8:key==='cocotte'?2:1.01325;setP(a,{cp_fluid:'water',cp_m:100,cp_P:P,cp_T:Thermo.saturationTemperature('water',P*1e5),cp_x:.25,cp_ov:false})}
+  else if(key==='co2'){setP(a,{cp_fluid:'co2',cp_m:100,cp_T:190,cp_P:1.01325,cp_ov:false})}
   else if(key==='critical'){const s=FL('sf6');setP(a,{cp_fluid:'sf6',cp_m:100,cp_T:+(s.Tc*.965).toFixed(2),cp_V:+(.1*s.vc*1000).toFixed(3),cp_ov:true})}
   vRef=etat(a).V*1.3;makeParts(parts.length||2600);a.render()}}
 
@@ -1235,7 +1238,7 @@ const A=AnimKit.app({
   titre:'Corps pur et diagrammes', sousTitre:'Piston, chauffage, diagrammes (P,T) et de Clapeyron',
   onglets:['Piston isotherme','Chauffage isobare','Chauffage isochore','Diagramme (P,T)'],
   temps:true, pas:DUREE/60, fichier:'Corps_Pur_Diagrammes',
-  curseur:{max:()=>1,get:()=>u,set:(a,v)=>{if(v>0&&!guidedOK(a)){a.toast('Ce parcours guidé n\'est pas possible dans ces conditions (choisir une température sous-critique ou une pression entre le point triple et le point critique).');return}u=v;a.t=v*DUREE}},
+  curseur:{max:()=>1,get:()=>u,set:(a,v)=>{if(v>0&&!guidedOK(a)){a.toast('Ce parcours guidé n\'est pas possible dans ces conditions (choisir une température sous-critique ou une pression entre le point triple et le point critique).');return}if(v===0&&u>0)restoreBase(a);u=v;a.t=v*DUREE}},
   panneaux:[{id:'scene',type:'canvas',poids:.8,ratioTel:.95,zoom:true},{id:'diag',poids:1.2,ratioTel:1.4}],
   reglages:[
     {titre:'Situations',presets:[
@@ -1253,8 +1256,8 @@ const A=AnimKit.app({
       {id:'cp_V',type:'range',log:true,step:'any',label:`Volume de l'enceinte ${mv('V')}`,min:.05,max:100,dec:3,value:1,unit:'L',onglets:[0,2]},
       {id:'cp_P',type:'range',log:true,step:'any',label:`Pression imposée ${mv('P')}`,min:.001,max:500,dec:3,value:1.01325,unit:'bar abs.',onglets:[1,3]},
       {id:'cp_m',type:'range',log:true,step:'any',label:`Masse totale ${mv('m')}`,min:1,max:1000,dec:0,value:100,unit:'g',onglets:[0,1,2,3]},
-      {id:'cp_x',label:`Titre massique en vapeur ${mv('x','G')}`,min:0,max:1,step:.001,value:.022,onglets:[0,1,3],si:a=>st&&st.kind==='two'&&!st.franklin},
-      {type:'boutons',items:[{label:'Se placer à la coexistence',action:a=>{const T=Thermo.saturationTemperature(a.p.cp_fluid,a.p.cp_P*1e5);if(T===null){a.toast('Cette pression est en dehors de la coexistence liquide–vapeur.');return}u=0;a.t=0;a.p.cp_T=+T.toFixed(3);a.p.cp_x=.5;a.refresh()}}],onglets:[1,3]}]},
+      {id:'cp_x',label:`Titre massique en vapeur ${mv('x','G')}`,min:0,max:1,step:.001,value:.022,onglets:[0,1,3],si:a=>st&&st.kind==='two'&&!st.franklin&&(a.tab!==0||a.p.cp_show)},
+      {type:'boutons',items:[{label:'Se placer à la coexistence',action:a=>{const T=Thermo.saturationTemperature(a.p.cp_fluid,a.p.cp_P*1e5);if(T===null){a.toast('Cette pression est en dehors de la coexistence liquide–vapeur.');return}hadGuided=false;u=0;a.t=0;a.p.cp_T=T;a.p.cp_x=.5;a.refresh()}}],onglets:[1,3]}]},
     {titre:'Parcours guidé',items:[
       {id:'cp_path',type:'seg',label:'Le point suit',options:[['isobare','Une isobare (T varie)'],['isotherme','Une isotherme (P varie)']],value:'isobare',onglets:[3]},
       {id:'cp_dir',type:'seg',label:'Sens',options:[['1','Croissant'],['-1','Décroissant']],value:1,onglets:[3]}]},
@@ -1280,18 +1283,18 @@ const A=AnimKit.app({
   change(a,id,v){
     if(id==='cp_N'){makeParts(v);return}
     if(['cp_trace','cp_freeze','cp_show','cp_log','cp_ov','cp_pt'].includes(id))return;
-    u=0;a.t=0;
+    hadGuided=false;u=0;a.t=0;
     if(id==='cp_fluid'){course=false;const f=FL(v);a.p.cp_T=+(f.Tt+(f.Tc-f.Tt)*.55).toFixed(1);const s=Thermo.saturation(v,a.p.cp_T);a.p.cp_V=+(a.p.cp_m/1000*s.vg*1.3*1000).toFixed(3);vRef=a.p.cp_V/1000*1.3}
     if(id==='cp_x'&&a.tab===0){const s=course?Thermo.courseSat():Thermo.saturation(a.p.cp_fluid,course?423:a.p.cp_T);if(s)a.p.cp_V=+(a.p.cp_m*mix(s.vl,s.vg,v)).toFixed(4)}
   },
   onglet(a){if(a.tab!==0)course=false;a.reset();if(a.tab===3&&a.p.cp_fluid==='water'&&a.p.cp_T>FL('water').Tc*1.4)a.p.cp_T=423},
-  reset(a){u=0;a.t=0;st=etat(a);vRef=st.V*1.3;syncParts(false)},
+  reset(a){restoreBase(a);u=0;a.t=0;st=etat(a);vRef=st.V*1.3;syncParts(false)},
   step(a,dt){a.t=Math.min(DUREE,a.t+dt);u=a.t/DUREE;if(u>=1){u=1;a.play(false)}},
-  peutLire:a=>{if(!guidedOK(a)){a.toast('Ce parcours guidé n\'est pas possible dans ces conditions (choisir une température sous-critique ou une pression entre le point triple et le point critique).');return false}if(u>=1){u=0;a.t=0}return true},
+  peutLire:a=>{if(!guidedOK(a)){a.toast('Ce parcours guidé n\'est pas possible dans ces conditions (choisir une température sous-critique ou une pression entre le point triple et le point critique).');return false}if(u>=1){restoreBase(a);u=0;a.t=0}return true},
   draw(a){st=etat(a);const f=FL(st.fluid);
     // les curseurs suivent l'état calculé
     if(a.tab===0||a.tab===2){if(Math.abs(a.p.cp_V-st.V*1000)>1e-6*st.V*1000)a.p.cp_V=clamp(st.V*1000,.05,100)}
-    if(a.tab<4)a.p.cp_T=+st.T.toFixed(3);
+    if(a.tab<4&&(u>0||Math.abs(a.p.cp_T-st.T)>1e-3))a.p.cp_T=+st.T.toFixed(3);
     if(a.tab===3&&u>0)a.p.cp_P=+clamp(st.P/1e5,.001,500).toFixed(5);
     if(st.kind==='two'&&xG(st)!==null)a.p.cp_x=+xG(st).toFixed(4);
     syncParts(false);sceneDraw(a,st);a.svg('diag',ptDraw(a,st)+pvDraw(a,st));infos(a,st);a.clock(u>0?`parcours guidé : ${FM.fix(u*100,0)} %`:'');a.refresh()}
@@ -1353,7 +1356,7 @@ function sceneDraw(a,E){
 let panH=null;
 A.drag('scene',{
   hit:(sx,sy)=>{const P=A.panels.scene,z=P.zoom||1;if(!box)return false;const x=(sx-P.w/2-(P.panX||0))/z+P.w/2,y=(sy-P.h/2-(P.panY||0))/z+P.h/2;return Math.abs(y-box.top)<27&&x>box.x-12&&x<box.x+box.bw+12},
-  start(){if(A.tab!==0){A.toast('Pour déplacer le piston, choisir l\'onglet « Piston isotherme ».');dragging=false;return}dragging=true;A.play(false);u=0;A.t=0},
+  start(){if(A.tab!==0){A.toast('Pour déplacer le piston, choisir l\'onglet « Piston isotherme ».');dragging=false;return}dragging=true;A.play(false);hadGuided=false;u=0;A.t=0},
   move(sx,sy){if(!dragging)return;const P=A.panels.scene,z=P.zoom||1,y=(sy-P.h/2-(P.panY||0))/z+P.h/2;const fr=clamp((box.bottom-y)/box.fullh,.12,.95),V=5e-5*Math.exp((fr-.12)/.83*Math.log(1e-1/5e-5));A.set('cp_V',+clamp(V*1000,.05,100).toFixed(4),{silent:true})},
   end(){dragging=false}
 });
@@ -1386,9 +1389,10 @@ function ptDraw(a,E){
   const P=a.panels.diag,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h*.36,fl=E.fluid,f=FL(fl);
   const xmin=fl==='water'?248:fl==='co2'?172:195,xmax=f.Tc*1.5,ymin=f.Pt/1e5*.025,ymax=Math.max(f.Pc/1e5*3,500);
   const G=logG(S,{x:0,y:0,w,h,xmin,xmax,ymin,ymax,logy:true,xlab:`${S.v('T')} (K)`,ylab:`${S.v('P')} (bar)`});ptG=G;
-  const sig=[a.tab,fl,E.T.toFixed(2),E.P.toFixed(0),E.kind,w|0,h|0,k,C.dark,a.p.cp_pt,u>0?1:0,E.franklin?u.toFixed(3):0].join('|');
+  const vz=(P.vz||1).toFixed(4),vx=(P.vx||0).toFixed(4),vy=(P.vy||0).toFixed(4);
+  const sig=[a.tab,fl,E.T.toFixed(2),E.P.toFixed(0),E.kind,w|0,h|0,k,C.dark,a.p.cp_pt,u>0?1:0,E.franklin?u.toFixed(3):0,vz,vx,vy].join('|');
   const html=cached('pt',sig,()=>{
-    let t=S.clip('ptc',G)+cached('ptbg',[fl,xmin|0,xmax|0,ymin,ymax,w|0,h|0,C.dark].join('|'),()=>{
+    let t=S.clip('ptc',G)+cached('ptbg',[fl,xmin|0,xmax|0,ymin,ymax,w|0,h|0,C.dark,vz,vx,vy].join('|'),()=>{
       let b='';const nx=40,ny=26,dx=G.w/nx,dy=G.h/ny;
       for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){const px=G.x0+i*dx,py=G.y0+j*dy,kind=Thermo.phasePT(fl,G.ix(px+dx/2),G.iy(py+dy/2)*1e5);
         b+=`<rect x="${px.toFixed(1)}" y="${py.toFixed(1)}" width="${(dx+.6).toFixed(1)}" height="${(dy+.6).toFixed(1)}" fill="${kind==='solid'?C.ink2:kind==='liquid'?C.B:kind==='super'?C.v:C.E}" opacity=".11"/>`}
@@ -1419,7 +1423,8 @@ function pvDraw(a,E){
   const ymax=Math.max(ov?f.Pc/1e5*1.2:s?s.P/1e5*1.9:f.Pc/1e5*1.3,E.P/1e5*1.05);
   const G=logG(S,{x:0,y:oy,w,h,xmin:lg?xmin:0,xmax,ymin:0,ymax,logx:lg,xlab:`${S.v('v')} (m${S.sup('3')}·kg${S.sup('−1')})${lg?' · log':''}`,ylab:`${S.v('P')} (bar)`});
   if(!lg)G.fx=x=>G.X(x);pvG=G;
-  const sig=[a.tab,fl,E.T.toFixed(3),E.v.toExponential(5),E.kind,ov,lg,course,a.p.cp_show,w|0,h|0,k,C.dark].join('|');
+  const vz=(P.vz||1).toFixed(4),vx=(P.vx||0).toFixed(4),vy=(P.vy||0).toFixed(4);
+  const sig=[a.tab,fl,E.T.toFixed(3),E.v.toExponential(5),E.kind,ov,lg,course,a.p.cp_show,w|0,h|0,k,C.dark,vz,vx,vy].join('|');
   return (cached('pv',sig,()=>{
     let t=S.clip('pvc',G)+G.svg;
     const X=lg?(x=>G.fx(x)):(x=>G.X(x)),pt=pts=>lg?G.tr(pts):pts;
@@ -1440,7 +1445,7 @@ function pvDraw(a,E){
     }
     t+=mk(E.v,E.P/1e5,E.kind==='two'?'M':'',C.cInk,true);
     if(ov)t+=S.circle(X(f.vc),G.Y(f.Pc/1e5),4*k,{fill:C.ink2})+S.text(X(f.vc)+8*k,G.Y(f.Pc/1e5)-10*k,'C',{size:14,c:C.ink2,weight:600});
-    if(lg)t+=S.text(G.x0+6*k,G.y0+14*k,'axe log : calculer x_G avec les valeurs',{size:12.5,c:C.ink2,halo:false});
+    if(lg)t+=S.text(G.x0+6*k,G.y0+14*k,`axe log : calculer ${S.v('x','G')} avec les valeurs`,{size:12.5,c:C.ink2,halo:false});
     return t}));
 }
 /* ---------- mesures et légende ---------- */
@@ -1462,14 +1467,15 @@ A.drag('diag',{
 function clickDiag(x,y){if(ptG&&ptG.inside(x,y))clickPT(x,y);else if(pvG&&pvG.inside(x,y))clickPV(x)}
 function clickPT(x,y){
   const G=ptG;if(!G||!G.inside(x,y))return;const fl=st.fluid,f=FL(fl);
-  if(A.tab!==3){A.setTab(3)}course=false;u=0;A.t=0;
-  const T=clamp(G.ix(x),TMIN[fl],f.Tc*1.4999);let Pp=G.iy(y)*1e5;const s=Thermo.saturation(fl,T);if(s&&Math.abs(Math.log(Pp/s.P))<.18)Pp=s.P;
+  if(A.tab!==3){A.setTab(3)}course=false;hadGuided=false;u=0;A.t=0;
+  let T=clamp(G.ix(x),TMIN[fl],f.Tc*1.4999),Pp=G.iy(y)*1e5;const s=Thermo.saturation(fl,T);
+  if(s&&Math.abs(Math.log(Pp/s.P))<.18){const Pbar=+clamp(s.P/1e5,.001,500).toFixed(4),Ts=Thermo.saturationTemperature(fl,Pbar*1e5);setP(A,{cp_T:Ts!==null?Ts:+T.toFixed(2),cp_P:Pbar});return}
   setP(A,{cp_T:+T.toFixed(2),cp_P:+clamp(Pp/1e5,.001,500).toFixed(4)});
 }
 function clickPV(x){
   const G=pvG;if(!G||x<G.x0||x>G.x0+G.w)return;const E=st;
   if(A.tab!==0){const T=E.T;A.setTab(0);setP(A,{cp_T:+T.toFixed(3)})}
-  u=0;A.t=0;const v=Math.max(1e-9,G.ix(x));A.set('cp_V',+clamp(E.m*v*1000,.05,100).toFixed(4),{silent:true});
+  hadGuided=false;u=0;A.t=0;const v=Math.max(1e-9,G.ix(x));A.set('cp_V',+clamp(E.m*v*1000,.05,100).toFixed(4),{silent:true});
 }
 
 </script>

@@ -1121,7 +1121,7 @@ function cfgOf(a){const p=a.p;switch(mode(a)){
   case'cyclotron':return{particle:p.cyP,B:p.cyB,K0:p.cyK0,U:p.cyU,turns:p.cyN,ratio:p.cyR,phase:p.cyPh};
   case'synchrotron':return{particle:p.syP,rho:p.syRho,K0:p.syK0,U:p.syU,turns:p.syN,matched:p.syM==='adapte'};
   case'wien':return{E:p.wiE,B:p.wiB,v:p.wiV,length:p.wiL,slit:p.wiS,sign:p.wiQ}}}
-function rebuild(a,auto=true){MDL=AM[mode(a)](cfgOf(a));a.t=Math.min(a.t,MDL.duration);if(auto){a.panels.scene.zoom=1;view.lock=null}}
+function rebuild(a,auto=true){MDL=AM[mode(a)](cfgOf(a));a.t=Math.min(a.t,MDL.duration);if(mode(a)==='spectrometer'&&rul!==null){const maxR=Math.max(...MDL.ions.map(x=>x.R));if(rul>2.15*maxR)rul=2*MDL.ions[1].R}if(auto){a.panels.scene.zoom=1;view.lock=null}}
 
 /* ---------- unités ---------- */
 function unit(a,x,type){const maps={length:[[1,'m'],[.01,'cm'],[.001,'mm'],[1e-6,'µm']],time:[[1,'s'],[1e-3,'ms'],[1e-6,'µs'],[1e-9,'ns']],energy:[[1e6,'MeV'],[1e3,'keV'],[1,'eV']],B:[[1,'T'],[1e-3,'mT']],freq:[[1e6,'MHz'],[1e3,'kHz'],[1,'Hz']]};
@@ -1135,7 +1135,7 @@ const pre=(tab,label,vals)=>({label,onglets:[tab],valeurs:vals,action:a=>{if('sp
 const st={reveal:false};
 const PRE=[pre(0,'Valeurs du cours',{spPrep:'voltage',spU:1,spB:7,spz:1,spW:.1,spS:'equal',spCmp:false}),pre(0,'Vitesse commune',{spPrep:'wien',spEw:1,spBw:10,spB:7,spz:1,spW:.1}),pre(0,'Inconnu A',{spS:'unknownA'}),pre(0,'Inconnu B',{spS:'unknownB'}),pre(0,'Taches élargies',{spW:.3}),
   pre(1,'Paquet accordé',{liR:1,liPh:0,liSp:0,liPs:0}),pre(1,'Énergies dispersées',{liR:1,liPh:0,liSp:25,liPs:0}),pre(1,'RF désaccordée',{liR:1.1,liPh:0,liSp:10,liPs:0}),pre(1,'Paquet étalé',{liR:1,liPh:0,liSp:15,liPs:35}),pre(1,'Phase freinante',{liR:1,liPh:180,liSp:0,liPs:0}),
-  pre(2,'Accord',{cyR:1,cyPh:0,cyN:8}),pre(2,'Désaccord',{cyR:1.08,cyPh:0,cyN:12}),pre(2,'Phase freinante',{cyR:1,cyPh:180,cyK0:5,cyU:2,cyN:8}),
+  pre(2,'Accord',{cyR:1,cyPh:0,cyK0:2,cyU:2,cyN:8}),pre(2,'Désaccord',{cyR:1.08,cyPh:0,cyK0:2,cyU:2,cyN:12}),pre(2,'Phase freinante',{cyR:1,cyPh:180,cyK0:5,cyU:2,cyN:8}),
   pre(3,'B adapté',{syM:'adapte'}),pre(3,'B constant',{syM:'constant'}),
   pre(4,'Accord',{wiE:1,wiB:10,wiV:100,wiL:12,wiS:1,wiQ:1}),pre(4,'Trop rapide',{wiE:1,wiB:10,wiV:140,wiL:12,wiS:1,wiQ:1}),pre(4,'Charge opposée',{wiE:1,wiB:10,wiV:100,wiL:12,wiS:1,wiQ:-1})];
 const R=(id,label,min,max,step,unit,value,o={})=>({id,label,min,max,step,unit,value,reinit:true,...o});
@@ -1446,10 +1446,10 @@ let dg=null;
 A.drag('scene',{
   hit:(x,y,e)=>!!(e.target.closest&&e.target.closest('[data-h],[data-ruler]')),
   start(x,y,e){A.play(false);dg=e.target.closest('[data-ruler]')?'r':'h'},
-  move(x,y){if(dg==='r'){const y0=view.P([0,0])[1];rul=Math.max(0,(y-y0)/view.sc)}else if(dg==='h'){const ox=view.P([0,0])[0];A.set('wiV',Math.round(clamp((x-ox)/(70*A.k)*100,20,400)),{silent:true});rebuild(A,false)}},
+  move(x,y){if(dg==='r'){const y0=view.P([0,0])[1],maxR=Math.max(...MDL.ions.map(o=>o.R));rul=clamp((y-y0)/view.sc,0,2.15*maxR)}else if(dg==='h'){const ox=view.P([0,0])[0];A.set('wiV',Math.round(clamp((x-ox)/(70*A.k)*100,20,400)),{silent:true});rebuild(A,false)}},
   end(){dg=null}
 });
-A.drag('diag',{hit:x=>GR&&x>=GR.G.x0-4&&x<=GR.G.x0+GR.G.w+4,start(x){A.play(false);A.t=clamp(GR.G.xv(x)/GR.tf,0,MDL.duration)},move(x){A.t=clamp(GR.G.xv(Math.max(GR.G.x0,Math.min(GR.G.x0+GR.G.w,x)))/GR.tf,0,MDL.duration)}});
+A.drag('diag',{hit:(x,y)=>GR&&x>=GR.G.x0-4&&x<=GR.G.x0+GR.G.w+4&&y>=GR.G.y0&&y<=GR.G.y0+GR.G.h,start(x){A.play(false);A.t=clamp(GR.G.xv(x)/GR.tf,0,MDL.duration)},move(x){A.t=clamp(GR.G.xv(Math.max(GR.G.x0,Math.min(GR.G.x0+GR.G.w,x)))/GR.tf,0,MDL.duration)}});
 
 </script>
 </body>

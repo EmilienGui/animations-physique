@@ -1224,7 +1224,7 @@ const MC1Maree = (() => {
   const vecH = (s, sub) => M.vec(M.v(s, sub));
 
   function drawPort1(a) {
-    const {S, C, k, p} = a, P = a.panels.port1, sol = p.soleil1, s = sAz(a), t = Math.min(a.t, T0MAX);
+    const {S, C, k, p} = a, P = a.panels.port1, sol = p.soleil1 && p.champ !== 'decomp', s = sAz(a), t = Math.min(a.t, T0MAX);
     const G = S.graph({x: 0, y: 0, w: P.w, h: P.h, padL: 62 * k, padR: 14 * k, padT: 26 * k, padB: 44 * k, xmin: 0, xmax: T0MAX, ymin: -40, ymax: 40,
       xlab: 't (h)', ylab: 'h (cm)', xticks: [0, 12, 24, 36, 48], yticks: [-40, -20, 0, 20, 40]});
     const n = Math.max(2, Math.ceil(t / T0MAX * 300)), pts = [];
@@ -1236,9 +1236,10 @@ const MC1Maree = (() => {
 
   function metrics0(a) {
     const {fmt, p} = a, dec = p.champ === 'decomp', sol = p.soleil1 && !dec, s = sAz(a), out = [];
+    if (!p.valeurs) { a.metrics([]); return; }
     if (!dec) {
       let mn = 1e9, mx = -1e9; for (let i = 0; i < 360; i++) { const d = MM.dz(i * DEG, sol, s); mn = Math.min(mn, d); mx = Math.max(mx, d); }
-      out.push({label: 'Terme de marée de la Lune, sur l’axe Terre-Lune', value: fmt.sci(MM.CL_AXE, 2), unit: 'm.s⁻²', hint: '2 ' + M.v('G') + M.v('M', 'L') + M.v('R', 'T') + ' / ' + M.v('d', 'L') + '³'});
+      out.push({label: 'Terme de marée de la Lune, sur l’axe Terre-Lune', value: fmt.sci(MM.CL_AXE, 2), unit: 'm·s⁻²', hint: '2 ' + M.v('G') + M.v('M', 'L') + M.v('R', 'T') + ' / ' + M.v('d', 'L') + '³'});
       out.push({label: 'En unité de g', value: fmt.sci(MM.CL_AXE / MM.G0, 2), unit: '', hint: 'de l’ordre de 10⁻⁷ g'});
       out.push({label: 'Dénivellation entre bourrelet et creux (modèle statique)', value: fmt.fix(mx - mn, 2), unit: 'm', hint: sol ? 'Lune et Soleil à l’âge choisi' : 'Lune seule : (3/2) ' + M.v('a', 'L')});
     } else {
@@ -1314,8 +1315,8 @@ const MC1Maree = (() => {
     for (let i = 0; i <= n; i++) { const tt = t * i / n; a1.push([tt, hS(a, tt) * sc.f]); if (p.bassin) a2.push([tt, hB(a, tt) * sc.f]); }
     let inner = '';
     if (p.enveloppe) {
-      const e1 = [], e2 = [], amp = p.bassin ? p.amp : 1;
-      for (let i = 0; i <= 400; i++) { const ag = TMOIS * i / 400, e = amp * MM.marnage(p.lat, TAU * ag / TMOIS, p.soleil3) / 2 * sc.f; e1.push([ag, e]); e2.push([ag, -e]); }
+      const e1 = [], e2 = [], amp = p.bassin ? p.amp : 1, lag = p.bassin ? p.retard / 24 : 0;
+      for (let i = 0; i <= 400; i++) { const ag = TMOIS * i / 400, e = amp * MM.marnage(p.lat, TAU * (ag - lag) / TMOIS, p.soleil3) / 2 * sc.f; e1.push([ag, e]); e2.push([ag, -e]); }
       inner += S.curve(e1, G, {c: C.ink2, w: 1.3, dash: '6 5', op: .9}) + S.curve(e2, G, {c: C.ink2, w: 1.3, dash: '6 5', op: .9});
     }
     if (p.bassin) inner += S.curve(a1, G, {c: C.ink2, w: 1.4}) + S.curve(a2, G, {c: C.cInk, w: 2.2});

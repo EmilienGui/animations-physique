@@ -1184,6 +1184,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
   let pmfCache = {key: '', bins: null};
 
   const lab = (a, x, y, html, o = {}) => a.S.text(x, y, html, {size: 13.5, ...o});
+  const clipped = (S, G, id, content) => S.clip(id, G) + '<g clip-path="url(#' + id + ')">' + content + '</g>';
   const nOf = (a, tab) => Math.max(1, Math.round(tab === 0 ? a.p.N1 : tab === 1 ? a.p.N2 : a.p.N3));
   const mu = a => a.p.moment === 'e' ? D.muB : D.mup;
   const xOf = (a, tab) => tab === 0 ? 1 / a.p.tau1 : tab === 1 ? 1 / a.p.tau2 : mu(a) * a.p.B / (D.kB * a.p.T3);
@@ -1306,17 +1307,17 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
       for (let j = b * kb; j <= j1; j++) c += s.counts[j];
       if (c) bars += barAt(b, c / s.n, {fill: C.c, fop: .6, c: C.cInk, w: 1});
     }
-    out += Gh.svg + bars;
     const lg = [{c: C.cold, dot: true, label: 'état fondamental −ε'}, {c: C.hot, label: 'état excité +ε'}, {c: C.c, label: 'histogramme (' + s.n + ' tirages)'}, {c: C.B, dot: true, label: 'points relevés'}];
-    if (s.n > 0) out += S.line(Gh.X(2 * s.mean / N - 1), Gh.y0, Gh.X(2 * s.mean / N - 1), Gh.y0 + Gh.h, {c: C.B, w: 2, dash: '7 5'});
+    if (s.n > 0) bars += S.line(Gh.X(2 * s.mean / N - 1), Gh.y0, Gh.X(2 * s.mean / N - 1), Gh.y0 + Gh.h, {c: C.B, w: 2, dash: '7 5'});
     if (p.prevision) {
       const th = binsTheory(N, D.p2of(1 / p.tau1));
       let t = '';
       for (let b = 0; b < nb; b++) if (th[b] > 1e-4) t += barAt(b, Math.min(1, th[b]), {c: C.ink, w: 1.8});
       t += S.line(Gh.X(L.e), Gh.y0, Gh.X(L.e), Gh.y0 + Gh.h, {c: C.ink, w: 1.6, dash: '3 5'});
-      out += t;
+      bars += t;
       lg.push({c: C.ink, label: 'loi binomiale prévue'});
     }
+    out += Gh.svg + clipped(S, Gh, 'th3a2-h', bars);
     /* σ_tot / |⟨E_tot⟩| en fonction de N, échelles logarithmiques */
     const Gl = S.graph(gOpts(a, Z.g[1], {xmin: -.15, xmax: 4.15, ymin: -4, ymax: 2, xticks: [0, 1, 2, 3, 4], yticks: [-4, -3, -2, -1, 0, 1, 2],
       xfmt: v => String(Math.round(10 ** v)), yfmt: v => String(+(10 ** v).toPrecision(1)),
@@ -1325,7 +1326,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
     let g2 = '';
     if (p.prevision) {
       g2 += S.curve([[-.15, Math.log10(r1) + .075], [4.15, Math.log10(r1) - 2.075]], Gl, {c: C.ink, w: 2.2, dash: '8 6'});
-      lg.push({c: C.ink, dash: true, label: 'prévu : (σ<sub>E</sub> / |⟨E⟩|) / √N, pente −1/2'});
+      lg.push({c: C.ink, dash: true, label: 'prévu : (σ<sub>E</sub> / ' + (p.origine ? '⟨E + ε⟩' : '|⟨E⟩|') + ') / √N, pente −1/2'});
     }
     const fit = D.fitSlope(pts1);
     if (p.valeurs && fit) {
@@ -1335,16 +1336,18 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
     for (const q of pts1) g2 += S.circle(Gl.X(Math.log10(q.N)), Gl.Y(Math.log10(q.r)), 5 * k, {fill: C.B, c: C.card, w: 1.4});
     const rm = ratioMes(s, p.origine);
     if (rm) g2 += S.circle(Gl.X(Math.log10(N)), Gl.Y(Math.log10(rm)), 7.5 * k, {fill: C.hot, c: C.card, w: 1.8});
-    out += Gl.svg + g2;
+    out += Gl.svg + clipped(S, Gl, 'th3a2-l', g2);
     a.svg('scene', out);
     a.clock('tirages : ' + s.n);
     lg.push(rm ? {c: C.hot, dot: true, label: 'série en cours'} : null);
     a.legend(lg);
     const m = [];
-    if (rm) m.push({label: a.M.v('σ', 'tot') + ' / ' + (p.origine ? '⟨' + a.M.v('E', 'tot') + ' + ' + a.M.v('N') + a.M.v('ε') + '⟩' : '|⟨' + a.M.v('E', 'tot') + '⟩|') + ' mesuré', value: rm < 1 ? fmt.sig(100 * rm, 2) : fmt.sig(rm, 2), unit: rm < 1 ? '%' : ''});
+    const denTot = p.origine ? '⟨' + a.M.v('E', 'tot') + ' + ' + a.M.v('N') + a.M.v('ε') + '⟩' : '|⟨' + a.M.v('E', 'tot') + '⟩|';
+    const den1 = p.origine ? '⟨E + ε⟩' : '|⟨E⟩|';
+    if (rm) m.push({label: a.M.v('σ', 'tot') + ' / ' + denTot + ' mesuré', value: rm < 1 ? fmt.sig(100 * rm, 2) : fmt.sig(rm, 2), unit: rm < 1 ? '%' : ''});
     if (p.valeurs) {
-      m.push({label: a.M.v('σ', 'tot') + ' / |⟨' + a.M.v('E', 'tot') + '⟩| calculé = (σ<sub>E</sub> / |⟨E⟩|) / √N', value: fmt.sig(r1 / Math.sqrt(N) * (r1 / Math.sqrt(N) < 1 ? 100 : 1), 2), unit: r1 / Math.sqrt(N) < 1 ? '%' : ''},
-        {label: 'σ<sub>E</sub> / |⟨E⟩| d’une particule', value: fmt.sig(r1, 3)},
+      m.push({label: a.M.v('σ', 'tot') + ' / ' + denTot + ' calculé = (σ<sub>E</sub> / ' + den1 + ') / √N', value: fmt.sig(r1 / Math.sqrt(N) * (r1 / Math.sqrt(N) < 1 ? 100 : 1), 2), unit: r1 / Math.sqrt(N) < 1 ? '%' : ''},
+        {label: 'σ<sub>E</sub> / ' + den1 + ' d’une particule', value: fmt.sig(r1, 3)},
         {label: 'Énergie moyenne mesurée ⟨E<sub>tot</sub>⟩ / (Nε)', value: s.n ? fmt.sig(2 * s.mean / N - 1, 3) : '—', hint: 'calculée : −th x = ' + fmt.sig(L.e, 3)});
       if (fit) m.push({label: 'Pente mesurée sur les points relevés', value: fmt.sig(fit.slope, 3), hint: 'attendue : −0.5'});
     }
@@ -1407,7 +1410,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
     }
     g1 += S.line(G1.X(tau), G1.y0, G1.X(tau), G1.y0 + G1.h, {c: C.B, w: 1.8, dash: '7 5'}) + S.circle(G1.X(tau), G1.y0 + 12 * k, 7 * k, {fill: C.B, c: C.card, w: 1.6});
     if (live) g1 += S.circle(G1.X(tau), G1.Y(1 - live.p2), 6.5 * k, {c: C.cold, w: 2.2}) + S.circle(G1.X(tau), G1.Y(live.p2), 6.5 * k, {c: C.hot, w: 2.2}) + S.circle(G1.X(tau), G1.Y(live.e), 6.5 * k, {c: C.v, w: 2.2});
-    out += G1.svg + g1;
+    out += G1.svg + clipped(S, G1, 'th3a2-g1', g1);
     /* capacité thermique C / (N k_B) */
     const G2 = S.graph(gOpts(a, Z.g[1], {xmin: 0, xmax: 4, ymin: 0, ymax: .5, xticks: [0, 1, 2, 3, 4], yticks: [0, .1, .2, .3, .4, .5], xfmt: fx1,
       xlab: S.v('k', 'B') + S.v('T') + ' / ' + S.v('ε'), ylab: S.v('C') + ' / (' + S.v('N') + S.v('k', 'B') + ')  mesurée par ' + S.v('σ', 'tot') + S.sup('2') + ' / (' + S.v('k', 'B') + S.v('T') + S.sup('2') + ')'}));
@@ -1420,7 +1423,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
     for (const q of pts2) g2 += errBar(S, G2, q.tau, q.C, q.err, C.B) + S.circle(G2.X(q.tau), G2.Y(q.C), 4.4 * k, {fill: C.B, c: C.card, w: 1});
     g2 += S.line(G2.X(tau), G2.y0, G2.X(tau), G2.y0 + G2.h, {c: C.B, w: 1.8, dash: '7 5'});
     if (live) g2 += errBar(S, G2, tau, live.C, live.err, C.hot) + S.circle(G2.X(tau), G2.Y(live.C), 7 * k, {fill: C.hot, c: C.card, w: 1.8});
-    out += G2.svg + g2;
+    out += G2.svg + clipped(S, G2, 'th3a2-g2', g2);
     frame2 = {G1, G2};
     a.svg('scene', out);
     a.clock('tirages : ' + s.n + ' · k<sub>B</sub>T = ' + fmt.fix(tau, 2) + ' ε');
@@ -1478,7 +1481,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
     };
     for (const q of pts3) g += mark(q.x, q.v, q.err, 5 * k, {fill: C.B, c: C.B, w: 1});
     if (s.n > 0) g += mark(x, vv.v, vv.err, 7.5 * k, {fill: C.c, c: C.card, w: 1.8});
-    out += G.svg + g;
+    out += G.svg + clipped(S, G, 'th3a2-g3', g);
     a.svg('scene', out);
     a.clock('tirages : ' + s.n);
     lg.push(s.n > 0 ? {c: C.c, dot: true, label: p.moy ? 'moyenne des tirages (± incertitude)' : 'dernier tirage (± fluctuation attendue)'} : null);
@@ -1547,7 +1550,7 @@ if (typeof module !== 'undefined') module.exports = TH3Deux;
         {label: 'N = 1000', valeurs: {N2: 1000}, lecture: true}
       ]},
       {titre: 'Situations', onglets: [2], presets: [
-        {label: 'Électron, 1.5 K, 5 T (saturation)', valeurs: {moment: 'e', B: 5, T3: 1.5, N3: 400}, lecture: true},
+        {label: 'Électron, 1.5 K, 5 T (saturation)', valeurs: {moment: 'e', B: 5, T3: 1.5, N3: 400, moy: false}, lecture: true},
         {label: 'Électron, 300 K, 1 T (Curie)', valeurs: {moment: 'e', B: 1, T3: 300, N3: 1e6, moy: true}, lecture: true},
         {label: 'Proton, 310 K, 1.5 T (IRM)', valeurs: {moment: 'p', B: 1.5, T3: 310, N3: 1e6, moy: true}, lecture: true}
       ]},

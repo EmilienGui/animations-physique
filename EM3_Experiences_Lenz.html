@@ -1361,9 +1361,9 @@ const A=AnimKit.app({
       {label:'Triangulaire',onglets:[2],valeurs:{signal:'triangle'}},
       {label:'Créneau lissé',onglets:[2],valeurs:{signal:'square'}},
       {label:'Courant constant',onglets:[2],valeurs:{signal:'constant'}},
-      {label:'Circuit ouvert',onglets:[3],valeurs:{closed:false}},
-      {label:'Circuit fermé',onglets:[3],valeurs:{closed:true,ghost:true},lecture:true},
-      {label:'Freinage marqué',titre:'N = 500, R = 1 Ω, aimant ×2, m = 5 g',onglets:[3],valeurs:{closed:true,ghost:true,N:500,R:1,strength:2,mass:5},lecture:true}],items:[]},
+      {label:'Circuit ouvert',onglets:[3],valeurs:{closed:false,N:200,R:30,strength:1,mass:10,h0:12}},
+      {label:'Circuit fermé',onglets:[3],valeurs:{closed:true,ghost:true,N:200,R:30,strength:1,mass:10,h0:12},lecture:true},
+      {label:'Freinage marqué',titre:'N = 500, R = 1 Ω, aimant ×2, m = 5 g',onglets:[3],valeurs:{closed:true,ghost:true,N:500,R:1,strength:2,mass:5,h0:12},lecture:true}],items:[]},
     {titre:'Mouvement',onglets:[0,1],items:[
       {id:'motion',type:'select',label:'Mouvement de la source',options:[['approach','Approcher'],['away','Éloigner'],['pass','Traverser'],['hold','Maintenir immobile'],['manual','Déplacement manuel']],value:'approach'},
       {id:'speed',label:'Rapidité du trajet',min:.5,max:2,step:.1,value:1,unit:'×',si:a=>!['hold','manual'].includes(a.p.motion)},
@@ -1403,7 +1403,8 @@ const A=AnimKit.app({
   change(a,id){
     if(['lignes','futur','ghost','prevoir','compare'].includes(id))return;
     if(id==='motion'){st.hist=[];st.man={x:-.16,v:0,last:0};a.p.rel=false;}
-    if(['pol','ori'].includes(id)&&isMan(a))st.hist=st.hist.map(m=>({...m}));
+    if(id==='ori'&&isMan(a))st.hist=st.hist.map(m=>({...m,phi:-m.phi,e:-m.e,i:-m.i}));
+    if(id==='pol'&&isMan(a))st.hist=[];
     if(!['pol','ori','closed','R','rel'].includes(id)){a.t=0;st.hist=[];}
   },
   onglet(a){a.play(false);a.t=0;st.hist=[];},
@@ -1505,20 +1506,20 @@ function drawScene(a){
   }
   st.geo={...geo,F};
   // vitesse (proportionnelle)
-  if(a.tab!==2&&Math.abs(m.v)>1e-6){const who=rel?F.P(xr,0):geo.src,vel=rel?-m.v:m.v,L=56*k*vel/tr.maxV,off=v?[-geo.r-14*k,0]:[0,-.075*sc-14*k];
+  if(a.tab!==2&&Math.abs(m.v)>1e-6){const who=rel?F.P(xr,0):geo.src,vel=rel?-m.v:m.v,L=56*k*Ph.clamp(vel/tr.maxV,-1.5,1.5),off=v?[-geo.r-14*k,0]:[0,-.075*sc-14*k];
     const o=[who[0]+off[0],who[1]+off[1]],e=[o[0]+F.ax[0]*L,o[1]+F.ax[1]*L];s+=S.arrow(o[0],o[1],e[0],e[1],{c:C.ink2,w:2.4});
     s+=K.vt(a,e[0]+(v?-6:Math.sign(vel)*8)*k,e[1]+(v?(vel>0?-8:16):4)*k,'v',undefined,{c:C.ink2,size:15,anchor:v?'end':vel>0?'start':'end'});}
   // courant, champ induit, force
   if(!hid&&p.closed&&Math.abs(m.physicalI)>1e-15){
-    const fr=Math.abs(m.physicalI)/tr.maxI,u0=v?-Math.PI/2:Math.PI/2,span=1.2*fr,sg=Math.sign(m.physicalI)*(v?-1:1);
+    const fr=Math.min(1,Math.abs(m.physicalI)/tr.maxI),u0=v?-Math.PI/2:Math.PI/2,span=1.2*fr,sg=Math.sign(m.physicalI);
     const pts=Array.from({length:21},(_,j)=>{const u=u0-span/2+span*j/20;return F.P(xr+.28*AREC*Math.sin(u),AREC*Math.cos(u))});
     // arc avant de la bobine (côté observateur) ; sens d'après la règle de la main droite autour de +x
-    const arc=v?pts:pts;s+=S.poly(arc,{c:C.E,w:5});
-    if(span>.12){const A1=sg>0?arc[14]:arc[6],B1=sg>0?arc[20]:arc[0];s+=S.arrow(A1[0],A1[1],B1[0],B1[1],{c:C.E,w:4});}
-    const Lb=70*k*m.Bind/tr.maxB,c0=F.P(xr,0),e=[c0[0]+F.ax[0]*Lb,c0[1]+F.ax[1]*Lb];
+    s+=S.poly(pts,{c:C.E,w:5});
+    if(span>.12){const A1=sg>0?pts[14]:pts[6],B1=sg>0?pts[20]:pts[0];s+=S.arrow(A1[0],A1[1],B1[0],B1[1],{c:C.E,w:4});}
+    const Lb=70*k*Ph.clamp(m.Bind/tr.maxB,-1.5,1.5),c0=F.P(xr,0),e=[c0[0]+F.ax[0]*Lb,c0[1]+F.ax[1]*Lb];
     if(Math.abs(Lb)>2){s+=S.line(c0[0],c0[1],e[0],e[1],{c:C.card,w:9});s+=S.arrow(c0[0],c0[1],e[0],e[1],{c:ind,w:4.5});
       s+=K.vt(a,e[0]+(v?12:Math.sign(Lb)*8)*k,e[1]+(v?(Lb>0?-6:18):22)*k,'B','ind',{c:ind,size:16,anchor:v?'start':Lb>0?'start':'end',weight:600});}
-    if(a.tab!==2&&Math.abs(m.force)>1e-15){const who=rel?F.P(xr,0):geo.src,Fx=rel?-m.force:m.force,L=56*k*Fx/tr.maxF,off=v?[geo.r+14*k,0]:[0,.075*sc+12*k];
+    if(a.tab!==2&&Math.abs(m.force)>1e-15){const who=rel?F.P(xr,0):geo.src,Fx=rel?-m.force:m.force,L=56*k*Ph.clamp(Fx/tr.maxF,-1.5,1.5),off=v?[geo.r+14*k,0]:[0,.075*sc+12*k];
       const o=[who[0]+off[0],who[1]+off[1]],e2=[o[0]+F.ax[0]*L,o[1]+F.ax[1]*L];
       if(Math.abs(L)>8*k){s+=S.arrow(o[0],o[1],e2[0],e2[1],{c:C.Em,w:3.4});s+=K.vt(a,e2[0]+(v?8:Math.sign(Fx)*8)*k,e2[1]+(v?4:5)*k,'F',undefined,{c:C.Em,size:16,anchor:v||Fx>0?'start':'end'});}}
   }
@@ -1533,7 +1534,7 @@ function face(a,F,m,tr,hid,ind){
   s+=S.text(x,y-r-30*k,'Vue depuis +'+S.v('x'),{anchor:'middle',size:13,c:C.ink2});
   s+=S.circle(x,y,r,{c:C.c,w:2.4});
   if(!hid&&a.p.closed&&Math.abs(m.physicalI)>1e-15){
-    const fr=Math.abs(m.physicalI)/tr.maxI,sg=Math.sign(m.physicalI),span=Math.max(.2,2.6*fr);
+    const fr=Math.min(1,Math.abs(m.physicalI)/tr.maxI),sg=Math.sign(m.physicalI),span=Math.max(.2,2.6*fr);
     s+=S.arc(x,y,r,Math.PI/2+(sg>0?-span/2:span/2),Math.PI/2+(sg>0?span/2:-span/2),{c:C.E,w:4,arrow:true});
     s+=S.text(x,y,m.Bind>0?'⊙':'⊗',{anchor:'middle',size:24,c:ind,halo:false});
   }else s+=S.text(x,y,hid?'?':S.v('i')+' = 0',{anchor:'middle',size:16,c:C.ink2});

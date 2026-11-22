@@ -1204,7 +1204,7 @@ const A=AnimKit.app({
       {id:'vmax',label:'Vitesse maximale du graphe',min:500,max:6000,step:100,value:2000,unit:'m·s<sup>−1</sup>',si:a=>a.tab<2&&(a.tab===0?a.p.i_graph:a.p.r_graph)==='speed'},
       {id:'t_mb',type:'check',label:'Afficher la distribution de Maxwell–Boltzmann',value:false,si:a=>a.tab<2&&(a.tab===0?a.p.i_graph:a.p.r_graph)==='speed'},
       {id:'t_ideal',type:'check',label:'Afficher le gaz parfait (comparaison)',value:false,si:a=>a.tab===1&&['amagat','pv'].includes(a.p.r_graph)},
-      {id:'t_multi',type:'check',label:'Plusieurs isothermes (T<sub>c</sub>, 300 K, T<sub>B</sub>, 800 K)',value:false,si:a=>a.tab===1&&a.p.r_graph==='amagat'},
+      {id:'t_multi',type:'check',label:'Plusieurs isothermes (160 K, 300 K, T<sub>B</sub>, 800 K)',value:false,si:a=>a.tab===1&&a.p.r_graph==='amagat'},
       {id:'t_kin',type:'check',label:'Pression cinétique ⅓ n* m v*² (échantillon)',value:false,onglets:[0]}]},
     {titre:'Observer les particules',items:[
       {id:'trace',type:'check',label:'Suivre une particule',value:true,onglets:[0,1,2]},
@@ -1223,7 +1223,7 @@ const A=AnimKit.app({
   change(a,id,v){
     if(id==='N'){makeParts(a)}
     if(id==='trace'&&!v)trail=[];
-    if(id==='g_con'&&v==='P'){/* la pression imposée part de la valeur courante */const E=etat(a);const pre=a.tab===1?'gr_P':'gi_P',mx=a.tab===1?200:20;a.p[pre]=+clamp(E.P/1e5,.2,mx).toFixed(1)}
+    if(id==='g_con'&&v==='P'){/* la pression imposée part de la valeur courante */const real=a.tab===1,pre=real?'gr_':'gi_',T=a.p[pre+'T'],n=a.p[pre+'n'],V=real?Math.max(a.p[pre+'V']/1000,n*BVDW*1.08):a.p[pre+'V']/1000,vm=V/n,Pcur=real?Thermo.vdW(T,vm,AVDW,BVDW):R*T/vm,mn=real?.5:.2,mx=real?200:20;a.p[pre+'P']=+clamp(Pcur/1e5,mn,mx).toFixed(1)}
   },
   onglet(a){a.reset()},
   reset(a){const E=etat(a);vRef=E.V*1.35;time=0;trail=[]},
@@ -1286,7 +1286,7 @@ A.drag('scene',{
     if(E.tab<2&&E.con!=='T'){A.toast(E.con==='V'?'La paroi est bloquée dans cette expérience.':'Le volume s\'adapte à la pression imposée.');sceneHit=null;return}dragging=true},
   move(sx){if(!sceneHit)return;const P=A.panels.scene,z=P.zoom||1,x=(sx-P.w/2-(P.panX||0))/z+P.w/2,E=etat(A);
     if(E.tab<2){const id=E.tab===1?'gr_V':'gi_V',lo=E.tab===1?Math.max(.01,E.n*BVDW*1080):.05,hi=E.tab===1?2:5;A.set(id,+clamp(5e-3*Math.exp((clamp((x-box.x)/box.fullw,.15,.95)-.15)/.8*Math.log(2000)),lo,hi).toFixed(3),{silent:true})}
-    else A.set('c_P',+clamp(sceneHit.P+(x-sceneHit.x)*.5,.2,200).toFixed(1),{silent:true})},
+    else A.set('c_P',+clamp(sceneHit.P-(x-sceneHit.x)*.5,.2,200).toFixed(1),{silent:true})},
   end(){dragging=false;sceneHit=null}
 });
 let panH=null;
@@ -1327,7 +1327,7 @@ function graphDraw(a,E){
     t+=S.circle(G.X(E.P/1e5),G.Y(multi?E.Z:E.P*E.vm),5.5*k,{fill:C.cInk,c:C.card,w:2});
     lg=multi?[{c:C.ink2,dash:true,label:'gaz parfait : Z = 1'},{c:C.E,label:`${mv('T')} = ${mv('T','B')} : pente nulle en P = 0`}]:[{c:C.cInk,label:'fluide de van der Waals'},a.p.t_ideal&&{c:C.ink2,dash:true,label:`gaz parfait : ${mv('P')}${mv('V','m')} = ${mv('R')}${mv('T')}`}];
   }else if(type==='pv'){
-    const cur=E.vm*1000,xmin=Math.max(BVDW*1000*1.1,cur*.22),xmax=cur*2.2,vdw=E.real;
+    const cur=E.vm*1000,vdw=E.real,xmin=vdw?Math.max(BVDW*1000*1.05,cur*.22):cur*.22,xmax=cur*2.2;
     const f=x=>vdw?Thermo.vdW(E.T,x/1000,AVDW,BVDW)/1e5:R*E.T/(x/1000)/1e5,yp=f(xmin);
     const G=S.graph({x:0,y:0,w,h,xmin,xmax,ymin:0,ymax:Math.min(Math.max(yp,E.P/1e5*1.3),5e4),xlab:`${S.v('V','m')} (L·mol${S.sup('−1')})`,ylab:'P (bar)'});
     t=S.clip('gc',G)+G.svg;const pts=Array.from({length:180},(_,i)=>{const x=xmin+(xmax-xmin)*i/179;return [x,f(x)]});

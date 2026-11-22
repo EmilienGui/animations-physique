@@ -1322,7 +1322,7 @@ const ph=a=>({mass:a.p.ph_mass,start:a.p.ph_start,power:a.p.ph_power,source:a.p.
 const jp=a=>({kind:a.p.jt_kind,T:a.p.jt_T,up:a.p.jt_up,down:a.p.jt_down});
 const metalLimit=p=>Math.min(180,Math.floor((95+(p.mass*TH.cw+p.cal)/(p.addMass*p.specific)*(95-p.hot))*100)/100);
 function prepare(a){
-  if(a.tab===2){if(a.p.ca_kind==='ice')a.p.ca_cold=Math.min(0,Math.max(-30,a.p.ca_cold));else if(a.p.ca_kind==='water')a.p.ca_cold=Math.min(80,Math.max(0,a.p.ca_cold));
+  if(a.tab===2){if(a.p.ca_kind==='ice')a.p.ca_cold=Math.min(0,Math.max(-30,a.p.ca_cold));else if(a.p.ca_kind==='water')a.p.ca_cold=Math.min(80,Math.max(0,a.p.ca_cold));else if(a.p.ca_kind==='metal')a.p.ca_cold=Math.min(180,Math.max(0,a.p.ca_cold));
     let q=cl(a);
     if(q.kind==='metal'&&q.cold>metalLimit(q)){const L=metalLimit(q);a.p.ca_cold=L;a.set('ca_cold',L,{silent:true});a.toast(`Température du métal ajustée à ${FM.fix(L,2)} °C pour garder l'eau liquide (T_F ≤ 95 °C).`);q=cl(a)}
     traj=TH.calorimeter(q);}
@@ -1434,7 +1434,7 @@ function dPiston(a){
   t+=repere(a,G,m.V0*1000,(mono?end.Pext:m.P0)/1e5,'I',C.ink,false,9,-12);
   if(m.eq&&u>.01)t+=repere(a,G,m.V*1000,(mono?end.Pext:m.P)/1e5,u>=1?'F':'M',C.cInk,true,9,-12);
   a.svg('graphe',t);
-  a.legend([{c:C.cInk,label:'trajet parcouru'},g.kind!=='isochore'&&{c:C.B,label:'aire = |W_P|'},cmp&&{c:g.kind==='isochore'?C.B:C.F,dash:true,label:g.kind==='isochore'?'chauffage isobare, même ΔT':'chauffage isochore, même ΔT'}]);
+  a.legend([{c:C.cInk,label:'trajet parcouru'},g.kind!=='isochore'&&{c:C.B,label:`aire = |${mv('W','P')}|`},cmp&&{c:g.kind==='isochore'?C.B:C.F,dash:true,label:g.kind==='isochore'?'chauffage isobare, même ΔT':'chauffage isochore, même ΔT'}]);
   if(cmp){const qi=TH.gas(gI,u).Q,qb=TH.gas(gB,u).Q;a.metrics([em(`${mv('Q','V')} = ${mv('C','V')}ΔT`,qi),em(`${mv('Q','P')} = ${mv('C','P')}ΔT`,qb,`${mv('C','P')} − ${mv('C','V')} = nR`),em(`Δ${M.v('U')} (identique)`,TH.gas(gI,u).dU)])}
   else a.metrics([em(`${WP} reçu`,m.W,!m.eq?'valeur de I à F à la fin':''),em('Q reçu',m.Q),em(`Δ${M.v('U')}`,m.dU,!m.eq?'transitoire non résolu':'')]);
 }
@@ -1495,7 +1495,7 @@ function dLibre(a){
   a.legend([{c:C.B,dot:true,label:'états d\'équilibre I et F'},p.li_cmp&&{c:C.hot,dash:true,label:'isotherme quasi-statique (autre chemin)'}]);
   const mets=[em('W reçu',u>=1?0:null),em('Q reçu',u>=1?0:null),em(`Δ${M.v('U')} · I → F`,u>=1?0:null)];
   if(p.li_cmp)mets.push(em('Isotherme : '+WP,m.Wiso,'et Q = −W'));
-  if(p.li_vdw){const v=TH2P.libreVdw(q);mets.push({label:`${mv('T','F')} · fluide de van der Waals`,value:u>=1?FM.sig(v.Tf,5):'—',unit:'K',hint:`écart ${u>=1?FM.sig(v.Tf-q.T,2):'—'} K`})}
+  if(p.li_vdw){const v=TH2P.libreVdw(q);mets.push({label:`${mv('T','F')} · fluide de van der Waals`,value:reveal?FM.sig(v.Tf,5):'—',unit:'K',hint:`écart ${reveal?FM.sig(v.Tf-q.T,2):'—'} K`})}
   a.metrics(mets);
 }
 
@@ -1529,7 +1529,7 @@ function dCalo(a){
   a.svg('graphe',t);a.legend([{c:C.hot,label:'eau + calorimètre'},{c:C.cold,dash:true,label:'corps ajouté'}]);
   const mets=[{label:'Température de l\'eau',value:FM.fix(m.Ta,1),unit:'°C'},{label:q.kind==='metal'?'Température du métal':q.kind==='ice'?'Température de l\'ajout':'Température eau 2',value:FM.fix(m.Tb,1),unit:'°C'}];
   if(q.kind==='ice')mets.push({label:'Masse de glace restante',value:FM.fix(m.solidMass*1000,1),unit:'g'});
-  else if(q.kind==='metal'){const TF=traj.final.T,C1=(q.cal+q.mass*TH.cw)*(q.hot-TF)/(TF-q.cold);mets.push({label:`${mv('C','1')} déduite de ${mv('T','F')}`,value:u>=1?FM.sig(C1,3):'—',unit:'J·K<sup>−1</sup>',hint:u>=1?`${mv('T','F')} = ${FM.fix(TF+273.15,1)} K`:'à la fin'})}
+  else if(q.kind==='metal'){const TF=traj.final.T,den=TF-q.cold,ok=Math.abs(den)>1e-6,C1=ok?(q.cal+q.mass*TH.cw)*(q.hot-TF)/den:NaN;mets.push({label:`${mv('C','1')} déduite de ${mv('T','F')}`,value:u>=1&&ok?FM.sig(C1,3):'—',unit:u>=1&&ok?'J·K<sup>−1</sup>':'',hint:u>=1?(ok?`${mv('T','F')} = ${FM.fix(TF+273.15,1)} K`:'indéterminée (même température initiale)'):'à la fin'})}
   else mets.push(em('Q avec l\'extérieur',0));
   a.metrics(mets);
 }
@@ -1549,8 +1549,8 @@ function dPhases(a){
   s+='</g>'+S.rect(x-5,y-7,ww+10,9,{fill:C.rule,c:C.ink2,w:1.2,rx:3})+S.line(x+ww/2,y-7,x+ww/2,y-25,{c:C.ink2,w:5})+S.rect(x+ww*.29,y-34,ww*.42,10,{fill:C.rule,c:C.ink2,w:1,rx:3});
   s+=S.rect(x-10,y-14,ww+20,hh+(heat?25:42),{c:C.cInk,w:1.6,dash:`${7*k} ${5*k}`,rx:11});
   if(heat){const L=Math.max(20,Math.min(46,46*q.power/2000+10));s+=S.arrow(x+ww*.5,bot+12+L,x+ww*.5,bot+12,{c:C.hot,w:3.5})+S.text(x+ww*.5+14,bot+12+L/2,'Q reçu',{size:14,c:C.hot,weight:600})}
-  else{s+=S.line(x+ww*.25,bot+40,x+ww*.25,bot+18,{c:C.B,w:2.3})+S.line(x+ww*.75,bot+40,x+ww*.75,bot+18,{c:C.B,w:2.3})+S.poly([[x+ww*.25,bot+18],[x+ww*.36,bot+13],[x+ww*.46,bot+22],[x+ww*.56,bot+13],[x+ww*.66,bot+22],[x+ww*.75,bot+18]],{c:C.hot,w:3})+S.text(x+ww/2,bot+40,`${mv('W','élec')} reçu`,{anchor:'middle',size:14,c:C.B,weight:600})}
-  s+=S.text(w/2,h-12*k,m.phase+(m.vapor>0&&m.vapor<1?` · ${mv('x','G')} = ${FM.fix(m.vapor,2)}`:m.solid>0&&m.solid<1?` · fraction de glace ${FM.fix(m.solid,2)}`:''),{anchor:'middle',size:15,c:C.cInk,weight:600});
+  else{s+=S.line(x+ww*.25,bot+40,x+ww*.25,bot+18,{c:C.B,w:2.3})+S.line(x+ww*.75,bot+40,x+ww*.75,bot+18,{c:C.B,w:2.3})+S.poly([[x+ww*.25,bot+18],[x+ww*.36,bot+13],[x+ww*.46,bot+22],[x+ww*.56,bot+13],[x+ww*.66,bot+22],[x+ww*.75,bot+18]],{c:C.hot,w:3})+S.text(x+ww/2,bot+40,`${S.v('W','élec')} reçu`,{anchor:'middle',size:14,c:C.B,weight:600})}
+  s+=S.text(w/2,h-12*k,m.phase+(m.vapor>0&&m.vapor<1?` · ${S.v('x','G')} = ${FM.fix(m.vapor,2)}`:m.solid>0&&m.solid<1?` · fraction de glace ${FM.fix(m.solid,2)}`:''),{anchor:'middle',size:15,c:C.cInk,weight:600});
   a.svg('scene',s);
   let t='';
   if(p.ph_view==='temp'){
@@ -1562,22 +1562,22 @@ function dPhases(a){
     t+=S.line(l,tp,l,bt,{c:C.ink2,w:1.3,raw:true})+S.line(l,bt,r,bt,{c:C.ink2,w:1.3,raw:true})+S.text(l,tp-14*k,S.v('P'),{size:14,c:C.ink2,halo:false})+S.text(r,bt+26*k,'h (kJ·kg<tspan dy="-0.5em" font-size="72%">−1</tspan><tspan dy="0.5em">)</tspan>',{anchor:'end',size:13,c:C.ink2,halo:false});
     t+=S.path(`M${X(80000)},${bt-5}C${X(100000)},${bt-25} ${X(hl*.7)},${yy+20} ${X(hl)},${yy}C${X(800000)},${yy-35} ${X(1500000)},${tp+8} ${X(2070000)},${tp+8}C${X(2660000)},${tp+8} ${X(2830000)},${yy-30} ${X(hg)},${yy}C${X(2780000)},${yy+23} ${X(2840000)},${bt-20} ${X(2850000)},${bt-5}`,{c:C.cold,w:2.4});
     t+=S.line(l,yy,r,yy,{c:C.ink2,w:1.2,dash:`${5*k} ${4*k}`})+S.text(l-6*k,yy,'1 bar',{anchor:'end',size:13,c:C.ink2,halo:false})+S.circle(X(hl),yy,4*k,{fill:C.cold})+S.circle(X(hg),yy,4*k,{fill:C.cold});
-    t+=S.text(X(hl),yy+24*k,mv('h','L'),{anchor:'middle',size:14,c:C.cold})+S.text(X(hg),yy+24*k,mv('h','G'),{anchor:'middle',size:14,c:C.cold})+S.text(X(hl),bt+14*k,FM.fix(hl/1000,0),{anchor:'middle',size:13,c:C.ink2,halo:false})+S.text(X(hg),bt+14*k,FM.fix(hg/1000,0),{anchor:'middle',size:13,c:C.ink2,halo:false});
+    t+=S.text(X(hl),yy+24*k,S.v('h','L'),{anchor:'middle',size:14,c:C.cold})+S.text(X(hg),yy+24*k,S.v('h','G'),{anchor:'middle',size:14,c:C.cold})+S.text(X(hl),bt+14*k,FM.fix(hl/1000,0),{anchor:'middle',size:13,c:C.ink2,halo:false})+S.text(X(hg),bt+14*k,FM.fix(hg/1000,0),{anchor:'middle',size:13,c:C.ink2,halo:false});
     t+=S.text((l+r)/2,tp+34*k,'Liquide + vapeur',{anchor:'middle',size:14,c:C.ink2});
     if(m.h>=0){t+=S.circle(X(m.h),yy,6*k,{fill:C.cInk,c:C.card,w:2})+S.text(X(m.h),yy-22*k,'M',{anchor:'middle',size:16,c:C.cInk,weight:700});
-      if(m.vapor>0&&m.vapor<1){t+=S.line(X(hl),yy+6*k,X(m.h),yy+6*k,{c:C.cInk,w:4});if(Pg.h>250)t+=S.text((l+r)/2,bt-14*k,`${mv('x','G')} = LM/LG = ${FM.fix(m.vapor,2)}`,{anchor:'middle',size:15,c:C.cInk,weight:600})}}
+      if(m.vapor>0&&m.vapor<1){t+=S.line(X(hl),yy+6*k,X(m.h),yy+6*k,{c:C.cInk,w:4});if(Pg.h>250)t+=S.text((l+r)/2,bt-14*k,`${S.v('x','G')} = LM/LG = ${FM.fix(m.vapor,2)}`,{anchor:'middle',size:15,c:C.cInk,weight:600})}}
     else t+=S.text(l+10*k,bt-18*k,'Le solide est hors de ce diagramme',{size:13,c:C.ink2});
     phG={type:'ph',l,r,h0:m.h0,hf:m.hf};
   }
   a.svg('graphe',t);
   a.legend(p.ph_view==='temp'?[{c:C.hot,label:'température en fonction de l\'énergie reçue'}]:[{c:C.cold,label:'courbe de saturation (schéma)'},{c:C.cInk,dot:true,label:'état M, glisser le long de l\'isobare'}]);
-  a.metrics([em(heat?'ΔH = Q reçu':`ΔH = ${mv('W','élec')} reçu`,m.dH,`durée ${FM.fix(m.dH/q.power,0)} s`),em(`${WP} reçu`,m.W,'−P ΔV, P = 1 bar'),em(`Δ${M.v('U')}`,m.dU,'ΔH + W_P')]);
+  a.metrics([em(heat?'ΔH = Q reçu':`ΔH = ${mv('W','élec')} reçu`,m.dH,`durée ${FM.fix(m.dH/q.power,0)} s`),em(`${WP} reçu`,m.W,'−P ΔV, P = 1 bar'),em(`Δ${M.v('U')}`,m.dU,`ΔH + ${mv('W','P')}`)]);
 }
 A.drag('graphe',{
   hit:(x)=>A.tab===3&&!!phG&&x>phG.l-10&&x<phG.r+10,
   start(){A.play(false)},
   move(x){if(!phG)return;const f=clamp((x-phG.l)/(phG.r-phG.l));
-    if(phG.type==='ph'){const hv=clamp(f*3100000,TH.cw*100,TH.cw*100+TH.Lv);u=clamp((hv-phG.h0)/(phG.hf-phG.h0))}else u=f;A.t=u*DUREE}
+    if(phG.type==='ph'){const hv=clamp(f*3100000,Math.max(0,phG.h0),phG.hf);u=clamp((hv-phG.h0)/(phG.hf-phG.h0))}else u=f;A.t=u*DUREE}
 });
 
 /* ---------- 5. Joule–Thomson ---------- */

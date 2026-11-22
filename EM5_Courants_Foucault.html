@@ -1204,12 +1204,22 @@ globalThis.EM5X=(()=>{
     return {t,theta,omega:w,S,K,L,e,flux:K*Math.cos(theta),i,di,phase,I0,tau,gammaL,gamma:-gammaL,Pind:e*i,PL:gammaL*w,Pm:-gammaL*w,PJ:R*i*i,Em:.5*L*i*i,dEm:L*i*di,meanP:.5*R*I0*I0,iRSF:I0*Math.sin(theta-phase)};
   }
 
+  const iExp=(g,h)=>Math.abs(g*h)<1e-5?h*(1-g*h/2+(g*h)**2/6-(g*h)**3/24):-Math.expm1(-g*h)/g;
+  const dispExp=(v0,acc,g,h)=>Math.abs(g*h)<1e-4?v0*iExp(g,h)+acc*h*h*(.5-g*h/6+(g*h)**2/24-(g*h)**3/120):v0*iExp(g,h)+acc*(h-iExp(g,h))/g;
+  const intV2=(v0,acc,g,h)=>{
+    if(g*h<1e-3){const vm=v0*Math.exp(-g*h/2)+acc*iExp(g,h/2),v1=v0*Math.exp(-g*h)+acc*iExp(g,h);return h*(v0*v0+4*vm*vm+v1*v1)/6}
+    const vinf=acc/g,d=v0-vinf;return vinf*vinf*h+2*vinf*d*iExp(g,h)+d*d*iExp(2*g,h);
+  };
+
   /* ---------- couple moteur constant, vitesse libre ----------
      J dω/dt = Γ₀ − K i sin θ ; L di/dt + R i = K ω sin θ ; θ(0) = 0, ω(0) = 0, i(0) = 0.
      Sans inductance : ⟨Γ_ℒ⟩ = −K²ω/(2R), d'où la vitesse limite moyenne ω_lim = 2RΓ₀/K². */
   function altLibre(p){
     const S=surface(p),K=p.B*S,J=p.J,R=p.R,L=p.Llibre,G0=p.G0,T=p.duree,rows=[];
-    const dt=Math.min(1e-3,L>0?L/R/20:1e-3),every=Math.max(1,Math.round(T/dt/800));
+    const gmax=L===0?K*K/(J*R):0, wem=L>0&&K>0?K/Math.sqrt(J*L):0;
+    const stiff=L===0&&gmax>500;
+    const dt=L>0?Math.min(1e-3,L/R/20,wem>0?.2/wem:1e-3):stiff?1e-3:Math.min(1e-3,gmax>0?.25/gmax:1e-3);
+    const every=Math.max(1,Math.round(T/dt/800));
     // avec L = 0, i est algébrique : i = Kω sin θ / R
     const cur=(y)=>L>0?y[2]:K*y[1]*Math.sin(y[0])/R;
     const fun=y=>{const i=cur(y);const d=[y[1],(G0-K*i*Math.sin(y[0]))/J];if(L>0)d.push((K*y[1]*Math.sin(y[0])-R*i)/L);else d.push(0);d.push(R*i*i);d.push(G0*y[1]);return d};
@@ -1217,7 +1227,11 @@ globalThis.EM5X=(()=>{
     for(let j=0;j<=N;j++){
       if(j%every===0||j===N){const i=cur(y),th=y[0],w=y[1],gL=-K*i*Math.sin(th);
         rows.push({t:j*dt,theta:th,omega:w,i,e:K*w*Math.sin(th),flux:K*Math.cos(th),gammaL:gL,gamma:G0,Pm:G0*w,PJ:R*i*i,PL:gL*w,Ec:.5*J*w*w,Em:.5*L*i*i,Q:y[3],W:y[4],S,K});}
-      y=rk4(fun,y,dt);
+      if(stiff){
+        const acc=G0/J,g0=K*K*Math.sin(y[0])**2/(J*R),thm=y[0]+dispExp(y[1],acc,g0,dt/2),gm=K*K*Math.sin(thm)**2/(J*R);
+        const dth=dispExp(y[1],acc,gm,dt),w1=y[1]*Math.exp(-gm*dt)+acc*iExp(gm,dt),dQ=J*gm*intV2(y[1],acc,gm,dt);
+        y=[y[0]+dth,w1,0,y[3]+dQ,y[4]+G0*dth];
+      }else y=rk4(fun,y,dt);
     }
     const wlim=K>0?2*R*G0/(K*K):Infinity;
     return {rows,tmax:T,wlim,tauMec:K>0?2*R*J/(K*K):Infinity,K,S};
@@ -1229,7 +1243,7 @@ globalThis.EM5X=(()=>{
      θ̈ + (3a²B²/(4mR)) θ̇ + (3g/(2a)) sin θ = 0 ; ω₀² = 3g/(2a) ; B₀² = 8mRω₀/(3a²). */
   function tige(p){
     const a=p.a,m=p.m,R=p.R,B=p.B,J=m*a*a/3,w0=Math.sqrt(3*G/(2*a)),lam=3*a*a*B*B/(8*m*R),B0=Math.sqrt(8*m*R*w0/(3*a*a));
-    const th0=p.theta0*Math.PI/180,T=p.duree,dt=5e-4,rows=[],every=Math.max(1,Math.round(T/dt/800));
+    const th0=p.theta0*Math.PI/180,T=p.duree,dt=Math.min(5e-4,lam>0?.25/(2*lam):5e-4),rows=[],every=Math.max(1,Math.round(T/dt/800));
     const fun=y=>{const e=B*a*a*y[1]/2,i=e/R;return [y[1],(-m*G*a/2*Math.sin(y[0])-i*B*a*a/2)/J,R*i*i]};
     let y=[th0,0,0];const N=Math.round(T/dt);
     for(let j=0;j<=N;j++){
@@ -1247,7 +1261,8 @@ globalThis.EM5X=(()=>{
   function cadre(p){
     const a=p.a,m=p.m,R=p.R,B=p.B,L=p.Lc,x0=-p.h0,xEnd=p.xfin,rows=[];
     const inside=x=>x>0&&x<a?1:0, plonge=x=>Math.max(0,Math.min(a,x))*a;
-    const dt=Math.min(2e-4,L>0?L/R/20:2e-4);
+    const wem=L>0&&B*a>0?B*a/Math.sqrt(m*L):0;
+    const dt=L>0?Math.min(2e-4,L/R/20,wem>0?.2/wem:2e-4):2e-4;
     const cur=y=>L>0?y[2]:-B*a*y[1]*inside(y[0])/R;
     const fun=y=>{const f=inside(y[0]),i=cur(y),e=-B*a*y[1]*f;return [y[1],G+B*a*i*f/m,L>0?(e-R*i)/L:0,R*i*i,m*G*y[1]]};
     let y=[x0,0,0,0,0],t=0,last=-1;
@@ -1256,7 +1271,12 @@ globalThis.EM5X=(()=>{
         rows.push({t,x:y[0],v:y[1],i,e:-B*a*y[1]*f,flux:B*plonge(y[0]),F:B*a*i*f,PJ:R*i*i,Ec:.5*m*y[1]**2,W:y[4],Q:y[3],Em:.5*L*i*i,phase:y[0]<0?1:y[0]<a?2:3});}
       // pas réduit au franchissement des bords du champ
       const h=(Math.abs(y[0])<y[1]*dt*2||Math.abs(y[0]-a)<y[1]*dt*2)?dt/10:dt;
-      y=rk4(fun,y,h);t+=h;
+      if(L===0){
+        const g=inside(y[0])?(B*a)**2/(m*R):0;
+        const dx=dispExp(y[1],G,g,h),v1=y[1]*Math.exp(-g*h)+G*iExp(g,h),dQ=g>0?m*g*intV2(y[1],G,g,h):0;
+        y=[y[0]+dx,v1,0,y[3]+dQ,y[4]+m*G*dx];
+      }else y=rk4(fun,y,h);
+      t+=h;
     }
     const i=cur(y),f=inside(y[0]);rows.push({t,x:y[0],v:y[1],i,e:-B*a*y[1]*f,flux:B*plonge(y[0]),F:B*a*i*f,PJ:R*i*i,Ec:.5*m*y[1]**2,W:y[4],Q:y[3],Em:.5*L*i*i,phase:y[0]<0?1:y[0]<a?2:3});
     const t1=rows.find(r=>r.x>=0)?.t??t, t2=rows.find(r=>r.x>=a)?.t??t;
@@ -1304,8 +1324,8 @@ globalThis.EM5X=(()=>{
     const fun=y=>{const e=-k*y[1],di=(E+e-R*y[2])/L;return [y[1],(F+k*y[2])/m,di,R*y[2]*y[2],E*y[2],F*y[1]]};
     let y=[.18,v0,0,0,0,0];
     for(let j=0;j<=N;j++){
-      if(j%every===0||j===N){const v=y[1],i=y[2],e=-k*v,FL=k*i;
-        rows.push({t:j*h,x:y[0],dx:y[0]-.18,v,i,e,flux:k*y[0],FL,F,E,Ec:.5*m*v*v,Ec0:.5*m*v0*v0,Q:y[3],We:y[4],Wm:y[5],Em:.5*L*i*i,Pm:F*v,Pe:E*i,PJ:R*i*i,Pind:e*i,PL:FL*v,dEc:(F+FL)*v});}
+      if(j%every===0||j===N){const v=y[1],i=y[2],e=-k*v,FL=k*i,di=(E+e-R*i)/L;
+        rows.push({t:j*h,x:y[0],dx:y[0]-.18,v,i,e,flux:k*y[0],FL,F,E,Ec:.5*m*v*v,Ec0:.5*m*v0*v0,Q:y[3],We:y[4],Wm:y[5],Em:.5*L*i*i,dEm:L*i*di,Pm:F*v,Pe:E*i,PJ:R*i*i,Pind:e*i,PL:FL*v,dEc:(F+FL)*v});}
       y=rk4(fun,y,h);
     }
     return rows;
@@ -1467,8 +1487,8 @@ let cache=null,cacheKey='';
 /* ---------- données ---------- */
 const tubeP=p=>({m:p.massTube,h:p.thicknessTube*1e-3,sigma:SIGMA[p.metalTube],phi:p.phi,length:p.length,radius:.0075,z0:.01});
 function tubeState(tp,t,tPVC){
-  const s=EM5.tube(tp,t),u=tp.length/2-s.z,phi0=tp.phi*1e-6,f=1/(1+(u/tp.z0)**2)**1.5,df=-3*u/(tp.z0*tp.z0)/(1+(u/tp.z0)**2)**2.5;
-  // anneau fixe à mi-hauteur, cote relative u (axe vers le haut) ; e = −Φ₀ f′(u) v
+  const s=EM5.tube(tp,t),u=s.z-tp.length/2,phi0=tp.phi*1e-6,f=1/(1+(u/tp.z0)**2)**1.5,df=-3*u/(tp.z0*tp.z0)/(1+(u/tp.z0)**2)**2.5;
+  // anneau fixe à mi-hauteur, cote relative u = z − L/2 (du/dt = v) ; e = −dΦ/dt = −Φ₀ f′(u) v
   return {...s,zPVC:t<=tPVC+1e-9?Math.min(tp.length,.5*G*t*t):NaN,vPVC:t<=tPVC+1e-9?G*t:NaN,flux:phi0*f,emf:-phi0*df*s.v};
 }
 function data(a){
@@ -1580,7 +1600,7 @@ function infos(a,d,q,lg){
   if(a.tab===0){m.push({label:'Chaleur Joule · disque plein',value:f.sig(q.Q,3),unit:'J',hint:`énergie initiale ${f.sig(q.E0,3)} J`},{label:'Chaleur Joule · disque fendu',value:f.sig(q.QS,3),unit:'J'})}
   else if(a.tab===1){m.push({label:'Vitesse dans le conducteur',value:f.sig(q.v,3),unit:'m·s<sup>−1</sup>',hint:fut?`limite ${f.sig(q.vlim,3)} m·s<sup>−1</sup>`:''},{label:'Durées de traversée',value:fut||a.t>=d.tmax-1e-9?f.sig(d.tmax,3):'?',unit:'s',hint:`PVC : ${fut||a.t>=d.tPVC?f.sig(d.tPVC,3)+' s':'?'}`})}
   else if(a.tab===2){m.push({label:`Champ critique ${M.v('B','0')}`,value:fut?f.sig(d.B0,3):'?',unit:'T',hint:fut?(d.regime==='critique'?'régime critique':d.regime==='pseudo'?'régime pseudo-périodique':'régime apériodique'):'cocher la prévision'})}
-  else m.push({label:`Vitesse ${M.v('v')}`,value:f.sig(q.v,3),unit:'m·s<sup>−1</sup>',hint:fut?`limite ${f.sig(d.vlim,3)} m·s<sup>−1</sup> (si <i class="m">L</i> = 0)`:''});
+  else m.push({label:`Vitesse ${M.v('v')}`,value:f.sig(q.v,3),unit:'m·s<sup>−1</sup>',hint:fut&&p.BC>0?`limite ${f.sig(d.vlim,3)} m·s<sup>−1</sup> (si <i class="m">L</i> = 0)`:''});
   a.metrics(m);
   a.clock(`${M.v('t')} = ${f.fix(a.t,2)} s`);
   a.legend(lg);
@@ -1710,7 +1730,7 @@ function cadre(a,d,q,lg){
     s+=S.arrow(mxx-sg*hl,yb,mxx+sg*hl,yb,{c:C.E,w:2.6})+S.arrow(mxx+sg*hl,yt,mxx-sg*hl,yt,{c:C.E,w:2.6})+S.arrow(xr,myy+sg*hl,xr,myy-sg*hl,{c:C.E,w:2.6})+S.arrow(xl,myy-sg*hl,xl,myy+sg*hl,{c:C.E,w:2.6})}
   // forces et vitesse
   const mg=p.mC*1e-3*G,Fw=44*k,cc=(yt+yb)/2;s+=S.arrow(xr+16*k,cc,xr+16*k,cc+Fw,{c:C.ink,w:2.2})+S.text(xr+24*k,cc+Fw*.7,S.v('m')+S.v('g'),{size:15,c:C.ink});
-  const Lf=q.F/mg*Fw;if(Math.abs(Lf)>2*k)s+=S.arrow(cx,yb,cx,yb+Lf,{c:C.F,w:2.6})+S.text(cx+8*k,yb+Lf-4*k,sb(S.v('F'),'L'),{size:15,c:C.F});
+  const rawLf=q.F/mg*Fw,maxLf=h*.36,capLf=Math.abs(rawLf)>maxLf,Lf=Math.max(-maxLf,Math.min(maxLf,rawLf));if(Math.abs(Lf)>2*k)s+=S.arrow(cx,yb,cx,yb+Lf,{c:C.F,w:2.6})+S.text(cx+8*k,yb+Lf-4*k,sb(S.v('F'),'L')+(capLf?' (hors échelle)':''),{size:15,c:C.F});
   const vM=d.mx('v'),Lv=q.v/vM*60*k;if(Lv>2*k)s+=S.arrow(xl-18*k,cc,xl-18*k,cc+Lv,{c:C.v,w:2.4})+S.text(xl-26*k,cc+Lv*.6,S.v('v'),{anchor:'end',size:15,c:C.v});
   const ph=q.x<0?'1 · hors du champ':q.x<aa?'2 · à cheval':'3 · entièrement dans le champ';
   s+=S.text(w-10*k,40*k,`Phase ${ph}`,{anchor:'end',base:'top',size:15,c:C.ink});
@@ -1751,7 +1771,7 @@ function graphe(a,d,q,lg){
   }else if(a.tab===1){const c=p.courbe1,tp0=d.tp;
     if(c==='distance'){tp(full,[{f:fn('z'),c:C.E},{f:fn('zPVC'),c:C.B,dash:true}],'Distance parcourue (m)',{id:'z'});L(C.E,p.metalTube);L(C.B,'PVC',true)}
     else if(c==='vitesse'){const ser=[{f:fn('v'),c:C.v}];if(fut)ser.push({f:()=>q.vlim,c:C.pred,dash:true,all:true,ghost:true});
-      tp(full,ser,`${S.v('v')} (m·s${S.sup('−1')})`,{id:'v',tangent:fut?{f:t=>G*t,df:()=>G,c:C.pred}:null});
+      tp(full,ser,`${S.v('v')} (m·s${S.sup('−1')})`,{id:'v'});
       L(C.v,'vitesse dans le conducteur');if(fut){L(C.pred,`vitesse limite ${M.v('mg')}/${M.v('c')} ; τ = ${M.v('m')}/${M.v('c')} = ${a.fmt.sig(q.tau*1000,3)} ms`,true)}}
     else if(c==='energies'){tp(full,[{f:fn('W'),c:C.cInk},{f:fn('Q'),c:C.F,dash:true},{f:fn('Ec'),c:C.v,dash:true}],'Énergies depuis le lâcher (J)',{id:'e'});L(C.cInk,'travail du poids');L(C.F,'chaleur Joule',true);L(C.v,`${M.v('E','c')}`,true)}
     else if(c==='puissances'){tp(full,[{f:g(r=>tp0.m*G*r.v),c:C.cInk},{f:fn('PJ'),c:C.F,dash:true}],'Puissances (W)',{id:'p'});L(C.cInk,'puissance du poids');L(C.F,'Joule',true)}
@@ -1765,7 +1785,7 @@ function graphe(a,d,q,lg){
   }else{const c=p.courbe3,marks=[];if(fut||a.t>=d.t1)marks.push({x:d.t1,label:'phase 2'});if(fut||a.t>=d.t2)marks.push({x:d.t2,label:'phase 3'});
     if(c==='vitesse'){const ser=[{f:fn('v'),c:C.v}];if(fut&&p.LC===0&&p.BC>0)ser.push({f:()=>d.vlim,c:C.pred,dash:true,all:true,ghost:true});tp(full,ser,`${S.v('v')} (m·s${S.sup('−1')})`,{id:'v',marks});if(ser.length>1)L(C.pred,`vitesse limite ${M.v('mgR')}/(${M.v('Ba')})<sup>2</sup> = ${a.fmt.sig(d.vlim,3)} m·s<sup>−1</sup>`,true)}
     else if(c==='courant'){tp(full,[{f:fn('i'),c:C.E}],`${S.v('i')} (A)`,{id:'i',sym:true,marks});L(C.E,'courant')}
-    else{tp(full,[{f:fn('W'),c:C.cInk},{f:fn('Ec'),c:C.v,dash:true},{f:fn('Q'),c:C.F,dash:true}],'Énergies depuis le lâcher (J)',{id:'e',marks});L(C.cInk,'travail du poids');L(C.v,M.v('E','c'),true);L(C.F,'chaleur Joule',true)}}
+    else{const se=[{f:fn('W'),c:C.cInk},{f:fn('Ec'),c:C.v,dash:true},{f:fn('Q'),c:C.F,dash:true}];if(p.LC>0)se.push({f:fn('Em'),c:C.Em,dash:true});tp(full,se,'Énergies depuis le lâcher (J)',{id:'e',marks});L(C.cInk,'travail du poids');L(C.v,M.v('E','c'),true);L(C.F,'chaleur Joule',true);if(p.LC>0)L(C.Em,'magnétique ½Li²',true)}}
   a.svg('graphe',s);
 }
 

@@ -1584,9 +1584,9 @@ const A=AnimKit.app({
     if(id==='ampS'){Object.assign(a.p,{contourR:2.3,offset:0,deform:0});}
     if(id==='mir')st.probe=v==='loop'?[.05,.025]:[.028,.043];
     if(id==='inv'&&v==='wire')a.p.rR=Math.max(.2,a.p.rR);
-    if(['ampS','mir'].includes(id)){a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0;}
+    if(['ampS','mir'].includes(id)){a.cadrer('scene');}
   },
-  onglet(a){const P=a.panels.scene;P.zoom=1;P.panX=P.panY=0;a.reset();},
+  onglet(a){a.cadrer('scene');a.reset();},
   init(a){a.p.orient=1;},
   reset(a){a.t=a.tab===0?TINV/3:a.tab===2?TAMP*.22:0;},
   step(a,dt){const T=a.tab===0?TINV:TAMP;a.t=Math.min(T,a.t+dt);if(a.t>=T)a.play(false);},
@@ -1635,10 +1635,10 @@ function drawInv(a){
   pts.forEach((q,i)=>{
     const o=Pp(q),b=fields[i],n=Math.hypot(...b);
     if(a.p.basis){const th=i?theta:0;[[[Math.cos(th),Math.sin(th),0],'r'],[[-Math.sin(th),Math.cos(th),0],'θ'],[[0,0,1],'z']].forEach(([e,l])=>{
-      const w=raw(e),L=Math.hypot(...w),x2=o[0]+w[0]/L*40*k,y2=o[1]-w[1]/L*40*k;s+=S.arrow(o[0],o[1],x2,y2,{c:C.ink2,w:1.1,head:6*k});
+      const w=raw(e),L=Math.hypot(...w);if(L<.08)return;const x2=o[0]+w[0]*40*k,y2=o[1]-w[1]*40*k;s+=S.arrow(o[0],o[1],x2,y2,{c:C.ink2,w:1.1,head:6*k});
       s+=U.vtext(a,x2+(w[0]/L)*12*k,y2-(w[1]/L)*12*k+4*k,'e',l,{c:C.ink2,size:14,anchor:'middle'});});}
-    if(n>0&&isFinite(n)){const w=raw(b),L=Math.hypot(...w);if(L>1e-30){const len=60*k*n/Bref*(L/n),x2=o[0]+w[0]/L*len,y2=o[1]-w[1]/L*len;
-      s+=S.arrow(o[0],o[1],x2,y2,{c:cols[i],w:3});if(len>16*k)s+=S.text(x2+(i?-8:8)*k,y2-10*k,`${S.v('B')}(${i?'M′':'M'})`,{anchor:i?'end':'start',size:15,c:cols[i]});}}
+    if(n>0&&isFinite(n)){const w=raw(b),L=Math.hypot(...w);if(L>1e-30){const rawL=60*k*n/Bref*(L/n),cap=rawL>150*k,len=Math.min(150*k,rawL),x2=o[0]+w[0]/L*len,y2=o[1]-w[1]/L*len;
+      s+=S.arrow(o[0],o[1],x2,y2,{c:cols[i],w:3});if(cap)s+=S.text(x2+(i?-8:8)*k,y2+14*k,'hors échelle',{anchor:i?'end':'start',size:12,c:cols[i]});if(len>16*k)s+=S.text(x2+(i?-8:8)*k,y2-10*k,`${S.v('B')}(${i?'M′':'M'})`,{anchor:i?'end':'start',size:15,c:cols[i]});}}
     s+=S.circle(o[0],o[1],4.5*k,{fill:C.card,c:cols[i],w:2})+S.text(o[0]+(i?-10:10)*k,o[1]+18*k,i?'M′':'M',{anchor:i?'end':'start',size:18,c:cols[i],math:true,italic:true});
   });
   s+=S.text(10*k,10*k,rot?`Rotation d'angle θ = ${f.fix(theta/DEG,0)}° autour de Oz`:`Translation Δ${S.v('z')} = ${f.sig(dz/R,2)} ${S.v('R')} suivant Oz`,{base:'top',size:15,c:C.ink,weight:600});
@@ -1673,7 +1673,7 @@ function drawMirror(a){
   const pm=[-st.probe[0],st.probe[1]],b=ok(...st.probe)?field(...st.probe):[NaN,NaN],bp=ok(...pm)?field(...pm):[NaN,NaN];
   const same=Math.abs(st.probe[0])<R*.005;
   if(!same){const q1=V.p(...st.probe),q2=V.p(...pm);s+=S.line(q1[0],q1[1],q2[0],q2[1],{c:C.ink2,w:1,dash:`${4*k} ${5*k}`,op:.7});}
-  if(a.p.naif&&!same&&isFinite(b[0])){const q=V.p(...pm),n=Math.hypot(...b),L=60*k*n/ref,ux=-b[0]/n,uy=-b[1]/n;
+  if(a.p.naif&&!same&&isFinite(b[0])){const q=V.p(...pm),n=Math.hypot(...b),L=Math.min(150*k,60*k*n/ref),ux=-b[0]/n,uy=-b[1]/n;
     if(n>0){const e=[q[0]+ux*L,q[1]+uy*L];s+=S.arrow(q[0],q[1],e[0],e[1],{c:C.pred,w:2.4,dash:`${5*k} ${4*k}`})+S.text(e[0]+8*k,e[1]+14*k,`sym[${S.v('B')}(M)]`,{size:14,c:C.pred});}}
   s+=U.probe(a,V,st.probe,b,ref,{label:same?'M = M′':'M'});
   if(!same)s+=U.probe(a,V,pm,bp,ref,{label:'M′',c:C.v,dot:C.v});
@@ -1725,7 +1725,7 @@ function drawAmp(a){
   const b=ideal&&Math.abs(Math.abs(pt[1])-R)<R*1e-8?[NaN,NaN]:field(...pt);
   const bf=contour(Math.max(0,ph-1e-4)),af=contour(Math.min(1,ph+1e-4)),tv=[af[0]-bf[0],af[1]-bf[1]],tn=Math.hypot(...tv);if(tn){tv[0]/=tn;tv[1]/=tn;}
   const bt=b[0]*tv[0]+b[1]*tv[1];
-  if(isFinite(bt)&&Math.abs(bt)>0){const L=60*k*bt/ref;s+=S.line(q[0],q[1],q[0]+tv[0]*L,q[1]-tv[1]*L,{c:C.v,w:5,op:.7});}
+  if(isFinite(bt)&&Math.abs(bt)>0){const L=Math.max(-150*k,Math.min(150*k,60*k*bt/ref));s+=S.line(q[0],q[1],q[0]+tv[0]*L,q[1]-tv[1]*L,{c:C.v,w:5,op:.7});}
   const dl=[q[0]+tv[0]*48*k,q[1]-tv[1]*48*k];s+=S.arrow(q[0],q[1],dl[0],dl[1],{c:C.E,w:2.4,head:9*k})+S.text(dl[0]+tv[1]*14*k,dl[1]+tv[0]*14*k,`d${S.v('ℓ')}`,{anchor:'middle',size:16,c:C.E});
   s+=U.probe(a,V,pt,b,ref,{label:'P'});
   s+=S.text(P.w-10*k,10*k,`Normale ${a.p.orient>0?'⊙':'⊗'}`,{anchor:'end',base:'top',size:15,c:C.E});
@@ -1759,15 +1759,12 @@ function drawAmp(a){
 }
 
 /* ---------- interactions ---------- */
-U.navigation(A,'scene',.3,6);
 A.drag('scene',{
-  start(x,y,e){const P=A.panels.scene;
-    if(e.shiftKey){st.drag={pan:true,x,y,px:P.panX,py:P.panY};return;}
+  start(x,y){
     if(A.tab===0){A.play(false);st.drag={cam:true,x,y,yaw:cam.yaw,pitch:cam.pitch};return;}
     if(A.tab===1){st.drag={probe:true};st.probe=geo.scene.q(x,y);return;}
     A.play(false);st.drag={P:true};this.move(x,y);},
-  move(x,y){const d=st.drag,P=A.panels.scene;if(!d)return;
-    if(d.pan){P.panX=d.px+x-d.x;P.panY=d.py+y-d.y;return;}
+  move(x,y){const d=st.drag;if(!d)return;
     if(d.cam){cam.yaw=d.yaw+(x-d.x)*.008;cam.pitch=Math.max(-1.2,Math.min(1.2,d.pitch+(y-d.y)*.006));return;}
     if(d.probe){st.probe=geo.scene.q(x,y);return;}
     if(d.P){const X=getAmp(A),V=geo.scene;let best=1e9,bt=0;for(let i=0;i<=600;i++){const q=V.p(...X.contour(i/600)),dd=Math.hypot(q[0]-x,q[1]-y);if(dd<best){best=dd;bt=i/600;}}A.t=bt*TAMP;}},

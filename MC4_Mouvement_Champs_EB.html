@@ -1210,11 +1210,12 @@ function sensVu(a){const n=LV.basis(a.p.view,cam.yaw,cam.pitch)[2],bn=dot(MD.B,n
 function syncV(a){const v=mul(MD?MD.v0:spherical(a.p.v/100,a.p.vt,a.p.vp),100);for(const[i,k]of['vx','vy','vz'].entries())a.set(k,+v[i].toFixed(1),{silent:true})}
 function fromXYZ(a){const v=[a.p.vx,a.p.vy,a.p.vz];let n=norm(v);if(n>500){const f=500/n;v.forEach((x,i)=>v[i]=x*f);n=500}a.set('v',+n.toFixed(2),{silent:true});a.set('vt',n<1e-9?90:+(Math.acos(Math.max(-1,Math.min(1,v[2]/n)))/DEG).toFixed(2),{silent:true});a.set('vp',n<1e-9?0:+(Math.atan2(v[1],v[0])/DEG).toFixed(2),{silent:true})}
 function setDurMax(a){for(const n of[document.getElementById('r_duration'),document.getElementById('n_duration')])if(n)n.max=ITD.max;if(a.p.duration>ITD.max)a.set('duration',ITD.max,{silent:true})}
+function clearRef(){st.ref=null;const b=document.getElementById('b_cmp');if(b)b.textContent='Garder comme référence'}
 function apply(a,data){
   for(const[k,v]of Object.entries(data)){if(k==='geometry')st.geometry=v;else a.set(k,v,{silent:true})}
   if(data.species)a.set('species',data.species,{silent:true});
   if(a.tab===0&&a.p.charge<0)a.set('ep',a.p.ep>0?a.p.ep-180:a.p.ep+180,{silent:true});
-  st.auto=true;Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});st.ref=null;a.t=0;setDurMax(a);rebuild(a);syncV(a);a.refresh();
+  st.auto=true;Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});clearRef();a.t=0;setDurMax(a);rebuild(a);syncV(a);a.refresh();
 }
 function custom(a){if(a.tab===2&&a.p.cas!=='custom')a.set('cas','custom',{silent:true})}
 
@@ -1242,7 +1243,7 @@ const A=AnimKit.app({
     {titre:'Prévoir',onglets:[1],items:[
       {id:'prevSens',type:'check',label:'Prévoir le sens de rotation avant de lancer',value:false},
       {type:'boutons',si:a=>a.p.prevSens,items:[{id:'hor',label:'Sens horaire ↻',action:a=>guess(a,1)},{id:'tri',label:'Sens trigonométrique ↺',action:a=>guess(a,-1)}]},
-      {type:'note',si:a=>a.p.prevSens,html:'Vu dans la vue courante. Réponse vérifiée, puis la lecture est possible.'}]},
+      {type:'note',si:a=>a.p.prevSens,html:a=>st.guess!==null?st.verdict:sensVu(a)===0?`${vec('B')} est dans le plan de l'écran : changer de vue pour voir un sens de rotation.`:'Vu dans la vue courante. Réponse vérifiée, puis la lecture est possible.'}]},
     {titre:'La particule',onglets:[0,1,2],items:[
       {id:'species',type:'select',label:'Espèce',options:[['proton','Proton'],['electron','Électron'],['positron','Positron'],['alpha','Particule α'],['custom','Personnalisée']],value:'proton'},
       {id:'mass',label:'Masse',min:.0005,max:40,step:.0001,dec:6,unit:'u',value:1.007276},
@@ -1303,11 +1304,11 @@ const A=AnimKit.app({
     apply(a,SETS[0][0][1]);buildDF(a);
   },
   reset(a){if(a.tab===3)buildDF(a)},
-  onglet(a,i){a.play(false);a.t=0;st.ref=null;st.geometry='uniform';if(i===3){Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});buildDF(a);return}if(i===2){a.set('cas','crossed',{silent:true});apply(a,CASES[0].data)}else apply(a,SETS[i][0][1])},
+  onglet(a,i){a.play(false);a.t=0;clearRef();st.geometry='uniform';if(i===3){Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});buildDF(a);return}if(i===2){a.set('cas','crossed',{silent:true});apply(a,CASES[0].data)}else apply(a,SETS[i][0][1])},
   change(a,id,v){
     if(['dsp','Ua','Ud','dd','ll','DD'].includes(id)){a.t=0;buildDF(a);return}
     if(id==='cas'){const c=CASES.find(c=>c.id===v);if(c)apply(a,c.data);return}
-    if(id==='view'){st.auto=true;Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});return}
+    if(id==='view'){st.auto=true;st.guess=null;st.verdict='';Object.assign(a.panels.scene,{zoom:1,panX:0,panY:0});return}
     if(id==='duration'){st.auto=true;a.t=0;rebuild(a);return}
     if(!PHYS.includes(id))return;
     if(id==='species'&&SP[v]){a.set('mass',SP[v][0],{silent:true});a.set('charge',SP[v][1],{silent:true});st.auto=true}
@@ -1324,12 +1325,13 @@ const A=AnimKit.app({
     if(Math.abs(Math.max(50,r.width)-P.w)>.5||Math.abs(Math.max(50,r.height)-P.h)>.5)a.render();
   }
 });
-A.panels.scene.el.querySelector('.ak-ptools').addEventListener('click',e=>{if(e.target.closest('[data-z]')){st.auto=true;if(e.target.closest('[data-z="0"]')){cam.yaw=.65;cam.pitch=.48}}},true);
+A.panels.scene.el.querySelector('.ak-ptools').addEventListener('click',e=>{if(e.target.closest('[data-z]')){st.auto=true;if(e.target.closest('[data-z="0"]')){cam.yaw=.65;cam.pitch=.48;if(A.tab===1&&A.p.prevSens&&st.guess!==null){st.guess=null;st.verdict='';A.refresh()}}}},true);
 
 function guess(a,s){
   const r=sensVu(a);if(r===0){a.toast('B est presque dans le plan de l\'écran : pas de sens de rotation visible');return}
   st.guess=s;const ok=s===r;
   st.verdict=(ok?'<b>Bien vu.</b> ':'<b>Non.</b> ')+`Pour ${a.p.charge>0?'q &gt; 0':'q &lt; 0'}, avec ${vec('B')} ${dot(MD.B,LV.basis(a.p.view,cam.yaw,cam.pitch)[2])>0?'vers l\'observateur':'vers l\'écran'}, la particule tourne dans le sens ${r>0?'horaire':'trigonométrique'} : ${vec('F')}<sub>B</sub> = q${vec('v')} ∧ ${vec('B')} pointe vers le centre.`;
+  a.refresh();
 }
 
 /* ---------- textes ---------- */
@@ -1505,7 +1507,7 @@ A.drag('scene',{
   start(x,y,e){A.play(false);const P=A.panels.scene;st.dg=A.tab<3&&e.target.closest&&e.target.closest('[data-v0]')?{type:'v',x,y,v:[...MD.v0]}:A.tab<3&&A.p.view==='3d'&&!e.shiftKey?{type:'cam',x,y,yaw:cam.yaw,pitch:cam.pitch}:{type:'pan',x,y,panX:P.panX,panY:P.panY}},
   move(x,y){const d=st.dg;if(!d)return;const dx=x-d.x,dy=y-d.y;
     if(d.type==='pan'){A.panels.scene.panX=d.panX+dx;A.panels.scene.panY=d.panY+dy;return}
-    if(d.type==='cam'){cam.yaw=d.yaw+dx*.007;cam.pitch=Math.max(-LV.elevationLimit,Math.min(LV.elevationLimit,d.pitch+dy*.007));const z=A.panels.scene.zoom;st.auto=true;return}
+    if(d.type==='cam'){cam.yaw=d.yaw+dx*.007;cam.pitch=Math.max(-LV.elevationLimit,Math.min(LV.elevationLimit,d.pitch+dy*.007));st.auto=true;if(A.tab===1&&A.p.prevSens&&st.guess!==null){st.guess=null;st.verdict='';A.refresh()}return}
     const v=LV.dragVector(d.v,dx/(66*A.k),dy/(66*A.k),A.p.view,cam.yaw,cam.pitch),n=norm(v);
     A.set('v',+(n*100).toFixed(2),{silent:true});A.set('vt',n<1e-12?90:+(Math.acos(Math.max(-1,Math.min(1,v[2]/n)))/DEG).toFixed(2),{silent:true});A.set('vp',n<1e-12?0:+(Math.atan2(v[1],v[0])/DEG).toFixed(2),{silent:true});
     custom(A);A.t=0;rebuild(A);syncV(A)},

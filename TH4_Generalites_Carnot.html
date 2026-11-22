@@ -1246,8 +1246,8 @@ globalThis.TH4K=(()=>{
   if(regen>0){const rw=Math.max(ew*.9,92*k),y0=ym+mh*.16,rh=Math.max(34*k,yb-eh/2-26*k-y0);
    s+=S.rect(xm-rw/2,y0,rw,rh,{fill:C.E,fop:.2,c:C.E,w:2,rx:6*k})+S.text(xm,y0+rh/2-3*k,'Régénérateur',{anchor:'middle',size:13,c:C.E,weight:600,halo:false})+S.text(xm,y0+rh/2+14*k,`${f.fix(regen*100,0)} %`,{anchor:'middle',size:13,c:C.E,halo:false})
     +S.arrow(xm-rw*.4,yt+eh/2+10*k,xm-rw*.4,y0-3*k,{c:C.E,w:2.4})+S.arrow(xm+rw*.4,y0+rh+3*k,xm+rw*.4,yb-eh/2-10*k,{c:C.E,w:2.4})}
-  /* échanges des isothermes (Ericsson) */
-  if(ericsson){s+=K_heat(a,xl-mw*.5-6*k,ym,-1,C.cold)+K_heat(a,xr+mw*.5+6*k,ym,1,C.hot)}
+  /* échanges des isothermes (Ericsson) : chaleur cédée au compresseur, reçue à la turbine */
+  if(ericsson){s+=K_heat(a,xl-mw*.5-6*k,ym,-1,C.cold)+K_heat(a,xr+mw*.5+40*k,ym,-1,C.hot)}
   /* points mobiles */
   for(let j=0;j<12;j++){const p=pos(u+j/12);s+=S.circle(p[0],p[1],3.2*k,{fill:C.paper,c:C.ink,w:1})}
   const pm=pos(u);s+=S.circle(pm[0],pm[1],9*k,{c:C.F,w:3,fill:'none'});
@@ -1257,8 +1257,8 @@ globalThis.TH4K=(()=>{
    +S.text(n[0],n[1],'ABCD'[i],{anchor:'middle',size:16,c:C.ink,weight:700})+S.text(n[0],n[1]+16*k,`${f.fix(st[i].T-273.15,0)} °C`,{anchor:'middle',size:13,c:C.ink2})});
   /* flèches Q et W (résultats) */
   if(a.p.prev){const vm=Math.max(Math.abs(c.Qc),Math.abs(c.Qf),Math.abs(c.W),1e-9);
-   s+=energyArrow(a,[xm,yt-eh/2-58*k],[xm,yt-eh/2-30*k],c.Qc,vm,C.hot,{w:5})+S.text(xm+18*k,yt-eh/2-42*k,`Q_c = ${f.fix(c.Qc,0)} J`,{anchor:'start',size:13,c:C.hot,weight:600})
-    +energyArrow(a,[xm,yb+eh/2+70*k],[xm,yb+eh/2+36*k],c.Qf,vm,C.cold,{w:5})+S.text(xm+18*k,yb+eh/2+56*k,`Q_f = ${f.fix(c.Qf,0)} J`,{anchor:'start',size:13,c:C.cold,weight:600})
+   s+=energyArrow(a,[xm,yt-eh/2-58*k],[xm,yt-eh/2-30*k],c.Qc,vm,C.hot,{w:5})+S.text(xm+18*k,yt-eh/2-42*k,`${S.v('Q','c')} = ${f.fix(c.Qc,0)} J`,{anchor:'start',size:13,c:C.hot,weight:600})
+    +energyArrow(a,[xm,yb+eh/2+70*k],[xm,yb+eh/2+36*k],c.Qf,vm,C.cold,{w:5})+S.text(xm+18*k,yb+eh/2+56*k,`${S.v('Q','f')} = ${f.fix(c.Qf,0)} J`,{anchor:'start',size:13,c:C.cold,weight:600})
     +energyArrow(a,[xr+mw*.5+90*k,ym],[xr+mw*.5+38*k,ym],c.W,vm,C.v,{w:5})+S.text(xr+mw*.5+90*k,ym-14*k,`W = ${f.fix(c.W,0)} J`,{anchor:'end',size:13,c:C.v,weight:600})}
   const nm=a.tab===4?['Compression isotherme','Échauffement isobare','Détente isotherme','Refroidissement isobare']:['Compression adiabatique','Échauffement isobare','Détente adiabatique','Refroidissement isobare'];
   s+=S.text(w/2,h-10*k,`${'ABCD'[cur]} → ${'ABCD'[(cur+1)%4]} · ${nm[cur]}`,{anchor:'middle',size:15,c:C.cInk,weight:700});
@@ -1421,7 +1421,7 @@ function cogenGraph(a,b){
 let plotC=null;
 function drawCarnot(a){
   const c=modelC(a),d=c.sample(U),rev=!!a.p.c_rev,P=a.panels.scene,S=a.S,C=a.C,k=a.k,w=P.w,h=P.h;let s='';
-  const fi=d.forwardStep??d.step,disp=d.step,cols=[C.hot,C.v,C.cold,C.v];
+  const fi=d.forwardStep??d.step,disp=d.step,cols=rev?[C.v,C.cold,C.v,C.hot]:[C.hot,C.v,C.cold,C.v];
   const Vlo=c.states[0].V,Vhi=c.states[2].V,f=clamp((d.V-Vlo)/(Vhi-Vlo),0,1);
   const bw=Math.min(w*.24,120*k),top=46*k,Hs=Math.max(80*k,h-top-150*k),cx=w/2,dead=Hs*.18;
   const cyl=K.cylinder(a,cx,top,bw,Hs,f,{dead,gas:K.tcol(d.T,280,700),gop:.55,wallw:3.2});

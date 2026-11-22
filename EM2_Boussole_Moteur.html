@@ -1159,9 +1159,9 @@ const A=AnimKit.app({
       {label:'Aiguille amortie',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:.35,th0:55,u0:0},lecture:true},
       {label:'Oscillations sans frottement',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:0,th0:55,u0:0},lecture:true},
       {label:'Petites oscillations',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:0,th0:8,u0:0},lecture:true},
-      {label:'Équilibre stable',onglets:[0],valeurs:{beta:0,th0:0,u0:0}},
-      {label:'Équilibre instable exact',onglets:[0],valeurs:{beta:0,th0:180,u0:0}},
-      {label:'Grand écart initial',onglets:[0],valeurs:{beta:0,th0:150,u0:0},lecture:true},
+      {label:'Équilibre stable',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:0,th0:0,u0:0}},
+      {label:'Équilibre instable exact',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:0,th0:180,u0:0}},
+      {label:'Grand écart initial',onglets:[0],valeurs:{Bf:20,muf:5,Jf:8,beta:0,th0:150,u0:0},lecture:true},
       {label:'Champ circulaire',onglets:[1],valeurs:{B0:5,ratio:1,phase:90,freq:.4},lecture:true},
       {label:'Sens inversé',onglets:[1],valeurs:{B0:5,ratio:1,phase:-90,freq:.4},lecture:true},
       {label:'Champ elliptique',onglets:[1],valeurs:{B0:5,ratio:.5,phase:90,freq:.4},lecture:true},
@@ -1353,11 +1353,12 @@ function graph(a){
 /* ---------- interactions : tourner l'aiguille ou le rotor ---------- */
 A.drag('scene',{
   hit:(x,y)=>A.tab!==1&&!!st.geo&&Math.hypot(x-st.geo.c[0],y-st.geo.c[1])<st.geo.R*1.05,
-  start(){st.drag={was:A.running};A.play(false);},
+  start(){st.drag={was:A.running,pending:null};A.play(false);},
   move(x,y){const g=st.geo,ang=Math.atan2(g.c[1]-y,x-g.c[0]);
     if(A.tab===0){A.p.th0=Math.round(ang/DEG);A.p.u0=0;A.t=0;traj=null;A.refresh();}
-    else{const yy=stateAt(A,A.t);cutAt(A,[yy[0]+wrap(ang-yy[0]),yy[1]]);}},
-  end(){const w=st.drag&&st.drag.was;st.drag=null;if(A.tab===0||w)A.play(true);}
+    else{const R=T_(A),j=Math.round(Math.min(R.n,A.t/R.dS)),yy=R.ys[j],ny=[yy[0]+wrap(ang-yy[0]),yy[1]];
+      if(A.p.futur)cutAt(A,ny);else{A.t=j*R.dS;R.ys[j]=ny;if(st.drag)st.drag.pending=ny;}}},
+  end(){const d=st.drag;st.drag=null;if(d&&d.pending&&A.tab===2)cutAt(A,d.pending);if(A.tab===0||(d&&d.was))A.play(true);}
 });
 
 </script>

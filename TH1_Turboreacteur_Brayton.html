@@ -1310,7 +1310,6 @@ const TH1Brayton = (() => {
     // parcelle d'air
     const q = M.at(t);
     g += S.circle(G.X(q.s * SK), G.Y(q.T), 7.5 * k, {fill: C.card, c: C.ink, w: 2.4}) + S.circle(G.X(q.s * SK), G.Y(q.T), 2.8 * k, {fill: C.ink});
-    g += notes(a, M);
     return g;
   }
   const cycleLegend = a => {
@@ -1364,8 +1363,7 @@ const TH1Brayton = (() => {
         (a.p.valeurs ? label(a, G.X(lb) + 9 * k, G.Y(gy) - 12 * k, key === 1 ? fmt.sig(gy, 3) + ' m·s' + S.sup('−1') : fmt.sig(gy, 3), {c: C.ink}) : '');
       if (key === 1) g1 += mark; else g2 += mark;
     }
-    g1 += notes(a, M);
-    a.svg('scene', g1 + g2);
+    a.svg('scene', g1 + g2 + '<g data-ak-hors-graphe>' + notes(a, M) + '</g>');
 
     a.clock('');
     const leg = [{c: C.cInk, label: 'T<sub>3</sub> = ' + fmt.sig(a.p.T3, 3) + ' K'}, {c: C.ink, dot: true, label: 'β choisi'}];

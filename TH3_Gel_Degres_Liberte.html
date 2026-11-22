@@ -1098,7 +1098,7 @@ const TH3Gel = (() => {
   }
   /** solide d'Einstein : C_m / (3R) et énergie thermique molaire U_m(T) − U_m(0) (J·mol⁻¹) */
   const solC = (T, th) => vib(T, th).c;
-  const solU = (T, th) => 3 * R * th / Math.expm1(th / T);
+  const solU = (T, th) => th / T > 700 ? 0 : 3 * R * th / Math.expm1(th / T);
 
   /** niveaux de rotation visibles jusqu'à E / k_B T = emax : e = E_ℓ / k_B T, p = probabilité d'occupation de chaque niveau */
   function niveauxRot(T, th, emax) {
@@ -1145,6 +1145,7 @@ if (typeof module !== 'undefined') module.exports = TH3Gel;
   let cache = {key: ''}, frame = null;
 
   const lab = (a, x, y, html, o = {}) => a.S.text(x, y, html, {size: 13.5, ...o});
+  const clipped = (S, G, id, content) => S.clip(id, G) + '<g clip-path="url(#' + id + ')">' + content + '</g>';
   const fx1 = v => (Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : String(+v.toFixed(2))).replace('-', MINUS);
   /** nombre en notation scientifique pour un texte SVG (3 chiffres significatifs) */
   function sci(S, v) {
@@ -1306,7 +1307,7 @@ if (typeof module !== 'undefined') module.exports = TH3Gel;
     if (n > 1) gr += band(lo1, top1, C.cold) + band(top1, top2, C.F) + band(top2, top3, C.hot) + S.curve(pf.lt.map((l, i) => [l, top3[i]]), Gr, {c: C.ink, w: 3});
     gr += S.line(Gr.X(lT), Gr.y0, Gr.X(lT), Gr.y0 + Gr.h, {c: C.B, w: 1.8, dash: '7 5'});
     gr += S.circle(Gr.X(lT), Gr.Y(st.tot), 6.5 * k, {fill: C.ink, c: C.card, w: 1.6}) + S.circle(Gr.X(lT), Gr.y0 + 12 * k, 7 * k, {fill: C.B, c: C.card, w: 1.6});
-    out += Gr.svg + gr;
+    out += Gr.svg + clipped(S, Gr, 'th3a3-gr', gr);
     frame = {tab: 0, Gs: [Gr]};
     a.svg('scene', out);
     a.clock('T = ' + fmt.sig(T, 3) + ' K');
@@ -1378,19 +1379,19 @@ if (typeof module !== 'undefined') module.exports = TH3Gel;
     }
     if (p.entiere) g1 += S.curve(full(fC), G1, {c: C.ink2, w: 2, dash: '2 6'});
     g1 += S.curve(upTo(samples(fC), fC), G1, {c: C.ink, w: 3});
-    out += G1.svg + g1;
+    out += G1.svg + clipped(S, G1, 'th3a3-g1', g1);
     const G2 = S.graph(gOpts(a, Z.g[1], {xmin: xr[0], xmax: xr[1], ymin: 0, ymax: 40, xticks: xt, xfmt: xf, yticks: [0, 10, 20, 30, 40], yfmt: fx1, xlab: S.v('T') + ' (K)', ylab: S.v('U', 'm') + '(T) − ' + S.v('U', 'm') + '(0) (kJ·mol' + S.sup('−1') + ')'}));
     const fU = t => G.solU(t, s.th) / 1000, U = fU(T);
     let g2 = '';
     if (p.reperes) {
       g2 += S.curve(full(t => 3 * G.R * t / 1000), G2, {c: C.ink2, w: 1.5, dash: '6 5'}) + lab(a, G2.X(xv(lg ? 12 : 40)), G2.Y(lg ? 5 : 31), '3' + S.v('R') + S.v('T'), {c: C.ink});
       const tan = [], t0 = lg ? Math.max(SOLMIN, T / 2.2) : Math.max(SOLMIN, T - 260), t1 = lg ? Math.min(SOLMAX, T * 2.2) : Math.min(SOLMAX, T + 260);
-      for (let i = 0; i <= 16; i++) {const t = t0 + (t1 - t0) * i / 16, y = U + c3 * 3 * G.R / 1000 * (t - T); if (y <= 40) tan.push([xv(t), y]);}
+      for (let i = 0; i <= 16; i++) {const t = t0 + (t1 - t0) * i / 16, y = U + c3 * 3 * G.R / 1000 * (t - T); tan.push([xv(t), y]);}
       g2 += S.curve(tan, G2, {c: C.F, w: 3});
     }
     if (p.entiere) g2 += S.curve(full(fU), G2, {c: C.ink2, w: 2, dash: '2 6'});
     g2 += S.curve(upTo(samples(fU), fU), G2, {c: C.ink, w: 3});
-    out += G2.svg + g2;
+    out += G2.svg + clipped(S, G2, 'th3a3-g2', g2);
     for (const [Gx, y] of [[G1, c3], [G2, U]]) {
       out += S.line(Gx.X(xv(T)), Gx.y0, Gx.X(xv(T)), Gx.y0 + Gx.h, {c: C.B, w: 1.8, dash: '7 5'}) + S.circle(Gx.X(xv(T)), Gx.Y(y), 6.5 * k, {fill: C.ink, c: C.card, w: 1.6});
     }

@@ -1193,9 +1193,9 @@ function build(a){
   let sim=null;try{sim=PM.create(st.prof,st.z0,u0)}catch(e){sim=null}
   const tauH=gam>0?Math.min(160,Math.max(40,6/gam)):40, N=gam>0?6000:3000;
   const R=gam>0||!sim?TB.friction(s.d,s.d2,st.z0,u0,gam,tauH,N,lo,hi):TB.fromModel(sim,tauH,N,lo,hi,q=>({z:q.z,u:q.u}));
-  let zmin=Infinity,zmax=-Infinity,umax=0,fmax=0;
-  for(const q of R.pts){zmin=Math.min(zmin,q.z);zmax=Math.max(zmax,q.z);umax=Math.max(umax,Math.abs(q.u));fmax=Math.max(fmax,Math.abs(s.d(q.z)))}
-  T={pts:R.pts,stop:R.stop,sim,e0,gam,u0,dur:R.pts[R.pts.length-1].tau*t0(a),zmin,zmax,umax,fmax};
+  let zmin=Infinity,zmax=-Infinity,umax=0,fmax=0,umin=Infinity;
+  for(const q of R.pts){zmin=Math.min(zmin,q.z);zmax=Math.max(zmax,q.z);umax=Math.max(umax,Math.abs(q.u));fmax=Math.max(fmax,Math.abs(s.d(q.z)));umin=Math.min(umin,s.u(q.z))}
+  T={pts:R.pts,stop:R.stop,sim,e0,gam,u0,dur:R.pts[R.pts.length-1].tau*t0(a),zmin,zmax,umax,fmax,umin};
   frame(a);
 }
 function frame(a){
@@ -1244,7 +1244,7 @@ function release(a,dir){prepare(a,selEq()[0]+dir*a.p.delta/a.p.a,0)}
 
 /* ---------- situations, selon le profil ---------- */
 const PRE=[];
-const pr=(prof,label,fn)=>PRE.push({label,si:()=>st.prof===prof,valeurs:{},action:a=>{const[z,u]=fn();prepare(a,z,u)}});
+const pr=(prof,label,fn)=>PRE.push({label,si:()=>st.prof===prof,valeurs:{alpha:0},action:a=>{const[z,u]=fn();prepare(a,z,u)}});
 pr('double','Puits gauche',()=>[-1,Math.sqrt(.7)]);pr('double','Puits droit',()=>[1,Math.sqrt(.7)]);
 pr('double','Franchissement',()=>[-1,Math.sqrt(2.8)]);pr('double','Séparatrice',()=>[-1,Math.SQRT2]);pr('double','Sommet immobile',()=>[0,0]);
 {const cA=()=>PM.profiles.course.eq[0][0],cB=()=>PM.profiles.course.eq[1][0],U=z=>PM.profiles.course.u(z),eM=()=>(U(cA())+U(cB()))/2;
@@ -1367,7 +1367,7 @@ function drawPot(a,q){
   // échelle d'énergie stable pendant le mouvement
   const vals=[];for(let i=0;i<=200;i++)vals.push(p.eps*U(lo+(hi-lo)*i/200));const fin=vals.filter(isFinite).sort((x,y)=>x-y);
   const eqV=s.eq.filter(e=>e[0]>=lo&&e[0]<=hi).map(e=>p.eps*U(e[0]));
-  let ymin=Math.min(0,fin[0],q.ep),ymax=Math.max(.15*p.eps,fin[Math.floor(fin.length*.8)]||0,T.e0*p.eps,...eqV);
+  let ymin=Math.min(0,fin[0],T.umin*p.eps),ymax=Math.max(.15*p.eps,fin[Math.floor(fin.length*.8)]||0,T.e0*p.eps,...eqV);
   if(harmOn(a))ymax=Math.max(ymax,p.eps*(U(selEq()[0])+.5*kap()*(st.z0-selEq()[0])**2+.5*T.u0**2));
   const yr=Math.max(.3*p.eps,ymax-ymin);ymin-=yr*.08;ymax+=yr*.14;
   const G=S.graph({x:4*k,y:4*k,w:P.w-8*k,h:P.h-railH-4*k,xmin:lo*p.a,xmax:hi*p.a,ymin,ymax,xlab:`${S.v('x')} (m)`,ylab:'Énergie (J)',padR:14*k});
@@ -1431,7 +1431,7 @@ function drawAux(a,q){
     G=S.graph({x:4*k,y:4*k,w:P.w-8*k,h:P.h-8*k,xmin:lo*p.a,xmax:hi*p.a,ymin:-fm,ymax:fm,xlab:`${S.v('x')} (m)`,ylab:`${S.v('F')} (N)`});
     o=G.svg+S.clip('aclip',G)+S.curve(pts,G,{c:C.F,w:2.6})+S.circle(G.X(q.x),G.Y(q.F),5*k,{fill:C.F});
   }else{
-    const dur=T.dur;
+    const dur=Math.max(1e-6,T.dur);
     if(aux==='pos'){let y1=T.zmin*p.a,y2=T.zmax*p.a;if(harmOn(a)){const z0=selEq()[0],Am=Math.hypot(st.z0-z0,T.u0/Math.sqrt(kap()));y1=Math.min(y1,(z0-Am)*p.a);y2=Math.max(y2,(z0+Am)*p.a)}const pad=Math.max(.1*p.a,(y2-y1)*.12);
       G=S.graph({x:4*k,y:4*k,w:P.w-8*k,h:P.h-8*k,xmin:0,xmax:dur,ymin:y1-pad,ymax:y2+pad,xlab:`${S.v('t')} (s)`,ylab:`${S.v('x')} (m)`});
       o=G.svg+S.clip('aclip',G);

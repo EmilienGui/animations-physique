@@ -1166,7 +1166,6 @@ function drag(a,id,grab){
     move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
     end:e=>{if(h&&h.end)h.end(e);h=null}
   });
-  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
   P.node.style.touchAction='none';
 }
 /** Nombre avec espaces fines de milliers (point décimal conservé). */
@@ -1235,7 +1234,7 @@ function buildScan(a){const w=Math.min(a.p.width,Math.floor(K.footprint(K.R+a.p.
   st.engine=new K.Scan({alt:a.p.alt,inclination:a.p.inc,width:w,earthRate:a.p.rot?1:0});st.times.scan=0;st.scanTarget=0;st.scanBusy=false;st.trackCache=null}
 function setRange(r,anim=true){st.targetRange=K.clamp(r,1.1,100);st.rangeFrom=st.viewRange;st.rangeStart=performance.now();st.rangeMoving=anim;if(!anim)st.viewRange=st.targetRange}
 function fit(a){st.mapPan=[0,0];st.camLon=-45*RAD;st.camLat=20*RAD;const P=a.panels.scene;P.zoom=1;const o=curOrb(a);setRange(mode(a)==='scan'?1.38:Math.max(1.35,o.a*(1+o.e)/K.R*1.2))}
-function chooseCase(a,id){st.caseId=id;const c=CASES[id];a.set('a',+c.a.toFixed(1),{silent:true});a.set('i',c.i,{silent:true});a.set('e',c.e,{silent:true});buildOrbit(a);fit(a)}
+function chooseCase(a,id){st.caseId=id;const c=CASES[id];a.set('a',c.a,{silent:true});a.set('i',c.i,{silent:true});a.set('e',c.e,{silent:true});buildOrbit(a);fit(a)}
 function setTime(a,t0){t0=K.clamp(t0,0,endTime(a));a.play(false);st.gap=false;if(mode(a)==='scan'){st.scanTarget=t0;const r=st.engine.advance(t0,0);st.times.scan=r.time;st.scanBusy=!r.complete;if(st.scanBusy)busy(a)}else st.times[mode(a)]=t0;st.trackCache=null;a.render()}
 function busy(a){if(!st.scanBusy)return;const r=st.engine.advance(st.scanTarget,550);st.times.scan=r.time;st.scanBusy=!r.complete;a.renderNow();if(st.scanBusy)requestAnimationFrame(()=>busy(a))}
 function rate(a){const v=a.p.lect;return v==='real'?1:v==='day180'?K.SOLAR/180:v==='orbit'?(mode(a)==='days'?K.SIDEREAL:curOrb(a).T)/20:K.SOLAR/60}
@@ -1294,7 +1293,7 @@ const A=AnimKit.app({
   init(a){buildOrbit(a);buildScan(a);setRange(Math.max(1.35,st.orb.a/K.R*1.2),false);dragSetup(a);
     a.panels.scene.el.querySelector('.ak-ptools').addEventListener('click',e=>{if(e.target.closest('[data-z="0"]'))fit(a)},true)},
   reset(a){setTime(a,0)},
-  onglet(a){a.play(false);st.gap=false;st.trackCache=null;if(mode(a)!=='days')fit(a)},
+  onglet(a){a.play(false);st.gap=false;st.scanBusy=false;st.trackCache=null;if(mode(a)!=='days')fit(a)},
   change(a,id,v){
     if(['a','i','e'].includes(id)){st.caseId='custom';buildOrbit(a);if(id!=='i')fit(a)}
     else if(['alt','inc','width','rot'].includes(id)){buildScan(a)}
@@ -1312,8 +1311,7 @@ const A=AnimKit.app({
 function dragSetup(a){const P=a.panels.scene;let d=null;
   a.drag('scene',{hit:()=>mode(a)!=='days',start:(x,y)=>{d={x,y,lon:st.camLon,lat:st.camLat,pan:[...st.mapPan]};if(view(a)==='globe'&&a.p.follow)a.set('follow',false,{silent:true})},
     move:(x,y)=>{if(!d)return;if(view(a)==='map'){const z=Math.max(1,P.zoom);st.mapPan=[d.pan[0]+x-d.x,K.clamp(d.pan[1]+y-d.y,-(z-1)*(st.mapBox?.h||200)/2,(z-1)*(st.mapBox?.h||200)/2)]}else{st.camLon=d.lon-(x-d.x)*.008;st.camLat=K.clamp(d.lat+(y-d.y)*.008,-1.3,1.3)}},end:()=>{d=null}});
-  P.node.style.touchAction='none';
-  P.node.addEventListener('wheel',e=>{if(mode(a)==='days')return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false})}
+  P.node.style.touchAction='none'}
 const view=a=>mode(a)==='days'?a.p.vued:a.p.vue;
 
 /* ---------- dessin canvas (code d'origine adapté) ---------- */

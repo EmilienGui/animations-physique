@@ -1346,8 +1346,8 @@ const A=AnimKit.app({
       {label:'Refroidir',valeurs:{ca_start:80,ca_heat:false},onglets:[2]},
       {label:'Manche en bois',valeurs:{ca_handle:'wood',ca_heat:true,ca_start:20},onglets:[2]},
       {label:'Exemple du cours',valeurs:{el_sys:'full',el_I:10,el_mass:1,el_start:20,el_loss:false,el_dur:334.4},onglets:[3]},
-      {label:'Eau seule',valeurs:{el_sys:'water'},onglets:[3]},
-      {label:'Avec pertes',valeurs:{el_loss:true},onglets:[3]},
+      {label:'Eau seule',valeurs:{el_sys:'water',el_I:10,el_loss:false},onglets:[3]},
+      {label:'Avec pertes',valeurs:{el_sys:'full',el_I:10,el_loss:true},onglets:[3]},
       {label:'Courant nul',valeurs:{el_I:0},onglets:[3]}],items:[
       {id:'pk_kind',type:'select',label:'Transformation',options:[['isotherme','Isotherme quasi-statique'],['isobare','Isobare, piston mobile'],['isochore','Isochore, piston bloqué']],value:'isotherme',onglets:[0],reinit:true},
       {id:'pk_ratio',label:`Rapport ${M.frac(mv('V','F'),mv('V','I'))}`,min:.5,max:2,step:.01,value:.5,onglets:[0],si:a=>a.p.pk_kind==='isotherme',reinit:true},
@@ -1457,7 +1457,7 @@ function dChemin(a){
   if(u>=1)t+=repere(a,G,Vf*1000,Pf/1e5,'F',colA,true,9,-12);
   else if(p.ch_path==='qs'&&u>.02)t+=repere(a,G,m.V*1000,m.P/1e5,'M',C.cInk,true,9,-12);
   a.svg('graphe',t);
-  a.legend([{c:colA,label:p.ch_path==='qs'?'quasi-statique : '+'P'+' = nRT/V':'brutal : P_ext = P_F'},p.ch_cmp&&{c:colO,dash:true,label:p.ch_path==='qs'?'chemin brutal (comparaison)':'chemin quasi-statique (comparaison)'}]);
+  a.legend([{c:colA,label:p.ch_path==='qs'?`quasi-statique : ${mv('P')} = ${mv('n')}${mv('R')}${mv('T')}/${mv('V')}`:`brutal : ${mv('P','ext')} = ${mv('P','F')}`},p.ch_cmp&&{c:colO,dash:true,label:p.ch_path==='qs'?'chemin brutal (comparaison)':'chemin quasi-statique (comparaison)'}]);
   const mets=[];
   if(p.ch_cmp){mets.push(em(`${WP} reçu · ${p.ch_path==='qs'?'quasi-statique':'brutal'}`,m.W),em(`${WP} reçu · ${p.ch_path==='qs'?'brutal':'quasi-statique'}`,u>=1?oth(1).W:null,u<1?'visible à la fin':''),em(`Δ${M.v('U')} (les deux chemins)`,m.dU))}
   else mets.push(em(`${WP} reçu`,m.W),em('Q reçu',m.Q),em(`Δ${M.v('U')}`,m.dU));

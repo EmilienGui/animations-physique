@@ -1303,7 +1303,7 @@ const TH1Debit = (() => {
     plot += S.circle(G.X(t * 1000), G.Y(M.Me(t) * f), 5 * k, {fill: C.cInk, c: C.card, w: 1.4});
     plot += S.circle(G.X(t * 1000), G.Y(M.Ms(t) * f), 3.4 * k, {fill: C.B, c: C.card, w: 1.2});
     if (unsteady) plot += S.circle(G.X(t * 1000), G.Y(diff(t) * f), 4.4 * k, {fill: C.hot, c: C.card, w: 1.3});
-    svg += plot + notes(a, st);
+    svg += plot + '<g data-ak-hors-graphe>' + notes(a, st) + '</g>';
     a.svg('scene', svg);
 
     a.clock('t = ' + a.fmt.fix(t * 1000, 1) + ' ms');
@@ -1396,6 +1396,8 @@ const TH1Debit = (() => {
       });
     },
     draw(a) {
+      const lim = duration(a);
+      if (a.t > lim) a.t = lim;
       if (a.tab === 0) drawSystem(a); else drawFlow(a);
     }
   });

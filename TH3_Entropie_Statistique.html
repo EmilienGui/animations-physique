@@ -1290,7 +1290,6 @@ function jusquaTout(a){
   const n=a.p.n;if(n>30){st.toutPile='N ≤ 30 pour cet essai.';a.refresh();return}
   const mask=n===32?0xffffffff:(1<<n)-1;let e=0,ok=false;const full=mask>>>0;
   while(e<3e6){rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;e++;if(((rng&mask)>>>0)===full){ok=true;break}}
-  st.trials+=e;
   st.toutPile=ok?`Tout pile obtenu après ${e.toLocaleString('en-US').replace(/,/g,' ')} essais (attendu : 2<sup>${n}</sup> = ${(2**n).toLocaleString('en-US').replace(/,/g,' ')}).`:`Pas obtenu en 3 000 000 essais (P = 2<sup>−${n}</sup> par essai).`;
   a.refresh();a.render();
 }
@@ -1330,7 +1329,7 @@ function drawGas(a){
   const show=Math.min(250,n),r=Math.max(2.2*k,Math.min(5*k,18*k/Math.sqrt(n/5)));let ng=0;
   for(let i=0;i<n;i++){const px=refl(gas.x0[i]+gas.vx[i]*t);if(px<.5)ng++;
     if(i<show){const py=refl(gas.y0[i]+gas.vy[i]*t);s+=S.circle(bx+bw*px,by+bh*py,r,{fill:px<.5?C.cInk:C.B})}}
-  if(a.p.suivre){a.p.k=ng}
+  if(a.p.suivre&&a.p.k!==ng){a.p.k=ng;a.refresh()}
   s+=S.text(w/2,by-16*k,`${S.v('N','g')} = ${ng} sur ${n}`,{anchor:'middle',size:16,c:C.ink,weight:600});
   s+=S.text(bx+bw*.25,by+bh+16*k,'Gauche',{anchor:'middle',size:13,c:C.cInk})+S.text(bx+bw*.75,by+bh+16*k,'Droite',{anchor:'middle',size:13,c:C.B});
   if(n>show)s+=S.text(w-10*k,by-16*k,`${show} points dessinés sur ${n}`,{anchor:'end',size:13,halo:false});
@@ -1385,7 +1384,7 @@ function drawGraph(a){
       const pts=[];for(let i=0;i<=240;i++){const x=i/10;pts.push([x,ratio(x)])}
       s+=S.line(G.x0,G.Y(1),G.x0+G.w,G.Y(1),{c:C.pred,w:1,dash:`${4*k} ${4*k}`})+S.curve(pts,G,{c:C.B,w:2.6});
       const xN=Math.log10(N);s+=S.line(G.X(xN),G.y0,G.X(xN),G.y0+G.h,{c:C.F,w:2,dash:`${5*k} ${4*k}`})+S.circle(G.X(xN),G.Y(clamp(ratio(xN)||0,0,1.05)),4.5*k,{fill:C.F});
-      lg.push({c:C.B,label:`ln Ω(${S.v('N')}/2) / (${S.v('N')} ln 2)`},{c:C.F,label:'N choisi',dash:true});
+      lg.push({c:C.B,label:`ln Ω(${M.v('N')}/2) / (${M.v('N')} ln 2)`},{c:C.F,label:'N choisi',dash:true});
     }else if(vue==='hist'){
       const H=bigHistSync(a),tot=H.j,inn=tot-H.out,bw=8/NB;
       G=S.graph({x:0,y:0,w,h,xmin:-4,xmax:4,ymin:0,ymax:.62,xlab:'z = (N<tspan font-size="72%" dy="0.42em">g</tspan><tspan dy="-0.3em">​</tspan> − N/2) / (√N/2)',ylab:'Densité des relevés',ny:3});s+=S.clip('ghi',G)+G.svg+`<g clip-path="url(#ghi)">`;
@@ -1426,8 +1425,8 @@ function info(a){
   }else{
     const N=a.p.N,e=N*Math.LOG10E*LN2;
     a.clock(`τ = ${f.fix(a.t,1)}`);
-    if(a.p.vue==='S'){const lo=N<=1e6?PH.logBinom(2*Math.round(N/2),Math.round(N/2)):N*LN2-.5*Math.log(Math.PI*N/2);
-      m.push({label:`${v('N')} ln 2 − ln Ω(${v('N')}/2)`,value:f.fix(N*LN2-lo,2),hint:`≈ ½ ln(π${v('N')}/2) : négligeable devant ${v('N')} ln 2`},{label:`ln Ω(${v('N')}/2) / (${v('N')} ln 2)`,value:f.fix(lo/(N*LN2),N>1e4?8:4)});}
+    if(a.p.vue==='S'){const m2=N<=1000?2*Math.round(N/2):N,diff=N<=1000?m2*LN2-PH.logBinom(m2,m2/2):.5*Math.log(Math.PI*m2/2);
+      m.push({label:`${v('N')} ln 2 − ln Ω(${v('N')}/2)`,value:f.fix(diff,2),hint:`≈ ½ ln(π${v('N')}/2) : négligeable devant ${v('N')} ln 2`},{label:`ln Ω(${v('N')}/2) / (${v('N')} ln 2)`,value:f.fix(1-diff/(m2*LN2),N>1e4?8:4)});}
     if(a.p.prev){m.push({label:`σ(${v('N','g')}/${v('N')})`,value:f.sci(1/(2*Math.sqrt(N)),3)},
       {label:`${v('p')}(${v('N','g')} = ${v('N')})`,value:`10<sup>−${f.sci(e,3)}</sup>`,hint:'jamais observé, même en attendant l\'âge de l\'Univers'},
       {label:'ΔS pour V → 2V',value:f.sci(N*PH.kB*LN2,3),unit:'J·K<sup>−1</sup>',hint:`n = ${f.sci(N/PH.NA,3)} mol`});}

@@ -1486,10 +1486,12 @@ function drawGraph(a){
   const g2=K.tplot(a,{box:b[1],T:T*tf,t:a.t*tf,futur:a.p.futur,xlab:`${S.v('t')} (${uT.u})`,ylab:`${a.tab===1?(a.p.schema==='equiv'?sub(a,'e','P'):sub(a,'u','L')):sub(a,'e','P')+' et '+sub(a,'u','K')} (V)`,series:sU,id:'b2'});
   let s=g1.svg+g2.svg;
   if(a.p.bilan){
+    let bs='';
     if(a.tab===1){const dec=a.p.prog==='decay',tot=dec?m.E0:m.Eg,max=Math.max(1e-15,dec?m.E0:P.rl(rlp(a),TT(a)).Eg);
-      s+=bars(a,b[2],[{l:dec?sub(a,'E','mag')+'(0)':'fournie',v:tot,c:C.ink2},{l:'Joule',v:m.Q,c:C.E},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],dec?'Bilan : '+sub(a,'E','mag')+'(0) = Joule + '+sub(a,'E','mag'):'Bilan : fournie = Joule + '+sub(a,'E','mag'),max);}
+      bs=bars(a,b[2],[{l:dec?sub(a,'E','mag')+'(0)':'fournie',v:tot,c:C.ink2},{l:'Joule',v:m.Q,c:C.E},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],dec?'Bilan : '+sub(a,'E','mag')+'(0) = Joule + '+sub(a,'E','mag'):'Bilan : fournie = Joule + '+sub(a,'E','mag'),max);}
     else{const end=P.rupture(cutp(a),TT(a)),max=Math.max(1e-15,end.E0+end.Eg);
-      s+=bars(a,b[2],[{l:'disponible',v:m.E0+m.Eg,c:C.ink2},{l:'Joule R',v:m.Qcoil,c:C.E},{l:a.p.prot==='open'?'Arc':a.p.prot==='resistor'?'R′':'Diode',v:m.Qprotection,c:C.F},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],'Bilan : disponible = dissipations + '+sub(a,'E','mag'),max);}
+      bs=bars(a,b[2],[{l:'disponible',v:m.E0+m.Eg,c:C.ink2},{l:'Joule R',v:m.Qcoil,c:C.E},{l:a.p.prot==='open'?'Arc':a.p.prot==='resistor'?'R′':'Diode',v:m.Qprotection,c:C.F},{l:sub(a,'E','mag'),v:m.energy,c:C.cInk}],'Bilan : disponible = dissipations + '+sub(a,'E','mag'),max);}
+    s+=`<g data-ak-hors-graphe>${bs}</g>`;
   }
   a.svg('graphe',s);
 }

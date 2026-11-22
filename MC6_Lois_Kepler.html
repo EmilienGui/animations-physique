@@ -1133,7 +1133,6 @@ function drag(a,id,grab){
     move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
     end:e=>{if(h&&h.end)h.end(e);h=null}
   });
-  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
   P.node.style.touchAction='none';
 }
 /** Nombre avec espaces fines de milliers (point décimal conservé). */
@@ -1216,7 +1215,7 @@ const A=AnimKit.app({
   init(a){models(a);MC6.drag(a,'scene',grab)},
   reset(a){models(a);a.t=0},
   change(a,id){if(['a1','e1','a2','e2','mass'].includes(id)){models(a);if(id!=='e1'&&id!=='e2')a.t=0;a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0}},
-  onglet(a){a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0},
+  onglet(a,i){a.panels.scene.zoom=1;a.panels.scene.panX=a.panels.scene.panY=0;if(i<2&&o1&&a.t>o1.T)a.t=a.t%o1.T},
   step(a,dt){a.t+=Math.max(0,dt)*RATE;const m=a.tab===2?3*Math.max(o1.T,o2.T):o1.T;if(a.t>m)a.t-=m},
   draw(a){models(a);scene(a);if(a.tab===2)logPlot(a);infos(a)}
 });

@@ -1189,7 +1189,6 @@ function drag(a,id,grab){
     move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
     end:e=>{if(h&&h.end)h.end(e);h=null}
   });
-  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
   P.node.style.touchAction='none';
 }
 /** Nombre avec espaces fines de milliers (point décimal conservé). */
@@ -1248,8 +1247,8 @@ const A=AnimKit.app({
       {id:'v0',label:`Vitesse initiale ${mv('v')}<sub>0</sub>`,min:0,max:20,step:.01,unit:'km·s<sup>−1</sup>',value:+(0.75*Math.sqrt(K.MU/(K.R+15000))).toFixed(2)},
       {id:'beta',label:'Angle β avec la tangente',min:-180,max:180,step:1,unit:'°',value:0},
       {type:'note',html:'β = 0° : vitesse tangentielle, dans le sens trigonométrique ; +90° : radiale sortante ; −90° : radiale entrante. Glisser M<sub>0</sub> ou la pointe de <span class="vec">v</span><sub>0</sub> sur le dessin.'},
-      {type:'boutons',items:[{label:`${mv('v')}<sub>0</sub> = ${mv('v')}<sub>circ</sub>(${mv('r')}<sub>0</sub>)`,action:a=>{a.set('v0',+o.vc.toFixed(2))}},
-        {label:`${mv('v')}<sub>0</sub> = ${mv('v')}<sub>lib</sub>(${mv('r')}<sub>0</sub>)`,action:a=>{a.set('v0',+o.vl.toFixed(2))}}]},
+      {type:'boutons',items:[{label:`${mv('v')}<sub>0</sub> = ${mv('v')}<sub>circ</sub>(${mv('r')}<sub>0</sub>)`,action:a=>{a.set('v0',o.vc)}},
+        {label:`${mv('v')}<sub>0</sub> = ${mv('v')}<sub>lib</sub>(${mv('r')}<sub>0</sub>)`,action:a=>{a.set('v0',o.vl)}}]},
       {type:'note',html:a=>`${mv('v')}<sub>circ</sub> = ${a.fmt.sig(o.vc,4)} km·s<sup>−1</sup> et ${mv('v')}<sub>lib</sub> = ${a.fmt.sig(o.vl,4)} km·s<sup>−1</sup> à ${mv('r')}<sub>0</sub> = ${MC6.nb(a,o.r0)} km. Pour un cercle, il faut aussi β = 0° ou 180°.`}]},
     {titre:'Comparer',items:[
       {id:'multi',type:'check',label:`Même ${mv('v')}<sub>0</sub>, autres angles β (±30°, ±60°)`,value:false},
@@ -1275,7 +1274,7 @@ const A=AnimKit.app({
   step(a,dt){a.t=Math.min(o.end,Math.max(0,a.t+Math.max(0,dt)*RATE));if(a.t>=o.end)a.play(false)},
   draw(a){scene(a);if(a.p.energy)energy(a);infos(a)}
 });
-function pre(a,f,h=15000,newton=false){st.newton=newton;st.phi=0;a.set('h0',h,{silent:true});a.set('beta',0,{silent:true});a.set('v0',+(f*Math.sqrt(K.MU/(K.R+h))).toFixed(3),{silent:true});a.t=0;build(a);fit(a)}
+function pre(a,f,h=15000,newton=false){st.newton=newton;st.phi=0;a.set('multi',false,{silent:true});a.set('h0',h,{silent:true});a.set('beta',0,{silent:true});a.set('v0',f*Math.sqrt(K.MU/(K.R+h)),{silent:true});a.t=0;build(a);fit(a)}
 
 /* ---------- caméra ---------- */
 let bounds=null,cam=null,vscale=1;

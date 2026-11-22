@@ -1143,7 +1143,6 @@ function drag(a,id,grab){
     move:(x,y,e)=>{if(h)h.move(x,y,e);else{P.panX=start.px+x-start.x;P.panY=start.py+y-start.y}},
     end:e=>{if(h&&h.end)h.end(e);h=null}
   });
-  P.node.addEventListener('wheel',e=>{if(!P.cfg.zoom)return;e.preventDefault();P.zoom=Math.max(.4,Math.min(8,P.zoom*(e.deltaY<0?1.1:1/1.1)));a.render()},{passive:false});
   P.node.style.touchAction='none';
 }
 /** Nombre avec espaces fines de milliers (point décimal conservé). */
@@ -1198,7 +1197,7 @@ function bornes(a){
   const u=document.querySelector('[for="r_b"]')?.parentElement?.querySelector('.ak-unit'),w=document.querySelector('[for="r_v"]')?.parentElement?.querySelector('.ak-unit');
   if(u)u.innerHTML=cfg.L;if(w)w.innerHTML=cfg.V;
 }
-function setMode(a,m,b,v){a.set('mode',m,{silent:true});cfg=CFG[m];bornes(a);st.side=1;st.focus=false;
+function setMode(a,m,b,v){a.set('mode',m,{silent:true});a.set('beam',false,{silent:true});cfg=CFG[m];bornes(a);st.side=1;st.focus=false;
   const d=cfg.def;let bb=b??d[0];const vv=v??d[1];if(m==='ruth'&&b===undefined){bb=cfg.kappa/(vv*cfg.vf)**2/Math.tan(30*RAD)}
   a.set('v',+vv.toFixed(3),{silent:true});a.set('b',+bb.toFixed(m==='terre'?0:2),{silent:true});a.t=0;build(a);fit(a)}
 
@@ -1328,8 +1327,8 @@ function graph(a){
   models.forEach(m=>{s+=S.circle(G2.X(a.p.b),G2.Y(m.rmin),5*k,{fill:C.v,c:C.card,w:1.4})});
   GD.h2=G2;a.svg('graph',s);
 }
-function graphDrag(a){const P=a.panels.graph;a.drag('graph',{hit:()=>true,start:(x)=>setB(x),move:(x)=>setB(x)});
-  function setB(x){if(!GD)return;const b=Math.max(0,Math.min(cfg.maxB,(x-GD.x0)/GD.w*gmax));a.set('b',+b.toFixed(a.p.mode==='terre'?0:2),{silent:true});a.t=0;st.focus=false;build(a);fit(a)}}
+function graphDrag(a){a.drag('graph',{hit:(x,y)=>GD&&x>=GD.x0&&x<=GD.x0+GD.w&&((y>=GD.y0&&y<=GD.y0+GD.h)||(GD.h2&&y>=GD.h2.y0&&y<=GD.h2.y0+GD.h2.h)),start:(x)=>setB(x),move:(x)=>setB(x)});
+  function setB(x){if(!GD)return;const b=Math.max(0,Math.min(cfg.maxB,GD.xv(x)));a.set('b',+b.toFixed(a.p.mode==='terre'?0:2),{silent:true});a.t=0;st.focus=false;build(a);fit(a)}}
 
 /* ---------- valeurs ---------- */
 function infos(a){
