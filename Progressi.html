@@ -417,6 +417,15 @@ sub,sup{line-height:0}
   overflow-y: auto; overscroll-behavior: contain; padding: .6em .2em .8em 0;
   gap: .55em; display: flex; flex-direction: column;
 }
+.pr-right-head{
+  display: none; align-items: center; justify-content: space-between;
+  padding-bottom: .35em; border-bottom: 1px solid var(--rule); flex: none;
+  font-size: .82em; font-weight: 700; color: var(--c-ink);
+}
+.pr-app.is-proj.proj-panel-open .pr-right-head{ display: flex; }
+@media (max-width: 960px){
+  .pr-app.narrow-panel-open .pr-right-head{ display: flex; }
+}
 
 /* Panneaux principaux par onglet */
 .pr-tab-view{ display: none; flex: 1; min-height: 0; flex-direction: column; }
@@ -644,11 +653,105 @@ sub,sup{line-height:0}
   z-index: 120; background: var(--card); color: var(--ink);
   border: 1px solid var(--c-btn); border-radius: 99px; padding: .42em 1.05em;
   font-size: .88em; box-shadow: 0 8px 24px rgb(0 0 0 / .35);
-  transition: opacity .2s; pointer-events: none;
+  transition: opacity .2s; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: .65em; max-width: 92vw;
 }
 .pr-toast.ok{ border-color: var(--ok); }
 .pr-toast.err{ border-color: var(--err); color: var(--err); }
 .pr-toast[hidden]{ display: none; }
+.pr-toast .pr-toast-act{
+  padding: .15em .65em; border-radius: 99px; font-size: .88em; font-weight: 650;
+  border: 1px solid var(--c-btn); background: var(--c-soft); color: var(--c-ink);
+  cursor: pointer; white-space: nowrap;
+}
+.pr-toast .pr-toast-act:hover{ filter: brightness(1.1); }
+
+/* Accordéons options avancées */
+.pr-adv{
+  border: 1px solid var(--rule); border-radius: .48em;
+  background: color-mix(in srgb, var(--paper) 55%, var(--card));
+  padding: .35em .55em; flex: none;
+}
+.pr-adv > summary{
+  cursor: pointer; font-size: .8em; font-weight: 650; color: var(--ink2);
+  list-style: none; display: flex; align-items: center; gap: .38em; user-select: none;
+}
+.pr-adv > summary::-webkit-details-marker{ display: none; }
+.pr-adv > summary::before{
+  content: '▸'; display: inline-block; transition: transform .15s; font-size: .95em;
+}
+.pr-adv[open] > summary::before{ transform: rotate(90deg); }
+.pr-adv[open] > summary{ margin-bottom: .45em; color: var(--ink); }
+.pr-adv-body{ display: flex; flex-direction: column; gap: .42em; }
+
+/* Écran d'accueil orienté tâche TP */
+.pr-welcome{
+  padding: 1.8em 1.4em; max-width: 54em; margin: auto;
+  display: flex; flex-direction: column; gap: 1.15em; align-items: stretch;
+}
+.pr-welcome-h{ text-align: center; }
+.pr-welcome-h h2{ margin: 0 0 .25em; font-size: 1.25em; color: var(--ink); }
+.pr-welcome-h p{ margin: 0; color: var(--ink2); font-size: .9em; }
+.pr-welcome-grid{
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5em, 1fr)); gap: .7em;
+}
+.pr-wcard{
+  display: flex; flex-direction: column; align-items: flex-start; gap: .32em;
+  text-align: left; padding: .9em 1em; border-radius: .65em;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
+  cursor: pointer; transition: border-color .15s, background .15s, transform .1s;
+}
+.pr-wcard:hover{ border-color: var(--c-btn); background: var(--c-soft); transform: translateY(-1px); }
+.pr-wcard .pr-wi{ font-size: 1.35em; line-height: 1; }
+.pr-wcard strong{ font-size: .95em; }
+.pr-wcard small{ color: var(--ink2); font-size: .8em; line-height: 1.35; }
+.pr-wchips{
+  display: flex; flex-wrap: wrap; gap: .38em; justify-content: center; align-items: center;
+  padding-top: .5em; border-top: 1px solid var(--rule);
+}
+
+/* Badges d'étape & bandeau contextuel vidéo */
+.pr-step-badge{
+  font-size: .85em; font-weight: 650; text-transform: none; letter-spacing: 0;
+  padding: .08em .48em; border-radius: 99px;
+  background: var(--paper); color: var(--ink2); border: 1px solid var(--rule);
+}
+.pr-step-badge.ok{
+  background: color-mix(in srgb, var(--ok) 18%, transparent);
+  color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+}
+.pr-vbanner{
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 4; display: flex; align-items: center; gap: .55em;
+  padding: .34em .8em; border-radius: 99px; max-width: 92%;
+  background: rgb(14 16 22 / .84); color: #f8fafc;
+  border: 1px solid rgb(255 255 255 / .18); font-size: .82em;
+  box-shadow: 0 4px 14px rgb(0 0 0 / .45); pointer-events: auto;
+}
+.pr-vbanner[hidden]{ display: none; }
+.pr-vbanner.armed{ border-color: #fde047; }
+.pr-vbanner button{
+  padding: .12em .5em; font-size: .86em; border-radius: 99px;
+  background: rgb(255 255 255 / .14); color: #fff; border: 1px solid rgb(255 255 255 / .25);
+  cursor: pointer;
+}
+.pr-vbanner button:hover{ background: rgb(255 255 255 / .24); }
+
+/* Index de ligne tableur (suppression au survol) */
+.pr-table td.idx{ position: sticky; left: 0; }
+.pr-table td.idx .pr-rdel{
+  display: none; border: 0; background: transparent; color: var(--err);
+  cursor: pointer; font-weight: 700; padding: 0 .2em; line-height: 1;
+}
+.pr-table tr:hover td.idx .pr-rnum{ display: none; }
+.pr-table tr:hover td.idx .pr-rdel{ display: inline; }
+
+/* Puces variables / modèles dans l'aide calcul */
+.pr-calc-vars{ display: flex; flex-wrap: wrap; gap: .25em; margin: .2em 0 .5em; }
+.pr-calc-vars code{ display: inline-block; }
+.pr-slo[aria-pressed="true"]{
+  background: var(--c-btn); color: var(--c-on-btn, #fff); border-color: var(--c-btn);
+}
 
 .pr-modal-bg{
   position: fixed; inset: 0; z-index: 130; background: rgb(0 0 0 / .55);
@@ -2147,15 +2250,24 @@ const IO = (() => {
     },
   };
 
-  async function importFile(file) {
+  async function readXlsxSheets(file) {
+    const buf = await file.arrayBuffer();
+    const { sheets } = await Xlsx.read(buf);
+    return sheets.filter(s => s.rows.some(r => r.some(v => v !== '' && v !== null && v !== undefined)));
+  }
+
+  function parseSheetRows(rows) {
+    const tsv = rows.map(r => r.join('\t')).join('\n');
+    return parseDelimited(tsv);
+  }
+
+  async function importFile(file, sheetIndex = 0) {
     const ext = (file.name.split('.').pop() || '').toLowerCase();
     if (ext === 'xlsx') {
-      const buf = await file.arrayBuffer();
-      const { sheets } = await Xlsx.read(buf);
-      const sh = sheets.find(s => s.rows.length > 1) || sheets[0];
+      const sheets = await readXlsxSheets(file);
+      const sh = sheets[sheetIndex] || sheets[0];
       if (!sh) throw new Error('Classeur vide');
-      const tsv = sh.rows.map(r => r.join('\t')).join('\n');
-      return parseDelimited(tsv);
+      return parseSheetRows(sh.rows);
     }
     const text = await file.text();
     if (ext === 'rw3') return parseRW3(text);
@@ -2185,16 +2297,32 @@ const IO = (() => {
       'import matplotlib.pyplot as plt',
       '',
     ];
+    const uncExpr = (spec, refName) => {
+      const s = String(spec || '').trim();
+      if (!s) return '';
+      if (curvesMap.has(s)) return s;
+      if (s.endsWith('%')) {
+        const pct = parseNum(s.slice(0, -1));
+        if (isFinite(pct) && pct > 0) return `${+(pct / 100).toPrecision(5)} * np.abs(${refName})`;
+        return '';
+      }
+      const num = parseNum(s);
+      return (isFinite(num) && num > 0) ? String(num) : '';
+    };
     const used = new Set();
     const xName = plotState.xName || (plotState.curves[0] && curvesMap.get(plotState.curves[0])?.x);
     if (xName && curvesMap.has(xName)) used.add(xName);
     for (const n of plotState.curves) {
       const c = curvesMap.get(n);
-      if (!c) continue;
+      if (!c || c.kind === 'model') continue;
       used.add(n);
-      if (c.x) used.add(c.x);
-      if (c.uxCol && curvesMap.has(c.uxCol)) used.add(c.uxCol);
-      if (c.uyCol && curvesMap.has(c.uyCol)) used.add(c.uyCol);
+      const xn = plotState.xName || c.x;
+      if (xn && curvesMap.has(xn)) used.add(xn);
+      const xc = xn ? curvesMap.get(xn) : null;
+      const uySpec = c.uySpec || c.uyCol || (c.uyVal > 0 ? String(c.uyVal) : '');
+      const uxSpec = c.uxSpec || c.uxCol || (c.uxVal > 0 ? String(c.uxVal) : '') || (xc ? (xc.uySpec || xc.uyCol || (xc.uyVal > 0 ? String(xc.uyVal) : '')) : '');
+      if (uySpec && curvesMap.has(uySpec)) used.add(uySpec);
+      if (uxSpec && curvesMap.has(uxSpec)) used.add(uxSpec);
     }
     for (const n of used) {
       const c = curvesMap.get(n);
@@ -2206,11 +2334,16 @@ const IO = (() => {
       const c = curvesMap.get(n);
       if (!c || c.kind === 'model') continue;
       const xn = plotState.xName || c.x || `np.arange(len(${n}))`;
+      const xc = (plotState.xName || c.x) ? curvesMap.get(plotState.xName || c.x) : null;
       const label = c.name + (c.unit ? ` (${c.unit})` : '');
-      if (c.uyVal > 0 || c.uyCol) {
-        const uyExpr = c.uyCol ? c.uyCol : String(c.uyVal);
-        const uxExpr = c.uxCol ? `, xerr=${c.uxCol}` : (c.uxVal > 0 ? `, xerr=${c.uxVal}` : '');
-        lines.push(`ax.errorbar(${xn}, ${n}, yerr=${uyExpr}${uxExpr}, fmt='o', capsize=3, label=${JSON.stringify(label)})`);
+      const uySpec = c.uySpec || c.uyCol || (c.uyVal > 0 ? String(c.uyVal) : '');
+      const uxSpec = c.uxSpec || c.uxCol || (c.uxVal > 0 ? String(c.uxVal) : '') || (xc ? (xc.uySpec || xc.uyCol || (xc.uyVal > 0 ? String(xc.uyVal) : '')) : '');
+      const uyE = uncExpr(uySpec, n);
+      const uxE = uncExpr(uxSpec, xn);
+      if (uyE || uxE) {
+        const yerrPart = uyE ? `, yerr=${uyE}` : '';
+        const xerrPart = uxE ? `, xerr=${uxE}` : '';
+        lines.push(`ax.errorbar(${xn}, ${n}${yerrPart}${xerrPart}, fmt='o', capsize=3, label=${JSON.stringify(label)})`);
       } else {
         lines.push(`ax.plot(${xn}, ${n}, 'o-', markersize=4, label=${JSON.stringify(label)})`);
       }
@@ -2239,6 +2372,7 @@ const IO = (() => {
     lines.push(
       `ax.set_xlabel(${JSON.stringify(xc ? xc.name + (xc.unit ? ' (' + xc.unit + ')' : '') : 'x')})`,
       `ax.set_ylabel('Grandeur mesurée')`,
+      plotState.plotTitle ? `ax.set_title(${JSON.stringify(plotState.plotTitle)})` : '',
       plotState.logx ? `ax.set_xscale('log')` : '',
       plotState.logy ? `ax.set_yscale('log')` : '',
       `ax.grid(True, alpha=0.35)`,
@@ -2246,7 +2380,7 @@ const IO = (() => {
       `plt.tight_layout()`,
       `plt.show()`,
     );
-    return lines.filter(l => l !== null && l !== undefined).join('\n');
+    return lines.filter(l => l !== null && l !== undefined && l !== '').join('\n');
   }
 
   // Jeux de données réalistes correspondant aux TP MPSI/MP (pour essais & démos en cours)
@@ -2362,7 +2496,7 @@ const IO = (() => {
     };
   }
 
-  return { parseNum, cleanName, extractUnit, parseDelimited, parseRW3, Xlsx, importFile, exportCSV, exportPython, sampleDataset };
+  return { parseNum, cleanName, extractUnit, parseDelimited, parseRW3, Xlsx, readXlsxSheets, parseSheetRows, importFile, exportCSV, exportPython, sampleDataset };
 })();
 
 ;
@@ -2407,7 +2541,50 @@ const PlotFmt = (() => {
     }
     return val(v, 4) + (unit ? ' ' + unit : '');
   }
-  return { niceStep, tick, val, si };
+  // Formatage métrologique CPGE : 2 cs sur u si 1er chiffre < 3 sinon 1 cs, valeur alignée à la même décimale
+  function metro(v, u, opts = {}) {
+    const latex = !!opts.latex;
+    const decSep = opts.comma ? (latex ? '{,}' : ',') : '.';
+    const fmtMinus = s => (latex ? s : s.replace(/-/g, MINUS));
+    if (!isFinite(v)) return '—';
+    if (!isFinite(u) || !(u > 0)) {
+      const s = val(v, 5).replace(MINUS, '-').replace('.', decSep);
+      return fmtMinus(s);
+    }
+    let expU = Math.floor(Math.log10(u));
+    let lead = u / Math.pow(10, expU);
+    let sigU = lead < 2.95 ? 2 : 1;
+    let stepExp = expU - (sigU - 1);
+    let step = Math.pow(10, stepExp);
+    let uR = Math.round(u / step) * step;
+    if (uR <= 0) uR = step;
+    // Vérifier si l'arrondi fait passer le 1er chiffre >= 3 (ex. 2.96 -> 3.0)
+    const expU2 = Math.floor(Math.log10(uR * (1 + 1e-12)));
+    const lead2 = uR / Math.pow(10, expU2);
+    if (sigU === 2 && lead2 >= 3) {
+      sigU = 1;
+      stepExp = expU2;
+      step = Math.pow(10, stepExp);
+      uR = Math.round(u / step) * step;
+    }
+    const vR = Math.round(v / step) * step;
+    const mag = Math.max(Math.abs(vR), uR);
+    const expM = mag > 0 ? Math.floor(Math.log10(mag)) : 0;
+    const useSci = (expM >= 4 || expM <= -3) && (expM - stepExp <= 6);
+    if (useSci) {
+      const scale = Math.pow(10, expM);
+      const dec = Math.max(0, expM - stepExp);
+      const vs = (vR / scale).toFixed(dec).replace('.', decSep);
+      const us = (uR / scale).toFixed(dec).replace('.', decSep);
+      if (latex) return `(${vs} \\pm ${us}) \\times 10^{${expM}}`;
+      return `(${fmtMinus(vs)} ± ${us}) × 10^${expM}`;
+    }
+    const dec = Math.max(0, -stepExp);
+    const vs = vR.toFixed(dec).replace('.', decSep);
+    const us = uR.toFixed(dec).replace('.', decSep);
+    return latex ? `${vs} \\pm ${us}` : `${fmtMinus(vs)} ± ${us}`;
+  }
+  return { niceStep, tick, val, si, metro };
 })();
 
 class SciPlot {
@@ -2429,15 +2606,21 @@ class SciPlot {
     this.showErr = true;
     this.showResiduals = false;
     this.residualsData = null; // { x, r, z, weighted, curveName }
+    this.title = opts.title || '';
+    this.showFitBox = false;
+    this.fitBoxLines = null;
     this.mode = 'zoom'; // zoom | pan | reticule | curseur | mesure | exclude | tangente | bounds
     this.view = null;
     this.auto = true;
 
     this.cursor = null;
     this.cursorCurve = null;
+    this.hoverPt = null;
     this.mesure = [];
     this.boundsRange = null; // [xa, xb] en coordonnées physiques
     this.overlays = []; // fonctions (ctx, plot) => void
+    this.handles = []; // [{ id, x, y, color, label, onDrag(x,y) }]
+    this.dragHandle = null;
     this.dragBox = null;
     this.down = null;
     this.onChange = opts.onChange || null;
@@ -2461,7 +2644,11 @@ class SciPlot {
   ty(v) { return this.logy ? (v > 0 ? Math.log10(v) : NaN) : v; }
   uy(u) { return this.logy ? Math.pow(10, u) : u; }
 
-  data(name) { return this.store.getCurveXY(name, this.xName); }
+  data(name) {
+    const c = this.store.curve(name);
+    if (c && c.kind === 'model') return this.store.getCurveXY(name, null);
+    return this.store.getCurveXY(name, this.xName);
+  }
   xRange() { const V = this.getView(); return [this.ux(V.xmin), this.ux(V.xmax)]; }
   zoomed() { return !this.auto && !!this.view; }
   autoscale() { this.auto = true; this.view = null; this.draw(); if (this.onChange) this.onChange(); }
@@ -2540,9 +2727,10 @@ class SciPlot {
     const fs = proj ? 16 : 12.5;
     const hasRight = this.curves.some(n => { const c = this.store.curve(n); return c && c.axis === 'd'; });
     const hasRes = this.showResiduals && this.residualsData && this.residualsData.x.length > 0;
+    const hasTitle = Boolean(this.title && this.title.trim());
     const padL = Math.round(fs * 5.2);
     const padR = hasRight ? Math.round(fs * 5.2) : Math.round(fs * 1.4);
-    const padT = Math.round(fs * 2.5);
+    const padT = Math.round(fs * (hasTitle ? 3.8 : 2.5));
     const padB = Math.round(fs * 3.4);
     let mainB = H - padB;
     let resBox = null;
@@ -2552,7 +2740,7 @@ class SciPlot {
       mainB = H - padB - resH - gap;
       resBox = { l: padL, r: W - padR, t: mainB + gap, b: H - padB };
     }
-    this.box = { l: padL, r: W - padR, t: padT, b: mainB, W, H, hasRight, fs, resBox };
+    this.box = { l: padL, r: W - padR, t: padT, b: mainB, W, H, hasRight, fs, resBox, hasTitle };
   }
 
   X(v) { const V = this.view, B = this.box; return B.l + (this.tx(v) - V.xmin) / (V.xmax - V.xmin) * (B.r - B.l); }
@@ -2692,20 +2880,36 @@ class SciPlot {
       const x1 = this.X(Math.min(...this.boundsRange)), x2 = this.X(Math.max(...this.boundsRange));
       ctx.fillStyle = C.accent; ctx.globalAlpha = 0.09;
       ctx.fillRect(x1, B.t, x2 - x1, B.b - B.t);
-      ctx.globalAlpha = 0.85; ctx.strokeStyle = C.accent; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.globalAlpha = 0.85; ctx.strokeStyle = C.accent; ctx.lineWidth = 1.6; ctx.setLineDash([5, 4]);
       ctx.beginPath(); ctx.moveTo(x1, B.t); ctx.lineTo(x1, B.b); ctx.moveTo(x2, B.t); ctx.lineTo(x2, B.b); ctx.stroke();
       ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (!opts.forceLight && this.mode === 'bounds') {
+        const my = 0.5 * (B.t + B.b);
+        for (const [bx, lbl] of [[x1, 'a'], [x2, 'b']]) {
+          ctx.fillStyle = C.accent;
+          ctx.beginPath(); ctx.roundRect(bx - 8, my - 11, 16, 22, 4); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.max(10, B.fs - 2)}px system-ui,sans-serif`;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(lbl, bx, my);
+        }
+      }
     }
 
     for (const n of this.curves) this._drawCurve(ctx, n, C);
     for (const ov of this.overlays) ov(ctx, this, C);
+    if (!opts.forceLight && this.handles.length) this._drawHandles(ctx, C);
     ctx.restore();
 
-    // --- Légende en haut ---
+    // --- Titre éventuel + Légende en haut ---
+    if (B.hasTitle) {
+      ctx.font = `700 ${Math.round(B.fs * 1.12)}px system-ui,sans-serif`;
+      ctx.fillStyle = C.fg; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(this.title.trim(), 0.5 * (B.l + B.r), 6);
+    }
     ctx.font = `600 ${B.fs}px system-ui,sans-serif`;
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     let lx = B.l + 4;
-    const ly = Math.round(B.t * 0.5);
+    const ly = B.hasTitle ? Math.round(B.t - B.fs * 0.9) : Math.round(B.t * 0.5);
     for (const n of this.curves) {
       const c = this.store.curve(n); if (!c) continue;
       const lab = c.name + (c.unit ? ` (${c.unit})` : '') + (c.axis === 'd' ? ' →' : '');
@@ -2719,10 +2923,15 @@ class SciPlot {
       if (lx > B.r - 40) break;
     }
 
+    // --- Encart résultats du modèle (écran + PNG) ---
+    if (this.showFitBox && this.fitBoxLines && this.fitBoxLines.length) {
+      this._drawFitBox(ctx, C);
+    }
+
     // --- Sous-graphe des résidus ---
     if (B.resBox) this._drawResiduals(ctx, B.resBox, C);
 
-    // --- Curseurs, mesure 2 pts & cadre de zoom ---
+    // --- Curseurs, survol intelligent, mesure 2 pts & cadre de zoom ---
     if (!opts.forceLight) {
       this._drawCursors(ctx, C);
       if (this.dragBox) {
@@ -2732,6 +2941,48 @@ class SciPlot {
         ctx.setLineDash([]);
       }
     }
+  }
+
+  _drawFitBox(ctx, C) {
+    const B = this.box, lines = this.fitBoxLines;
+    const fs = Math.max(10.5, B.fs - 1);
+    const lh = fs + 4.5;
+    ctx.save();
+    ctx.font = `500 ${fs}px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace`;
+    const w = Math.min(B.r - B.l - 16, Math.max(...lines.map(l => ctx.measureText(l).width)) + 16);
+    const h = lines.length * lh + 10;
+    const bx = B.r - w - 10, by = B.t + 10;
+    ctx.fillStyle = C.bg; ctx.globalAlpha = 0.92;
+    ctx.strokeStyle = C.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(bx, by, w, h, 6); ctx.fill(); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = C.fg; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lines.forEach((l, i) => {
+      if (i === 0) ctx.font = `700 ${fs}px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace`;
+      else ctx.font = `500 ${fs}px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace`;
+      ctx.fillText(l, bx + 8, by + 5 + i * lh, w - 16);
+    });
+    ctx.restore();
+  }
+
+  _drawHandles(ctx, C) {
+    const B = this.box;
+    ctx.save();
+    for (const h of this.handles) {
+      const px = this.X(h.x), py = this.Y(h.y);
+      if (!isFinite(px) || !isFinite(py)) continue;
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = h.color || '#38bdf8';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath(); ctx.arc(px, py, 6.5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      if (h.label) {
+        ctx.font = `700 ${Math.max(11, B.fs - 1)}px system-ui,sans-serif`;
+        ctx.fillStyle = h.color || '#38bdf8';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText(h.label, px, py - 10);
+      }
+    }
+    ctx.restore();
   }
 
   _drawCurve(ctx, name, C) {
@@ -2971,6 +3222,21 @@ class SciPlot {
       label(txt, px, py);
     }
 
+    if (this.hoverPt && (this.mode === 'zoom' || this.mode === 'pan') && !this.dragBox && !this.down) {
+      const hp = this.hoverPt, c = this.store.curve(hp.curve);
+      if (c) {
+        const px = this.X(hp.x), py = this.Y(hp.y, c.axis === 'd');
+        if (isFinite(px) && isFinite(py) && px >= B.l && px <= B.r && py >= B.t && py <= B.b) {
+          ctx.save();
+          ctx.strokeStyle = c.color; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(px, py, 6.5, 0, 2 * Math.PI); ctx.stroke();
+          ctx.restore();
+          const txt = `${xn} = ${PlotFmt.val(hp.x, 5)}${xu}\n${c.name} = ${PlotFmt.val(hp.y, 5)}${c.unit ? ' ' + c.unit : ''}  (#${hp.i + 1})`;
+          label(txt, px, py);
+        }
+      }
+    }
+
     if (this.mesure.length) {
       ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.4;
       for (const m of this.mesure) {
@@ -2997,6 +3263,46 @@ class SciPlot {
       }
     }
     return { x: this.invX(p.px), y: this.invY(p.py), i: -1, curve: null };
+  }
+
+  _findHoverPoint(px, py) {
+    let best = null, bd = 14;
+    for (const n of this.curves) {
+      const c = this.store.curve(n);
+      if (!c || c.kind === 'model') continue;
+      const d = this.data(n);
+      if (!d) continue;
+      const L = Math.min(d.x.length, d.y.length);
+      if (!L) continue;
+      const right = c.axis === 'd';
+      // Échantillonnage rapide si très grande courbe
+      if (L > 4000) {
+        const i = this.nearestIndex(d, this.invX(px));
+        if (i >= 0) {
+          const x = this.X(d.x[i]), y = this.Y(d.y[i], right);
+          const dist = Math.hypot(x - px, y - py);
+          if (dist < bd) { bd = dist; best = { curve: n, i, x: d.x[i], y: d.y[i] }; }
+        }
+      } else {
+        for (let i = 0; i < L; i++) {
+          const x = this.X(d.x[i]), y = this.Y(d.y[i], right);
+          if (!isFinite(x) || !isFinite(y)) continue;
+          const dist = Math.hypot(x - px, y - py);
+          if (dist < bd) { bd = dist; best = { curve: n, i, x: d.x[i], y: d.y[i] }; }
+        }
+      }
+    }
+    return best;
+  }
+
+  _findHandle(px, py) {
+    let best = null, bd = 16;
+    for (const h of this.handles) {
+      const hx = this.X(h.x), hy = this.Y(h.y);
+      const dist = Math.hypot(hx - px, hy - py);
+      if (dist < bd) { bd = dist; best = h; }
+    }
+    return best;
   }
 
   _bind() {
@@ -3026,6 +3332,15 @@ class SciPlot {
       if (e.button === 2) return;
       cv.setPointerCapture(e.pointerId);
       const p = pos(e);
+      // Poignées interactives prioritaires (ex. tangentes parallèles)
+      if (this.handles.length && this.box) {
+        const hit = this._findHandle(p.px, p.py);
+        if (hit) {
+          this.dragHandle = hit;
+          cv.style.cursor = 'grabbing';
+          return;
+        }
+      }
       if (this.mode === 'mesure') {
         const pt = this._snap(p);
         if (this.mesure.length >= 2) this.mesure = [];
@@ -3048,6 +3363,18 @@ class SciPlot {
         return;
       }
       if (this.mode === 'bounds') {
+        if (this.boundsRange && this.boundsRange.length === 2) {
+          const [b0, b1] = this.boundsRange;
+          const x0 = this.X(b0), x1 = this.X(b1);
+          if (Math.abs(p.px - x0) < 12) {
+            this.down = { ...p, kind: 'bounds', xStart: b1 };
+            return;
+          }
+          if (Math.abs(p.px - x1) < 12) {
+            this.down = { ...p, kind: 'bounds', xStart: b0 };
+            return;
+          }
+        }
         const xv = this.invX(p.px);
         this.down = { ...p, kind: 'bounds', xStart: xv };
         this.boundsRange = [xv, xv];
@@ -3066,6 +3393,10 @@ class SciPlot {
       if (this.box && this.onHover) {
         this.onHover(this.invX(p.px), this.invY(p.py));
       }
+      if (this.dragHandle) {
+        this.dragHandle.onDrag?.(this.invX(p.px), this.invY(p.py));
+        return;
+      }
       if (this.down && this.down.kind === 'bounds') {
         this.boundsRange = [this.down.xStart, this.invX(p.px)];
         this.draw();
@@ -3076,7 +3407,26 @@ class SciPlot {
         this.draw();
         return;
       }
-      if (!this.down) return;
+      if (!this.down) {
+        // Curseur grab sur poignée ou barre de borne
+        if (this.handles.length && this.box && this._findHandle(p.px, p.py)) {
+          cv.style.cursor = 'grab';
+          return;
+        }
+        if (this.mode === 'bounds' && this.boundsRange?.length === 2 && this.box) {
+          const near = Math.abs(p.px - this.X(this.boundsRange[0])) < 12 || Math.abs(p.px - this.X(this.boundsRange[1])) < 12;
+          cv.style.cursor = near ? 'ew-resize' : 'crosshair';
+        } else {
+          cv.style.cursor = this.mode === 'pan' ? 'grab' : (this.mode === 'zoom' ? 'default' : 'crosshair');
+        }
+        // Survol intelligent des points en mode zoom / pan
+        if ((this.mode === 'zoom' || this.mode === 'pan') && this.box) {
+          const hp = this._findHoverPoint(p.px, p.py);
+          const changed = (hp?.curve !== this.hoverPt?.curve) || (hp?.i !== this.hoverPt?.i);
+          if (changed) { this.hoverPt = hp; this.draw(); }
+        }
+        return;
+      }
       if (this.mode === 'pan' || this.down.btn === 1 || e.shiftKey) {
         const V0 = this.down.view, B = this.box;
         const dx = (p.px - this.down.px) / (B.r - B.l) * (V0.xmax - V0.xmin);
@@ -3095,6 +3445,11 @@ class SciPlot {
     });
 
     cv.addEventListener('pointerup', () => {
+      if (this.dragHandle) {
+        this.dragHandle = null;
+        cv.style.cursor = 'default';
+        return;
+      }
       if (this.down && this.down.kind === 'bounds') {
         if (this.boundsRange && Math.abs(this.boundsRange[1] - this.boundsRange[0]) < 1e-15) {
           this.boundsRange = null;
@@ -3124,10 +3479,12 @@ class SciPlot {
     });
 
     cv.addEventListener('pointerleave', () => {
+      let dirty = false;
       if (this.mode === 'reticule' || this.mode === 'curseur' || this.mode === 'tangente') {
-        this.cursor = null;
-        this.draw();
+        this.cursor = null; dirty = true;
       }
+      if (this.hoverPt) { this.hoverPt = null; dirty = true; }
+      if (dirty) this.draw();
     });
   }
 
@@ -3136,6 +3493,13 @@ class SciPlot {
     const ctx = off.getContext('2d');
     this.draw({ canvas: off, ctx, dpr: 2, forceLight });
     return off.toDataURL('image/png');
+  }
+
+  exportPNGBlob(forceLight = true) {
+    const off = document.createElement('canvas');
+    const ctx = off.getContext('2d');
+    this.draw({ canvas: off, ctx, dpr: 2, forceLight });
+    return new Promise(res => off.toBlob(b => res(b), 'image/png'));
   }
 }
 
@@ -3242,6 +3606,12 @@ class VideoTracker {
       </div>`;
     canvasArea.append(this.fallbackBanner);
 
+    this.bannerEl = document.createElement('div');
+    this.bannerEl.className = 'pr-vbanner';
+    this.bannerEl.hidden = true;
+    this.bannerEl.innerHTML = `<span class="pr-vb-txt"></span><button type="button" class="pr-vb-esc" hidden>Quitter (Échap)</button>`;
+    canvasArea.appendChild(this.bannerEl);
+
     const transport = document.createElement('div');
     transport.className = 'ak-transport pr-vtrans';
     transport.innerHTML = `
@@ -3261,30 +3631,33 @@ class VideoTracker {
 
     this.sideEl.innerHTML = `
       <div class="pr-sec">
-        <div class="pr-sec-h">1 · Vidéo & cadence</div>
+        <div class="pr-sec-h">1 · Vidéo & cadence <span class="pr-step-badge pr-st1">À ouvrir</span></div>
         <div class="pr-row">
           <button class="ib on pr-vopen" style="flex:1">Ouvrir vidéo…</button>
           <button class="ib pr-vdet" title="Mesurer automatiquement la cadence du fichier">Détecter ips</button>
         </div>
-        <div class="pr-grid2">
-          <label class="pr-fld"><span>Cadence fichier (ips)</span><input class="pr-fpsf" value="30"></label>
-          <label class="pr-fld"><span>Tournage réel (ips)</span><input class="pr-fpsr" value="30"></label>
-        </div>
         <div class="pr-row pr-chips-row">
           <span class="pr-muted" style="font-size:.78em">Ralenti :</span>
-          <button class="mini pr-slo" data-fps="same">1×</button>
-          <button class="mini pr-slo" data-fps="60">60</button>
-          <button class="mini pr-slo" data-fps="120">120</button>
-          <button class="mini pr-slo" data-fps="240">240</button>
+          <button class="mini pr-slo" data-fps="same" aria-pressed="true">1×</button>
+          <button class="mini pr-slo" data-fps="60" aria-pressed="false">60</button>
+          <button class="mini pr-slo" data-fps="120" aria-pressed="false">120</button>
+          <button class="mini pr-slo" data-fps="240" aria-pressed="false">240</button>
         </div>
         <div class="pr-meta pr-vmeta"></div>
-        <div class="pr-row" style="margin-top:.3em">
-          <button class="mini pr-vconv-manual" style="width:100%" title="Reconvertit en MP4 all-intra si le pas-à-pas saute des images">Secours en ligne : reconvertir en MP4 exact</button>
-        </div>
+        <details class="pr-adv">
+          <summary>Cadence détaillée & conversion MP4</summary>
+          <div class="pr-adv-body">
+            <div class="pr-grid2">
+              <label class="pr-fld"><span>Cadence fichier (ips)</span><input class="pr-fpsf" value="30"></label>
+              <label class="pr-fld"><span>Tournage réel (ips)</span><input class="pr-fpsr" value="30"></label>
+            </div>
+            <button class="mini pr-vconv-manual" style="width:100%" title="Reconvertit en MP4 all-intra si le pas-à-pas saute des images">Secours en ligne : reconvertir en MP4 exact</button>
+          </div>
+        </details>
       </div>
 
       <div class="pr-sec">
-        <div class="pr-sec-h">2 · Échelle & repère</div>
+        <div class="pr-sec-h">2 · Échelle & repère <span class="pr-step-badge pr-st2">À calibrer</span></div>
         <div class="pr-row">
           <button class="ib pr-vech" style="flex:1">Échelle (2 clics)</button>
           <input class="pr-vlen" value="1" style="width:4.4em">
@@ -3301,7 +3674,7 @@ class VideoTracker {
       </div>
 
       <div class="pr-sec">
-        <div class="pr-sec-h">3 · Pointage manuel & suivi auto</div>
+        <div class="pr-sec-h">3 · Pointage <span class="pr-step-badge pr-st3">0 pt</span></div>
         <div class="pr-grid2">
           <label class="pr-fld"><span>Objets / image</span><input class="pr-vnpi" type="number" value="1" min="1" max="4"></label>
           <label class="pr-fld"><span>Avancer de (img)</span><input class="pr-vstep" type="number" value="1" min="1" max="50"></label>
@@ -3320,11 +3693,6 @@ class VideoTracker {
               </select>
             </label>
           </div>
-          <div class="pr-grid3">
-            <label class="pr-fld"><span>Objet (px)</span><input class="pr-vtsz" value="auto"></label>
-            <label class="pr-fld"><span>Recherche</span><input class="pr-vrsz" value="auto"></label>
-            <label class="pr-fld"><span>Fin img</span><input class="pr-vfend" value="fin"></label>
-          </div>
           <div class="pr-row pr-tol-row">
             <label class="pr-fld" style="flex:1"><span>Seuil / Tolérance (<span class="pr-tol-v">38</span>)</span>
               <input type="range" class="pr-vtol" min="10" max="110" value="38">
@@ -3337,13 +3705,23 @@ class VideoTracker {
           <div class="pr-row pr-hsv-row" hidden>
             <label class="ak-chk"><input type="checkbox" role="switch" class="pr-vmask"><span class="ak-switch-track"></span><span>Aperçu du masque couleur</span></label>
           </div>
+          <details class="pr-adv">
+            <summary>Paramètres avancés du suivi</summary>
+            <div class="pr-adv-body">
+              <div class="pr-grid3">
+                <label class="pr-fld"><span>Objet (px)</span><input class="pr-vtsz" value="auto"></label>
+                <label class="pr-fld"><span>Recherche</span><input class="pr-vrsz" value="auto"></label>
+                <label class="pr-fld"><span>Fin img</span><input class="pr-vfend" value="fin"></label>
+              </div>
+            </div>
+          </details>
           <div class="pr-row">
             <button class="ib on pr-vauto" style="flex:1">Lancer suivi (clic objet)</button>
             <button class="ib pr-vstop" disabled>Arrêter</button>
           </div>
         </div>
         <div class="pr-row" style="margin-top:.35em">
-          <button class="mini pr-vundo" style="flex:1">Annuler</button>
+          <button class="mini pr-vundo" style="flex:1" title="Annuler le dernier point (Ctrl+Z)">Annuler</button>
           <button class="mini pr-vclro" style="flex:1">Effacer obj.</button>
           <button class="mini pr-vclr" style="flex:1">Tout effacer</button>
         </div>
@@ -3358,31 +3736,32 @@ class VideoTracker {
           <label class="ak-chk"><input type="checkbox" role="switch" class="pr-sV"><span class="ak-switch-track"></span><span>Vecteurs v</span></label>
           <label class="ak-chk"><input type="checkbox" role="switch" class="pr-sA"><span class="ak-switch-track"></span><span>Vecteurs a</span></label>
         </div>
-        <div class="pr-row" style="margin-top:.25em">
-          <label class="pr-fld" style="flex:1"><span>Affichage des points</span>
-            <select class="pr-sPts">
-              <option value="smart" selected>Discrets en pointage (auto)</option>
-              <option value="all">Tous les points</option>
-              <option value="cur">Image courante seule</option>
-              <option value="none">Masquer les points</option>
-            </select>
-          </label>
-        </div>
-        <div class="pr-grid2" style="margin-top:.3em">
-          <label class="pr-fld"><span>Longueur flèches</span><input type="range" class="pr-vsc" min="-1.5" max="1.5" step="0.05" value="0"></label>
-          <label class="pr-fld"><span>1 flèche / N pts</span><input type="number" class="pr-vev" value="1" min="1" max="20"></label>
-        </div>
-        <div class="pr-row" style="margin-top:.35em">
-          <label class="pr-fld" style="flex:1"><span>Dérivées vx, vy, ax, ay</span>
-            <select class="pr-vderiv">
-              <option value="sg">Savitzky-Golay (recommandé)</option>
-              <option value="centree">Différences centrées</option>
-              <option value="none">Position seule (t, x, y)</option>
-            </select>
-          </label>
-        </div>
-        <button class="ib on pr-vmk" style="width:100%;margin-top:.45em">Envoyer vers Courbes & Ajustements →</button>
-        <div class="pr-meta pr-vinfo" style="margin-top:.35em"></div>
+        <details class="pr-adv">
+          <summary>Réglages d'affichage & dérivées</summary>
+          <div class="pr-adv-body">
+            <label class="pr-fld"><span>Affichage des points</span>
+              <select class="pr-sPts">
+                <option value="smart" selected>Discrets en pointage (auto)</option>
+                <option value="all">Tous les points</option>
+                <option value="cur">Image courante seule</option>
+                <option value="none">Masquer les points</option>
+              </select>
+            </label>
+            <div class="pr-grid2">
+              <label class="pr-fld"><span>Longueur flèches</span><input type="range" class="pr-vsc" min="-1.5" max="1.5" step="0.05" value="0"></label>
+              <label class="pr-fld"><span>1 flèche / N pts</span><input type="number" class="pr-vev" value="1" min="1" max="20"></label>
+            </div>
+            <label class="pr-fld"><span>Dérivées vx, vy, ax, ay</span>
+              <select class="pr-vderiv">
+                <option value="sg">Savitzky-Golay (recommandé)</option>
+                <option value="centree">Différences centrées</option>
+                <option value="none">Position seule (t, x, y)</option>
+              </select>
+            </label>
+          </div>
+        </details>
+        <button class="ib on pr-vmk" style="width:100%;margin-top:.25em">Envoyer vers Courbes & Ajustements →</button>
+        <div class="pr-meta pr-vinfo" style="margin-top:.25em"></div>
       </div>`;
 
     this._bindEvents();
@@ -3420,12 +3799,16 @@ class VideoTracker {
       this.convertWithFFmpeg();
     };
 
+    this.q('.pr-vb-esc').onclick = () => this.setMode(null);
+
     this.q('.pr-vdet').onclick = () => this.detectFps();
-    this.q('.pr-fpsf').onchange = () => { this.goto(this.frame); this._meta(); this.app.markDirty(); };
-    this.q('.pr-fpsr').onchange = () => { this.goto(this.frame); this.draw(); this.app.markDirty(); };
+    this.q('.pr-fpsf').onchange = () => { this.goto(this.frame); this._meta(); this._syncSloChips(); this.app.markDirty(); };
+    this.q('.pr-fpsr').onchange = () => { this.goto(this.frame); this._meta(); this._syncSloChips(); this.draw(); this.app.markDirty(); };
     this.sideEl.querySelectorAll('.pr-slo').forEach(b => b.onclick = () => {
       this.q('.pr-fpsr').value = b.dataset.fps === 'same' ? this.q('.pr-fpsf').value : b.dataset.fps;
       this.goto(this.frame);
+      this._meta();
+      this._syncSloChips();
       this.draw();
       this.app.markDirty();
     });
@@ -3474,13 +3857,22 @@ class VideoTracker {
     this.q('.pr-vbgcur').onclick = () => this.captureCurrentAsBackground();
     this.q('.pr-vauto').onclick = () => { this.setMode('suivi'); this.app.toast('Cliquez sur l’objet à suivre automatiquement'); };
     this.q('.pr-vstop').onclick = () => { this.tracking = false; };
-    this.q('.pr-vundo').onclick = () => { const k = this.hist.pop(); if (k) this.pts.delete(k); this.draw(); this.app.markDirty(); };
+    this.q('.pr-vundo').onclick = () => this.undoLast();
     this.q('.pr-vclro').onclick = () => {
       const k = +this.q('.pr-vobj').value;
-      for (const [key, p] of [...this.pts]) if (p.k === k) this.pts.delete(key);
-      this.draw(); this.app.markDirty();
+      const cnt = [...this.pts.values()].filter(p => p.k === k).length;
+      if (!cnt) return;
+      this.app.confirm(`Effacer les ${cnt} points de l'Objet ${k + 1} ?`, () => {
+        for (const [key, p] of [...this.pts]) if (p.k === k) this.pts.delete(key);
+        this.draw(); this.app.markDirty();
+      });
     };
-    this.q('.pr-vclr').onclick = () => { this.pts.clear(); this.hist = []; this.draw(); this.app.markDirty(); };
+    this.q('.pr-vclr').onclick = () => {
+      if (!this.pts.size) return;
+      this.app.confirm(`Effacer les ${this.pts.size} points du pointage vidéo ?`, () => {
+        this.pts.clear(); this.hist = []; this.draw(); this.app.markDirty();
+      });
+    };
 
     this.sideEl.querySelectorAll('.pr-sTraj,.pr-sRep,.pr-sPts,.pr-sV,.pr-sA,.pr-vev,.pr-vlu,.pr-vlen').forEach(e => e.onchange = () => this.draw());
     this.q('.pr-vsc').oninput = () => this.draw();
@@ -3534,12 +3926,87 @@ class VideoTracker {
   tOf(f) { return (f - this.f0) / this.fpsR(); }
   key(f, k) { return f + '|' + k; }
 
+  undoLast() {
+    const k = this.hist.pop();
+    if (!k) return;
+    const removed = this.pts.get(k);
+    this.pts.delete(k);
+    if (removed) this.goto(removed.f);
+    this.draw();
+    this.app.markDirty();
+    this.app.toast('Dernier point annulé');
+  }
+
+  _syncSloChips() {
+    const fF = this.fpsF(), fR = this.fpsR();
+    const isSame = Math.abs(fR - fF) < 0.01;
+    this.sideEl.querySelectorAll('.pr-slo').forEach(b => {
+      const on = b.dataset.fps === 'same' ? isSame : (!isSame && Math.abs(fR - Number(b.dataset.fps)) < 0.01);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  _updateBanner() {
+    if (!this.bannerEl) return;
+    if (!this.vw()) { this.bannerEl.hidden = true; return; }
+    this.bannerEl.hidden = false;
+    const txt = this.q('.pr-vb-txt'), escBtn = this.q('.pr-vb-esc');
+    const msgs = {
+      ech: this.tmp.length === 1 ? 'Échelle : cliquez la 2e extrémité de la règle' : 'Échelle : cliquez la 1re extrémité de la règle',
+      ori: 'Origine : cliquez le point O du repère',
+      axe: 'Axe x : cliquez un point de l’axe x (côté positif)',
+      pt: 'Pointage actif : cliquez l’objet (glisser = corriger · clic droit = supprimer · Ctrl+Z = annuler)',
+      suivi: 'Suivi auto : cliquez au centre de l’objet à suivre',
+    };
+    if (this.mode && msgs[this.mode]) {
+      txt.textContent = msgs[this.mode];
+      this.bannerEl.classList.add('armed');
+      escBtn.hidden = false;
+    } else {
+      const next = !this.ech ? 'Étape suivante : cliquez « Échelle (2 clics) » à droite'
+        : (!this.pts.size ? 'Prêt : cliquez « Pointer » ou « Lancer suivi » à droite'
+          : `${this.pts.size} point(s) · Cliquez « Envoyer vers Courbes → » ou « Pointer » pour continuer`);
+      txt.textContent = next;
+      this.bannerEl.classList.remove('armed');
+      escBtn.hidden = true;
+    }
+  }
+
+  _updateBadges() {
+    const b1 = this.q('.pr-st1'), b2 = this.q('.pr-st2'), b3 = this.q('.pr-st3');
+    if (b1) {
+      if (this.vw()) {
+        const fR = this.fpsR(), fF = this.fpsF();
+        b1.textContent = Math.abs(fR - fF) > 0.1 ? `✓ ralenti ${fR} ips` : `✓ ${fF} ips`;
+        b1.classList.add('ok');
+      } else {
+        b1.textContent = 'À ouvrir';
+        b1.classList.remove('ok');
+      }
+    }
+    if (b2) {
+      if (this.ech) {
+        b2.textContent = this.ori ? '✓ Échelle + O' : '✓ Échelle';
+        b2.classList.add('ok');
+      } else {
+        b2.textContent = 'À calibrer';
+        b2.classList.remove('ok');
+      }
+    }
+    if (b3) {
+      const n = this.pts.size;
+      b3.textContent = n ? `✓ ${n} pt${n > 1 ? 's' : ''}` : '0 pt';
+      b3.classList.toggle('ok', n > 0);
+    }
+  }
+
   setMode(m) {
     this.mode = m;
     this.ovCv.style.cursor = m ? 'crosshair' : 'default';
     this.sideEl.querySelectorAll('.ib.armed').forEach(b => b.classList.remove('armed'));
     const sel = { ech: '.pr-vech', ori: '.pr-vori', axe: '.pr-vaxe', pt: '.pr-vpt', suivi: '.pr-vauto' }[m];
     if (sel) this.q(sel).classList.add('armed');
+    this._updateBanner();
   }
 
   exportState() {
@@ -3705,9 +4172,13 @@ class VideoTracker {
 
   _meta() {
     const w = this.vw(), h = this.vh();
+    const dtMs = 1000 / this.fpsR();
     this.q('.pr-vmeta').textContent = w
-      ? `${this.fname} · ${w}×${h} px · ${this.v.duration.toFixed(2)} s · ${this.nmax() + 1} img`
+      ? `${this.fname} · ${w}×${h} px · ${this.v.duration.toFixed(2)} s · Δt = ${PlotFmt.val(dtMs, 3)} ms/img`
       : '';
+    this._syncSloChips();
+    this._updateBadges();
+    this._updateBanner();
   }
 
   layout() {
@@ -4360,6 +4831,8 @@ class VideoTracker {
 
     this.q('.pr-vinfo').textContent = `${this.pts.size} point(s) pointé(s)` +
       (this.ech ? ' · échelle calibrée (m)' : ' · sans échelle (px)');
+    this._updateBadges();
+    this._updateBanner();
 
     // Dessiner la loupe AVANT le réticule vidéo pour éviter un double réticule grossi dans la loupe
     this._drawLoupe();
@@ -4480,6 +4953,16 @@ class VideoTracker {
     ctx.drawImage(this.ovCv, 0, 0);
     return off.toDataURL('image/png');
   }
+
+  exportPNGBlob() {
+    if (!this.vw()) return Promise.resolve(null);
+    const off = document.createElement('canvas');
+    off.width = this.vw(); off.height = this.vh();
+    const ctx = off.getContext('2d');
+    ctx.drawImage(this.viewCv, 0, 0);
+    ctx.drawImage(this.ovCv, 0, 0);
+    return new Promise(res => off.toBlob(b => res(b), 'image/png'));
+  }
 }
 
 ;
@@ -4501,6 +4984,7 @@ const Progressi = (() => {
     moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
     sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>',
     image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
     proj: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
     settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
     fs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
@@ -4524,7 +5008,8 @@ const Progressi = (() => {
     lastFit: null,
     fitPreview: null,
     treatTool: 'deriv', // deriv | integ | dosage | fft | bode
-    dataLayout: 'both', // table | calc | both
+    dataLayout: 'table', // table | calc | both
+    dosageType: 'ph', // ph | cond
     dosageState: { curve: null, x1: null, x2: null, slope: null },
     integState: { curve: null, a: null, b: null },
     dirty: false,
@@ -4674,7 +5159,8 @@ const Progressi = (() => {
             <a class="ib ak-sommaire" href="${sommaireHref}" aria-label="Sommaire des animations" title="Retour au sommaire des animations">${IC.sommaire}<span class="ak-lbl">Sommaire</span></a>
             <button class="ib" data-act="help" title="Aide-mémoire (H)">${IC.help}<span class="ak-lbl">Aide</span></button>
             <button class="ib" data-act="theme" title="Basculer le thème (T)">${IC.sun}<span class="ak-lbl">Clair</span></button>
-            <button class="ib" data-act="image" title="Exporter l'image PNG en thème clair (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+            <button class="ib" data-act="image" title="Télécharger l'image PNG en thème clair (I)">${IC.image}<span class="ak-lbl">Image</span></button>
+            <button class="ib" data-act="copyimg" title="Copier l'image PNG dans le presse-papiers (C)">${IC.copy}<span class="ak-lbl">Copier PNG</span></button>
             <button class="ib" data-act="proj" title="Mode projection (P)">${IC.proj}<span class="ak-lbl">Projection</span></button>
             <button class="ib ak-btn-settings" data-act="settings" title="Afficher / masquer les réglages">${IC.settings}<span class="ak-lbl">Réglages</span></button>
             <button class="ib" data-act="fs" aria-label="Plein écran" title="Plein écran (F)">${IC.fs}</button>
@@ -4703,6 +5189,7 @@ const Progressi = (() => {
           </main>
 
           <aside class="ak-right" id="akRight">
+            <div class="pr-right-head"><span>Réglages</span><button class="mini" id="btnCloseRight" title="Fermer le panneau">✕</button></div>
             <div class="pr-side-view act" id="side0"></div>
             <div class="pr-side-view" id="side1"></div>
             <div class="pr-side-view" id="side2"></div>
@@ -4764,12 +5251,17 @@ const Progressi = (() => {
         else ak.classList.toggle('narrow-panel-open');
         setTimeout(() => this.redrawPlots(), 60);
       };
+      $('#btnCloseRight').onclick = () => {
+        ak.classList.remove('proj-panel-open', 'narrow-panel-open');
+        setTimeout(() => this.redrawPlots(), 60);
+      };
       $('[data-act=fs]').onclick = () => {
         if (document.fullscreenElement) document.exitFullscreen?.();
         else document.documentElement.requestFullscreen?.();
       };
       $('[data-act=help]').onclick = () => this.showHelp();
       $('[data-act=image]').onclick = () => this.exportActiveImage();
+      $('[data-act=copyimg]').onclick = () => this.copyActiveImage();
 
       $$('.ak-tab').forEach(b => {
         b.onclick = () => this.setTab(+b.dataset.tab);
@@ -4820,14 +5312,14 @@ const Progressi = (() => {
           <button class="ib" id="btnExpPy" title="Générer le script Python matplotlib">Python</button>
           <span style="flex:1"></span>
           <div class="pr-views-bar">
-            <button class="mini" data-dl="table" aria-pressed="false">Tableur</button>
-            <button class="mini" data-dl="both" aria-pressed="true">Mixte</button>
+            <button class="mini" data-dl="table" aria-pressed="true">Tableur</button>
+            <button class="mini" data-dl="both" aria-pressed="false">Mixte</button>
             <button class="mini" data-dl="calc" aria-pressed="false">Calculs</button>
           </div>
         </div>
         <div class="pr-data-split">
           <div class="pr-table-wrap" id="tableWrap"></div>
-          <div class="pr-calc-pane" id="calcPane">
+          <div class="pr-calc-pane" id="calcPane" hidden>
             <div class="pr-bar" style="padding:.25em .55em">
               <button class="ib on" id="btnRunCalc">▶ Exécuter (F2)</button>
               <span class="pr-muted">Une formule par ligne : <code>Nom = expression [unité]</code> · commentaires <code>//</code></span>
@@ -4835,6 +5327,15 @@ const Progressi = (() => {
             <div class="pr-calc-body">
               <textarea class="pr-calc-ta" id="calcTa" spellcheck="false"></textarea>
               <aside class="pr-calc-help">
+                <b>Variables</b>
+                <div class="pr-calc-vars" id="calcVars"><span class="pr-muted">Aucune</span></div>
+                <b>Modèles rapides</b>
+                <div class="pr-calc-vars" id="calcSnips">
+                  <code data-snip="deriv">Dérivée SG</code>
+                  <code data-snip="unc">u = Δ/√3</code>
+                  <code data-snip="ln">Linéariser ln</code>
+                  <code data-snip="ec">Énergie Ec</code>
+                </div>
                 <b>Fonctions</b><br>
                 <code>sin()</code> <code>cos()</code> <code>tan()</code> <code>exp()</code> <code>ln()</code> <code>log10()</code> <code>sqrt()</code> <code>abs()</code> <code>arctan()</code> <code>sqr()</code><br><br>
                 <b>Traitements TP</b><br>
@@ -4861,10 +5362,10 @@ const Progressi = (() => {
             <button class="mini" id="btnClearAll" style="width:100%">Tout effacer (nouveau TP)</button>
           </div>
         </div>
-        <div class="pr-sec">
-          <div class="pr-sec-h">Générateur de signal</div>
-          <div class="pr-row">
-            <label class="pr-fld" style="flex:1"><span>Signal</span>
+        <details class="pr-adv">
+          <summary>Générateur de signal</summary>
+          <div class="pr-adv-body">
+            <label class="pr-fld"><span>Signal</span>
               <select id="gPreset">
                 <option value="2*sin(2*pi*100*t)">Sinusoïde 100 Hz</option>
                 <option value="2*sin(2*pi*100*t) + 0.15*bruit(t)">Sinusoïde bruitée</option>
@@ -4875,33 +5376,62 @@ const Progressi = (() => {
                 <option value="bruit(t)">Bruit blanc gaussien</option>
               </select>
             </label>
+            <div class="pr-grid2">
+              <label class="pr-fld"><span>Nom Y</span><input id="gY" value="u"></label>
+              <label class="pr-fld"><span>Unité Y</span><input id="gYu" value="V"></label>
+            </div>
+            <label class="pr-fld"><span>Formule en t</span><input id="gExpr" value="2*sin(2*pi*100*t)"></label>
+            <div class="pr-grid3">
+              <label class="pr-fld"><span>t₀ (s)</span><input id="gT0" value="0"></label>
+              <label class="pr-fld"><span>Durée (s)</span><input id="gD" value="0.05"></label>
+              <label class="pr-fld"><span>Nb pts</span><input id="gN" value="1000"></label>
+            </div>
+            <button class="ib on" id="gCreate" style="width:100%">Générer la courbe</button>
           </div>
-          <div class="pr-grid2">
-            <label class="pr-fld"><span>Nom Y</span><input id="gY" value="u"></label>
-            <label class="pr-fld"><span>Unité Y</span><input id="gYu" value="V"></label>
-          </div>
-          <label class="pr-fld"><span>Formule en t</span><input id="gExpr" value="2*sin(2*pi*100*t)"></label>
-          <div class="pr-grid3">
-            <label class="pr-fld"><span>t₀ (s)</span><input id="gT0" value="0"></label>
-            <label class="pr-fld"><span>Durée (s)</span><input id="gD" value="0.05"></label>
-            <label class="pr-fld"><span>Nb pts</span><input id="gN" value="1000"></label>
-          </div>
-          <button class="ib on" id="gCreate" style="width:100%">Générer la courbe</button>
-        </div>`;
+        </details>`;
 
       $('#calcTa').value = this.calcText;
       $('#calcTa').oninput = e => { this.calcText = e.target.value; this.markDirty(); };
       $('#calcTa').onkeydown = e => {
         if (e.key === 'F2' || (e.key === 'Enter' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); this.runCalc(); }
       };
-      $$('#tab0 .pr-calc-help code').forEach(c => {
+      const insertCalc = txt => {
+        const ta = $('#calcTa'), st = ta.selectionStart, en = ta.selectionEnd;
+        ta.value = ta.value.slice(0, st) + txt + ta.value.slice(en);
+        ta.selectionStart = ta.selectionEnd = st + txt.length;
+        ta.focus();
+        this.calcText = ta.value;
+        this.markDirty();
+      };
+      this._insertCalc = insertCalc;
+      $$('#tab0 .pr-calc-help code:not([data-snip])').forEach(c => {
+        c.onclick = () => insertCalc(c.textContent);
+      });
+      $$('#calcSnips [data-snip]').forEach(c => {
         c.onclick = () => {
-          const ta = $('#calcTa'), st = ta.selectionStart, en = ta.selectionEnd;
-          ta.value = ta.value.slice(0, st) + c.textContent + ta.value.slice(en);
-          ta.selectionStart = ta.selectionEnd = st + c.textContent.length;
-          ta.focus();
-          this.calcText = ta.value;
+          const nonM = this.order.filter(n => this.curve(n)?.kind !== 'model');
+          const yN = nonM.find(n => this.curve(n).x) || nonM[1] || nonM[0] || 'y';
+          const snips = {
+            deriv: `\nd_${yN} = sgderiv(${yN}, 7, 2)\n`,
+            unc: `\nu_${yN} = 0.05 / sqrt(3)\n`,
+            ln: `\nln_${yN} = ln(abs(${yN}))\n`,
+            ec: `\nEc = 0.5 * 0.1 * ${yN}^2 [J]\n`,
+          };
+          insertCalc(snips[c.dataset.snip] || '');
         };
+      });
+
+      // Collage direct Ctrl+V dans l'onglet Données (détecte un tableau multi-cellules)
+      $('#tableWrap').addEventListener('paste', e => {
+        const txt = e.clipboardData?.getData('text/plain') || '';
+        if (!txt || (!txt.includes('\t') && !txt.includes('\n') && !txt.includes(';'))) return;
+        try {
+          const cols = IO.parseDelimited(txt);
+          if (cols.length >= 1 && cols[0].y.length >= 2) {
+            e.preventDefault();
+            this._ingestColumns(cols, 'presse-papiers');
+          }
+        } catch (_) {}
       });
 
       $('#btnImp').onclick = () => this.pickFile('.csv,.txt,.tsv,.xlsx,.rw3,.dat').then(f => f && this.handleFile(f));
@@ -4914,14 +5444,20 @@ const Progressi = (() => {
       $('#btnExpCSV').onclick = () => this.download('progressi_donnees.csv', IO.exportCSV(this.curves, this.order), 'text/csv;charset=utf-8');
       $('#btnExpPy').onclick = () => this.showPythonExport();
       $('#btnClearAll').onclick = () => {
-        this.curves.clear(); this.order = []; this.views = []; this.lastFit = null;
-        if (this.video) { this.video.pts.clear(); this.video.hist = []; this.video.ech = null; this.video.ori = null; this.video.savedState = null; this.video.importState(null); this.video.draw(); }
-        this.calcText = ''; $('#calcTa').value = '';
-        this.ensureDefaultView();
-        this.clearAutoSave();
-        this.dirty = false;
-        this.refreshAll();
-        this.toast('Nouveau TP : données et sauvegarde locale effacées');
+        const hasData = this.order.length > 0 || (this.video && this.video.pts.size > 0);
+        const doClear = () => {
+          this.curves.clear(); this.order = []; this.views = []; this.lastFit = null;
+          if (this.video) { this.video.pts.clear(); this.video.hist = []; this.video.ech = null; this.video.ori = null; this.video.savedState = null; this.video.importState(null); this.video.draw(); }
+          this.calcText = ''; $('#calcTa').value = '';
+          this.ensureDefaultView();
+          this.clearAutoSave();
+          this.dirty = false;
+          this.setDataLayout('table');
+          this.refreshAll();
+          this.toast('Nouveau TP : données et sauvegarde locale effacées');
+        };
+        if (hasData) this.confirm('Tout effacer (courbes, pointage vidéo et sauvegarde locale) pour démarrer un nouveau TP ?', doClear);
+        else doClear();
       };
       $('#selSample').onchange = e => {
         if (!e.target.value) return;
@@ -4929,16 +5465,55 @@ const Progressi = (() => {
         e.target.value = '';
       };
 
-      $$('#tab0 [data-dl]').forEach(b => b.onclick = () => {
-        this.dataLayout = b.dataset.dl;
-        $$('#tab0 [data-dl]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-        $('#tableWrap').hidden = this.dataLayout === 'calc';
-        $('#calcPane').hidden = this.dataLayout === 'table';
-        $('#calcPane').classList.toggle('full', this.dataLayout === 'calc');
-      });
+      $$('#tab0 [data-dl]').forEach(b => b.onclick = () => this.setDataLayout(b.dataset.dl));
 
       $('#gPreset').onchange = e => { $('#gExpr').value = e.target.value; };
       $('#gCreate').onclick = () => this.generateSignal();
+    },
+
+    setDataLayout(mode) {
+      this.dataLayout = mode;
+      $$('#tab0 [data-dl]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.dl === mode)));
+      $('#tableWrap').hidden = mode === 'calc';
+      $('#calcPane').hidden = mode === 'table';
+      $('#calcPane').classList.toggle('full', mode === 'calc');
+    },
+
+    startManualTable() {
+      const xn = this.uniqueName('x'), yn = this.uniqueName('y');
+      this.setCurve(xn, { y: new Float64Array(10).fill(NaN), unit: '', x: null, kind: 'saisie', color: '#788496' });
+      this.setCurve(yn, { y: new Float64Array(10).fill(NaN), unit: '', x: xn, kind: 'saisie' });
+      const v = this.activeView();
+      if (!v.curves.length) { v.curves = [yn]; v.xName = xn; }
+      this.markDirty();
+      this.refreshAll();
+      setTimeout(() => {
+        const first = $('#tableWrap input[data-i="0"]');
+        if (first) first.focus();
+      }, 20);
+    },
+
+    deleteTableRow(idx) {
+      const cols = this.order.filter(n => this.curve(n)?.kind !== 'model');
+      for (const n of cols) {
+        const c = this.curve(n);
+        if (idx >= c.y.length) continue;
+        const arr = new Float64Array(Math.max(0, c.y.length - 1));
+        arr.set(c.y.subarray(0, idx), 0);
+        arr.set(c.y.subarray(idx + 1), idx);
+        c.y = arr;
+        if (c.excluded?.size) {
+          const nextEx = new Set();
+          for (const k of c.excluded) {
+            if (k < idx) nextEx.add(k);
+            else if (k > idx) nextEx.add(k - 1);
+          }
+          c.excluded = nextEx;
+        }
+      }
+      this.markDirty();
+      this.refreshAll();
+      this.toast(`Ligne #${idx + 1} supprimée`);
     },
 
     refreshDataUI() {
@@ -4964,17 +5539,86 @@ const Progressi = (() => {
           this.plot.autoscale();
         };
         $('[data-a=prop]', li).onclick = () => this.openCurveProps(n);
-        $('[data-a=del]', li).onclick = () => { this.removeCurve(n); this.refreshAll(); };
+        $('[data-a=del]', li).onclick = () => {
+          const snap = {
+            ...c,
+            y: Float64Array.from(c.y),
+            excluded: new Set(c.excluded),
+            pos: this.order.indexOf(n),
+          };
+          this.removeCurve(n);
+          this.markDirty();
+          this.refreshAll();
+          this.toast(`Variable « ${n} » supprimée`, '', {
+            label: 'Annuler',
+            fn: () => {
+              this.curves.set(n, { ...snap });
+              this.order.splice(Math.min(snap.pos, this.order.length), 0, n);
+              this.markDirty();
+              this.refreshAll();
+            },
+          });
+        };
         ul.appendChild(li);
       }
 
-      // Tableur
+      // Puces variables cliquables dans l'aide calcul
+      const cv = $('#calcVars');
+      if (cv) {
+        const vnames = this.order.filter(n => this.curve(n)?.kind !== 'model');
+        cv.innerHTML = vnames.length
+          ? vnames.map(n => `<code data-cv="${esc(n)}">${esc(n)}</code>`).join('')
+          : '<span class="pr-muted">Aucune</span>';
+        $$('[data-cv]', cv).forEach(el => el.onclick = () => this._insertCalc?.(el.dataset.cv));
+      }
+
+      // Tableur ou écran d'accueil orienté tâches TP
       const wrap = $('#tableWrap');
       const cols = this.order.filter(n => this.curve(n)?.kind !== 'model');
       if (!cols.length) {
-        wrap.innerHTML = `<div style="padding:2em;text-align:center;color:var(--ink2)">
-          <p>Aucune donnée. Importez un fichier (CSV, TXT, Excel, Regressi), collez un tableau, lancez un pointage vidéo ou choisissez un <b>Exemple TP</b>.</p>
-        </div>`;
+        wrap.innerHTML = `
+          <div class="pr-welcome">
+            <div class="pr-welcome-h">
+              <h2>Démarrer une exploitation de TP</h2>
+              <p>Glissez-déposez un fichier n'importe où sur la fenêtre, ou choisissez une action :</p>
+            </div>
+            <div class="pr-welcome-grid">
+              <button class="pr-wcard" type="button" data-wa="imp">
+                <span class="pr-wi">📂</span>
+                <strong>Importer un fichier</strong>
+                <small>CSV, TXT, Excel (.xlsx), Regressi (.rw3) ou session .json</small>
+              </button>
+              <button class="pr-wcard" type="button" data-wa="paste">
+                <span class="pr-wi">📋</span>
+                <strong>Coller un tableau</strong>
+                <small>Depuis Excel, LibreOffice, Python ou un oscilloscope (Ctrl+V)</small>
+              </button>
+              <button class="pr-wcard" type="button" data-wa="manual">
+                <span class="pr-wi">✏️</span>
+                <strong>Saisir des mesures</strong>
+                <small>Ouvre un tableau x / y prêt à remplir au clavier</small>
+              </button>
+              <button class="pr-wcard" type="button" data-wa="video">
+                <span class="pr-wi">🎬</span>
+                <strong>Pointer une vidéo</strong>
+                <small>Pointage manuel ou suivi automatique (MP4, MOV, WebM…)</small>
+              </button>
+            </div>
+            <div class="pr-wchips">
+              <span class="pr-muted">Ou tester un exemple TP :</span>
+              <button class="mini" data-ws="beer">Beer-Lambert</button>
+              <button class="mini" data-ws="rc">Charge RC</button>
+              <button class="mini" data-ws="rlc">RLC amorti</button>
+              <button class="mini" data-ws="ph">Dosage pH</button>
+              <button class="mini" data-ws="cond">Conductimétrie</button>
+              <button class="mini" data-ws="bode">Bode RC</button>
+            </div>
+          </div>`;
+        $('[data-wa=imp]', wrap).onclick = () => $('#btnImp').click();
+        $('[data-wa=paste]', wrap).onclick = () => this.pasteFromClipboard();
+        $('[data-wa=manual]', wrap).onclick = () => this.startManualTable();
+        $('[data-wa=video]', wrap).onclick = () => this.setTab(1);
+        $$('[data-ws]', wrap).forEach(b => b.onclick = () => this.loadSample(b.dataset.ws, false));
         return;
       }
       const maxR = Math.max(10, ...cols.map(n => this.curve(n).y.length));
@@ -4988,7 +5632,7 @@ const Progressi = (() => {
       }
       html += `</tr></thead><tbody>`;
       for (let i = 0; i < limit; i++) {
-        html += `<tr><td class="idx">${i + 1}</td>`;
+        html += `<tr><td class="idx"><span class="pr-rnum">${i + 1}</span><button type="button" class="pr-rdel" data-rdel="${i}" title="Supprimer la ligne ${i + 1}">×</button></td>`;
         for (const n of cols) {
           const c = this.curve(n);
           const v = i < c.y.length && isFinite(c.y[i]) ? String(+c.y[i].toPrecision(7)) : '';
@@ -5002,6 +5646,7 @@ const Progressi = (() => {
       wrap.innerHTML = html;
 
       $$('th[data-col]', wrap).forEach(th => th.onclick = () => this.openCurveProps(th.dataset.col));
+      $$('[data-rdel]', wrap).forEach(b => b.onclick = () => this.deleteTableRow(+b.dataset.rdel));
       $$('td input', wrap).forEach(inp => {
         inp.onchange = () => {
           const c = this.curve(inp.dataset.n), idx = +inp.dataset.i;
@@ -5014,10 +5659,19 @@ const Progressi = (() => {
           this.redrawPlots();
         };
         inp.onkeydown = e => {
-          if (e.key === 'Enter') {
+          const idx = +inp.dataset.i, colName = inp.dataset.n;
+          if (e.key === 'Enter' || e.key === 'ArrowDown') {
             e.preventDefault();
-            const next = wrap.querySelector(`input[data-n="${CSS.escape(inp.dataset.n)}"][data-i="${+inp.dataset.i + 1}"]`);
+            let next = wrap.querySelector(`input[data-n="${CSS.escape(colName)}"][data-i="${idx + 1}"]`);
+            if (!next && e.key === 'Enter') {
+              this.addTableRows(1);
+              next = wrap.querySelector(`input[data-n="${CSS.escape(colName)}"][data-i="${idx + 1}"]`);
+            }
             if (next) { next.focus(); next.select(); }
+          } else if (e.key === 'ArrowUp' && idx > 0) {
+            e.preventDefault();
+            const prev = wrap.querySelector(`input[data-n="${CSS.escape(colName)}"][data-i="${idx - 1}"]`);
+            if (prev) { prev.focus(); prev.select(); }
           }
         };
       });
@@ -5242,15 +5896,17 @@ const Progressi = (() => {
           <button class="mini" id="pEq" aria-pressed="false" title="Repère orthonormé (même échelle X et Y)">1:1</button>
           <button class="mini" id="pErr" aria-pressed="true" title="Afficher les barres d'incertitude u(x), u(y)">Barres u</button>
           <button class="mini" id="pRes" aria-pressed="false" title="Afficher le sous-graphe des résidus">Résidus</button>
+          <button class="mini" id="pFitBox" aria-pressed="false" title="Incruster l'encart modèle (équation & paramètres) sur le graphe et le PNG">Encart modèle</button>
         </div>
         <div class="pr-plot-wrap" id="plotWrap"></div>
-        <div class="pr-status"><span id="pInfo">Double-clic : cadrer · Molette : zoom · Maj+glisser : déplacer</span><span id="pCoords"></span></div>`;
+        <div class="pr-status"><span id="pInfo">Double-clic : cadrer · Molette : zoom · Maj+glisser : déplacer · Survol : lire un point</span><span id="pCoords"></span></div>`;
 
       $('#side2').innerHTML = `
         <div class="pr-sec">
           <div class="pr-sec-h">Courbes & axes</div>
           <label class="pr-fld"><span>Abscisse X de la vue</span><select id="pXSel"></select></label>
           <div class="pr-clist" id="pCurveList"></div>
+          <label class="pr-fld"><span>Titre du graphique (optionnel, inclus dans le PNG)</span><input id="pTitle" placeholder="ex. Étalonnage Beer-Lambert"></label>
         </div>
 
         <div class="pr-sec">
@@ -5265,6 +5921,10 @@ const Progressi = (() => {
               </select>
             </label>
           </div>
+          <div class="pr-grid2" id="mBoundsRow" hidden>
+            <label class="pr-fld"><span>Borne a</span><input id="mBoundA" placeholder="glisser sur graphe"></label>
+            <label class="pr-fld"><span>Borne b</span><input id="mBoundB" placeholder="glisser sur graphe"></label>
+          </div>
           <label class="pr-fld"><span>Modèle</span><select id="mModel"></select></label>
           <label class="pr-fld" id="mExprWrap" hidden><span>Expression libre (variable x)</span><input id="mExpr" placeholder="ex. A*cos(w*x + phi) + B"></label>
           <div class="pr-meta" id="mFormula"></div>
@@ -5274,9 +5934,14 @@ const Progressi = (() => {
           </div>
           <div class="pr-switches">
             <label class="ak-chk"><input type="checkbox" role="switch" id="mWeight" checked><span class="ak-switch-track"></span><span>Pondérer</span></label>
-            <label class="ak-chk"><input type="checkbox" role="switch" id="mMC"><span class="ak-switch-track"></span><span>Monte-Carlo</span></label>
+            <label class="ak-chk" title="Estime les incertitudes des paramètres par 300 tirages aléatoires (nécessite u(X) ou u(Y))"><input type="checkbox" role="switch" id="mMC"><span class="ak-switch-track"></span><span>Monte-Carlo</span></label>
           </div>
-          <table class="pr-ptbl" id="mParamsTbl"></table>
+          <details class="pr-adv" id="mParamsAdv">
+            <summary>Paramètres initiaux & verrouillage</summary>
+            <div class="pr-adv-body">
+              <table class="pr-ptbl" id="mParamsTbl"></table>
+            </div>
+          </details>
           <div class="pr-row">
             <button class="ib on" id="mRun" style="flex:1">Ajuster le modèle</button>
             <button class="ib" id="mClear">Effacer</button>
@@ -5289,10 +5954,12 @@ const Progressi = (() => {
           </div>
         </div>
 
-        <div class="pr-sec">
-          <div class="pr-sec-h">Mesures automatiques</div>
-          <div class="pr-res-box" id="pStats" style="font-size:.78em">—</div>
-        </div>`;
+        <details class="pr-adv" open>
+          <summary>Mesures automatiques</summary>
+          <div class="pr-adv-body">
+            <div class="pr-res-box" id="pStats" style="font-size:.78em">—</div>
+          </div>
+        </details>`;
 
       // Remplir la liste des modèles par catégorie
       const byCat = new Map();
@@ -5337,19 +6004,16 @@ const Progressi = (() => {
         onBoundsChange: r => {
           if (r) {
             $('#mRange').value = 'bounds';
-            $('#pInfo').textContent = `Plage d'ajustement : [${PlotFmt.val(r[0], 5)} ; ${PlotFmt.val(r[1], 5)}]`;
+            $('#mBoundsRow').hidden = false;
+            $('#mBoundA').value = PlotFmt.val(r[0], 5);
+            $('#mBoundB').value = PlotFmt.val(r[1], 5);
+            $('#pInfo').textContent = `Plage d'ajustement : [${PlotFmt.val(r[0], 5)} ; ${PlotFmt.val(r[1], 5)}] — tirez les poignées a/b pour ajuster`;
           }
         },
         onChange: () => this.updateQuickStats(),
       });
 
-      $$('#plotBar [data-pm]').forEach(b => b.onclick = () => {
-        $$('#plotBar [data-pm]').forEach(x => x.classList.toggle('on', x === b));
-        this.plot.mode = b.dataset.pm;
-        if (b.dataset.pm !== 'mesure') this.plot.mesure = [];
-        if (b.dataset.pm !== 'tangente') this.plot.overlays = [];
-        this.plot.draw();
-      });
+      $$('#plotBar [data-pm]').forEach(b => b.onclick = () => this.setPlotMode(b.dataset.pm));
       $('#btnAuto').onclick = () => this.plot.autoscale();
       $('#pStyle').onchange = e => { this.activeView().style = this.plot.style = e.target.value; this.plot.draw(); };
       const bindToggle = (id, fn) => {
@@ -5365,13 +6029,49 @@ const Progressi = (() => {
       bindToggle('#pEq', on => { this.activeView().equal = this.plot.equal = on; this.plot.autoscale(); });
       bindToggle('#pErr', on => { this.plot.showErr = on; this.plot.draw(); });
       bindToggle('#pRes', on => { this.plot.showResiduals = on; this.plot.draw(); });
+      bindToggle('#pFitBox', on => { this.plot.showFitBox = on; this.plot.draw(); });
 
+      $('#pTitle').oninput = e => {
+        this.activeView().plotTitle = e.target.value;
+        this.plot.title = e.target.value;
+        this.plot.draw();
+        this.markDirty();
+      };
       $('#pXSel').onchange = e => {
         const val = e.target.value || null;
         this.activeView().xName = this.plot.xName = val;
         this.plot.autoscale();
         this.updateQuickStats();
       };
+      $('#mRange').onchange = e => {
+        const isB = e.target.value === 'bounds';
+        $('#mBoundsRow').hidden = !isB;
+        if (isB) {
+          this.setPlotMode('bounds');
+          if (!this.plot.boundsRange) {
+            const cn = $('#mCurve').value;
+            const d = cn ? this.getCurveXY(cn, this.plot.xName) : null;
+            if (d && d.x.length >= 2) {
+              const x0 = Num.min(d.x), x1 = Num.max(d.x), sp = x1 - x0;
+              const a = x0 + 0.1 * sp, b = x1 - 0.1 * sp;
+              this.plot.boundsRange = [a, b];
+              $('#mBoundA').value = PlotFmt.val(a, 5);
+              $('#mBoundB').value = PlotFmt.val(b, 5);
+              this.plot.draw();
+            }
+          }
+        }
+      };
+      const syncBoundsFromInputs = () => {
+        const a = IO.parseNum($('#mBoundA').value), b = IO.parseNum($('#mBoundB').value);
+        if (isFinite(a) && isFinite(b)) {
+          this.plot.boundsRange = a <= b ? [a, b] : [b, a];
+          this.plot.draw();
+        }
+      };
+      $('#mBoundA').onchange = syncBoundsFromInputs;
+      $('#mBoundB').onchange = syncBoundsFromInputs;
+
       $('#mCurve').onchange = () => { this._syncCurveUncInputs(); this.updateQuickStats(); };
       $('#mModel').onchange = () => this._renderModelParams();
       $('#mExpr').oninput = () => this._renderModelParams();
@@ -5384,7 +6084,10 @@ const Progressi = (() => {
         this.removeCurve('Mod_' + cn + '_x');
         this.plot.residualsData = null;
         this.plot.showResiduals = false;
+        this.plot.fitBoxLines = null;
+        this.plot.showFitBox = false;
         $('#pRes').setAttribute('aria-pressed', 'false');
+        $('#pFitBox').setAttribute('aria-pressed', 'false');
         this.lastFit = null;
         $('#mQuality').innerHTML = '';
         $('#mRes').textContent = 'Modèle effacé.';
@@ -5394,6 +6097,26 @@ const Progressi = (() => {
       $('#mCopyTex').onclick = () => this.copyFit('tex');
 
       this._renderModelParams();
+    },
+
+    setPlotMode(mode) {
+      if (!this.plot) return;
+      $$('#plotBar [data-pm]').forEach(x => x.classList.toggle('on', x.dataset.pm === mode));
+      this.plot.mode = mode;
+      if (mode !== 'mesure') this.plot.mesure = [];
+      if (mode !== 'tangente') this.plot.overlays = [];
+      const hints = {
+        zoom: 'Zoom : tracez un rectangle · Molette : zoom · Maj+glisser : déplacer · Double-clic : cadrer',
+        pan: 'Déplacer : cliquer-glisser pour naviguer · Molette : zoom · Double-clic : cadrer',
+        reticule: 'Réticule libre : déplacez la souris pour lire les coordonnées exactes',
+        curseur: 'Curseur courbe : survolez pour lire les coordonnées point par point',
+        mesure: 'Mesure 2 pts : cliquez 2 points sur la courbe pour obtenir Δx, Δy, pente et 1/|Δx|',
+        tangente: 'Tangente : cliquez un point de la courbe pour tracer la tangente locale',
+        bounds: 'Bornes [a, b] : glissez sur le graphe ou tirez les poignées a et b pour délimiter la plage',
+        exclude: 'Exclure pt : cliquez un point aberrant pour l’écarter (ou le réinclure) de l’ajustement',
+      };
+      if (hints[mode]) $('#pInfo').textContent = hints[mode];
+      this.plot.draw();
     },
 
     _syncCurveUncInputs() {
@@ -5416,6 +6139,7 @@ const Progressi = (() => {
     _renderModelParams(lastVals = null) {
       const m = Fit.MODELS.find(x => x.id === $('#mModel').value) || Fit.MODELS[0];
       $('#mExprWrap').hidden = !!m.params;
+      if (!m.params && $('#mParamsAdv')) $('#mParamsAdv').open = true;
       $('#mFormula').textContent = m.params ? 'y(x) = ' + m.expr : '';
       let ps = m.params;
       if (!ps) {
@@ -5452,14 +6176,15 @@ const Progressi = (() => {
         this.syncPlotFromView();
       });
       $('#btnAddView').onclick = () => {
-        this.views.push({ id: Date.now(), title: 'Vue ' + (this.views.length + 1), curves: [], xName: null, style: 'lignepoints', logx: false, logy: false, equal: false });
+        this.views.push({ id: Date.now(), title: 'Vue ' + (this.views.length + 1), curves: [], xName: null, style: 'lignepoints', logx: false, logy: false, equal: false, plotTitle: '' });
         this.activeViewIdx = this.views.length - 1;
         this.syncPlotFromView();
       };
 
-      // Sélecteur X
+      // Sélecteur X & titre
       $('#pXSel').innerHTML = `<option value="">(abscisse propre de chaque courbe)</option>` +
         this.order.map(n => `<option value="${esc(n)}" ${n === v.xName ? 'selected' : ''}>${esc(n)}</option>`).join('');
+      if ($('#pTitle')) $('#pTitle').value = v.plotTitle || '';
 
       // Liste des courbes cochables
       const cl = $('#pCurveList');
@@ -5490,6 +6215,7 @@ const Progressi = (() => {
 
       this.plot.curves = v.curves.slice();
       this.plot.xName = v.xName;
+      this.plot.title = v.plotTitle || '';
       this.plot.style = v.style; $('#pStyle').value = v.style;
       this.plot.logx = v.logx; $('#pLogX').setAttribute('aria-pressed', String(!!v.logx));
       this.plot.logy = v.logy; $('#pLogY').setAttribute('aria-pressed', String(!!v.logy));
@@ -5525,6 +6251,8 @@ const Progressi = (() => {
       const d = this.getCurveXY(name, this.plot.xName);
       const uxAll = $('#mWeight').checked ? this.getUncertainty(name, 'x', this.plot.xName) : null;
       const uyAll = $('#mWeight').checked ? this.getUncertainty(name, 'y', this.plot.xName) : null;
+      const mcWanted = $('#mMC').checked;
+      const mcNoUnc = mcWanted && !uxAll && !uyAll;
 
       let xMin = -Infinity, xMax = Infinity;
       const rMode = $('#mRange').value;
@@ -5566,37 +6294,50 @@ const Progressi = (() => {
           userExpr: $('#mExpr').value,
           init, fixed,
           ux: fux, uy: fuy,
-          monteCarlo: $('#mMC').checked,
+          monteCarlo: mcWanted,
         });
-        this.lastFit = { ...out, curveName: name, xName: this.plot.xName || c.x || 'x' };
+        this.lastFit = { ...out, curveName: name, xName: this.plot.xName || c.x || 'x', fixed };
         const { p, sig, r2, rmse, chi2red, zmax, weighted, resid, zscores } = out.res;
         const xc = this.plot.xName ? this.curve(this.plot.xName) : this.xCurveOf(name);
         const xu = xc ? xc.unit : '';
 
-        // Badge qualité CPGE
+        // Badge qualité CPGE avec rappel pédagogique
         let badge = '';
         if (weighted && isFinite(chi2red)) {
           const cls = (chi2red <= 2.2 && zmax <= 2.5) ? 'pr-badge-ok' : (chi2red <= 5 ? 'pr-badge-warn' : 'pr-badge-err');
           const lbl = (chi2red <= 2.2 && zmax <= 2.5) ? 'Modèle compatible avec les incertitudes' : 'Écart significatif aux incertitudes';
-          badge = `<span class="${cls}">χ²_red = ${PlotFmt.val(chi2red, 3)} · max|z| = ${PlotFmt.val(zmax, 3)} — ${lbl}</span>`;
+          const tip = 'Règle CPGE : accord modèle/mesures satisfaisant si χ²_red ≈ 1 (≤ 2) et tous les écarts normalisés |z| ≤ 2.';
+          badge = `<span class="${cls}" title="${tip}">χ²_red = ${PlotFmt.val(chi2red, 3)} · max|z| = ${PlotFmt.val(zmax, 3)} — ${lbl}</span>`;
         } else {
           const cls = r2 >= 0.99 ? 'pr-badge-ok' : (r2 >= 0.95 ? 'pr-badge-warn' : 'pr-badge-err');
-          badge = `<span class="${cls}">R² = ${r2.toFixed(5)} · RMSE = ${PlotFmt.val(rmse, 3)}</span>`;
+          badge = `<span class="${cls}" title="Renseignez u(Y) ou u(X) pour activer le test χ²_red et les écarts normalisés z.">R² = ${r2.toFixed(5)} · RMSE = ${PlotFmt.val(rmse, 3)}</span>`;
         }
         $('#mQuality').innerHTML = badge;
 
-        let txt = `${m.nom} (${fx.length} pts${weighted ? ', pondéré' : ''})\n`;
-        txt += `${name} = ${out.expr.replace(/\bx\b/g, xc ? xc.name : 'x')}\n\n`;
+        const eqStr = `${name} = ${out.expr.replace(/\bx\b/g, xc ? xc.name : 'x')}`;
+        let txt = `${m.nom} (${fx.length} pts${weighted ? ', pondéré' : ''})\n${eqStr}\n\n`;
+        const boxLines = [eqStr];
         out.pnames.forEach((pn, i) => {
-          const mcTxt = out.mc && isFinite(out.mc.sig[i]) ? `  [MC: ± ${PlotFmt.val(out.mc.sig[i], 2)}]` : '';
-          txt += `${pn} = ${PlotFmt.val(p[i], 5)}` +
-            (fixed[pn] ? '  (fixé)' : (isFinite(sig[i]) ? `  ± ${PlotFmt.val(sig[i], 2)}` : '')) + mcTxt + '\n';
+          const formatted = fixed[pn]
+            ? `${PlotFmt.val(p[i], 5)}  (fixé)`
+            : PlotFmt.metro(p[i], sig[i]);
+          const mcTxt = out.mc && isFinite(out.mc.sig[i]) ? `  [MC: ${PlotFmt.metro(p[i], out.mc.sig[i])}]` : '';
+          txt += `${pn} = ${formatted}${mcTxt}\n`;
+          boxLines.push(`${pn} = ${fixed[pn] ? PlotFmt.val(p[i], 4) + ' (fixé)' : PlotFmt.metro(p[i], sig[i])}`);
         });
         if (m.extra) {
           txt += '\n' + m.extra(p, xu).join('\n') + '\n';
         }
         txt += `\nR² = ${r2.toFixed(6)}   ·   RMSE = ${PlotFmt.val(rmse, 4)}`;
-        if (weighted && isFinite(chi2red)) txt += `\nχ²_red = ${PlotFmt.val(chi2red, 3)}   ·   max|z| = ${PlotFmt.val(zmax, 3)}`;
+        if (weighted && isFinite(chi2red)) {
+          txt += `\nχ²_red = ${PlotFmt.val(chi2red, 3)}   ·   max|z| = ${PlotFmt.val(zmax, 3)}`;
+          boxLines.push(`χ²_red = ${PlotFmt.val(chi2red, 3)} · max|z| = ${PlotFmt.val(zmax, 2)}`);
+        } else {
+          boxLines.push(`R² = ${r2.toFixed(5)}`);
+        }
+        if (mcNoUnc) {
+          txt += `\n\n⚠ Monte-Carlo inactif : renseignez u(Y) ou u(X) ci-dessus.`;
+        }
         $('#mRes').textContent = txt;
 
         // Mettre à jour les placeholders des valeurs initiales
@@ -5618,16 +6359,19 @@ const Progressi = (() => {
         this.setCurve(mxn, { y: mx, unit: xu, kind: 'model', x: null, color: '#888' });
         this.setCurve(mn, { y: my, unit: c.unit, kind: 'model', x: mxn, color: document.documentElement.dataset.theme === 'dark' ? '#f8fafc' : '#111827', style: 'ligne', dash: true, width: 2.3, axis: c.axis });
         const v = this.activeView();
-        v.xName = null; // Permet d'afficher la courbe modèle sur son propre x dense
+        // Conserver v.xName : SciPlot.data() utilise toujours c.x pour kind==='model'
         if (!v.curves.includes(name)) v.curves.push(name);
         if (!v.curves.includes(mn)) v.curves.push(mn);
 
         this.plot.residualsData = { x: Float64Array.from(fx), r: resid, z: zscores, weighted, curveName: name };
         this.plot.showResiduals = true;
+        this.plot.fitBoxLines = boxLines;
+        this.plot.showFitBox = true;
         $('#pRes').setAttribute('aria-pressed', 'true');
+        $('#pFitBox').setAttribute('aria-pressed', 'true');
         this.refreshPlotUI();
         this.scheduleAutoSave();
-        this.toast('Ajustement calculé', 'ok');
+        this.toast(mcNoUnc ? 'Ajustement calculé (renseignez u(Y)/u(X) pour Monte-Carlo)' : 'Ajustement calculé', 'ok');
       } catch (e) {
         $('#mRes').textContent = 'Échec de l’ajustement : ' + e.message;
         this.toast(e.message, 'err');
@@ -5641,7 +6385,10 @@ const Progressi = (() => {
         const f = this.lastFit;
         txt = f.pnames.map((pn, i) => {
           const s = f.res.sig[i];
-          return `${pn} = ${PlotFmt.val(f.res.p[i], 4)}${isFinite(s) && s > 0 ? ` \\pm ${PlotFmt.val(s, 2)}` : ''}`;
+          const valStr = f.fixed?.[pn]
+            ? PlotFmt.val(f.res.p[i], 4).replace('−', '-').replace('.', '{,}')
+            : PlotFmt.metro(f.res.p[i], s, { latex: true, comma: true });
+          return `${pn} = ${valStr}`;
         }).join(' \\quad ; \\quad ');
         txt = `$$${txt}$$`;
       }
@@ -5679,7 +6426,7 @@ const Progressi = (() => {
     // ==================== ONGLET 4 : TRAITEMENTS & SPECTRES ====================
     _buildTab3() {
       $('#tab3').innerHTML = `
-        <div class="pr-bar">
+        <div class="pr-bar" id="tPlotBar">
           <div class="pr-pills" id="treatPills">
             <button class="mini" data-tt="deriv" aria-pressed="true">Dérivée / Lissage</button>
             <button class="mini" data-tt="integ" aria-pressed="false">Intégrale / Aire</button>
@@ -5688,6 +6435,9 @@ const Progressi = (() => {
             <button class="mini" data-tt="bode" aria-pressed="false">Bode & Filtres</button>
           </div>
           <span style="flex:1"></span>
+          <button class="ib on" data-tpm="zoom" title="Zoom par cadre">Zoom</button>
+          <button class="ib" data-tpm="curseur" title="Curseur sur la courbe / spectre">Curseur</button>
+          <button class="ib" data-tpm="mesure" title="Mesurer Δx, Δy entre deux points">Mesure 2 pts</button>
           <button class="ib" id="tAuto">Cadrer</button>
         </div>
         <div class="pr-plot-wrap" id="tPlotWrap"></div>
@@ -5697,6 +6447,12 @@ const Progressi = (() => {
 
       this.tplot = new SciPlot($('#tPlotWrap'), this, {
         onHover: (x, y) => { $('#tCoords').textContent = `x = ${PlotFmt.val(x, 5)}   y = ${PlotFmt.val(y, 5)}`; },
+        onPickPoint: (kind, payload) => {
+          if (kind === 'mesure' && payload.length === 2) {
+            const [a, b] = payload, dx = b.x - a.x, dy = b.y - a.y;
+            $('#tInfo').textContent = `Δx = ${PlotFmt.val(dx, 5)} · Δy = ${PlotFmt.val(dy, 5)} · pente = ${PlotFmt.val(dy / dx, 5)}`;
+          }
+        },
         onBoundsChange: r => {
           if (this.treatTool === 'integ' && r) {
             this.integState.a = r[0]; this.integState.b = r[1];
@@ -5708,12 +6464,29 @@ const Progressi = (() => {
         },
       });
       $('#tAuto').onclick = () => this.tplot.autoscale();
+      $$('#tPlotBar [data-tpm]').forEach(b => b.onclick = () => {
+        $$('#tPlotBar [data-tpm]').forEach(x => x.classList.toggle('on', x === b));
+        this.tplot.mode = b.dataset.tpm;
+        if (b.dataset.tpm !== 'mesure') this.tplot.mesure = [];
+        this.tplot.draw();
+      });
 
       $$('#treatPills [data-tt]').forEach(b => b.onclick = () => {
         this.treatTool = b.dataset.tt;
         $$('#treatPills [data-tt]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
         this.refreshTreatUI();
       });
+    },
+
+    openCurveInPlot(names, opts = {}) {
+      const list = Array.isArray(names) ? names : [names];
+      const v = this.activeView();
+      if (opts.replace) v.curves = [];
+      for (const n of list) if (this.curve(n) && !v.curves.includes(n)) v.curves.push(n);
+      if (opts.logx !== undefined) v.logx = !!opts.logx;
+      if (opts.xName !== undefined) v.xName = opts.xName;
+      this.setTab(2);
+      this.plot.autoscale();
     },
 
     _curveOptsHtml(sel, filter) {
@@ -5726,9 +6499,12 @@ const Progressi = (() => {
       const nonModel = this.order.filter(n => this.curve(n)?.kind !== 'model');
       const defC = nonModel.find(n => this.curve(n).x) || nonModel[nonModel.length - 1] || '';
       this.tplot.overlays = [];
+      this.tplot.handles = [];
       this.tplot.boundsRange = null;
+      this.tplot.mesure = [];
       this.tplot.mode = 'zoom';
       this.tplot.logx = false;
+      $$('#tPlotBar [data-tpm]').forEach(x => x.classList.toggle('on', x.dataset.tpm === 'zoom'));
 
       if (!nonModel.length) {
         P.innerHTML = `<div class="pr-sec-h">Traitements</div><p class="pr-muted">Importez ou créez d'abord des données dans l'onglet 1.</p>`;
@@ -5784,7 +6560,7 @@ const Progressi = (() => {
             <label class="pr-fld"><span>Borne a</span><input id="tiA"></label>
             <label class="pr-fld"><span>Borne b</span><input id="tiB"></label>
           </div>
-          <p class="pr-muted">Glissez directement sur le graphe pour choisir l'intervalle [a, b].</p>
+          <p class="pr-muted">Glissez sur le graphe ou tirez les poignées a / b pour choisir l'intervalle.</p>
           <div class="pr-res-box" id="tiRes">—</div>
           <button class="ib on" id="tiPrim" style="width:100%">Créer la courbe primitive ∫ y dx</button>`;
         this.tplot.mode = 'bounds';
@@ -5804,43 +6580,67 @@ const Progressi = (() => {
           const cn = $('#tiC').value, c = this.curve(cn), d = this.getCurveXY(cn), xc = this.xCurveOf(cn);
           const nm = this.uniqueName('Int_' + cn);
           this.setCurve(nm, { y: Num.integ(d.x, d.y), x: c.x, unit: [c.unit, xc?.unit].filter(Boolean).join('·'), kind: 'calc' });
-          this.toast(`Primitive ${nm} créée`, 'ok');
+          this.markDirty();
           this.refreshDataUI();
+          this.toast(`Primitive ${nm} créée`, 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot(nm) });
         };
         initBounds();
       } else if (this.treatTool === 'dosage') {
-        const phCand = nonModel.find(n => /ph/i.test(n)) || defC;
+        const phCand = nonModel.find(n => /ph/i.test(n)) || nonModel.find(n => /sig|cond|g\b/i.test(n)) || defC;
+        if (/sig|cond/i.test(phCand) && !/ph/i.test(phCand)) this.dosageType = 'cond';
         P.innerHTML = `
           <div class="pr-sec-h">Dosages (pH-métrie & conductim.)</div>
+          <div class="pr-pills" id="tdoModePills">
+            <button class="mini" data-dm="ph" aria-pressed="${this.dosageType !== 'cond'}">pH-métrique</button>
+            <button class="mini" data-dm="cond" aria-pressed="${this.dosageType === 'cond'}">Conductimétrique</button>
+          </div>
           <label class="pr-fld"><span>Courbe titrage (pH ou σ)</span><select id="tdoC">${this._curveOptsHtml(phCand)}</select></label>
-          <div class="pr-subbox">
-            <div class="pr-sec-h" style="border:0;padding:0">1 · Dérivée Savitzky-Golay</div>
-            <label class="pr-fld"><span>Fenêtre lissage</span><select id="tdoW"><option selected>5</option><option>7</option><option>9</option></select></label>
-            <div class="pr-res-box" id="tdoPeaks">—</div>
-            <button class="mini" id="tdoSaveD" style="width:100%">Ajouter la courbe dérivée</button>
-          </div>
-          <div class="pr-subbox">
-            <div class="pr-sec-h" style="border:0;padding:0">2 · Tangentes parallèles</div>
-            <div class="pr-grid2">
-              <label class="pr-fld"><span>Point avant V₁</span><input id="tdoV1"></label>
-              <label class="pr-fld"><span>Point après V₂</span><input id="tdoV2"></label>
+          <div id="tdoPhWrap" ${this.dosageType === 'cond' ? 'hidden' : ''}>
+            <div class="pr-subbox" style="margin-bottom:.45em">
+              <div class="pr-sec-h" style="border:0;padding:0">1 · Dérivée Savitzky-Golay</div>
+              <label class="pr-fld"><span>Fenêtre lissage</span><select id="tdoW"><option selected>5</option><option>7</option><option>9</option></select></label>
+              <div class="pr-res-box" id="tdoPeaks">—</div>
+              <button class="mini" id="tdoSaveD" style="width:100%">Ajouter la courbe dérivée</button>
             </div>
-            <label class="pr-fld"><span>Pente commune (auto si vide)</span><input id="tdoM" placeholder="auto"></label>
-            <div class="pr-res-box" id="tdoTanRes">—</div>
+            <div class="pr-subbox">
+              <div class="pr-sec-h" style="border:0;padding:0">2 · Tangentes parallèles</div>
+              <p class="pr-muted">Déplacez les poignées <b>V₁</b> et <b>V₂</b> directement à la souris sur le graphe.</p>
+              <div class="pr-grid2">
+                <label class="pr-fld"><span>Point avant V₁</span><input id="tdoV1"></label>
+                <label class="pr-fld"><span>Point après V₂</span><input id="tdoV2"></label>
+              </div>
+              <label class="pr-fld"><span>Pente commune (auto si vide)</span><input id="tdoM" placeholder="auto"></label>
+              <div class="pr-res-box" id="tdoTanRes">—</div>
+            </div>
           </div>
-          <button class="ib on" id="tdoBiAff" style="width:100%">Dosage conductimétrique → ajustement 2 droites</button>`;
-        const run = () => this._previewDosage(true);
+          <div id="tdoCondWrap" ${this.dosageType !== 'cond' ? 'hidden' : ''}>
+            <div class="pr-subbox">
+              <div class="pr-sec-h" style="border:0;padding:0">Ajustement bi-affine (2 droites)</div>
+              <p class="pr-muted">Ajuste deux segments affines avant et après l'équivalence et détermine directement le point d'intersection (V_E, σ_E) avec son incertitude.</p>
+              <button class="ib on" id="tdoBiAff" style="width:100%">Lancer l'ajustement 2 droites →</button>
+            </div>
+          </div>`;
+        const run = () => this._previewDosage(true, true);
+        $$('#tdoModePills [data-dm]').forEach(b => b.onclick = () => {
+          this.dosageType = b.dataset.dm;
+          $$('#tdoModePills [data-dm]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+          $('#tdoPhWrap').hidden = this.dosageType === 'cond';
+          $('#tdoCondWrap').hidden = this.dosageType !== 'cond';
+          this._previewDosage(false, true);
+        });
         $('#tdoC').onchange = run;
-        $('#tdoW').onchange = () => this._previewDosage(false);
-        $('#tdoV1').onchange = () => this._previewDosage(false);
-        $('#tdoV2').onchange = () => this._previewDosage(false);
-        $('#tdoM').onchange = () => this._previewDosage(false);
+        $('#tdoW').onchange = () => this._previewDosage(false, false);
+        $('#tdoV1').onchange = () => this._previewDosage(false, false);
+        $('#tdoV2').onchange = () => this._previewDosage(false, false);
+        $('#tdoM').onchange = () => this._previewDosage(false, false);
         $('#tdoSaveD').onclick = () => {
           const cn = $('#tdoC').value, c = this.curve(cn), d = this.getCurveXY(cn), xc = this.xCurveOf(cn);
           const pk = Num.findTitrationPeaks(d.x, d.y, +$('#tdoW').value || 5);
           const nm = this.uniqueName('d' + cn);
           this.setCurve(nm, { y: pk.deriv, x: c.x, unit: c.unit + (xc?.unit ? '/' + xc.unit : ''), kind: 'calc', axis: 'd' });
-          this.toast(`Courbe dérivée ${nm} ajoutée`, 'ok');
+          this.markDirty();
+          this.refreshDataUI();
+          this.toast(`Courbe dérivée ${nm} ajoutée`, 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot([cn, nm]) });
         };
         $('#tdoBiAff').onclick = () => {
           const cn = $('#tdoC').value;
@@ -5965,8 +6765,9 @@ const Progressi = (() => {
         if (save) {
           this.curves.delete('__prev'); this.curves.delete('__prev_x');
           if (!this.order.includes(tmpName)) this.order.push(tmpName);
-          this.toast(`Courbe ${tmpName} enregistrée`, 'ok');
+          this.markDirty();
           this.refreshDataUI();
+          this.toast(`Courbe ${tmpName} enregistrée`, 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot(tmpName) });
         }
         this.tplot.xName = null;
         this.tplot.style = 'ligne';
@@ -6000,10 +6801,21 @@ const Progressi = (() => {
       this.tplot.autoscale();
     },
 
-    _previewDosage(resetV) {
+    _previewDosage(resetV, doAutoscale = true) {
       const cn = $('#tdoC').value, c = this.curve(cn), d = this.getCurveXY(cn), xc = this.xCurveOf(cn);
       if (!c || !d) return;
+      if (this.dosageType === 'cond') {
+        this.tplot.curves = [cn];
+        this.tplot.xName = null;
+        this.tplot.style = 'lignepoints';
+        this.tplot.overlays = [];
+        this.tplot.handles = [];
+        if (doAutoscale) this.tplot.autoscale(); else this.tplot.draw();
+        $('#tInfo').textContent = 'Dosage conductimétrique : cliquez « Lancer l’ajustement 2 droites → » pour déterminer V_E.';
+        return;
+      }
       const xu = xc?.unit || '';
+      const xmin = Num.min(d.x), xmax = Num.max(d.x);
       const pk = Num.findTitrationPeaks(d.x, d.y, +$('#tdoW').value || 5);
       if (pk.equivs.length) {
         $('#tdoPeaks').textContent = pk.equivs.slice(0, 3).map((e, i) =>
@@ -6015,10 +6827,10 @@ const Progressi = (() => {
 
       // Initialisation auto de V1 et V2 autour de la 1ère équivalence
       if (resetV || !$('#tdoV1').value) {
-        const span = (Num.max(d.x) - Num.min(d.x)) || 1;
-        const ve = pk.equivs[0]?.V ?? 0.5 * (Num.min(d.x) + Num.max(d.x));
-        $('#tdoV1').value = PlotFmt.val(Math.max(Num.min(d.x), ve - 0.14 * span), 4);
-        $('#tdoV2').value = PlotFmt.val(Math.min(Num.max(d.x), ve + 0.14 * span), 4);
+        const span = (xmax - xmin) || 1;
+        const ve = pk.equivs[0]?.V ?? 0.5 * (xmin + xmax);
+        $('#tdoV1').value = PlotFmt.val(Math.max(xmin, ve - 0.14 * span), 4);
+        $('#tdoV2').value = PlotFmt.val(Math.min(xmax, ve + 0.14 * span), 4);
       }
       const v1 = IO.parseNum($('#tdoV1').value), v2 = IO.parseNum($('#tdoV2').value);
       const slopeIn = $('#tdoM').value.trim() ? IO.parseNum($('#tdoM').value) : null;
@@ -6026,6 +6838,29 @@ const Progressi = (() => {
       if (tan) {
         $('#tdoTanRes').textContent = `V_E = ${PlotFmt.val(tan.ve, 4)} ${xu}\n${cn}_E = ${PlotFmt.val(tan.phe, 4)}\npente commune = ${PlotFmt.val(tan.m, 3)}`;
       }
+
+      const yAt = vx => {
+        const i = this.tplot.nearestIndex(d, vx);
+        return i >= 0 ? d.y[i] : 0;
+      };
+      this.tplot.handles = [
+        {
+          id: 'v1', x: v1, y: yAt(v1), color: '#38bdf8', label: 'V₁',
+          onDrag: xNew => {
+            const clamped = Math.max(xmin, Math.min(xmax, xNew));
+            $('#tdoV1').value = PlotFmt.val(clamped, 4);
+            this._previewDosage(false, false);
+          },
+        },
+        {
+          id: 'v2', x: v2, y: yAt(v2), color: '#38bdf8', label: 'V₂',
+          onDrag: xNew => {
+            const clamped = Math.max(xmin, Math.min(xmax, xNew));
+            $('#tdoV2').value = PlotFmt.val(clamped, 4);
+            this._previewDosage(false, false);
+          },
+        },
+      ];
 
       this.curves.set('__dos_d', { name: 'd' + cn + '/d' + (xc?.name || 'x'), unit: '', x: c.x, y: pk.deriv, color: '#f59e0b', axis: 'd', kind: 'tmp', style: 'ligne' });
       this.tplot.curves = [cn, '__dos_d'];
@@ -6051,7 +6886,8 @@ const Progressi = (() => {
         ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, p.box.b); ctx.stroke();
         ctx.setLineDash([]);
       }];
-      this.tplot.autoscale();
+      if (doAutoscale) this.tplot.autoscale(); else this.tplot.draw();
+      $('#tInfo').textContent = 'Glissez les poignées bleues V₁ et V₂ sur la courbe pour ajuster les tangentes parallèles.';
     },
 
     _previewFFT(save) {
@@ -6070,12 +6906,14 @@ const Progressi = (() => {
           this.curves.delete('__fft_f'); this.curves.delete('__fft_a');
           if (!this.order.includes(fn)) this.order.push(fn);
           if (!this.order.includes(an)) this.order.push(an);
-          this.toast(`Spectre enregistré (${fn}, ${an})`, 'ok');
+          this.markDirty();
           this.refreshDataUI();
+          this.toast(`Spectre enregistré (${fn}, ${an})`, 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot(an, { replace: true, xName: fn }) });
         }
         this.tplot.xName = null;
         this.tplot.style = $('#tfSt').value;
         this.tplot.curves = [an];
+        this.tplot.cursorCurve = an;
         this.tplot.autoscale();
 
         // Zoomer automatiquement sur les fréquences utiles
@@ -6094,6 +6932,7 @@ const Progressi = (() => {
           `${i + 1}. f = ${PlotFmt.si(p.f, fu)} · A = ${PlotFmt.val(p.a, 4)}`
         ).join('\n');
         $('#tfRes').textContent = txt;
+        $('#tInfo').textContent = 'Utilisez « Curseur » ou survolez un pic pour lire sa fréquence exacte.';
       } catch (e) { $('#tfRes').textContent = 'Erreur : ' + e.message; }
     },
 
@@ -6116,8 +6955,9 @@ const Progressi = (() => {
         if (save) {
           this.curves.delete('__filt');
           if (!this.order.includes(nm)) this.order.push(nm);
-          this.toast(`Courbe filtrée ${nm} enregistrée`, 'ok');
+          this.markDirty();
           this.refreshDataUI();
+          this.toast(`Courbe filtrée ${nm} enregistrée`, 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot([cn, nm]) });
         }
         this.tplot.xName = null;
         this.tplot.logx = false;
@@ -6182,17 +7022,18 @@ const Progressi = (() => {
         this.tplot.style = 'lignepoints';
         this.tplot.curves = ['Bode_GdB', 'Bode_phi'];
         this.tplot.autoscale();
-        this.toast('Diagramme de Bode mis à jour', 'ok');
+        this.markDirty();
         this.refreshDataUI();
+        this.toast('Diagramme de Bode mis à jour', 'ok', { label: 'Voir dans Courbes →', fn: () => this.openCurveInPlot(['Bode_GdB', 'Bode_phi'], { replace: true, logx: true, xName: 'Bode_f' }) });
       } catch (e) { this.toast('Bode : ' + e.message, 'err'); }
     },
 
     // ==================== FICHIERS, SESSIONS & EXEMPLES ====================
     onVideoExported(made) {
-      this.views = [
-        { id: 1, title: 'Trajectoire y(x)', curves: [made[1]], xName: made[0], style: 'lignepoints', logx: false, logy: false, equal: true },
-        { id: 2, title: 'Horaires x(t), y(t)', curves: made.slice(), xName: 't', style: 'lignepoints', logx: false, logy: false, equal: false },
-      ];
+      const otherViews = this.views.filter(vw => vw.curves.length && !vw.isVideoView);
+      const vTraj = { id: 1, title: 'Trajectoire y(x)', curves: [made[1]], xName: made[0], style: 'lignepoints', logx: false, logy: false, equal: true, isVideoView: true };
+      const vHor = { id: 2, title: 'Horaires x(t), y(t)', curves: made.slice(), xName: 't', style: 'lignepoints', logx: false, logy: false, equal: false, isVideoView: true };
+      this.views = [vTraj, vHor, ...otherViews];
       this.activeViewIdx = 0;
       this.setTab(2);
       this.plot.autoscale();
@@ -6207,10 +7048,20 @@ const Progressi = (() => {
       this.views = [{
         id: 1, title: ds.label.split(' (')[0],
         curves: ds.plot.curves.slice(), xName: ds.plot.xName || null,
-        style: ds.plot.style || 'points', logx: !!ds.plot.logx, logy: false, equal: false,
+        style: ds.plot.style || 'points', logx: !!ds.plot.logx, logy: false, equal: false, plotTitle: '',
       }];
       this.activeViewIdx = 0;
-      if (this.plot) { this.plot.residualsData = null; this.plot.showResiduals = false; $('#pRes').setAttribute('aria-pressed', 'false'); }
+      if (this.plot) {
+        this.plot.residualsData = null; this.plot.showResiduals = false;
+        this.plot.fitBoxLines = null; this.plot.showFitBox = false;
+        $('#pRes').setAttribute('aria-pressed', 'false');
+        $('#pFitBox').setAttribute('aria-pressed', 'false');
+      }
+      if (id === 'ph') {
+        this.treatTool = 'dosage';
+        this.dosageType = 'ph';
+        $$('#treatPills [data-tt]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.tt === 'dosage')));
+      }
       this.refreshAll();
       if (ds.suggestModel) {
         $('#mModel').value = ds.suggestModel;
@@ -6254,6 +7105,32 @@ const Progressi = (() => {
           this.loadSession(data);
           this.toast(`Session « ${file.name} » ouverte`, 'ok');
         } catch (e) { this.toast('Session invalide : ' + e.message, 'err'); }
+        return;
+      }
+      if (ext === 'xlsx') {
+        try {
+          const sheets = await IO.readXlsxSheets(file);
+          if (!sheets.length) throw new Error('Classeur vide');
+          const finish = sh => {
+            try {
+              const cols = IO.parseSheetRows(sh.rows);
+              this._ingestColumns(cols, `${file.name} (${sh.name})`);
+              this.setTab(2);
+              this.plot.autoscale();
+            } catch (e) { this.toast('Import échoué : ' + e.message, 'err'); }
+          };
+          if (sheets.length === 1) { finish(sheets[0]); return; }
+          const opts = sheets.map((s, i) => `<option value="${i}">${esc(s.name)} (${s.rows.length} lignes)</option>`).join('');
+          this.modal(`Choisir la feuille · ${file.name}`, `
+            <p class="pr-muted">Ce classeur Excel contient ${sheets.length} feuilles non vides :</p>
+            <label class="pr-fld"><span>Feuille à importer</span><select id="mXlsxSheet">${opts}</select></label>`,
+            [{ label: 'Annuler' }, {
+              label: 'Importer', pri: true, action: bg => {
+                const idx = +$('#mXlsxSheet', bg).value || 0;
+                finish(sheets[idx]);
+              },
+            }]);
+        } catch (e) { this.toast('Import Excel échoué : ' + e.message, 'err'); }
         return;
       }
       try {
@@ -6379,6 +7256,23 @@ const Progressi = (() => {
       this.toast(`Image ${fname} enregistrée`, 'ok');
     },
 
+    async copyActiveImage() {
+      let blob = null;
+      if (this.tab === 1 && this.video) blob = await this.video.exportPNGBlob();
+      else if (this.tab === 3 && this.tplot) blob = await this.tplot.exportPNGBlob(true);
+      else if (this.plot) blob = await this.plot.exportPNGBlob(true);
+      if (!blob) { this.toast('Rien à copier sur cet onglet', 'err'); return; }
+      try {
+        if (navigator.clipboard?.write && window.ClipboardItem) {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          this.toast('Image PNG copiée (prête à coller par Ctrl+V dans le compte-rendu)', 'ok');
+          return;
+        }
+      } catch (_) {}
+      // Repli téléchargement si le navigateur refuse l'écriture d'image au presse-papiers
+      this.exportActiveImage();
+    },
+
     showPythonExport() {
       const code = IO.exportPython(this.curves, this.activeView(), this.lastFit);
       this.modal('Script Python (numpy + matplotlib)', `
@@ -6396,18 +7290,18 @@ const Progressi = (() => {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em;font-size:.9em">
           <div>
             <b>1 · Données</b><br>
-            Glissez-déposez un fichier <code>.csv</code>, <code>.txt</code>, <code>.xlsx</code>, <code>.rw3</code> (Regressi) ou <code>.json</code> n'importe où sur la fenêtre, ou collez depuis Excel.<br><br>
+            Glissez-déposez un fichier <code>.csv</code>, <code>.txt</code>, <code>.xlsx</code>, <code>.rw3</code> (Regressi) ou <code>.json</code>, ou collez directement par <code>Ctrl+V</code> depuis Excel.<br>
+            Dans le tableur : <code>Entrée</code> / <code>↑</code> / <code>↓</code> naviguent ; <code>Entrée</code> sur la dernière ligne en ajoute une nouvelle.<br><br>
             <b>2 · Pointage vidéo</b><br>
-            Compatible MP4/WebM/MOV. Si un codec smartphone (HEVC, AVI, MKV) n'est pas lu nativement, utilisez le bouton <b>Convertir en MP4 (secours en ligne)</b>.<br>
-            Flèches <code>←</code> / <code>→</code> (ou molette) : image par image. Glisser un point le corrige, clic droit le supprime.<br>
-            3 suivis auto : <i>Soustraction de fond</i> (trépied), <i>Couleur HSV</i> (avec aperçu du masque) et <i>Motif NCC</i>.
+            Compatible MP4/WebM/MOV (+ secours conversion MP4 en ligne).<br>
+            <code>←</code> / <code>→</code> (ou molette) : image par image · <code>Ctrl+Z</code> : annuler le dernier point · <code>Échap</code> : quitter un mode armé · clic droit : supprimer un point.
           </div>
           <div>
             <b>3 · Courbes & Ajustements</b><br>
-            Renseignez <code>u(Y)</code> / <code>u(X)</code> (nombre, <code>2%</code> ou nom de colonne) pour activer les barres d'erreur, l'ajustement pondéré (WLS/ODR), <b>χ²_red</b>, les écarts normalisés <b>z</b> et <b>Monte-Carlo</b>.<br>
-            Utilisez <i>Exclure pt</i> pour ignorer un point aberrant, ou <i>Bornes [a,b]</i> pour restreindre l'ajustement.<br><br>
+            Renseignez <code>u(Y)</code> / <code>u(X)</code> (nombre, <code>2%</code> ou colonne) pour activer barres d'erreur, ajustement pondéré (WLS/ODR), <b>χ²_red</b>, <b>z</b> et <b>Monte-Carlo</b>.<br>
+            Activez <i>Encart modèle</i> et cliquez <b>Copier PNG</b> (<code>C</code>) pour coller directement le graphe dans votre compte-rendu.<br><br>
             <b>Raccourcis clavier</b><br>
-            <code>T</code> thème · <code>P</code> projection · <code>F</code> plein écran · <code>I</code> exporter PNG · <code>H</code> aide · <code>Ctrl+S</code> sauver · <code>Alt+1..4</code> onglets.
+            <code>T</code> thème · <code>P</code> projection · <code>F</code> plein écran · <code>I</code> sauver PNG · <code>C</code> copier PNG · <code>H</code> aide · <code>Ctrl+S</code> sauver · <code>Alt+1..4</code> onglets.
           </div>
         </div>`, [{ label: 'Fermer', pri: true }]);
     },
@@ -6419,13 +7313,31 @@ const Progressi = (() => {
     },
 
     // ==================== UTILITAIRES UI ====================
-    toast(msg, cls = '') {
+    toast(msg, cls = '', action = null) {
       const t = $('#prToast');
-      t.textContent = msg;
+      t.innerHTML = '';
+      const span = document.createElement('span');
+      span.textContent = msg;
+      t.appendChild(span);
+      if (action && action.label && action.fn) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'pr-toast-act';
+        btn.textContent = action.label;
+        btn.onclick = () => { t.hidden = true; action.fn(); };
+        t.appendChild(btn);
+      }
       t.className = 'pr-toast' + (cls ? ' ' + cls : '');
       t.hidden = false;
       clearTimeout(this._toastT);
-      this._toastT = setTimeout(() => { t.hidden = true; }, 4500);
+      this._toastT = setTimeout(() => { t.hidden = true; }, action ? 6500 : 4500);
+    },
+
+    confirm(msg, onOk) {
+      this.modal('Confirmation', `<p style="margin:0">${esc(msg)}</p>`, [
+        { label: 'Annuler' },
+        { label: 'Confirmer', pri: true, action: () => { onOk(); } },
+      ]);
     },
 
     modal(title, bodyHtml, buttons = [{ label: 'Fermer' }], onOpen) {
@@ -6497,12 +7409,21 @@ const Progressi = (() => {
         const tag = document.activeElement?.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && this.tab === 1 && this.video) {
+          e.preventDefault(); this.video.undoLast(); return;
+        }
+        if (e.key === 'Escape') {
+          if (this.tab === 1 && this.video?.mode) { this.video.setMode(null); return; }
+          if (this.tab === 2 && this.plot && this.plot.mode !== 'zoom') { this.setPlotMode('zoom'); return; }
+        }
+
         const k = e.key.toLowerCase();
         if (k === 't') $('[data-act=theme]').click();
         else if (k === 'p') $('[data-act=proj]').click();
         else if (k === 'f') $('[data-act=fs]').click();
         else if (k === 'h') $('[data-act=help]').click();
         else if (k === 'i') $('[data-act=image]').click();
+        else if (k === 'c' && !e.ctrlKey && !e.metaKey) $('[data-act=copyimg]').click();
         else if (this.tab === 1 && this.video) {
           if (e.key === 'ArrowRight') { e.preventDefault(); this.video.goto(this.video.frame + (e.shiftKey ? 10 : 1)); }
           else if (e.key === 'ArrowLeft') { e.preventDefault(); this.video.goto(this.video.frame - (e.shiftKey ? 10 : 1)); }
