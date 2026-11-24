@@ -709,6 +709,13 @@ sub,sup{line-height:0}
   display: flex; flex-wrap: wrap; gap: .38em; justify-content: center; align-items: center;
   padding-top: .5em; border-top: 1px solid var(--rule);
 }
+.pr-resume-bar{
+  display: flex; align-items: center; justify-content: space-between; gap: .6em; flex-wrap: wrap;
+  padding: .6em .85em; border-radius: .6em;
+  border: 1px solid color-mix(in srgb, var(--c-btn) 55%, var(--rule));
+  background: var(--c-soft); font-size: .88em;
+}
+.pr-resume-bar .pr-row{ gap: .35em; }
 
 /* Badges d'étape & bandeau contextuel vidéo */
 .pr-step-badge{
@@ -4097,9 +4104,158 @@ class VideoTracker {
     this.q('.pr-vprog').hidden = true;
   }
 
+  async _fetchWithProgress(urls, asText, onProg) {
+    let lastErr = null;
+    for (const url of urls) {
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} (${url})`);
+        if (asText) return await resp.text();
+        const total = Number(resp.headers.get('content-length')) || 0;
+        if (!resp.body || !resp.body.getReader) return await resp.arrayBuffer();
+        const reader = resp.body.getReader();
+        const chunks = [];
+        let got = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          got += value.byteLength;
+          if (onProg) onProg(got, total);
+        }
+        const out = new Uint8Array(got);
+        let off = 0;
+        for (const ch of chunks) { out.set(ch, off); off += ch.byteLength; }
+        return out.buffer;
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('Téléchargement impossible');
+  }
+
+  _runFFmpegInWorker(coreJs, wasmBuf, inName, inBytes, args, onProg) {
+    return new Promise((resolve, reject) => {
+      const runner = `
+        let core = null;
+        let logs = [];
+        self.onmessage = async (ev) => {
+          const d = ev.data;
+          try {
+            if (d.cmd === 'init') {
+              const factory = (typeof createFFmpegCore !== 'undefined') ? createFFmpegCore : self.createFFmpegCore;
+              if (typeof factory !== 'function') throw new Error('createFFmpegCore introuvable');
+              core = await factory({
+                wasmBinary: new Uint8Array(d.wasmBuf),
+                locateFile: p => p,
+              });
+              if (core.setLogger) core.setLogger(({ message }) => { if (message) { logs.push(message); if (logs.length > 8) logs.shift(); } });
+              if (core.setProgress) core.setProgress(({ progress }) => { self.postMessage({ type: 'prog', progress: Number(progress) || 0 }); });
+              self.postMessage({ type: 'ready' });
+            } else if (d.cmd === 'run') {
+              logs = [];
+              core.FS.writeFile(d.inName, new Uint8Array(d.inBuf));
+              if (typeof core.exec === 'function') {
+                core.exec(...d.args);
+                const ret = core.ret;
+                if (typeof core.reset === 'function') core.reset();
+                if (ret && ret !== 0) throw new Error('FFmpeg a retourné le code ' + ret + (logs.length ? ' — ' + logs[logs.length - 1] : ''));
+              } else if (typeof core.callMain === 'function') {
+                core.callMain(d.args);
+              } else {
+                throw new Error('Méthode exec/callMain introuvable');
+              }
+              const out = core.FS.readFile('output.mp4');
+              try { core.FS.unlink(d.inName); } catch (_) {}
+              try { core.FS.unlink('output.mp4'); } catch (_) {}
+              const copy = out.slice().buffer;
+              self.postMessage({ type: 'done', buf: copy }, [copy]);
+            }
+          } catch (err) {
+            self.postMessage({ type: 'err', message: (err && err.message) ? err.message : String(err) });
+          }
+        };
+      `;
+      let worker = null, wUrl = null, settled = false;
+      const cleanup = () => {
+        if (worker) { try { worker.terminate(); } catch (_) {} worker = null; }
+        if (wUrl) { URL.revokeObjectURL(wUrl); wUrl = null; }
+      };
+      const fail = err => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(initTimer);
+        cleanup();
+        reject(err);
+      };
+      const initTimer = setTimeout(() => fail(new Error('Délai dépassé lors de l’initialisation du Worker')), 25000);
+      try {
+        wUrl = URL.createObjectURL(new Blob([coreJs + '\n;\n' + runner], { type: 'text/javascript' }));
+        worker = new Worker(wUrl);
+      } catch (e) {
+        fail(e);
+        return;
+      }
+      worker.onerror = e => fail(new Error(e.message || 'Erreur Worker WebAssembly'));
+      worker.onmessage = ev => {
+        const m = ev.data || {};
+        if (m.type === 'ready') {
+          clearTimeout(initTimer);
+          const sendBuf = inBytes.buffer.slice(inBytes.byteOffset, inBytes.byteOffset + inBytes.byteLength);
+          worker.postMessage({ cmd: 'run', inName, inBuf: sendBuf, args }, [sendBuf]);
+        } else if (m.type === 'prog') {
+          if (onProg) onProg(m.progress);
+        } else if (m.type === 'done') {
+          if (settled) return;
+          settled = true;
+          clearTimeout(initTimer);
+          cleanup();
+          resolve(new Uint8Array(m.buf));
+        } else if (m.type === 'err') {
+          fail(new Error(m.message || 'Échec FFmpeg'));
+        }
+      };
+      const wasmCopy = wasmBuf.slice(0);
+      worker.postMessage({ cmd: 'init', wasmBuf: wasmCopy }, [wasmCopy]);
+    });
+  }
+
+  async _runFFmpegOnMainThread(coreJs, wasmBuf, inName, inBytes, args, onProg) {
+    if (typeof window.createFFmpegCore !== 'function') {
+      const url = URL.createObjectURL(new Blob([coreJs], { type: 'text/javascript' }));
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = () => { URL.revokeObjectURL(url); res(); };
+        s.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Impossible d’exécuter ffmpeg-core.js')); };
+        document.head.appendChild(s);
+      });
+    }
+    if (!this._ffMainCore) {
+      this._ffMainCore = await window.createFFmpegCore({ wasmBinary: new Uint8Array(wasmBuf.slice(0)) });
+    }
+    const core = this._ffMainCore;
+    const logs = [];
+    if (core.setLogger) core.setLogger(({ message }) => { if (message) { logs.push(message); if (logs.length > 8) logs.shift(); } });
+    if (core.setProgress) core.setProgress(({ progress }) => { if (onProg) onProg(Number(progress) || 0); });
+    core.FS.writeFile(inName, inBytes);
+    if (typeof core.exec === 'function') {
+      core.exec(...args);
+      const ret = core.ret;
+      if (typeof core.reset === 'function') core.reset();
+      if (ret && ret !== 0) throw new Error('FFmpeg a retourné le code ' + ret + (logs.length ? ' — ' + logs[logs.length - 1] : ''));
+    } else if (typeof core.callMain === 'function') {
+      core.callMain(args);
+    } else {
+      throw new Error('Méthode exec/callMain introuvable');
+    }
+    const out = core.FS.readFile('output.mp4');
+    try { core.FS.unlink(inName); } catch (_) {}
+    try { core.FS.unlink('output.mp4'); } catch (_) {}
+    return out.slice();
+  }
+
   async convertWithFFmpeg() {
     if (!this.rawFile) return;
-    if (!navigator.onLine) {
+    if (!navigator.onLine && !this._ffCache) {
       this.app.toast('Conversion FFmpeg impossible hors ligne. Convertissez la vidéo en MP4 (H.264) ou connectez-vous.', 'err');
       return;
     }
@@ -4111,51 +4267,57 @@ class VideoTracker {
     const setStatus = (pct, msg) => { bar.style.width = Math.round(pct) + '%'; txt.textContent = msg; };
 
     try {
-      if (!this.ffmpegInst) {
-        setStatus(8, 'Chargement du module FFmpeg (~25 Mo)…');
-        const loadScript = src => new Promise((res, rej) => {
-          const s = document.createElement('script');
-          s.src = src; s.onload = res; s.onerror = () => rej(new Error('Impossible de charger ' + src));
-          document.head.appendChild(s);
+      if (!this._ffCache) {
+        const bases = [
+          'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd',
+          'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd',
+        ];
+        setStatus(5, 'Téléchargement du script FFmpeg…');
+        const coreJs = await this._fetchWithProgress(bases.map(b => `${b}/ffmpeg-core.js`), true);
+        setStatus(10, 'Téléchargement du cœur WebAssembly (~31 Mo)…');
+        const wasmBuf = await this._fetchWithProgress(bases.map(b => `${b}/ffmpeg-core.wasm`), false, (got, tot) => {
+          const mb = (got / 1048576).toFixed(1);
+          if (tot > 0) {
+            const totMb = (tot / 1048576).toFixed(1);
+            setStatus(10 + 35 * (got / tot), `Téléchargement FFmpeg… ${mb} / ${totMb} Mo`);
+          } else {
+            setStatus(25, `Téléchargement FFmpeg… ${mb} Mo`);
+          }
         });
-        if (!window.FFmpegWASM) {
-          await loadScript('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js');
-        }
-        const { FFmpeg } = window.FFmpegWASM;
-        const ff = new FFmpeg();
-        ff.on('progress', ({ progress }) => {
-          setStatus(30 + Math.min(68, Math.max(0, progress * 68)), `Conversion en MP4… ${Math.round(progress * 100)} %`);
-        });
-        const toBlobURL = async (url, mime) => {
-          const resp = await fetch(url);
-          if (!resp.ok) throw new Error('Téléchargement échoué : ' + url);
-          return URL.createObjectURL(new Blob([await resp.arrayBuffer()], { type: mime }));
-        };
-        setStatus(18, 'Initialisation du cœur WebAssembly…');
-        const base = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
-        await ff.load({
-          coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, 'text/javascript'),
-          wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, 'application/wasm'),
-        });
-        this.ffmpegInst = ff;
+        this._ffCache = { coreJs, wasmBuf };
       }
 
-      const ff = this.ffmpegInst;
-      setStatus(30, 'Lecture du fichier vidéo…');
-      const ext = (this.rawFile.name.split('.').pop() || 'mp4').toLowerCase();
+      const { coreJs, wasmBuf } = this._ffCache;
+      setStatus(48, 'Lecture du fichier vidéo…');
+      const ext = (this.rawFile.name.split('.').pop() || 'avi').toLowerCase().replace(/[^a-z0-9]/g, '') || 'avi';
       const inName = 'input.' + ext;
-      const data = new Uint8Array(await this.rawFile.arrayBuffer());
-      await ff.writeFile(inName, data);
-      await ff.exec([
-        '-i', inName,
+      const inBytes = new Uint8Array(await this.rawFile.arrayBuffer());
+      const args = [
+        '-nostdin', '-y', '-i', inName,
         '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '22',
         '-g', '1', '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart',
         'output.mp4',
-      ]);
-      const out = await ff.readFile('output.mp4');
-      await ff.deleteFile(inName).catch(() => {});
-      await ff.deleteFile('output.mp4').catch(() => {});
-      const blob = new Blob([out.buffer], { type: 'video/mp4' });
+      ];
+
+      setStatus(52, 'Initialisation du cœur WebAssembly…');
+      let outBytes;
+      const onProg = p => {
+        const cl = Math.min(1, Math.max(0, p || 0));
+        setStatus(54 + cl * 44, `Conversion en MP4… ${Math.round(cl * 100)} %`);
+      };
+      try {
+        outBytes = await this._runFFmpegInWorker(coreJs, wasmBuf, inName, inBytes, args, onProg);
+      } catch (workerErr) {
+        // Repli sur le fil principal si le navigateur bloque les Workers (ex. ouverture directe en file://)
+        setStatus(55, 'Conversion en mode local direct (patientez quelques secondes)…');
+        await new Promise(r => setTimeout(r, 60));
+        outBytes = await this._runFFmpegOnMainThread(coreJs, wasmBuf, inName, inBytes, args, onProg);
+      }
+
+      if (!outBytes || outBytes.byteLength < 100) {
+        throw new Error('Fichier converti vide (codec source non pris en charge)');
+      }
+      const blob = new Blob([outBytes.buffer], { type: 'video/mp4' });
       if (this.url) URL.revokeObjectURL(this.url);
       this.url = URL.createObjectURL(blob);
       this.v.src = this.url;
@@ -5208,12 +5370,11 @@ const Progressi = (() => {
       this._buildTab3();
       this._bindGlobalEvents();
 
-      // Restaurer la session locale précédente si présente, sinon ouvrir vide
-      if (!this.restoreAutoSave()) {
-        this.ensureDefaultView();
-        this.refreshAll();
-        this.setTab(0);
-      }
+      // Toujours démarrer vide ; proposer de reprendre la session locale précédente si présente
+      this.pendingAutoSave = this.peekAutoSave();
+      this.ensureDefaultView();
+      this.refreshAll();
+      this.setTab(0);
     },
 
     _bindHeader() {
@@ -5576,8 +5737,25 @@ const Progressi = (() => {
       const wrap = $('#tableWrap');
       const cols = this.order.filter(n => this.curve(n)?.kind !== 'model');
       if (!cols.length) {
+        let resumeHtml = '';
+        if (this.pendingAutoSave) {
+          const ps = this.pendingAutoSave;
+          const parts = [];
+          if (ps.nCurves) parts.push(`${ps.nCurves} variable${ps.nCurves > 1 ? 's' : ''}`);
+          if (ps.nVideoPts) parts.push(`${ps.nVideoPts} pt${ps.nVideoPts > 1 ? 's' : ''} vidéo`);
+          const detail = parts.length ? ` (${parts.join(' · ')})` : '';
+          resumeHtml = `
+            <div class="pr-resume-bar">
+              <span><strong>Session précédente disponible</strong>${detail}</span>
+              <div class="pr-row">
+                <button class="ib on" type="button" data-wr="resume">Reprendre la session</button>
+                <button class="mini" type="button" data-wr="discard" title="Effacer la sauvegarde locale">Effacer</button>
+              </div>
+            </div>`;
+        }
         wrap.innerHTML = `
           <div class="pr-welcome">
+            ${resumeHtml}
             <div class="pr-welcome-h">
               <h2>Démarrer une exploitation de TP</h2>
               <p>Glissez-déposez un fichier n'importe où sur la fenêtre, ou choisissez une action :</p>
@@ -5614,6 +5792,9 @@ const Progressi = (() => {
               <button class="mini" data-ws="bode">Bode RC</button>
             </div>
           </div>`;
+        const bRes = $('[data-wr=resume]', wrap), bDis = $('[data-wr=discard]', wrap);
+        if (bRes) bRes.onclick = () => this.applyPendingAutoSave();
+        if (bDis) bDis.onclick = () => { this.clearAutoSave(); this.refreshDataUI(); this.toast('Sauvegarde locale effacée'); };
         $('[data-wa=imp]', wrap).onclick = () => $('#btnImp').click();
         $('[data-wa=paste]', wrap).onclick = () => this.pasteFromClipboard();
         $('[data-wa=manual]', wrap).onclick = () => this.startManualTable();
@@ -7162,6 +7343,7 @@ const Progressi = (() => {
     },
 
     markDirty() {
+      this.pendingAutoSave = null;
       this.dirty = true;
       this.scheduleAutoSave();
     },
@@ -7193,25 +7375,35 @@ const Progressi = (() => {
 
     clearAutoSave() {
       clearTimeout(this._saveTimer);
+      this.pendingAutoSave = null;
       try { localStorage.removeItem(AUTOSAVE_KEY); } catch (_) {}
     },
 
-    restoreAutoSave() {
+    peekAutoSave() {
       try {
         const raw = localStorage.getItem(AUTOSAVE_KEY);
-        if (!raw) return false;
+        if (!raw) return null;
         const data = JSON.parse(raw);
-        if (!data || data.app !== 'Progressi') return false;
-        const hasCurves = Array.isArray(data.curves) && data.curves.length > 0;
-        const hasVideo = data.video && (data.video.pts?.length || data.video.ech || data.video.ori);
-        if (!hasCurves && !hasVideo) return false;
-        this.loadSession(data, true);
-        const tab = (typeof data.tab === 'number' && data.tab >= 0 && data.tab <= 3) ? data.tab : 0;
-        this.setTab(tab);
-        this.dirty = false;
-        this.toast('Session précédente restaurée automatiquement', 'ok');
-        return true;
-      } catch (_) { return false; }
+        if (!data || data.app !== 'Progressi') return null;
+        const curves = Array.isArray(data.curves) ? data.curves : Object.values(data.curves || {});
+        const nCurves = curves.filter(c => c && c.kind !== 'model').length;
+        const nVideoPts = data.video?.pts?.length || 0;
+        const hasVideo = data.video && (nVideoPts || data.video.ech || data.video.ori);
+        if (!nCurves && !hasVideo) return null;
+        return { data, nCurves, nVideoPts, savedAt: data.savedAt || null };
+      } catch (_) { return null; }
+    },
+
+    applyPendingAutoSave() {
+      const ps = this.pendingAutoSave || this.peekAutoSave();
+      if (!ps) return false;
+      this.pendingAutoSave = null;
+      this.loadSession(ps.data, true);
+      const tab = (typeof ps.data.tab === 'number' && ps.data.tab >= 0 && ps.data.tab <= 3) ? ps.data.tab : 0;
+      this.setTab(tab);
+      this.dirty = false;
+      this.toast('Session précédente restaurée', 'ok');
+      return true;
     },
 
     saveSession() {
